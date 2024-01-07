@@ -11,7 +11,8 @@ import SwiftUI
 struct OpacityApp: App {
   var body: some Scene {
     WindowGroup {
-      Text("Hello world")
+      ContentView()
     }
+    .windowStyle(HiddenTitleBarWindowStyle())
   }
 }
