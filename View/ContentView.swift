@@ -8,27 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+  @State private var siteURL: String = "https://google.com"
+  @State private var viewSize: CGSize = .zero
+  
   var body: some View {
-    VStack {
-      NavigationSplitView {
-        HStack {
-          Text("navigation")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    GeometryReader { geometry in
+      VStack(spacing: 0) {
+        NavigationSplitView {
+          HStack {
+            Text("navigation")
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
+          }
+        } detail: {
+          VStack(spacing: 0) {
+            TitleView(viewSize: $viewSize, siteURL: $siteURL)
+              .frame(maxWidth: .infinity, minHeight: 36.0, maxHeight: 36.0)
+            Divider()
+            
+            Spacer()
+            Button("button") {
+              
+            }
+            Spacer()
+          }
+          .ignoresSafeArea(.all, edges: .top)
+          .multilineTextAlignment(.leading)
         }
-      } detail: {
-        VStack {
-          Text("title area")
-            .frame(maxWidth: .infinity, minHeight: 38.0)
-          Spacer()
-          Text("content")
-            .frame(maxWidth: .infinity, alignment: .leading)
-          Spacer()
-        }
-        .ignoresSafeArea(.all, edges: .top)
-        .multilineTextAlignment(.leading)
       }
-      .border(.red, width: 0)
+      .onChange(of: geometry.size) { oldValue, newValue in
+        self.viewSize = newValue
+      }
     }
+    .frame(minWidth: 520)
   }
 }
 
