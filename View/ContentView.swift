@@ -15,10 +15,7 @@ struct ContentView: View {
     GeometryReader { geometry in
       VStack(spacing: 0) {
         NavigationSplitView {
-          HStack {
-            Text("navigation")
-              .frame(maxWidth: .infinity, maxHeight: .infinity)
-          }
+          SidebarView()
         } detail: {
           VStack(spacing: 0) {
             TitleView(viewSize: $viewSize, siteURL: $siteURL)
@@ -31,7 +28,7 @@ struct ContentView: View {
             }
             Spacer()
           }
-          .ignoresSafeArea(.all, edges: .top)
+          .ignoresSafeArea(.all, edges: .all)
           .multilineTextAlignment(.leading)
         }
       }
