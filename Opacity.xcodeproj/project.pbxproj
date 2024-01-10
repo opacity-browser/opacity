@@ -18,6 +18,7 @@
 		A188C94C2B4CFDCB00B39BC8 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C94B2B4CFDCB00B39BC8 /* SidebarView.swift */; };
 		A188C94E2B4CFDDC00B39BC8 /* BookmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C94D2B4CFDDC00B39BC8 /* BookmarkView.swift */; };
 		A188C9512B4D3D6000B39BC8 /* DisclosureGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9502B4D3D6000B39BC8 /* DisclosureGroupView.swift */; };
+		A188C9562B4E62EA00B39BC8 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9552B4E62EA00B39BC8 /* TabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		A188C94B2B4CFDCB00B39BC8 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		A188C94D2B4CFDDC00B39BC8 /* BookmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkView.swift; sourceTree = "<group>"; };
 		A188C9502B4D3D6000B39BC8 /* DisclosureGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureGroupView.swift; sourceTree = "<group>"; };
+		A188C9552B4E62EA00B39BC8 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				A188C9482B4ACECD00B39BC8 /* TItleView.swift */,
 				A188C94B2B4CFDCB00B39BC8 /* SidebarView.swift */,
 				A188C94D2B4CFDDC00B39BC8 /* BookmarkView.swift */,
+				A188C9552B4E62EA00B39BC8 /* TabView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A188C9562B4E62EA00B39BC8 /* TabView.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
 				A188C94C2B4CFDCB00B39BC8 /* SidebarView.swift in Sources */,

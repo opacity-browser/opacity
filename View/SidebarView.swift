@@ -10,15 +10,20 @@ import SwiftUI
 struct SidebarView: View {
   var body: some View {
     VStack(spacing: 0) {
-      VStack { }.frame(maxHeight: 36)
+      VStack { }.frame(maxWidth: .infinity, maxHeight: 36)
+      
       Divider()
-      HStack {
-        Image(systemName: "bookmark.fill")
-          .foregroundColor(.accentColor)
-          .padding(.leading, 12)
-        Spacer()
+      
+      VStack {
+        HStack {
+          Image(systemName: "bookmark.fill")
+            .foregroundColor(.accentColor)
+            .padding(.leading, 12)
+          Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: 26, alignment: .leading)
       }
-      .frame(maxHeight: 26, alignment: .leading)
+      
       Divider()
       BookmarkView()
         .padding(.top, 10)
