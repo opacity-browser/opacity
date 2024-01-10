@@ -65,13 +65,14 @@ struct ContentView: View {
             Divider()
             
             // webview area
-            Spacer()
             
-            Button("button") {
-              
+            HStack(spacing: 0) {
+              ForEach(0..<3){ index in
+                WebviewView(isAcitive: index == 0, baseURL: "http://naver.com")
+              }
             }
             
-            Spacer()
+            
           }
           .ignoresSafeArea(.container, edges: .top)
           .multilineTextAlignment(.leading)

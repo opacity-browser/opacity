@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-final class Tab: Identifiable {
+final class Tab: ObservableObject {
   let id = UUID()
-  var title: String
-  var webURL: String
+  let webURL: String
+  @Published var title: String
   
   init(title: String = "New Tab", webURL: String) {
     self.title = title
