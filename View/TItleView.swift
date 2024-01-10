@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TitleView: View {
+  @Environment(\.colorScheme) var colorScheme
   @Binding var viewSize: CGSize
   @Binding var siteURL: String
   @FocusState private var textFieldFocused: Bool
@@ -52,11 +53,10 @@ struct TitleView: View {
             .padding(.bottom, 4)
             .padding(.leading, 19)
             .padding(.trailing, 35)
-            .background(.white)
+            .background(colorScheme == .dark ? .gray.opacity(0.2) : .white)
             .clipShape(RoundedRectangle(cornerRadius: 6))
             .font(.system(size: 12))
             .fontWeight(.regular)
-            .foregroundColor(.black.opacity(0.7))
             Image(systemName: "goforward")
               .padding(.top, 1)
               .padding(.leading, 5)
@@ -87,7 +87,7 @@ struct TitleView: View {
               .padding(.trailing, 5)
               .font(.system(size: 12))
               .fontWeight(.regular)
-              .foregroundColor(.black.opacity(0.7))
+              .opacity(0.7)
               .lineLimit(1)
               .truncationMode(.tail)
             Image(systemName: "goforward")
@@ -157,6 +157,6 @@ struct TitleView: View {
           }
         }
       })
-    }
+    }.colorScheme(.dark)
   }
 }

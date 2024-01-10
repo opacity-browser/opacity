@@ -15,17 +15,19 @@ struct BookmarkView: View {
           HStack(spacing: 0) {
             Image("icon-16")
             Text("Bookmark")
-              .padding(.vertical, 2)
+              .padding(.vertical, 2.5)
               .padding(.leading, 5)
           }
         }, content: {
           VStack(spacing: 0) {
             DisclosureGroupView(title: {
               HStack(spacing: 0) {
-                Image(systemName: "folder")
+                Image(systemName: "folder.fill")
+                  .opacity(0.6)
+                  .font(.system(size: 12))
                 Text("Bookmark")
-                  .padding(.vertical, 2)
-                  .padding(.leading, 5)
+                  .padding(.vertical, 2.2)
+                  .padding(.leading, 4)
               }
             }, content: {
               VStack(spacing: 0) {
@@ -33,7 +35,7 @@ struct BookmarkView: View {
                   Image(systemName: "bookmark.circle")
                   Text("Apple")
                     .padding(.leading, 4)
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 3.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 35)
@@ -42,7 +44,7 @@ struct BookmarkView: View {
                   Image(systemName: "bookmark.circle")
                   Text("Microsoft")
                     .padding(.leading, 4)
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 3.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 35)
@@ -52,10 +54,12 @@ struct BookmarkView: View {
             
             DisclosureGroupView(title: {
               HStack(spacing: 0) {
-                Image(systemName: "folder")
+                Image(systemName: "folder.fill")
+                  .opacity(0.6)
+                  .font(.system(size: 12))
                 Text("Bookmark")
-                  .padding(.vertical, 2)
-                  .padding(.leading, 5)
+                  .padding(.vertical, 2.2)
+                  .padding(.leading, 4)
               }
             }, content: {
               VStack(spacing: 0) {
@@ -63,7 +67,7 @@ struct BookmarkView: View {
                   Image(systemName: "bookmark.circle")
                   Text("Apple")
                     .padding(.leading, 4)
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 3.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 35)
@@ -72,7 +76,7 @@ struct BookmarkView: View {
                   Image(systemName: "bookmark.circle")
                   Text("Microsoft")
                     .padding(.leading, 4)
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 3.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 35)
@@ -84,7 +88,7 @@ struct BookmarkView: View {
               Image(systemName: "bookmark.circle")
               Text("Apple")
                 .padding(.leading, 4)
-                .padding(.vertical, 3)
+                .padding(.vertical, 3.5)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 35)
@@ -93,7 +97,7 @@ struct BookmarkView: View {
               Image(systemName: "bookmark.circle")
               Text("Microsoft")
                 .padding(.leading, 4)
-                .padding(.vertical, 3)
+                .padding(.vertical, 3.5)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 35)
@@ -102,7 +106,7 @@ struct BookmarkView: View {
               Image(systemName: "bookmark.circle")
               Text("Alphabet")
                 .padding(.leading, 4)
-                .padding(.vertical, 3)
+                .padding(.vertical, 3.5)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 35)
@@ -111,7 +115,7 @@ struct BookmarkView: View {
               Image(systemName: "bookmark.circle")
               Text("Amazon")
                 .padding(.leading, 4)
-                .padding(.vertical, 3)
+                .padding(.vertical, 3.5)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 35)
