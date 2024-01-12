@@ -98,26 +98,17 @@ struct Webview: NSViewRepresentable {
   }
       
   func makeNSView(context: Context) -> WKWebView {
-    print("A")
-    if let webview = WebviewManager.shared.getWebview(id: tab.id) {
-      print("B")
-//      webview.load(URLRequest(url: URL(string: tab.webURL)!))
-      return webview
-    } else {
-      print("C")
-      let prefs = WKWebpagePreferences()
-      prefs.allowsContentJavaScript = true
-      let config = WKWebViewConfiguration()
-      config.defaultWebpagePreferences = prefs
-      
-      let newWebview = WKWebView(frame: .zero, configuration: config)
-      newWebview.navigationDelegate = context.coordinator
-      newWebview.uiDelegate = context.coordinator
-      newWebview.allowsBackForwardNavigationGestures = true
-      WebviewManager.shared.setWebview(id: tab.id, webview: newWebview)
-      newWebview.load(URLRequest(url: URL(string: tab.webURL)!))
-      return newWebview
-    }
+    let prefs = WKWebpagePreferences()
+    prefs.allowsContentJavaScript = true
+    let config = WKWebViewConfiguration()
+    config.defaultWebpagePreferences = prefs
+    
+    let newWebview = WKWebView(frame: .zero, configuration: config)
+    newWebview.navigationDelegate = context.coordinator
+    newWebview.uiDelegate = context.coordinator
+    newWebview.allowsBackForwardNavigationGestures = true
+    newWebview.load(URLRequest(url: URL(string: tab.webURL)!))
+    return newWebview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
