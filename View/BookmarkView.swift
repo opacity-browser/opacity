@@ -11,7 +11,7 @@ struct BookmarkView: View {
   var body: some View {
     VStack(spacing: 0) {
       ForEach (0..<1) { i in
-        DisclosureGroupView(title: {
+        ExpandList(title: {
           HStack(spacing: 0) {
             Image("icon-16")
             Text("Bookmark")
@@ -20,7 +20,7 @@ struct BookmarkView: View {
           }
         }, content: {
           VStack(spacing: 0) {
-            DisclosureGroupView(title: {
+            ExpandList(title: {
               HStack(spacing: 0) {
                 Image(systemName: "folder.fill")
                   .opacity(0.6)
@@ -52,7 +52,7 @@ struct BookmarkView: View {
             })
             .padding(.leading, 12)
             
-            DisclosureGroupView(title: {
+            ExpandList(title: {
               HStack(spacing: 0) {
                 Image(systemName: "folder.fill")
                   .opacity(0.6)

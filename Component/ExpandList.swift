@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DisclosureGroupView<Title: View, Content: View>: View {
+struct ExpandList<Title: View, Content: View>: View {
   @State private var isExpanded: Bool = true
   let title: () -> Title
   let content: () -> Content

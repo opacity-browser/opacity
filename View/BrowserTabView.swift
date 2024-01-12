@@ -1,16 +1,15 @@
 //
-//  TabView.swift
+//  BrowserTabView.swift
 //  Opacity
 //
-//  Created by Falsy on 1/10/24.
+//  Created by Falsy on 1/11/24.
 //
 
 import SwiftUI
 
-struct TabView: View {
-  var title: String
+struct BrowserTabView: View {
+  @Binding var title: String
   var isActive: Bool
-  var onClick: ()-> Void
   var onClose: ()-> Void
   
   @State private var showCloseButton: Bool = false
@@ -33,25 +32,24 @@ struct TabView: View {
         .padding(.leading, 10)
         
         Text(title)
-          .frame(minWidth: 20, maxWidth: 80, alignment: .leading)
+          .frame(minWidth: 100, maxWidth: 160, alignment: .leading)
           .font(.system(size: 12))
           .padding(.trailing, 5)
           .padding(.leading, 15)
-        
       }
         .frame(maxHeight: 26, alignment: .leading)
+        .padding(.top, isActive ? 2 : 0)
       if isActive {
-        Divider()
-          .border(.pointBlue)
+        Rectangle()
+          .fill(.pointBlue)
+          .frame(height: 2)
           .offset(y: 1)
       }
     }
-    .frame(maxWidth: 120, maxHeight: 26, alignment: .leading)
-    .onTapGesture {
-      onClick()
-    }
+    .frame(maxWidth: 160, maxHeight: 26, alignment: .leading)
     .onHover { isHover in
       showCloseButton = isHover
     }
   }
 }
+

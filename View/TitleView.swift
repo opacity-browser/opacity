@@ -10,7 +10,18 @@ import SwiftUI
 struct TitleView: View {
   @Environment(\.colorScheme) var colorScheme
   @Binding var viewSize: CGSize
-  @Binding var siteURL: String
+//  @Binding var tab: Tab
+//  @Binding var webURL: String
+//  @Binding var inputURL: String
+//  @Binding var viewURL: String
+//  @Binding var goBack: Bool
+//  @Binding var goForward: Bool
+//  @Binding var goToPage: Bool
+  
+  @Binding var tab: Tab
+//  @Binding var activeTabIndex: Int
+  
+  
   @FocusState private var textFieldFocused: Bool
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
@@ -31,23 +42,35 @@ struct TitleView: View {
             .padding(.trailing, 5)
             .foregroundColor(.gray.opacity(0.7))
             .font(.system(size: 14))
+            .onTapGesture {
+              tab.goBack = true
+            }
           
           Image(systemName: "chevron.forward")
             .padding(.leading, 5)
             .padding(.trailing, 10)
             .foregroundColor(.gray.opacity(0.7))
             .font(.system(size: 14))
+            .onTapGesture {
+              tab.goForward = true
+            }
           
           if isEditing {
             ZStack(alignment: .trailing) {
-              TextField("", text: $siteURL, onEditingChanged: { isEdit in
+              TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                 if !isEdit {
                   isEditing = false
                 }
               })
               .focused($textFieldFocused)
               .onSubmit {
+                var uriString = tab.inputURL
+                if !uriString.contains("://") {
+                  uriString = "https://\(uriString)"
+                }
                 
+                tab.webURL = uriString
+                tab.goToPage = true
               }
               .textFieldStyle(PlainTextFieldStyle())
               .padding(.top, 4)
@@ -80,7 +103,7 @@ struct TitleView: View {
             .frame(maxWidth: 300)
           } else {
             HStack {
-              Text(siteURL)
+              Text(tab.viewURL)
                 .frame(maxWidth: 300, alignment: .leading)
                 .padding(.top, 5)
                 .padding(.bottom, 5)
