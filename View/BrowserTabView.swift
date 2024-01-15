@@ -17,6 +17,13 @@ struct BrowserTabView: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
+        Text(title)
+          .frame(minWidth: 100, maxWidth: 160, alignment: .leading)
+          .font(.system(size: 13))
+          .padding(.trailing, 5)
+          .padding(.leading, 15)
+          .background(.red)
+        
         HStack(spacing: 0) {
           if showCloseButton {
             Button {
@@ -30,26 +37,15 @@ struct BrowserTabView: View {
         }
         .frame(width: 10)
         .padding(.leading, 10)
-        
-        Text(title)
-          .frame(minWidth: 100, maxWidth: 160, alignment: .leading)
-          .font(.system(size: 12))
-          .padding(.trailing, 5)
-          .padding(.leading, 15)
       }
-        .frame(maxHeight: 26, alignment: .leading)
-        .padding(.top, isActive ? 2 : 0)
-      if isActive {
-        Rectangle()
-          .fill(.pointBlue)
-          .frame(height: 2)
-          .offset(y: 1)
-      }
+      .frame(maxHeight: 24, alignment: .leading)
+      .padding(.top, 4)
     }
-    .frame(maxWidth: 160, maxHeight: 26, alignment: .leading)
+    .frame(maxWidth: 160, maxHeight: 28, alignment: .leading)
     .onHover { isHover in
       showCloseButton = isHover
     }
+    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
   }
 }
 

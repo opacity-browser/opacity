@@ -10,9 +10,9 @@ import SwiftUI
 struct SidebarView: View {
   var body: some View {
     VStack(spacing: 0) {
-      VStack { }.frame(maxWidth: .infinity, maxHeight: 38)
+      HStack { }.frame(maxWidth: .infinity, maxHeight: 38)
       
-      Divider()
+//      Divider()
       
       VStack {
         HStack {
@@ -29,10 +29,6 @@ struct SidebarView: View {
         .padding(.top, 10)
       Spacer()
     }
-    .ignoresSafeArea(.all, edges: .all)
+    .ignoresSafeArea(.container, edges: .top)
   }
-}
-
-#Preview {
-    SidebarView()
 }
