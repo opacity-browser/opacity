@@ -10,7 +10,7 @@ import SwiftUI
 struct BrowserTabView: View {
   @Binding var title: String
   var isActive: Bool
-  var onClose: ()-> Void
+  var onClose: () -> Void
   
   @State private var showCloseButton: Bool = false
   

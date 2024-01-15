@@ -169,7 +169,7 @@ struct TitleView: View {
           
           VStack{ }.frame(maxWidth: 0)
         }
-        .frame(height: 36)
+        .frame(height: 38)
         .onChange(of: geometry.size, { oldValue, newValue in
           DispatchQueue.main.async {
             let isActionPeriod = viewSize.width - geometry.size.width <= 140

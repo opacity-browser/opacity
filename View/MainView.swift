@@ -9,9 +9,8 @@ import SwiftUI
 
 struct MainView: View {
   @Environment(\.colorScheme) var colorScheme
-//  @ObservedObject var browser: Browser = Browser()
-  @State var tabs: [Tab] = []
   @Binding var viewSize: CGSize
+  @State var tabs: [Tab] = []
   @State private var isAddHover: Bool = false
   @State private var activeTabIndex: Int = -1
   
@@ -25,7 +24,7 @@ struct MainView: View {
             tab: $tabs[activeTabIndex]
           )
         }
-        .frame(maxWidth: .infinity,  maxHeight: 36.0)
+        .frame(maxWidth: .infinity,  maxHeight: 38.0)
         .background(colorScheme == .dark ? .black.opacity(0.1) : .gray.opacity(0.5))
       }
       
@@ -52,22 +51,25 @@ struct MainView: View {
         }
         
         VStack {
-          Image(systemName: "plus")
-            .font(.system(size: 11))
-            .frame(maxWidth: 19, maxHeight: 19)
-            .background(isAddHover ? .gray.opacity(0.1) : .gray.opacity(0))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
-        }
-        .padding(.leading, 5)
-        .onHover { isHover in
-          withAnimation {
-            isAddHover = isHover
+          Button(action: {
+            let newTab = Tab(webURL: DEFAULT_URL)
+            tabs.append(newTab)
+            activeTabIndex = tabs.count - 1
+          }, label: {
+            Image(systemName: "plus")
+              .font(.system(size: 11))
+              .frame(maxWidth: 19, maxHeight: 19)
+              .background(isAddHover ? .gray.opacity(0.1) : .gray.opacity(0))
+              .clipShape(RoundedRectangle(cornerRadius: 5))
+          })
+          .padding(.leading, 5)
+          .onHover { isHover in
+            withAnimation {
+              isAddHover = isHover
+            }
           }
-        }
-        .onTapGesture {
-          let newTab = Tab(webURL: DEFAULT_URL)
-          tabs.append(newTab)
-          activeTabIndex = tabs.count - 1
+          .buttonStyle(.plain)
+          .keyboardShortcut(KeyEquivalent("t"), modifiers: .command)
         }
         
         Spacer()
@@ -84,23 +86,6 @@ struct MainView: View {
           }
         }
       }
-      
-//      if browser.tabs.indices.contains(activeTabIndex) {
-//        Webview(tab: $browser.tabs[activeTabIndex])
-//      }
-      
-//      switch browser.activeTabIndex {
-//        case 0:
-//          Webview(tab: $browser.tabs[0])
-//        case 1:
-//          Webview(tab: $browser.tabs[1])
-//        case 2:
-//          Webview(tab: $browser.tabs[2])
-//        default:
-//          Spacer()
-//      }
-      
-      
     }
     .ignoresSafeArea(.container, edges: .top)
     .multilineTextAlignment(.leading)

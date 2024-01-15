@@ -80,6 +80,7 @@ struct ContentView: View {
       VStack(spacing: 0) {
         NavigationSplitView {
           SidebarView()
+            .navigationSplitViewColumnWidth(min: 240, ideal: 240)
         } detail: {
           MainView(viewSize: $viewSize)
         }

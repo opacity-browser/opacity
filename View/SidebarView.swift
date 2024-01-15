@@ -10,7 +10,7 @@ import SwiftUI
 struct SidebarView: View {
   var body: some View {
     VStack(spacing: 0) {
-      VStack { }.frame(maxWidth: .infinity, maxHeight: 36)
+      VStack { }.frame(maxWidth: .infinity, maxHeight: 38)
       
       Divider()
       

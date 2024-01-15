@@ -112,42 +112,42 @@ struct Webview: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-//        print("############# 웹뷰 업데이트 호출: update")
-////        print("webview url: \(String(describing: webView.url))")
-////        print("webview site url: \(webURL)")
-////        print("input url: \(inputURL )")
-//      
-//      var nowWebviewURL: String = ""
-//      var nowWebviewStringURL: String = ""
-//      if let stringURL = webView.url {
-//          nowWebviewStringURL = String(describing: stringURL)
-//          nowWebviewURL = String(describing: stringURL)
-//          nowWebviewURL = StringURL.shortURL(url: nowWebviewURL)
-//      }
-//      
-//    let stateURL: String = StringURL.shortURL(url: tab.webURL)
-//      
-////        print("nowWebviewURL: \(nowWebviewURL)")
-////        print("stateURL: \(stateURL)")
-//      
-//      if(stateURL == nowWebviewURL) {
-//        if StringURL.shortURL(url: tab.viewURL) != stateURL {
-//            tab.viewURL = stateURL
-//          }
-//          return
-//      }
-//      
-//      if nowWebviewStringURL != "" {
-//        if tab.goToPage {
-//          webView.load(URLRequest(url: URL(string: tab.webURL)!))
-//          DispatchQueue.main.async {
-//            tab.goToPage = false
-//          }
-//        } else {
-//          webView.load(URLRequest(url: URL(string: nowWebviewStringURL)!))
-//        }
-//      } else {
-//        webView.load(URLRequest(url: URL(string: tab.webURL)!))
-//      }
+    print("############# 웹뷰 업데이트 호출: update")
+//        print("webview url: \(String(describing: webView.url))")
+//        print("webview site url: \(webURL)")
+//        print("input url: \(inputURL )")
+      
+      var nowWebviewURL: String = ""
+      var nowWebviewStringURL: String = ""
+      if let stringURL = webView.url {
+          nowWebviewStringURL = String(describing: stringURL)
+          nowWebviewURL = String(describing: stringURL)
+          nowWebviewURL = StringURL.shortURL(url: nowWebviewURL)
+      }
+      
+    let stateURL: String = StringURL.shortURL(url: tab.webURL)
+      
+//        print("nowWebviewURL: \(nowWebviewURL)")
+//        print("stateURL: \(stateURL)")
+      
+      if(stateURL == nowWebviewURL) {
+        if StringURL.shortURL(url: tab.viewURL) != stateURL {
+            tab.viewURL = stateURL
+          }
+          return
+      }
+      
+      if nowWebviewStringURL != "" {
+        if tab.goToPage {
+          webView.load(URLRequest(url: URL(string: tab.webURL)!))
+          DispatchQueue.main.async {
+            tab.goToPage = false
+          }
+        } else {
+          webView.load(URLRequest(url: URL(string: nowWebviewStringURL)!))
+        }
+      } else {
+        webView.load(URLRequest(url: URL(string: tab.webURL)!))
+      }
   }
 }
