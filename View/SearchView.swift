@@ -17,7 +17,7 @@ struct SearchView: View {
   @State private var isMoreHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
-//  let inputHeight: Double = 24
+  let inputHeight: Double = 28
   
   var body: some View {
     HStack(spacing: 0) {
@@ -60,7 +60,7 @@ struct SearchView: View {
               isEditing = false
             }
           })
-//          .frame(maxHeight: inputHeight)
+          .frame(maxHeight: inputHeight)
           .focused($textFieldFocused)
           .onSubmit {
             var uriString = tab.inputURL

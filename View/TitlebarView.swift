@@ -27,7 +27,7 @@ struct TitlebarView: View {
               BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex, index: index) {
                 print("close")
                 tabs.remove(at: index)
-                activeTabIndex = tabs.count - 1
+                activeTabIndex = activeTabIndex > 0 ? activeTabIndex - 1 : tabs.count - 1
               }
               .contentShape(Rectangle())
 //              .background(.red.opacity(0.2))
@@ -49,7 +49,6 @@ struct TitlebarView: View {
             .background(isAddHover ? .gray.opacity(0.1) : .gray.opacity(0))
             .clipShape(RoundedRectangle(cornerRadius: 5))
         }
-        .keyboardShortcut(KeyEquivalent("t"), modifiers: .command)
         .padding(.top, 1)
         .padding(.leading, 10)
         .buttonStyle(.plain)
