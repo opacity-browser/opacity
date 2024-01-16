@@ -13,14 +13,13 @@ struct ContentView: View {
       VStack(spacing: 0) {
         // tab bar area
         TitlebarView(tabs: $tabs, activeTabIndex: $activeTabIndex, titleSafeWidth: $titleSafeWidth)
-          .background(.blue)
           .frame(maxWidth: .infinity, maxHeight: 38)
         
-        Divider()
+//        Divider()
         
         NavigationSplitView {
           SidebarView()
-            .navigationSplitViewColumnWidth(min: 240, ideal: 240)
+            .navigationSplitViewColumnWidth(min: 180, ideal: 180)
         } detail: {
           MainView(tabs: $tabs, activeTabIndex: $activeTabIndex)
         }
