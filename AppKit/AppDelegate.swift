@@ -20,21 +20,24 @@ import SwiftUI
 //  }
 //}
 
-class AppDelegate: NSObject, NSApplicationDelegate {
-  var window: NSWindow!
-  var browser: Browser = Browser()
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+  var windows: [NSWindow] = []
+  var browsers: [Int:Browser] = [:]
 
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
-    let windowRect = NSRect(x: 0, y: 0, width: 1024, height: 800)
-    window = NSWindow(contentRect: windowRect,
-                      styleMask: [.titled, .closable, .miniaturizable, .resizable],
-                      backing: .buffered, defer: false)
+    let windowRect = NSRect(x: 0, y: 0, width: 1200, height: 800)
+    let newWindow = NSWindow(contentRect: windowRect,
+                             styleMask: [.titled, .closable, .miniaturizable, .resizable],
+                             backing: .buffered, defer: false)
+    
+    let newWindowNo = newWindow.windowNumber
+    self.browsers[newWindowNo] = Browser()
 
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
       ContentView()
-        .environmentObject(self.browser)
+        .environmentObject(self.browsers[newWindowNo]!)
 //        .onAppear {
 //          if let windowSize = WindowSizeManager.load() {
 //            NSApplication.shared.windows.forEach({ NSWindow in
@@ -47,43 +50,62 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        }
     }
     
-    let windowController = NSWindowController(window: window)
+    let windowController = NSWindowController(window: newWindow)
 
-    window.contentView = NSHostingController(rootView: contentView).view
-    window.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
-    window.titleVisibility = .hidden // 타이틀을 숨깁니다
-    window.styleMask.insert(.fullSizeContentView)
+    newWindow.contentView = NSHostingController(rootView: contentView).view
+    newWindow.center()
+    newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
+    newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    newWindow.styleMask.insert(.fullSizeContentView)
 
-    // 윈도우 타이틀 및 표시
-//        window.title = "Opacity"
-    window.makeKeyAndOrderFront(nil)
-//    window.delegate = self
+    newWindow.makeKeyAndOrderFront(nil)
+    newWindow.delegate = self
     windowController.showWindow(self)
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
-    let mainMenu = NSMenu() // 메인 메뉴 생성
-
-    // 파일 메뉴 생성
-    let fileMenuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
-    mainMenu.addItem(fileMenuItem)
-
-    let fileMenu = NSMenu(title: "File")
-    fileMenuItem.submenu = fileMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
-
-    // 메뉴 아이템 추가
-    fileMenu.addItem(NSMenuItem(title: "New", action: #selector(newDocument), keyEquivalent: "n"))
-
-    // 메인 메뉴를 애플리케이션에 설정
-    NSApplication.shared.mainMenu = mainMenu
+    let windowNo = createWindow()
     
-//    createWindow()
+    DispatchQueue.main.async {
+      let mainMenu = NSMenu() // 메인 메뉴 생성
+      
+      // 파일 메뉴 생성
+      let fileMenuItem = NSMenuItem(title: "Opacity", action: nil, keyEquivalent: "")
+      mainMenu.addItem(fileMenuItem)
+      
+      let fileMenu = NSMenu(title: "Opacity")
+      
+      // 메뉴 아이템 추가
+      fileMenu.addItem(NSMenuItem(title: "About Opacity", action: nil, keyEquivalent: ""))
+      fileMenuItem.submenu = fileMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
+      
+      let menuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
+      let subMenu = NSMenu(title: "File")
+      subMenu.addItem(withTitle: "New Tab", action: #selector(self.newTab), keyEquivalent: "t")
+      subMenu.addItem(withTitle: "New Window", action: #selector(self.newWindow), keyEquivalent: "n")
+      
+      menuItem.submenu = subMenu
+      
+      mainMenu.addItem(menuItem)
+      
+      // 메인 메뉴를 애플리케이션에 설정
+      NSApplication.shared.mainMenu = mainMenu
+    }
   }
   
-  @objc func newDocument() {
-      // "New" 메뉴 아이템이 선택될 때 실행될 동작을 여기에 작성합니다.
-    print("KeyDown Action")
+  @objc func newWindow() {
     createWindow()
+  }
+  
+  @objc func newTab(sender: NSMenuItem) {
+    print(sender)
+    if let windowNo = sender.representedObject as? Int {
+      print(windowNo)
+    }
+//    let newTab = Tab(webURL: DEFAULT_URL)
+//    browsers[sender]
+//    browser.tabs.append(newTab)
+//    browser.index = browser.tabs.count - 1
   }
   
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

@@ -25,11 +25,8 @@ struct TitlebarView: View {
           if tabs.count > 0 {
             ForEach(tabs.indices, id: \.self) { index in
               BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex) {
-                print("close")
-                print(index)
-                print(tabs[index].id)
                 tabs.remove(at: index)
-                activeTabIndex = activeTabIndex > 0 ? activeTabIndex - 1 : tabs.count - 1
+                activeTabIndex = tabs.count > index ? index : tabs.count - 1
               }
               .contentShape(Rectangle())
 //              .background(.red.opacity(0.2))
