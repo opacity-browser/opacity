@@ -17,7 +17,7 @@ struct SearchView: View {
   @State private var isMoreHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
-  let inputHeight: Double = 28
+  let inputHeight: Double = 29
   
   var body: some View {
     HStack(spacing: 0) {
@@ -54,13 +54,22 @@ struct SearchView: View {
       Spacer()
       
       if isEditing {
-        ZStack(alignment: .trailing) {
+        HStack(spacing: 0) {
           TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
             if !isEdit {
               isEditing = false
             }
           })
           .frame(maxHeight: inputHeight)
+          .textFieldStyle(PlainTextFieldStyle())
+          .font(.system(size: 13))
+          .fontWeight(.regular)
+          .padding(.top, 4)
+          .padding(.bottom, 4)
+          .padding(.leading, 19)
+          .padding(.trailing, 34)
+          .background(colorScheme == .dark ? Color("MainBlack") : .white)
+//          .foregroundColor(colorScheme == .dark ? .white : .black)
           .focused($textFieldFocused)
           .onSubmit {
             var uriString = tab.inputURL
@@ -71,28 +80,20 @@ struct SearchView: View {
             tab.webURL = uriString
             tab.goToPage = true
           }
-          .textFieldStyle(PlainTextFieldStyle())
-          .padding(.top, 4)
-          .padding(.bottom, 4)
-          .padding(.leading, 19)
-          .padding(.trailing, 35)
-          .background(colorScheme == .dark ? .gray.opacity(0.2) : .white)
           .clipShape(RoundedRectangle(cornerRadius: 8))
-          .font(.system(size: 13))
-          .fontWeight(.regular)
         }
         .padding(1)
-        .background(.gray.opacity(0.05))
+        .background(Color("PointColor"))
         .clipShape(RoundedRectangle(cornerRadius: 8))
       } else {
         HStack {
           Text(tab.viewURL)
 //              .frame(maxWidth: 300, alignment: .leading)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .padding(.top, 5)
             .padding(.bottom, 5)
             .padding(.leading, 20)
-            .padding(.trailing, 5)
+            .padding(.trailing, 35)
             .font(.system(size: 13))
             .fontWeight(.regular)
             .opacity(0.7)
@@ -103,10 +104,10 @@ struct SearchView: View {
         .background(isSearchHover ? .gray.opacity(0.2) : .gray.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .onTapGesture {
-          withAnimation {
+//          withAnimation {
             isEditing = true
             textFieldFocused = true
-          }
+//          }
         }
         .onHover { hovering in
           withAnimation {
@@ -138,7 +139,7 @@ struct SearchView: View {
       
 //      VStack{ }.frame(maxWidth: 10)
     }
-    .frame(height: 28)
+    .frame(height: 29)
 //    .background(.red.opacity(0.2))
     .offset(y: -2)
   }

@@ -9,4 +9,5 @@ import SwiftUI
 
 final class Browser: ObservableObject {
   @Published var tabs: [Tab] = []
+  @Published var index: Int = -1
 }

@@ -12,9 +12,17 @@ struct OpacityApp: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   
   var body: some Scene {
-    Settings {
-
+//    Settings {
+//      EmptyView()
+//    }
+    WindowGroup {
+      ContentView()
+        .environmentObject(Browser())
+//        .onAppear {
+//          NSWindow.allowsAutomaticWindowTabbing = false
+//        }
     }
+    .windowStyle(HiddenTitleBarWindowStyle())
   }
   
 //  @State var tabs: [Tab] = []

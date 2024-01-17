@@ -24,8 +24,10 @@ struct TitlebarView: View {
         HStack(spacing: 0) {
           if tabs.count > 0 {
             ForEach(tabs.indices, id: \.self) { index in
-              BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex, index: index) {
+              BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex) {
                 print("close")
+                print(index)
+                print(tabs[index].id)
                 tabs.remove(at: index)
                 activeTabIndex = activeTabIndex > 0 ? activeTabIndex - 1 : tabs.count - 1
               }
@@ -33,6 +35,7 @@ struct TitlebarView: View {
 //              .background(.red.opacity(0.2))
               .onTapGesture {
                 activeTabIndex = index
+                print(tabs[activeTabIndex].id)
               }
             }
           }
@@ -49,7 +52,7 @@ struct TitlebarView: View {
             .background(isAddHover ? .gray.opacity(0.1) : .gray.opacity(0))
             .clipShape(RoundedRectangle(cornerRadius: 5))
         }
-        .padding(.top, 1)
+        .padding(.top, 2)
         .padding(.leading, 10)
         .buttonStyle(.plain)
 //        .offset(x: CGFloat(tabs.count * -15))
@@ -67,11 +70,11 @@ struct TitlebarView: View {
       
       Divider()
         .frame(maxWidth: .infinity, maxHeight: 2)
-        .border(Color(red: 30/255, green: 30/255, blue: 30/255))
+        .border(Color("MainBlack"))
         .offset(y: 1)
       Divider()
-        .frame(maxWidth: .infinity, maxHeight: 1)
-        .border(Color(red: 30/255, green: 30/255, blue: 30/255))
+        .frame(maxWidth: .infinity, maxHeight: 2)
+        .border(Color("MainBlack"))
         .offset(y: 1)
     }
     
@@ -79,8 +82,7 @@ struct TitlebarView: View {
     if(tabs.count > 0) {
       SearchView(tab: $tabs[activeTabIndex])
         .frame(maxWidth: .infinity,  maxHeight: 36.0)
-        .background(Color(red: 30/255, green: 30/255, blue: 30/255))
-//          .background(.red)
+        .background(Color("MainBlack"))
     }
   }
 }

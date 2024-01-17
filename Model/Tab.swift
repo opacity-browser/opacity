@@ -9,6 +9,7 @@ import SwiftUI
 
 final class Tab: ObservableObject, Identifiable {
   var id = UUID()
+  
   @Published var webURL: String
   @Published var inputURL: String
   @Published var viewURL: String
@@ -20,11 +21,11 @@ final class Tab: ObservableObject, Identifiable {
   
   
   init(webURL: String = DEFAULT_URL, goToPage: Bool = false, goBack: Bool = false, goForward: Bool = false) {
-      self.webURL = webURL
-      self.inputURL = webURL
-      self.viewURL = StringURL.shortURL(url: webURL)
-      self.goToPage = goToPage
-      self.goBack = goBack
-      self.goForward = goForward
+    self.webURL = webURL
+    self.inputURL = webURL
+    self.viewURL = StringURL.shortURL(url: webURL)
+    self.goToPage = goToPage
+    self.goBack = goBack
+    self.goForward = goForward
   }
 }
