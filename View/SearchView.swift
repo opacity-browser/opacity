@@ -9,7 +9,8 @@ import SwiftUI
 
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
-  @Binding var tab: Tab
+  @Binding var tabs: [Tab]
+  @Binding var activeTabIndex: Int
   
   @FocusState private var textFieldFocused: Bool
   @State private var isEditing: Bool = false
@@ -17,7 +18,7 @@ struct SearchView: View {
   @State private var isMoreHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
-  let inputHeight: Double = 29
+  let inputHeight: Double = 28
   
   var body: some View {
     HStack(spacing: 0) {
@@ -25,28 +26,31 @@ struct SearchView: View {
       VStack(spacing: 0) { }.frame(width: 13)
       
       Image(systemName: "chevron.backward")
-        .padding(.leading, 5)
+        .padding(.leading, 6)
         .padding(.trailing, 12)
-        .foregroundColor(.gray.opacity(0.7))
+        .foregroundColor(Color("Icon"))
         .font(.system(size: 14))
+        .fontWeight(.regular)
         .onTapGesture {
-          tab.goBack = true
+          tabs[activeTabIndex].goBack = true
         }
       
       Image(systemName: "chevron.forward")
         .padding(.leading, 10)
-        .padding(.trailing, 11)
-        .foregroundColor(.gray.opacity(0.7))
+        .padding(.trailing, 10)
+        .foregroundColor(Color("Icon"))
+        .fontWeight(.regular)
         .font(.system(size: 14))
         .onTapGesture {
-          tab.goForward = true
+          tabs[activeTabIndex].goForward = true
         }
       
       Image(systemName: "goforward")
         .padding(.leading, 14)
         .padding(.trailing, 14)
-        .foregroundColor(.gray.opacity(0.7))
+        .foregroundColor(Color("Icon"))
         .font(.system(size: 13.5))
+        .fontWeight(.regular)
         .onTapGesture {
 //          tab.goForward = true
         }
@@ -55,7 +59,7 @@ struct SearchView: View {
       
       if isEditing {
         HStack(spacing: 0) {
-          TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
+          TextField("", text: $tabs[activeTabIndex].inputURL, onEditingChanged: { isEdit in
             if !isEdit {
               isEditing = false
             }
@@ -72,22 +76,22 @@ struct SearchView: View {
 //          .foregroundColor(colorScheme == .dark ? .white : .black)
           .focused($textFieldFocused)
           .onSubmit {
-            var uriString = tab.inputURL
+            var uriString = tabs[activeTabIndex].inputURL
             if !uriString.contains("://") {
               uriString = "https://\(uriString)"
             }
             
-            tab.webURL = uriString
-            tab.goToPage = true
+            tabs[activeTabIndex].webURL = uriString
+            tabs[activeTabIndex].goToPage = true
           }
-          .clipShape(RoundedRectangle(cornerRadius: 8))
+          .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .padding(1)
         .background(Color("PointColor"))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-      } else {
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+      } else if tabs.count > 0 {
         HStack {
-          Text(tab.viewURL)
+          Text(tabs[activeTabIndex].viewURL)
 //              .frame(maxWidth: 300, alignment: .leading)
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .padding(.top, 5)
@@ -102,7 +106,7 @@ struct SearchView: View {
         }
         .frame(alignment: .leading)
         .background(isSearchHover ? .gray.opacity(0.2) : .gray.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .onTapGesture {
 //          withAnimation {
             isEditing = true
@@ -121,9 +125,10 @@ struct SearchView: View {
       VStack(spacing: 0) {
         VStack(spacing: 0) {
           Image(systemName: "ellipsis")
-            .font(.system(size: 14))
             .rotationEffect(.degrees(90))
-            .opacity(0.7)
+            .foregroundColor(Color("Icon"))
+            .font(.system(size: 14))
+            .fontWeight(.regular)
         }
         .frame(maxWidth: 24, maxHeight: 24)
         .background(isMoreHover ? .gray.opacity(0.1) : .gray.opacity(0))
@@ -139,8 +144,8 @@ struct SearchView: View {
       
 //      VStack{ }.frame(maxWidth: 10)
     }
-    .frame(height: 29)
+    .frame(height: 28)
 //    .background(.red.opacity(0.2))
-    .offset(y: -2)
+    .offset(y: -1.5)
   }
 }

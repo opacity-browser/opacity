@@ -12,28 +12,29 @@ struct TitlebarView: View {
   
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
-  @Binding var titleSafeWidth: CGFloat
+  
   @State private var isAddHover: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        //      VStack { }.frame(width: titleSafeWidth).background(.blue)
+
         VStack { }.frame(width: 119)
         
         HStack(spacing: 0) {
-          if tabs.count > 0 {
-            ForEach(tabs.indices, id: \.self) { index in
-              BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex) {
-                tabs.remove(at: index)
-                activeTabIndex = tabs.count > index ? index : tabs.count - 1
+          ForEach(tabs.indices, id: \.self) { index in
+            BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex) {
+              tabs.remove(at: index)
+              activeTabIndex = tabs.count > index ? index : tabs.count - 1
+              if(tabs.count == 0) {
+                NSApplication.shared.keyWindow?.close()
               }
-              .contentShape(Rectangle())
+            }
+            .contentShape(Rectangle())
 //              .background(.red.opacity(0.2))
-              .onTapGesture {
-                activeTabIndex = index
-                print(tabs[activeTabIndex].id)
-              }
+            .onTapGesture {
+              activeTabIndex = index
+              print(tabs[activeTabIndex].id)
             }
           }
         }
@@ -76,10 +77,8 @@ struct TitlebarView: View {
     }
     
     // search area
-    if(tabs.count > 0) {
-      SearchView(tab: $tabs[activeTabIndex])
-        .frame(maxWidth: .infinity,  maxHeight: 36.0)
-        .background(Color("MainBlack"))
-    }
+    SearchView(tabs: $tabs, activeTabIndex: $activeTabIndex )
+      .frame(maxWidth: .infinity,  maxHeight: 37.0)
+      .background(Color("MainBlack"))
   }
 }

@@ -1,20 +1,19 @@
 import SwiftUI
 
 struct ContentView: View {
-//  @State private var viewSize: CGSize = .zero
   @EnvironmentObject var browser: Browser
-//  @State var tabs: [Tab] = []
-//  @State var activeTabIndex: Int = -1
+
   @State var windowWidth: CGFloat = .zero
   @State private var isAddHover: Bool = false
-  @State var titleSafeWidth: CGFloat = .zero
   
   var body: some View {
     GeometryReader { geometry in
       VStack(spacing: 0) {
         // tab bar area
-        TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index, titleSafeWidth: $titleSafeWidth)
-          .frame(maxWidth: .infinity, maxHeight: 38)
+        if browser.tabs.count > 0 {
+          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+            .frame(maxWidth: .infinity, maxHeight: 38)
+        }
         
 //        Divider()
         

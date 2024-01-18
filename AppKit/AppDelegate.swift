@@ -21,8 +21,51 @@ import SwiftUI
 //}
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+  private var isTerminating = false
+  
   var windows: [NSWindow] = []
   var browsers: [Int:Browser] = [:]
+  
+  private func exitWindow() {
+    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
+    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
+
+    let contentView = HStack(spacing: 0) {
+      Text("to quit, press ")
+        .font(.system(size: 30))
+        .bold()
+        .foregroundStyle(.white)
+      Image(systemName: "command")
+        .font(.system(size: 30))
+        .bold()
+        .foregroundStyle(.white)
+      Text("Q again")
+        .font(.system(size: 30))
+        .bold()
+        .foregroundStyle(.white)
+    }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .background(.black.opacity(0.4))
+      .clipShape(RoundedRectangle(cornerRadius: 10))
+    
+    let windowController = NSWindowController(window: exitWindow)
+    exitWindow.contentView = NSHostingController(rootView: contentView).view
+    exitWindow.center()
+    exitWindow.isOpaque = false
+    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
+    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
+    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    exitWindow.styleMask.insert(.fullSizeContentView)
+
+    exitWindow.makeKeyAndOrderFront(nil)
+    windowController.showWindow(self)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+      exitWindow.close()
+      self.isTerminating = false
+    }
+  }
+  
 
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
@@ -64,32 +107,52 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
-    let windowNo = createWindow()
+    createWindow()
     
     DispatchQueue.main.async {
-      let mainMenu = NSMenu() // 메인 메뉴 생성
+      let mainMenu = NSMenu()
       
-      // 파일 메뉴 생성
+      // Opacity 메뉴
       let fileMenuItem = NSMenuItem(title: "Opacity", action: nil, keyEquivalent: "")
-      mainMenu.addItem(fileMenuItem)
-      
       let fileMenu = NSMenu(title: "Opacity")
-      
-      // 메뉴 아이템 추가
       fileMenu.addItem(NSMenuItem(title: "About Opacity", action: nil, keyEquivalent: ""))
+      fileMenu.addItem(NSMenuItem.separator())
+      fileMenu.addItem(withTitle: "Exit Opacity", action: #selector(self.exitApplication), keyEquivalent: "q")
       fileMenuItem.submenu = fileMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
       
+      mainMenu.addItem(fileMenuItem)
+      
+      // File 메뉴
       let menuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
       let subMenu = NSMenu(title: "File")
       subMenu.addItem(withTitle: "New Tab", action: #selector(self.newTab), keyEquivalent: "t")
       subMenu.addItem(withTitle: "New Window", action: #selector(self.newWindow), keyEquivalent: "n")
-      
+      subMenu.addItem(NSMenuItem.separator())
+      subMenu.addItem(withTitle: "Close Tab", action: #selector(self.closeTab), keyEquivalent: "w")
       menuItem.submenu = subMenu
       
       mainMenu.addItem(menuItem)
       
+//      // 단축키에 파라미터 전송 예시
+//      let menuItem3 = NSMenuItem(title: "File2", action: nil, keyEquivalent: "")
+//      let myMenu = NSMenu()
+//      let menuItem2 = NSMenuItem(title: "Click Me", action: #selector(self.menuItemAction(sender:)), keyEquivalent: "")
+//      menuItem2.representedObject = "test"
+//      myMenu.addItem(menuItem2)
+//      menuItem3.submenu = myMenu
+//      mainMenu.addItem(menuItem3)
+      
       // 메인 메뉴를 애플리케이션에 설정
       NSApplication.shared.mainMenu = mainMenu
+    }
+  }
+  
+  @objc func exitApplication() {
+    if self.isTerminating {
+      NSApplication.shared.terminate(self)
+    } else {
+      exitWindow()
+      self.isTerminating = true
     }
   }
   
@@ -97,27 +160,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     createWindow()
   }
   
-  @objc func newTab(sender: NSMenuItem) {
-    print(sender)
-    if let windowNo = sender.representedObject as? Int {
-      print(windowNo)
+  @objc func newTab() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.browsers[windowNumber] {
+        let newTab = Tab(webURL: DEFAULT_URL)
+        target.tabs.append(newTab)
+        target.index = target.tabs.count - 1
+      }
     }
-//    let newTab = Tab(webURL: DEFAULT_URL)
-//    browsers[sender]
-//    browser.tabs.append(newTab)
-//    browser.index = browser.tabs.count - 1
+  }
+  
+  @objc func closeTab() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.browsers[windowNumber] {
+        target.tabs.remove(at: target.index)
+        target.index = target.tabs.count > target.index ? target.index : target.tabs.count - 1
+        if target.tabs.count == 0 {
+          keyWindow.close()
+        }
+      }
+    }
   }
   
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
     if !flag {
-//            window.makeKeyAndOrderFront(self)
-//      createWindow()
+      createWindow()
     }
     return true
   }
-//    // NSWindowDelegate 메서드
-//    func windowWillClose(_ notification: Notification) {
-//        // 윈도우가 닫힐 때 수행할 작업
-//        print("윈도우가 닫힘")
+  
+//  // 단축키에 파라미터 전송 예시
+//  @objc func menuItemAction(sender: NSMenuItem) {
+//    if let data = sender.representedObject as? String {
+//     print("Menu item selected with data: \(data)")
 //    }
+//  }
 }

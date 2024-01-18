@@ -16,7 +16,7 @@ struct MainView: View {
     VStack(spacing: 0) {
       // webview area
       ZStack {
-        if(tabs.count > 0) {
+        if tabs.count > 0 {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, item in
             Webview(tab: $tabs[index]).zIndex(index == activeTabIndex ? Double(tabs.count) : 0)
           }
