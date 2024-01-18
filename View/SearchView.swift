@@ -16,50 +16,85 @@ struct SearchView: View {
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
+  @State private var isBackHover: Bool = false
+  @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
   
   let inputHeight: Double = 28
+  let iconHeight: Double = 26
+  let iconRadius: Double = 6
   
   var body: some View {
     HStack(spacing: 0) {
       
-      VStack(spacing: 0) { }.frame(width: 13)
+      VStack(spacing: 0) { }.frame(width: 10)
       
-      Image(systemName: "chevron.backward")
-        .padding(.leading, 6)
-        .padding(.trailing, 12)
-        .foregroundColor(Color("Icon"))
-        .font(.system(size: 14))
-        .fontWeight(.regular)
-        .onTapGesture {
-          if let webview = tabs[activeTabIndex].webview {
-            webview.goBack()
-          }
+      VStack(spacing: 0) {
+        Image(systemName: "chevron.backward")
+          .foregroundColor(Color("Icon"))
+          .font(.system(size: 14))
+          .fontWeight(.regular)
+      }
+      .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+      .background(isBackHover ? .gray.opacity(0.2) : .gray.opacity(0))
+      .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+      .onHover { hovering in
+        withAnimation {
+          isBackHover = hovering
         }
+      }
+      .onTapGesture {
+        if let webview = tabs[activeTabIndex].webview {
+          webview.goBack()
+        }
+      }
       
-      Image(systemName: "chevron.forward")
-        .padding(.leading, 10)
-        .padding(.trailing, 10)
-        .foregroundColor(Color("Icon"))
-        .fontWeight(.regular)
-        .font(.system(size: 14))
-        .onTapGesture {
-          if let webview = tabs[activeTabIndex].webview {
-            webview.goForward()
-          }
-        }
+      VStack(spacing: 0) { }.frame(width: 8)
       
-      Image(systemName: "goforward")
-        .padding(.leading, 14)
-        .padding(.trailing, 14)
-        .foregroundColor(Color("Icon"))
-        .font(.system(size: 13.5))
-        .fontWeight(.regular)
-        .onTapGesture {
-          if let webview = tabs[activeTabIndex].webview {
-            webview.reload()
-          }
+      VStack(spacing: 0) {
+        Image(systemName: "chevron.forward")
+          .foregroundColor(Color("Icon"))
+          .fontWeight(.regular)
+          .font(.system(size: 14))
+      }
+      .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+      .background(isForwardHober ? .gray.opacity(0.2) : .gray.opacity(0))
+      .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+      .onHover { hovering in
+        withAnimation {
+          isForwardHober = hovering
         }
+      }
+      .onTapGesture {
+        if let webview = tabs[activeTabIndex].webview {
+          webview.goForward()
+        }
+      }
+      
+      VStack(spacing: 0) { }.frame(width: 10)
+      
+      VStack(spacing: 0) {
+        Image(systemName: "goforward")
+          .rotationEffect(.degrees(45))
+          .foregroundColor(Color("Icon"))
+          .font(.system(size: 13.5))
+          .fontWeight(.regular)
+      }
+      .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+      .background(isRefreshHober ? .gray.opacity(0.2) : .gray.opacity(0))
+      .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+      .onHover { hovering in
+        withAnimation {
+          isRefreshHober = hovering
+        }
+      }
+      .onTapGesture {
+        if let webview = tabs[activeTabIndex].webview {
+          webview.reload()
+        }
+      }
+      
+      VStack(spacing: 0) { }.frame(width: 10)
       
       Spacer()
       
@@ -128,6 +163,8 @@ struct SearchView: View {
       
       Spacer()
       
+      VStack(spacing: 0) { }.frame(width: 10)
+      
       VStack(spacing: 0) {
         VStack(spacing: 0) {
           Image(systemName: "ellipsis")
@@ -136,16 +173,15 @@ struct SearchView: View {
             .font(.system(size: 14))
             .fontWeight(.regular)
         }
-        .frame(maxWidth: 24, maxHeight: 24)
-        .background(isMoreHover ? .gray.opacity(0.1) : .gray.opacity(0))
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+        .background(isMoreHover ? .gray.opacity(0.2) : .gray.opacity(0))
+        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
         .onHover { hovering in
           withAnimation {
             isMoreHover = hovering
           }
         }
       }
-      .padding(.leading, 5)
       .padding(.trailing, 10)
       
 //      VStack{ }.frame(maxWidth: 10)

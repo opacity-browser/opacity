@@ -31,7 +31,6 @@ struct TitlebarView: View {
               }
             }
             .contentShape(Rectangle())
-//              .background(.red.opacity(0.2))
             .onTapGesture {
               activeTabIndex = index
               print(tabs[activeTabIndex].id)
@@ -46,14 +45,13 @@ struct TitlebarView: View {
         }) {
           Image(systemName: "plus")
             .font(.system(size: 11))
-            .frame(maxWidth: 24, maxHeight: 24)
-            .background(isAddHover ? .gray.opacity(0.1) : .gray.opacity(0))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
+            .frame(maxWidth: 26, maxHeight: 26)
+            .background(isAddHover ? .gray.opacity(0.2) : .gray.opacity(0))
+            .clipShape(RoundedRectangle(cornerRadius: 6))
         }
         .padding(.top, 2)
-        .padding(.leading, 10)
+//        .padding(.leading, 5)
         .buttonStyle(.plain)
-//        .offset(x: CGFloat(tabs.count * -15))
         .contentShape(Rectangle())
         .onHover { isHover in
           withAnimation {
@@ -63,8 +61,8 @@ struct TitlebarView: View {
         
         Spacer()
       }
-      .frame(maxWidth: .infinity, maxHeight: 38, alignment: .leading)
-//      .background(.blue)
+      .frame(maxWidth: .infinity, maxHeight: 36, alignment: .leading)
+//      .background(.blue.opacity(0.2))
       
       Divider()
         .frame(maxWidth: .infinity, maxHeight: 2)

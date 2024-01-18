@@ -69,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
-    let windowRect = NSRect(x: 0, y: 0, width: 1200, height: 800)
+    let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)

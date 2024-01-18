@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject var browser: Browser
 
+  @State private var columnVisibility = NavigationSplitViewVisibility.detailOnly
   @State var windowWidth: CGFloat = .zero
   @State private var isAddHover: Bool = false
   
@@ -15,17 +16,11 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: 38)
         }
         // nav area
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
           SidebarView()
             .navigationSplitViewColumnWidth(min: 180, ideal: 180)
-            .toolbar(removing: .sidebarToggle)
         } detail: {
           MainView(tabs: $browser.tabs, activeTabIndex: $browser.index)
-        }
-        .toolbar {
-          ToolbarItem(placement: .navigation) {
-            SidebarButton()
-          }
         }
       }
       .onChange(of: geometry.size) { oldValue, newValue in
