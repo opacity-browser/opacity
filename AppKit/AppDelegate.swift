@@ -81,6 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let contentView = GeometryReader { geometry in
       ContentView()
         .environmentObject(self.browsers[newWindowNo]!)
+        .background(VisualEffect())
 //        .onAppear {
 //          if let windowSize = WindowSizeManager.load() {
 //            NSApplication.shared.windows.forEach({ NSWindow in

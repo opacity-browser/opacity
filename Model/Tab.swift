@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WebKit
 
 final class Tab: ObservableObject, Identifiable {
   var id = UUID()
@@ -18,14 +19,18 @@ final class Tab: ObservableObject, Identifiable {
   @Published var goToPage: Bool
   @Published var goBack: Bool
   @Published var goForward: Bool
+  @Published var refresh: Bool
+  
+  var webview: WKWebView?
   
   
-  init(webURL: String = DEFAULT_URL, goToPage: Bool = false, goBack: Bool = false, goForward: Bool = false) {
+  init(webURL: String = DEFAULT_URL, goToPage: Bool = false, goBack: Bool = false, goForward: Bool = false, refresh: Bool = false) {
     self.webURL = webURL
     self.inputURL = webURL
     self.viewURL = StringURL.shortURL(url: webURL)
     self.goToPage = goToPage
     self.goBack = goBack
     self.goForward = goForward
+    self.refresh = refresh
   }
 }

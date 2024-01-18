@@ -32,7 +32,9 @@ struct SearchView: View {
         .font(.system(size: 14))
         .fontWeight(.regular)
         .onTapGesture {
-          tabs[activeTabIndex].goBack = true
+          if let webview = tabs[activeTabIndex].webview {
+            webview.goBack()
+          }
         }
       
       Image(systemName: "chevron.forward")
@@ -42,7 +44,9 @@ struct SearchView: View {
         .fontWeight(.regular)
         .font(.system(size: 14))
         .onTapGesture {
-          tabs[activeTabIndex].goForward = true
+          if let webview = tabs[activeTabIndex].webview {
+            webview.goForward()
+          }
         }
       
       Image(systemName: "goforward")
@@ -52,7 +56,9 @@ struct SearchView: View {
         .font(.system(size: 13.5))
         .fontWeight(.regular)
         .onTapGesture {
-//          tab.goForward = true
+          if let webview = tabs[activeTabIndex].webview {
+            webview.reload()
+          }
         }
       
       Spacer()

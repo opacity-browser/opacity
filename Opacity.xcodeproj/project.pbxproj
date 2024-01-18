@@ -12,6 +12,8 @@
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
 		A15D541D2B56BD32007020CA /* WindowSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541C2B56BD32007020CA /* WindowSizeManager.swift */; };
+		A15D54232B590B4D007020CA /* VisualEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54222B590B4D007020CA /* VisualEffect.swift */; };
+		A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54242B590CA6007020CA /* SidebarButton.swift */; };
 		A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A169200F2B2FA82200F8B4C0 /* Assets.xcassets */; };
 		A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
@@ -36,6 +38,8 @@
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A15D541C2B56BD32007020CA /* WindowSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSizeManager.swift; sourceTree = "<group>"; };
+		A15D54222B590B4D007020CA /* VisualEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffect.swift; sourceTree = "<group>"; };
+		A15D54242B590CA6007020CA /* SidebarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarButton.swift; sourceTree = "<group>"; };
 		A16920082B2FA82100F8B4C0 /* Opacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Opacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Opacity/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				A15D541A2B56B40F007020CA /* AppDelegate.swift */,
+				A15D54222B590B4D007020CA /* VisualEffect.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -157,6 +162,7 @@
 			children = (
 				A188C9502B4D3D6000B39BC8 /* ExpandList.swift */,
 				A188C95C2B4EBBC700B39BC8 /* Webview.swift */,
+				A15D54242B590CA6007020CA /* SidebarButton.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -257,11 +263,13 @@
 			files = (
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
+				A15D54232B590B4D007020CA /* VisualEffect.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
 				A188C94C2B4CFDCB00B39BC8 /* SidebarView.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
+				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A188C9412B4A924900B39BC8 /* BookmarkGroup.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,

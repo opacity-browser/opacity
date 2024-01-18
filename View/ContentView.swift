@@ -14,14 +14,18 @@ struct ContentView: View {
           TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index)
             .frame(maxWidth: .infinity, maxHeight: 38)
         }
-        
-//        Divider()
-        
+        // nav area
         NavigationSplitView {
           SidebarView()
             .navigationSplitViewColumnWidth(min: 180, ideal: 180)
+            .toolbar(removing: .sidebarToggle)
         } detail: {
           MainView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+        }
+        .toolbar {
+          ToolbarItem(placement: .navigation) {
+            SidebarButton()
+          }
         }
       }
       .onChange(of: geometry.size) { oldValue, newValue in
