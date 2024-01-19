@@ -9,8 +9,10 @@ import SwiftUI
 
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
-  @Binding var tabs: [Tab]
-  @Binding var activeTabIndex: Int
+//  @Binding var tabs: [Tab]
+//  @Binding var activeTabIndex: Int
+  
+  @ObservedObject var tab: Tab
   
   @FocusState private var textFieldFocused: Bool
   
@@ -27,6 +29,18 @@ struct SearchView: View {
   let iconHeight: Double = 26
   let iconRadius: Double = 6
   
+  var isBack: Bool {
+    tab.isBack
+//    if let back = tabs[activeTabIndex].webview?.canGoBack {
+//      return back
+//    }
+//    return false
+  }
+//  
+  var isForward: Bool {
+    tab.isForward
+  }
+  
   var body: some View {
     HStack(spacing: 0) {
       
@@ -35,11 +49,12 @@ struct SearchView: View {
       VStack(spacing: 0) {
         Image(systemName: "chevron.backward")
           .foregroundColor(Color("Icon"))
-          .font(.system(size: 14))
           .fontWeight(.regular)
+          .font(.system(size: 14))
+          .opacity(isBack ? 1 : 0.4)
       }
       .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isBackHover ? .gray.opacity(0.2) : .gray.opacity(0))
+      .background(isBackHover && isBack ? .gray.opacity(0.2) : .gray.opacity(0))
       .clipShape(RoundedRectangle(cornerRadius: iconRadius))
       .onHover { hovering in
         withAnimation {
@@ -47,8 +62,10 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if let webview = tabs[activeTabIndex].webview {
-          webview.goBack()
+        if isBack {
+          if let webview = tab.webview {
+            webview.goBack()
+          }
         }
       }
       
@@ -59,9 +76,10 @@ struct SearchView: View {
           .foregroundColor(Color("Icon"))
           .fontWeight(.regular)
           .font(.system(size: 14))
+          .opacity(isForward ? 1 : 0.4)
       }
       .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isForwardHober ? .gray.opacity(0.2) : .gray.opacity(0))
+      .background(isForwardHober && isForward ? .gray.opacity(0.2) : .gray.opacity(0))
       .clipShape(RoundedRectangle(cornerRadius: iconRadius))
       .onHover { hovering in
         withAnimation {
@@ -69,8 +87,10 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if let webview = tabs[activeTabIndex].webview {
-          webview.goForward()
+        if isForward {
+          if let webview = tab.webview {
+            webview.goForward()
+          }
         }
       }
       
@@ -92,7 +112,7 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if let webview = tabs[activeTabIndex].webview {
+        if let webview = tab.webview {
           webview.reload()
         }
       }
@@ -103,7 +123,7 @@ struct SearchView: View {
       
       if isEditing {
         HStack(spacing: 0) {
-          TextField("", text: $tabs[activeTabIndex].inputURL, onEditingChanged: { isEdit in
+          TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
             if !isEdit {
               isEditing = false
             }
@@ -119,23 +139,23 @@ struct SearchView: View {
           .background(colorScheme == .dark ? Color("MainBlack") : .white)
           .focused($textFieldFocused)
           .clipShape(RoundedRectangle(cornerRadius: 10))
-          .onChange(of: tabs[activeTabIndex].inputURL) {
-            self.isDomain = StringURL.checkURL(url: tabs[activeTabIndex].inputURL)
+          .onChange(of: tab.inputURL) {
+            self.isDomain = StringURL.checkURL(url: tab.inputURL)
           }
           .onSubmit {
-            var newURL = tabs[activeTabIndex].inputURL
+            var newURL = tab.inputURL
             if !newURL.contains("://") {
               newURL = "https://\(newURL)"
             }
-            tabs[activeTabIndex].updateURL(url: newURL)
+            tab.updateURL(url: newURL)
           }
         }
         .padding(1)
         .background(Color("PointColor"))
         .clipShape(RoundedRectangle(cornerRadius: 10))
-      } else if tabs.count > 0 {
+      } else {
         HStack {
-          Text(tabs[activeTabIndex].printURL)
+          Text(tab.printURL)
 //              .frame(maxWidth: 300, alignment: .leading)
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .padding(.top, 5)

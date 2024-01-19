@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BrowserTabView: View {
-  @Binding var title: String
+  @ObservedObject var tab: Tab
   var isActive: Bool
   var onClose: () -> Void
   
@@ -35,7 +35,7 @@ struct BrowserTabView: View {
           }
           
           HStack(spacing: 0) {
-            Text(title)
+            Text(tab.title)
               .frame(maxWidth: 180, maxHeight: 22, alignment: .leading)
               .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
               .font(.system(size: 12))

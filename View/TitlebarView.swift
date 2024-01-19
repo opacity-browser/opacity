@@ -22,8 +22,8 @@ struct TitlebarView: View {
         VStack { }.frame(width: 119)
         
         HStack(spacing: 0) {
-          ForEach(tabs.indices, id: \.self) { index in
-            BrowserTabView(title: $tabs[index].title, isActive: index == activeTabIndex) {
+          ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
+            BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -33,7 +33,6 @@ struct TitlebarView: View {
             .contentShape(Rectangle())
             .onTapGesture {
               activeTabIndex = index
-              print(tabs[activeTabIndex].id)
             }
           }
         }
@@ -75,7 +74,7 @@ struct TitlebarView: View {
     }
     
     // search area
-    SearchView(tabs: $tabs, activeTabIndex: $activeTabIndex )
+    SearchView(tab: tabs[activeTabIndex])
       .frame(maxWidth: .infinity,  maxHeight: 37.0)
       .background(Color("MainBlack"))
   }

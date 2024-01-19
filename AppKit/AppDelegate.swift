@@ -22,8 +22,6 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   private var isTerminating = false
-  
-  var windows: [NSWindow] = []
   var browsers: [Int:Browser] = [:]
   
   private func exitWindow() {

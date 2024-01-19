@@ -61,11 +61,16 @@ struct Webview: NSViewRepresentable {
       }
       
       func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//          guard let title = webView.title else { return }
-//          print(title)
-//          if parent.title != title {
-//              parent.title = title
-//          }
+        print("############# didFinish")
+        DispatchQueue.main.async {
+          self.parent.tab.isBack = webView.canGoBack
+          self.parent.tab.isForward = webView.canGoForward
+          
+          if let title = webView.title {
+            print(title)
+            self.parent.tab.title = title
+          }
+        }
       }
       
       func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
