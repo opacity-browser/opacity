@@ -29,9 +29,9 @@ struct BrowserTabView: View {
           if !isActive && isTabHover {
             Rectangle()
               .frame(maxWidth: 220, maxHeight: 26, alignment: .leading)
-              .foregroundColor(Color("PointColor").opacity(0.4))
+              .foregroundColor(Color("PointColor").opacity(0.2))
               .clipShape(RoundedRectangle(cornerRadius: 10))
-              .offset(y: 1)
+              .offset(y: 2)
           }
           
           HStack(spacing: 0) {

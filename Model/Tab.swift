@@ -11,26 +11,26 @@ import WebKit
 final class Tab: ObservableObject, Identifiable {
   var id = UUID()
   
-  @Published var webURL: String
+  @Published var originURL: String
+  @Published var printURL: String
   @Published var inputURL: String
-  @Published var viewURL: String
-  @Published var title: String = "New Tab"
   
-  @Published var goToPage: Bool
-  @Published var goBack: Bool
-  @Published var goForward: Bool
-  @Published var refresh: Bool
+  @Published var title: String = "New Tab"
+  @Published var favicon: String?
+  
+  @Published var isBack: Bool = false
+  @Published var isForward: Bool = false
   
   var webview: WKWebView?
   
+  init(url: String = DEFAULT_URL) {
+    self.originURL = url
+    self.inputURL = url
+    self.printURL = StringURL.shortURL(url: url)
+  }
   
-  init(webURL: String = DEFAULT_URL, goToPage: Bool = false, goBack: Bool = false, goForward: Bool = false, refresh: Bool = false) {
-    self.webURL = webURL
-    self.inputURL = webURL
-    self.viewURL = StringURL.shortURL(url: webURL)
-    self.goToPage = goToPage
-    self.goBack = goBack
-    self.goForward = goForward
-    self.refresh = refresh
+  func updateURL(url: String) {
+    self.originURL = url
+    self.printURL = StringURL.shortURL(url: url)
   }
 }

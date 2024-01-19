@@ -30,7 +30,7 @@ struct ContentView: View {
       .frame(minWidth: 520)
       .onAppear {
         if browser.tabs.count == 0 {
-          let newTab = Tab(webURL: DEFAULT_URL)
+          let newTab = Tab(url: DEFAULT_URL)
           browser.tabs.append(newTab)
           browser.index = 0
         }

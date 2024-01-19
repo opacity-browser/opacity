@@ -29,4 +29,16 @@ class StringURL {
         
         return returnUrlString
     }
+  
+  static func checkURL(url urlString: String) -> Bool {
+    if urlString.contains(" ") || !urlString.contains(".") {
+      return false
+    }
+    
+    guard let _ = urlString.firstMatch(of: /^[a-zA-Z0-9]/)?.output else {
+      return false
+    }
+
+    return true
+  }
 }

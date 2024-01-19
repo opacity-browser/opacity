@@ -88,9 +88,9 @@ struct Webview: NSViewRepresentable {
     newWebview.navigationDelegate = context.coordinator
     newWebview.uiDelegate = context.coordinator
     newWebview.allowsBackForwardNavigationGestures = true
-//    newWebview.isOpaque = false
+    
     tab.webview = newWebview
-    newWebview.load(URLRequest(url: URL(string: tab.webURL)!))
+    newWebview.load(URLRequest(url: URL(string: tab.originURL)!))
     return newWebview
   }
   

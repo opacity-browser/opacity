@@ -39,7 +39,7 @@ struct TitlebarView: View {
         }
         
         Button(action: {
-          let newTab = Tab(webURL: DEFAULT_URL)
+          let newTab = Tab(url: DEFAULT_URL)
           tabs.append(newTab)
           activeTabIndex = tabs.count - 1
         }) {

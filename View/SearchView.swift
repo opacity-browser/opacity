@@ -13,6 +13,9 @@ struct SearchView: View {
   @Binding var activeTabIndex: Int
   
   @FocusState private var textFieldFocused: Bool
+  
+  @State private var isDomain: Bool = true
+  
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
@@ -114,25 +117,25 @@ struct SearchView: View {
           .padding(.leading, 19)
           .padding(.trailing, 34)
           .background(colorScheme == .dark ? Color("MainBlack") : .white)
-//          .foregroundColor(colorScheme == .dark ? .white : .black)
           .focused($textFieldFocused)
-          .onSubmit {
-            var uriString = tabs[activeTabIndex].inputURL
-            if !uriString.contains("://") {
-              uriString = "https://\(uriString)"
-            }
-            
-            tabs[activeTabIndex].webURL = uriString
-            tabs[activeTabIndex].goToPage = true
-          }
           .clipShape(RoundedRectangle(cornerRadius: 10))
+          .onChange(of: tabs[activeTabIndex].inputURL) {
+            self.isDomain = StringURL.checkURL(url: tabs[activeTabIndex].inputURL)
+          }
+          .onSubmit {
+            var newURL = tabs[activeTabIndex].inputURL
+            if !newURL.contains("://") {
+              newURL = "https://\(newURL)"
+            }
+            tabs[activeTabIndex].updateURL(url: newURL)
+          }
         }
         .padding(1)
         .background(Color("PointColor"))
         .clipShape(RoundedRectangle(cornerRadius: 10))
       } else if tabs.count > 0 {
         HStack {
-          Text(tabs[activeTabIndex].viewURL)
+          Text(tabs[activeTabIndex].printURL)
 //              .frame(maxWidth: 300, alignment: .leading)
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .padding(.top, 5)

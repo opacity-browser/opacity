@@ -48,7 +48,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       .background(.black.opacity(0.4))
       .clipShape(RoundedRectangle(cornerRadius: 10))
     
-    let windowController = NSWindowController(window: exitWindow)
     exitWindow.contentView = NSHostingController(rootView: contentView).view
     exitWindow.center()
     exitWindow.isOpaque = false
@@ -58,6 +57,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     exitWindow.styleMask.insert(.fullSizeContentView)
 
     exitWindow.makeKeyAndOrderFront(nil)
+    
+    let windowController = NSWindowController(window: exitWindow)
     windowController.showWindow(self)
     
     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -94,8 +95,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 //        }
     }
     
-    let windowController = NSWindowController(window: newWindow)
-
     newWindow.contentView = NSHostingController(rootView: contentView).view
     newWindow.center()
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
@@ -104,6 +103,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     newWindow.makeKeyAndOrderFront(nil)
     newWindow.delegate = self
+    
+    let windowController = NSWindowController(window: newWindow)
     windowController.showWindow(self)
   }
 
@@ -114,26 +115,50 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       let mainMenu = NSMenu()
       
       // Opacity 메뉴
-      let fileMenuItem = NSMenuItem(title: "Opacity", action: nil, keyEquivalent: "")
-      let fileMenu = NSMenu(title: "Opacity")
-      fileMenu.addItem(NSMenuItem(title: "About Opacity", action: nil, keyEquivalent: ""))
-      fileMenu.addItem(NSMenuItem.separator())
-      fileMenu.addItem(withTitle: "Exit Opacity", action: #selector(self.exitApplication), keyEquivalent: "q")
-      fileMenuItem.submenu = fileMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
+      let opacityItem = NSMenuItem(title: "Opacity", action: nil, keyEquivalent: "")
+      let opacityMenu = NSMenu(title: "Opacity")
+      opacityMenu.addItem(NSMenuItem(title: "About Opacity", action: nil, keyEquivalent: ""))
+      opacityMenu.addItem(NSMenuItem.separator())
+      opacityMenu.addItem(withTitle: "Exit Opacity", action: #selector(self.exitApplication), keyEquivalent: "q")
+      opacityItem.submenu = opacityMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
       
-      mainMenu.addItem(fileMenuItem)
+      mainMenu.addItem(opacityItem)
       
       // File 메뉴
-      let menuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
-      let subMenu = NSMenu(title: "File")
-      subMenu.addItem(withTitle: "New Tab", action: #selector(self.newTab), keyEquivalent: "t")
-      subMenu.addItem(withTitle: "New Window", action: #selector(self.newWindow), keyEquivalent: "n")
-      subMenu.addItem(NSMenuItem.separator())
-      subMenu.addItem(withTitle: "Close Tab", action: #selector(self.closeTab), keyEquivalent: "w")
-      menuItem.submenu = subMenu
+      let fileItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
+      let fileMenu = NSMenu(title: "File")
+      fileMenu.addItem(withTitle: "New Window", action: #selector(self.newWindow), keyEquivalent: "n")
+      fileMenu.addItem(withTitle: "New Tab", action: #selector(self.newTab), keyEquivalent: "t")
+      fileMenu.addItem(NSMenuItem.separator())
+      fileMenu.addItem(withTitle: "Close Window", action: #selector(self.closeWindow), keyEquivalent: "W")
+      fileMenu.addItem(withTitle: "Close Tab", action: #selector(self.closeTab), keyEquivalent: "w")
+      fileItem.submenu = fileMenu
       
-      mainMenu.addItem(menuItem)
+      mainMenu.addItem(fileItem)
       
+      // Edit 메뉴
+      let editItem = NSMenuItem(title: "Edit", action: nil, keyEquivalent: "")
+      let editMenu = NSMenu(title: "Edit")
+      editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
+      editMenu.addItem(withTitle: "Redo", action: Selector(("redo:")), keyEquivalent: "Z")
+      editMenu.addItem(NSMenuItem.separator())
+      editMenu.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+      editMenu.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+      editMenu.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+      editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+      editMenu.addItem(NSMenuItem.separator())
+      editItem.submenu = editMenu
+      
+      mainMenu.addItem(editItem)
+      
+      // View 메뉴
+      let viewItem = NSMenuItem(title: "View", action: nil, keyEquivalent: "")
+      let viewMenu = NSMenu(title: "View")
+      viewMenu.addItem(withTitle: "Reload Page", action: #selector(self.refreshTab), keyEquivalent: "r")
+      viewMenu.addItem(NSMenuItem.separator())
+      viewItem.submenu = viewMenu
+      
+      mainMenu.addItem(viewItem)
 //      // 단축키에 파라미터 전송 예시
 //      let menuItem3 = NSMenuItem(title: "File2", action: nil, keyEquivalent: "")
 //      let myMenu = NSMenu()
@@ -145,6 +170,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       
       // 메인 메뉴를 애플리케이션에 설정
       NSApplication.shared.mainMenu = mainMenu
+    }
+  }
+  
+  func menuWillOpen(_ menu: NSMenu) {
+    // 메뉴 아이템의 상태 업데이트
+    print("a")
+    menu.items.forEach { item in
+      item.isEnabled = true // 또는 특정 조건에 따라 설정
     }
   }
   
@@ -165,10 +198,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
       if let target = self.browsers[windowNumber] {
-        let newTab = Tab(webURL: DEFAULT_URL)
+        let newTab = Tab(url: DEFAULT_URL)
         target.tabs.append(newTab)
         target.index = target.tabs.count - 1
       }
+    }
+  }
+  
+  @objc func closeWindow() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      keyWindow.close()
     }
   }
   
@@ -181,6 +220,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         if target.tabs.count == 0 {
           keyWindow.close()
         }
+      }
+    }
+  }
+  
+  @objc func refreshTab() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.browsers[windowNumber] {
+        target.tabs[target.index].webview?.reload()
       }
     }
   }
