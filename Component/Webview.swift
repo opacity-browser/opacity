@@ -62,13 +62,27 @@ struct Webview: NSViewRepresentable {
       
       func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("############# didFinish")
-        DispatchQueue.main.async {
-          self.parent.tab.isBack = webView.canGoBack
-          self.parent.tab.isForward = webView.canGoForward
-          
-          if let title = webView.title {
-            print(title)
+        self.parent.tab.isBack = webView.canGoBack
+        self.parent.tab.isForward = webView.canGoForward
+
+        webView.evaluateJavaScript("document.title") { (response, error) in
+          if let title = response as? String {
             self.parent.tab.title = title
+          }
+        }
+
+        webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
+          if let faviconURL = response as? String, !faviconURL.isEmpty {
+            if faviconURL.contains("://") {
+              self.parent.tab.favicon = faviconURL
+            } else {
+              if let pageURL = webView.url {
+                if let host = pageURL.host {
+                  let fullDomain = pageURL.scheme! + "://" + host
+                  self.parent.tab.favicon = fullDomain + faviconURL
+                }
+              }
+            }
           }
         }
       }

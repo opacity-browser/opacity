@@ -22,7 +22,7 @@ struct BrowserTabView: View {
           Rectangle()
             .frame(maxWidth: 220, maxHeight: 32, alignment: .leading)
             .foregroundColor(Color("MainBlack"))
-            .clipShape((BrowserTabShape(cornerRadius: 12)))
+            .clipShape((BrowserTabShape(cornerRadius: 10)))
             .offset(y: 3)
         }
         ZStack {
@@ -31,15 +31,27 @@ struct BrowserTabView: View {
               .frame(maxWidth: 220, maxHeight: 26, alignment: .leading)
               .foregroundColor(Color("PointColor").opacity(0.2))
               .clipShape(RoundedRectangle(cornerRadius: 10))
-              .offset(y: 2)
+              .offset(y: 1)
           }
           
           HStack(spacing: 0) {
+            
+            VStack(spacing: 0) {
+              if let faviconURL = tab.favicon {
+                Favicon(url: URL(string: faviconURL)!)
+              } else {
+                Image("icon-16")
+                  .frame(maxWidth: 16, maxHeight: 16)
+              }
+            }
+            .frame(maxWidth: 16, maxHeight: 16, alignment: .leading)
+            .padding(.leading, 6)
+            
             Text(tab.title)
-              .frame(maxWidth: 180, maxHeight: 22, alignment: .leading)
+              .frame(maxWidth: 150, maxHeight: 22, alignment: .leading)
               .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
               .font(.system(size: 12))
-              .padding(.leading, 10)
+              .padding(.leading, 5)
               .padding(.trailing, 5)
               .lineLimit(1)
               .truncationMode(.tail)
