@@ -41,16 +41,16 @@ struct BrowserTabView: View {
                 Favicon(url: URL(string: faviconURL)!)
               } else {
                 Image("icon-16")
-                  .frame(maxWidth: 16, maxHeight: 16)
+                  .frame(maxWidth: 14, maxHeight: 14)
               }
             }
-            .frame(maxWidth: 16, maxHeight: 16, alignment: .leading)
-            .padding(.leading, 6)
+            .frame(maxWidth: 14, maxHeight: 14, alignment: .leading)
+            .padding(.leading, 7)
             
             Text(tab.title)
               .frame(maxWidth: 150, maxHeight: 22, alignment: .leading)
               .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-              .font(.system(size: 12))
+              .font(.system(size: 11))
               .padding(.leading, 5)
               .padding(.trailing, 5)
               .lineLimit(1)

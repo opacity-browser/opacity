@@ -21,12 +21,12 @@ struct Favicon: View {
           Image(nsImage: image)
             .resizable() // 이미지 크기 조절 가능하게 함
             .aspectRatio(contentMode: .fill)
-            .frame(maxWidth: 16, maxHeight: 16)
+            .frame(maxWidth: 14, maxHeight: 14)
             .clipShape(RoundedRectangle(cornerRadius: 4))
             .clipped()
         } else {
           Image("icon-16")
-            .frame(maxWidth: 16, maxHeight: 16)
+            .frame(maxWidth: 14, maxHeight: 14)
         }
     }
 }
