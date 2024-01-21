@@ -11,7 +11,7 @@ import WebKit
 final class Tab: ObservableObject, Identifiable {
   var id = UUID()
   
-  @Published var originURL: String {
+  @Published var originURL: URL {
     didSet {
       objectWillChange.send()
     }
@@ -19,24 +19,32 @@ final class Tab: ObservableObject, Identifiable {
   @Published var printURL: String
   @Published var inputURL: String
   
-  @Published var title: String = "New Tab"
-  @Published var favicon: Image = Image("icon-16")
+  @Published var title: String = ""
+  @Published var favicon: Image = Image("egg")
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
   var webview: WKWebView?
   
-  init(url: String = DEFAULT_URL) {
+  init(url: URL = DEFAULT_URL) {
+    let stringURL = String(describing: url)
+    let shortStringURL = StringURL.shortURL(url: stringURL)
+    
     self.originURL = url
-    self.inputURL = url
-    self.printURL = StringURL.shortURL(url: url)
+    self.inputURL = stringURL
+    self.printURL = shortStringURL
+    self.title = shortStringURL
   }
   
-  func updateURL(url: String) {
+  func updateURL(url: URL) {
+    let stringURL = String(describing: url)
+    let shortStringURL = StringURL.shortURL(url: stringURL)
+    
     self.originURL = url
-    self.inputURL = url
-    self.printURL = StringURL.shortURL(url: url)
+    self.inputURL = stringURL
+    self.printURL = shortStringURL
+    self.title = shortStringURL
   }
   
   func loadFavicon(url: URL) {
@@ -54,7 +62,7 @@ final class Tab: ObservableObject, Identifiable {
   
   func setDefaultFavicon() {
     withAnimation {
-      self.favicon = Image("icon-16")
+      self.favicon = Image("egg")
     }
   }
 }

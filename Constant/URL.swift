@@ -5,4 +5,6 @@
 //  Created by Falsy on 1/10/24.
 //
 
-let DEFAULT_URL: String = "https://naver.com"
+import SwiftUI
+
+let DEFAULT_URL: URL = URL(string: "https://naver.com")!

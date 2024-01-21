@@ -44,18 +44,17 @@ struct BrowserTabView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))
                 .clipped()
             }
-            .frame(maxWidth: 14, maxHeight: 14, alignment: .leading)
+            .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
             .padding(.leading, 7)
             
             Text(tab.title)
-              .frame(maxWidth: 150, maxHeight: 22, alignment: .leading)
+              .frame(maxWidth: 160, maxHeight: 22, alignment: .leading)
               .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
               .font(.system(size: 11))
               .padding(.leading, 5)
               .padding(.trailing, 5)
               .lineLimit(1)
               .truncationMode(.tail)
-//              .background(.blue.opacity(0.2))
             
             Button {
               onClose()

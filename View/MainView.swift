@@ -18,7 +18,7 @@ struct MainView: View {
       ZStack {
         if tabs.count > 0 {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, item in
-            Webview(tab: tabs[index]).zIndex(index == activeTabIndex ? Double(tabs.count) : 0)
+            Webview(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[index]).zIndex(index == activeTabIndex ? Double(tabs.count) : 0)
           }
         }
       }

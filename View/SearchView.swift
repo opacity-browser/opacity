@@ -161,7 +161,7 @@ struct SearchView: View {
                 }
 
                 DispatchQueue.main.async {
-                  tab.updateURL(url: newURL)
+                  tab.updateURL(url: URL(string: newURL)!)
                 }
               }
             }
