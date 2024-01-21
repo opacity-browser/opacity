@@ -44,7 +44,7 @@
 		A15D54242B590CA6007020CA /* SidebarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarButton.swift; sourceTree = "<group>"; };
 		A15D54262B5BA457007020CA /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		A15D54282B5BA658007020CA /* Favicon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
-		A16920082B2FA82100F8B4C0 /* FriedEgg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriedEgg.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A16920082B2FA82100F8B4C0 /* Fried Egg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fried Egg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = FriedEgg/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A16920142B2FA82200F8B4C0 /* FriedEgg.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FriedEgg.entitlements; path = FriedEgg/FriedEgg.entitlements; sourceTree = "<group>"; };
@@ -103,7 +103,7 @@
 		A16920092B2FA82100F8B4C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A16920082B2FA82100F8B4C0 /* FriedEgg.app */,
+				A16920082B2FA82100F8B4C0 /* Fried Egg.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -214,7 +214,7 @@
 			);
 			name = FriedEgg;
 			productName = AhPuh;
-			productReference = A16920082B2FA82100F8B4C0 /* FriedEgg.app */;
+			productReference = A16920082B2FA82100F8B4C0 /* Fried Egg.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -441,7 +441,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = falsy.FriedEgg;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Fried Egg";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -472,7 +472,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = falsy.FriedEgg;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Fried Egg";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
