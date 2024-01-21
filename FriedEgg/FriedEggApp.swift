@@ -1,6 +1,6 @@
 //
-//  OpacityApp.swift
-//  Opacity
+//  FriedEggApp.swift
+//  FriedEgg
 //
 //  Created by Falsy on 1/7/24.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct OpacityApp: App {
+struct FriedEggApp: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   
   var body: some Scene {
