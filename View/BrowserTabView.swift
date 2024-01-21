@@ -37,12 +37,12 @@ struct BrowserTabView: View {
           HStack(spacing: 0) {
             
             VStack(spacing: 0) {
-              if let faviconURL = tab.favicon {
-                Favicon(url: faviconURL)
-              } else {
-                Image("icon-16")
-                  .frame(maxWidth: 14, maxHeight: 14)
-              }
+              tab.favicon
+                .resizable() // 이미지 크기 조절 가능하게 함
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: 14, maxHeight: 14)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+                .clipped()
             }
             .frame(maxWidth: 14, maxHeight: 14, alignment: .leading)
             .padding(.leading, 7)
@@ -69,7 +69,8 @@ struct BrowserTabView: View {
                 }
                 Image(systemName: "xmark")
                   .frame(width: 18, height: 18)
-                  .font(.system(size: 11))
+                  .font(.system(size: 9))
+                  .fontWeight(.medium)
                   .opacity(isCloseHover ? 1 : 0.6)
               }
             }

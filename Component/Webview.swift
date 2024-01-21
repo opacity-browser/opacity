@@ -56,6 +56,7 @@ struct Webview: NSViewRepresentable {
 
         webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
           guard let href = response as? String, let currentURL = webView.url else {
+            self.parent.tab.setDefaultFavicon()
             return
           }
           
@@ -77,7 +78,7 @@ struct Webview: NSViewRepresentable {
             faviconURL = URL(string: href, relativeTo: currentURL)!
           }
           
-          self.parent.tab.favicon = faviconURL
+          self.parent.tab.loadFavicon(url: faviconURL)
         }
       }
       
