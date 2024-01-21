@@ -16,7 +16,7 @@ struct SearchView: View {
   
   @FocusState private var textFieldFocused: Bool
   
-  @State private var isDomain: Bool = true
+//  @State private var isDomain: Bool = true
   
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
@@ -25,21 +25,9 @@ struct SearchView: View {
   @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
   
-  let inputHeight: Double = 28
+  let inputHeight: Double = 29
   let iconHeight: Double = 26
   let iconRadius: Double = 6
-  
-  var isBack: Bool {
-    tab.isBack
-//    if let back = tabs[activeTabIndex].webview?.canGoBack {
-//      return back
-//    }
-//    return false
-  }
-//  
-  var isForward: Bool {
-    tab.isForward
-  }
   
   var body: some View {
     HStack(spacing: 0) {
@@ -51,10 +39,10 @@ struct SearchView: View {
           .foregroundColor(Color("Icon"))
           .fontWeight(.regular)
           .font(.system(size: 14))
-          .opacity(isBack ? 1 : 0.4)
+          .opacity(tab.isBack ? 1 : 0.4)
       }
       .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isBackHover && isBack ? .gray.opacity(0.2) : .gray.opacity(0))
+      .background(isBackHover && tab.isBack ? .gray.opacity(0.2) : .gray.opacity(0))
       .clipShape(RoundedRectangle(cornerRadius: iconRadius))
       .onHover { hovering in
         withAnimation {
@@ -62,7 +50,7 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if isBack {
+        if tab.isBack {
           if let webview = tab.webview {
             webview.goBack()
           }
@@ -76,10 +64,10 @@ struct SearchView: View {
           .foregroundColor(Color("Icon"))
           .fontWeight(.regular)
           .font(.system(size: 14))
-          .opacity(isForward ? 1 : 0.4)
+          .opacity(tab.isForward ? 1 : 0.4)
       }
       .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isForwardHober && isForward ? .gray.opacity(0.2) : .gray.opacity(0))
+      .background(isForwardHober && tab.isForward ? .gray.opacity(0.2) : .gray.opacity(0))
       .clipShape(RoundedRectangle(cornerRadius: iconRadius))
       .onHover { hovering in
         withAnimation {
@@ -87,7 +75,7 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if isForward {
+        if tab.isForward {
           if let webview = tab.webview {
             webview.goForward()
           }
@@ -123,65 +111,113 @@ struct SearchView: View {
       
       if isEditing {
         HStack(spacing: 0) {
-          TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
-            if !isEdit {
-              isEditing = false
+          ZStack {
+            Rectangle()
+              .frame(maxWidth: .infinity, maxHeight: inputHeight)
+              .foregroundColor(Color("MainBlack"))
+              .clipShape(RoundedRectangle(cornerRadius: 9))
+              .padding(0)
+//              .offset(y: 1)
+            
+            HStack(spacing: 0) {
+              HStack(spacing: 0) {
+                Image(systemName: "magnifyingglass")
+                  .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
+//                  .background(Color("MainBlack"))
+//                  .clipShape(RoundedRectangle(cornerRadius: 11))
+                  .font(.system(size: 12))
+                  .foregroundColor(Color.white.opacity(0.9))
+              }
+              .padding(.top, 1)
+              .padding(.leading, 4)
+              
+              TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
+                if !isEdit {
+                  isEditing = false
+                }
+              })
+              .padding(.leading, 5)
+              .frame(maxHeight: inputHeight)
+              .textFieldStyle(PlainTextFieldStyle())
+              .font(.system(size: 13))
+              .fontWeight(.regular)
+              .focused($textFieldFocused)
+//              .onChange(of: tab.inputURL) {
+//                self.isDomain = StringURL.checkURL(url: tab.inputURL)
+//              }
+              .onSubmit {
+                print("submit")
+                if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                  return
+                }
+                print("submit - process")
+                var newURL = tab.inputURL
+                if StringURL.checkURL(url: newURL) {
+                  if !newURL.contains("://") {
+                    newURL = "https://\(newURL)"
+                  }
+                } else {
+                  newURL = "https://www.google.com/search?q=\(newURL)"
+                }
+
+                DispatchQueue.main.async {
+                  tab.updateURL(url: newURL)
+                }
+              }
             }
-          })
-          .frame(maxHeight: inputHeight)
-          .textFieldStyle(PlainTextFieldStyle())
-          .font(.system(size: 13))
-          .fontWeight(.regular)
-          .padding(.top, 4)
-          .padding(.bottom, 4)
-          .padding(.leading, 19)
-          .padding(.trailing, 34)
-          .background(colorScheme == .dark ? Color("MainBlack") : .white)
-          .focused($textFieldFocused)
+          }
+          .padding(2)
+          .background(Color("PointJade"))
           .clipShape(RoundedRectangle(cornerRadius: 10))
-          .onChange(of: tab.inputURL) {
-            self.isDomain = StringURL.checkURL(url: tab.inputURL)
-          }
-          .onSubmit {
-            var newURL = tab.inputURL
-            if !newURL.contains("://") {
-              newURL = "https://\(newURL)"
-            }
-            tab.updateURL(url: newURL)
-          }
         }
-        .padding(1)
-        .background(Color("PointColor"))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.top, 1)
+        .padding(.leading, 1)
       } else {
-        HStack {
-          Text(tab.printURL)
-//              .frame(maxWidth: 300, alignment: .leading)
-            .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-            .padding(.top, 5)
-            .padding(.bottom, 5)
-            .padding(.leading, 20)
-            .padding(.trailing, 35)
-            .font(.system(size: 13))
-            .fontWeight(.regular)
-            .opacity(0.7)
-            .lineLimit(1)
-            .truncationMode(.tail)
-        }
-        .frame(alignment: .leading)
-        .background(isSearchHover ? .gray.opacity(0.2) : .gray.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .onTapGesture {
-//          withAnimation {
+        HStack(spacing: 0) {
+          ZStack {
+            Rectangle()
+              .frame(maxWidth: .infinity, maxHeight: inputHeight)
+              .foregroundColor(isSearchHover ? .gray.opacity(0.3) : .gray.opacity(0.15))
+              .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            HStack(spacing: 0) {
+              HStack(spacing: 0) {
+                Image(systemName: "lock.shield")
+                  .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
+                  .background(Color("MainBlack"))
+                  .clipShape(RoundedRectangle(cornerRadius: 11))
+                  .font(.system(size: 13))
+                  .foregroundColor(Color.white.opacity(0.9))
+              }
+              .padding(.leading, 5)
+              .padding(.top, 1)
+              
+              Text(tab.printURL)
+                .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                .padding(.top, 5)
+                .padding(.bottom, 5)
+                .padding(.leading, 5)
+                .padding(.trailing, 10)
+                .font(.system(size: 13))
+                .fontWeight(.regular)
+                .opacity(0.9)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            }
+          }
+          .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+          .onTapGesture {
             isEditing = true
             textFieldFocused = true
-//          }
-        }
-        .onHover { hovering in
-          withAnimation {
-            isSearchHover = hovering
+          }
+          .onHover { hovering in
+            withAnimation {
+              isSearchHover = hovering
+            }
           }
         }
+        .padding(.leading, 1)
+        .padding(.top, 1)
       }
       
       Spacer()
@@ -209,7 +245,7 @@ struct SearchView: View {
       
 //      VStack{ }.frame(maxWidth: 10)
     }
-    .frame(height: 28)
+    .frame(height: 29)
 //    .background(.red.opacity(0.2))
     .offset(y: -1.5)
   }

@@ -29,7 +29,7 @@ struct BrowserTabView: View {
           if !isActive && isTabHover {
             Rectangle()
               .frame(maxWidth: 220, maxHeight: 26, alignment: .leading)
-              .foregroundColor(Color("PointColor").opacity(0.2))
+              .foregroundColor(Color("PointJade").opacity(0.2))
               .clipShape(RoundedRectangle(cornerRadius: 10))
               .offset(y: 1)
           }
@@ -38,7 +38,7 @@ struct BrowserTabView: View {
             
             VStack(spacing: 0) {
               if let faviconURL = tab.favicon {
-                Favicon(url: URL(string: faviconURL)!)
+                Favicon(url: faviconURL)
               } else {
                 Image("icon-16")
                   .frame(maxWidth: 14, maxHeight: 14)

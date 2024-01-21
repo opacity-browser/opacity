@@ -32,6 +32,7 @@
 		A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9652B4ECBB800B39BC8 /* MainView.swift */; };
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
 		A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */; };
+		A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		A188C9652B4ECBB800B39BC8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A188C9672B4ED3F600B39BC8 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabView.swift; sourceTree = "<group>"; };
+		A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				A188C9422B4A926800B39BC8 /* Bookmark.swift */,
 				A188C9442B4A948C00B39BC8 /* Tab.swift */,
 				A188C9672B4ED3F600B39BC8 /* Browser.swift */,
+				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				A15D54292B5BA658007020CA /* Favicon.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
+				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A188C9412B4A924900B39BC8 /* BookmarkGroup.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,

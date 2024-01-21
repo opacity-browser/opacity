@@ -9,7 +9,8 @@ import SwiftUI
 import WebKit
 
 struct Webview: NSViewRepresentable {
-  @Binding var tab: Tab
+//  @Binding var tab: Tab
+  @ObservedObject var tab: Tab
   
   func makeCoordinator() -> Coordinator {
       Coordinator(self)
@@ -24,40 +25,22 @@ struct Webview: NSViewRepresentable {
       
       func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("############# 코디네이터 호출: didStartProvisionalNavigation")
-//        print("webview url: \(String(describing: webView.url))")
-//        print("webview site url: \(parent.tab.webURL)")
-//        print("input url: \(parent.tab.inputURL )")
-//          
-//        var nowWebviewURL: String = ""
-//        var nowWebviewStringURL: String = ""
-//        if let stringURL = webView.url {
-//          nowWebviewStringURL = String(describing: stringURL)
-//          nowWebviewURL = String(describing: stringURL)
-//          nowWebviewURL = StringURL.removeLastSlash(url: nowWebviewURL)
-//        }
-//        
-//        if parent.tab.webURL != nowWebviewURL {
-//          parent.tab.webURL = nowWebviewURL
-//          parent.tab.viewURL = StringURL.shortURL(url: nowWebviewURL)
-//          parent.tab.inputURL = StringURL.removeLastSlash(url: nowWebviewStringURL)
-//        }
+        
       }
       
       func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
         print("############# 리다이렉트 호출: didReceiveServerRedirectForProvisionalNavigation")
-//        print("webview redirect url: \(String(describing: webView.url))")
-//        print("webview title2: \(String(describing: webView.title))")
-//        var nowWebviewURL: String = ""
-//        var nowWebviewStringURL: String = ""
-//        if let stringURL = webView.url {
-//          nowWebviewStringURL = String(describing: stringURL)
-//          nowWebviewURL = String(describing: stringURL)
-//          nowWebviewURL = StringURL.removeLastSlash(url: nowWebviewURL)
-//          
-//          parent.tab.webURL = nowWebviewURL
-//          parent.tab.viewURL = StringURL.shortURL(url: nowWebviewURL)
-//          parent.tab.inputURL = StringURL.removeLastSlash(url: nowWebviewStringURL)
-//        }
+        print("webview redirect url: \(String(describing: webView.url))")
+        print("tab origin url: \(String(describing: parent.tab.originURL))")
+
+        if let webviewURL = webView.url {
+          let webviewStringURL = StringURL.removeLastSlash(url: String(describing: webviewURL))
+          if webviewStringURL != StringURL.removeLastSlash(url: parent.tab.originURL) {
+            parent.tab.originURL = webviewStringURL
+            parent.tab.inputURL = StringURL.removeLastSlash(url: webviewStringURL)
+            parent.tab.printURL = StringURL.shortURL(url: webviewStringURL)
+          }
+        }
       }
       
       func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -72,18 +55,29 @@ struct Webview: NSViewRepresentable {
         }
 
         webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
-          if let faviconURL = response as? String, !faviconURL.isEmpty {
-            if faviconURL.contains("://") {
-              self.parent.tab.favicon = faviconURL
-            } else {
-              if let pageURL = webView.url {
-                if let host = pageURL.host {
-                  let fullDomain = pageURL.scheme! + "://" + host
-                  self.parent.tab.favicon = fullDomain + faviconURL
-                }
-              }
-            }
+          guard let href = response as? String, let currentURL = webView.url else {
+            return
           }
+          
+          let faviconURL: URL
+          if href.hasPrefix("http") {
+            faviconURL = URL(string: href)!
+          } else if href.hasPrefix("/") {
+            var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
+            
+            let splitHref = href.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+            let pathPart = String(splitHref[0])
+            let queryPart = splitHref.count > 1 ? String(splitHref[1]) : nil
+
+            components.path = pathPart
+            components.query = queryPart
+
+            faviconURL = components.url!
+          } else {
+            faviconURL = URL(string: href, relativeTo: currentURL)!
+          }
+          
+          self.parent.tab.favicon = faviconURL
         }
       }
       
@@ -109,40 +103,22 @@ struct Webview: NSViewRepresentable {
     newWebview.allowsBackForwardNavigationGestures = true
     
     tab.webview = newWebview
-    newWebview.load(URLRequest(url: URL(string: tab.originURL)!))
+//    newWebview.load(URLRequest(url: URL(string: tab.originURL)!))
     return newWebview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     print("############# 웹뷰 업데이트 호출: update")
-//    var nowWebviewURL: String = ""
-//    var nowWebviewStringURL: String = ""
-//    if let stringURL = webView.url {
-//      nowWebviewStringURL = String(describing: stringURL)
-//      nowWebviewURL = String(describing: stringURL)
-//      nowWebviewURL = StringURL.shortURL(url: nowWebviewURL)
-//    }
-//      
-//    let stateURL: String = StringURL.shortURL(url: tab.webURL)
-//
-//    if(stateURL == nowWebviewURL) {
-//      if StringURL.shortURL(url: tab.viewURL) != stateURL {
-//        tab.viewURL = stateURL
-//      }
-//      return
-//    }
-//    
-//    if nowWebviewStringURL != "" {
-//      if tab.goToPage {
-//        webView.load(URLRequest(url: URL(string: tab.webURL)!))
-//        DispatchQueue.main.async {
-//          tab.goToPage = false
-//        }
-//      } else {
-//        webView.load(URLRequest(url: URL(string: nowWebviewStringURL)!))
-//      }
-//    } else {
-//      webView.load(URLRequest(url: URL(string: tab.webURL)!))
-//    }
+    print("webview url: \(String(describing: webView.url))")
+    print("tab origin url: \(String(describing: tab.originURL))")
+    
+    if let webviewURL = webView.url {
+      let webviewStringURL = StringURL.removeLastSlash(url: String(describing: webviewURL))
+      if webviewStringURL != StringURL.removeLastSlash(url: tab.originURL) {
+        webView.load(URLRequest(url: URL(string: tab.originURL)!))
+      }
+    } else {
+      webView.load(URLRequest(url: URL(string: tab.originURL)!))
+    }
   }
 }
