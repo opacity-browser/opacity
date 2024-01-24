@@ -15,15 +15,6 @@ class WebviewError {
   static var share = WebviewError()
 }
 
-class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
-  func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    if message.name == "myHandler" {
-      // JavaScript에서 보낸 메시지 처리
-      print("Received message: \(message.body)")
-    }
-  }
-}
-
 struct Webview: NSViewRepresentable {
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
@@ -35,19 +26,54 @@ struct Webview: NSViewRepresentable {
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
     var parent: Webview
+    var errorPages: [WKBackForwardListItem: URL] = [:]
+    var errorOriginURL: URL?
     
     init(_ parent: Webview) {
-        self.parent = parent
+      self.parent = parent
     }
     
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-      print("didStartProvisionalNavigation")
+    func getCurrentItem(of webView: WKWebView) -> WKBackForwardListItem? {
+      guard let currentItem = webView.backForwardList.currentItem else {
+        return nil
+      }
+      return currentItem
+    }
+    
+//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+//      print("didStartProvisionalNavigation")
+//      if let currentItem = getCurrentItem(of: webView) {
+//        print("============= did start currentItem: \(currentItem)")
+//      }
+//      WebviewError.share.isError = false
+//      if WebviewError.share.checkError {
+//        WebviewError.share.checkError = false
+//        WebviewError.share.isError = true
+//      }
+//    }
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+      print("============= didComit currentItem: \(getCurrentItem(of: webView)!)")
+      
       WebviewError.share.isError = false
       if WebviewError.share.checkError {
         WebviewError.share.checkError = false
         WebviewError.share.isError = true
+        
+        if let errorURL = errorOriginURL, let currentItem = getCurrentItem(of: webView) {
+          print("set error url: \(errorURL)")
+          errorPages[currentItem] = errorURL
+          errorOriginURL = nil
+        }
+      } else {
+        if let currentItem = getCurrentItem(of: webView), let originalURL = errorPages[currentItem] {
+          print("update error url: \(originalURL)")
+          webView.load(URLRequest(url: originalURL))
+          errorPages.removeValue(forKey: currentItem)
+        }
       }
     }
+
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
       guard let url = navigationAction.request.url else {
@@ -100,7 +126,6 @@ struct Webview: NSViewRepresentable {
       if WebviewError.share.isError {
         webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(self.parent.tab.originURL)'})")
         webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
-        print("set Script")
         return
       }
 
@@ -143,7 +168,6 @@ struct Webview: NSViewRepresentable {
       print("############# 새창으로 웹뷰 호출")
       if navigationAction.targetFrame == nil {
         if let requestURL = navigationAction.request.url {
-          print("new tab url: \(requestURL)")
           let newTab = Tab(url: requestURL)
           self.parent.tabs.append(newTab)
           self.parent.activeTabIndex = parent.tabs.count - 1
@@ -154,10 +178,17 @@ struct Webview: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
       if (error as NSError).code == NSURLErrorCancelled {
-          return // 오류를 무시하거나 특별한 처리를 합니다.
+          return // 오류 무시
       }
-      // 오류 화면 표시 로직
-      print("http 포함 오류")
+      
+      if let urlError = error as? URLError {
+        if let failingURL = urlError.userInfo[NSURLErrorFailingURLErrorKey] as? URL {
+          // 실패 도메인 캐시
+          errorOriginURL = failingURL
+        }
+      }
+      
+      // 오류
       print(error)
       handleWebViewError(webView: webView, error: error)
     }
@@ -169,24 +200,19 @@ struct Webview: NSViewRepresentable {
     
     private func handleWebViewError(webView: WKWebView, error: Error) {
       let nsError = error as NSError
-      
       print("in webive error func")
       
-      // HTTP 요청 오류
-      if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorAppTransportSecurityRequiresSecureConnection {
-          // 'http' 요청 관련 오류 처리
-      }
-
       // 웹 콘텐츠 로딩 관련 오류
       if nsError.domain == NSURLErrorDomain {
+        WebviewError.share.checkError = true
+        WebviewError.share.isError = true
+        
         switch nsError.code {
           case NSURLErrorCannotFindHost:
             // 호스트를 찾을 수 없는 경우 처리
             print("not-find-host")
-            if let schemeURL = URL(string: "friedegg://not-find-host") {
+            if let schemeURL = URL(string:"friedegg://not-find-host") {
               webView.load(URLRequest(url: schemeURL))
-              WebviewError.share.checkError = true
-              WebviewError.share.isError = true
             }
           case NSURLErrorCannotConnectToHost:
             // 호스트에 연결할 수 없는 경우 처리
@@ -203,12 +229,13 @@ struct Webview: NSViewRepresentable {
   }
       
   func makeNSView(context: Context) -> WKWebView {
+    let config = WKWebViewConfiguration()
+    
     let prefs = WKWebpagePreferences()
     prefs.allowsContentJavaScript = true
-    let config = WKWebViewConfiguration()
-    let schemeHandler = SchemeHandler()
-    
     config.defaultWebpagePreferences = prefs
+    
+    let schemeHandler = SchemeHandler()
     config.setURLSchemeHandler(schemeHandler, forURLScheme: "friedegg")
     
 //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
@@ -219,18 +246,17 @@ struct Webview: NSViewRepresentable {
 //    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
 //    config.preferences = preferences
     
-    let contentController = WKUserContentController()
-    let handler = MyScriptMessageHandler()
-    contentController.add(handler, name: "myHandler")
-    config.userContentController = contentController
+//    let contentController = WKUserContentController()
+//    config.userContentController = contentController
     
     let newWebview = WKWebView(frame: .zero, configuration: config)
+    
     newWebview.navigationDelegate = context.coordinator
     newWebview.uiDelegate = context.coordinator
     newWebview.allowsBackForwardNavigationGestures = true
+    newWebview.isInspectable = true
     
     tab.webview = newWebview
-    newWebview.isInspectable = true
     return newWebview
   }
   
@@ -240,7 +266,7 @@ struct Webview: NSViewRepresentable {
     print("tab origin url: \(String(describing: tab.originURL))")
     print("WebviewError.share.isError: \(WebviewError.share.isError)")
     
-    if WebviewError.share.isError {
+    if !tab.isUpdateBySearch && WebviewError.share.isError {
       print("isError: true - return")
       return
     }
@@ -258,6 +284,7 @@ struct Webview: NSViewRepresentable {
     
     if tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
+      WebviewError.share.isError = false
       print("update by searchURL - return")
       webView.load(URLRequest(url: tab.originURL))
       return
