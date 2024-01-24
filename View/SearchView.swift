@@ -32,7 +32,7 @@ struct SearchView: View {
   var body: some View {
     HStack(spacing: 0) {
       
-      VStack(spacing: 0) { }.frame(width: 10)
+      VStack(spacing: 0) { }.frame(width: 11)
       
       VStack(spacing: 0) {
         Image(systemName: "chevron.backward")
@@ -105,7 +105,7 @@ struct SearchView: View {
         }
       }
       
-      VStack(spacing: 0) { }.frame(width: 10)
+      VStack(spacing: 0) { }.frame(width: 8)
       
       Spacer()
       
@@ -161,7 +161,7 @@ struct SearchView: View {
                 }
 
                 DispatchQueue.main.async {
-                  tab.updateURL(url: URL(string: newURL)!)
+                  tab.updateURLBySearch(url: URL(string: newURL)!)
                 }
               }
             }

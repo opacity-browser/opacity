@@ -8,22 +8,30 @@
 import SwiftUI
 import WebKit
 
+//enum WebviewError {
+//  case noError
+//  case notFind
+//  case notHttps
+//  case notNetwork
+//  case notConnect
+//}
+
 final class Tab: ObservableObject, Identifiable {
   var id = UUID()
-  
-  @Published var originURL: URL {
-    didSet {
-      objectWillChange.send()
-    }
-  }
+  @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
+  
+  var isUpdateBySearch: Bool = false
+//  var prevURL: URL
   
   @Published var title: String = ""
   @Published var favicon: Image = Image("egg")
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
+  
+//  @Published var isErrorStatus: WebviewError = .noError
   
   var webview: WKWebView?
   
@@ -37,19 +45,35 @@ final class Tab: ObservableObject, Identifiable {
     self.title = shortStringURL
   }
   
-  func updateURL(url: URL) {
+  func updateURLBySearch(url: URL) {
     let stringURL = String(describing: url)
     let shortStringURL = StringURL.shortURL(url: stringURL)
     
-    self.originURL = url
-    self.inputURL = stringURL
-    self.printURL = shortStringURL
-    self.title = shortStringURL
+    DispatchQueue.main.async {
+      self.isUpdateBySearch = true
+      self.originURL = url
+      self.inputURL = stringURL
+      self.printURL = shortStringURL
+      self.title = shortStringURL
+    }
+  }
+  
+  func updateURLByBrowser(url: URL) {
+    let stringURL = String(describing: url)
+    let shortStringURL = StringURL.shortURL(url: stringURL)
+    
+    DispatchQueue.main.async {
+      self.originURL = url
+      self.inputURL = stringURL
+      self.printURL = shortStringURL
+      self.title = shortStringURL
+    }
   }
   
   func loadFavicon(url: URL) {
     URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, let uiImage = NSImage(data: data) else {
+        self.setDefaultFavicon()
         return
       }
       DispatchQueue.main.async {
@@ -61,8 +85,10 @@ final class Tab: ObservableObject, Identifiable {
   }
   
   func setDefaultFavicon() {
-    withAnimation {
-      self.favicon = Image("egg")
+    DispatchQueue.main.async {
+      withAnimation {
+        self.favicon = Image("egg")
+      }
     }
   }
 }

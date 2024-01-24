@@ -45,7 +45,7 @@ struct BrowserTabView: View {
                 .clipped()
             }
             .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-            .padding(.leading, 7)
+            .padding(.leading, 8)
             
             Text(tab.title)
               .frame(maxWidth: 160, maxHeight: 22, alignment: .leading)
