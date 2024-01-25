@@ -242,9 +242,9 @@ struct Webview: NSViewRepresentable {
 //    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
 //    config.userContentController.addUserScript(userScript)
     
-//    let preferences = WKPreferences()
-//    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
-//    config.preferences = preferences
+    let preferences = WKPreferences()
+    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
+    config.preferences = preferences
     
 //    let contentController = WKUserContentController()
 //    config.userContentController = contentController

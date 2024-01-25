@@ -26,7 +26,7 @@ struct SearchView: View {
   @State private var isRefreshHober: Bool = false
   
   let inputHeight: Double = 29
-  let iconHeight: Double = 26
+  let iconHeight: Double = 22
   let iconRadius: Double = 6
   
   var body: some View {
