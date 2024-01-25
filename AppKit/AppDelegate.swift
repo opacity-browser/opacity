@@ -113,46 +113,46 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       let mainMenu = NSMenu()
       
       // Opacity 메뉴
-      let opacityItem = NSMenuItem(title: "Opacity", action: nil, keyEquivalent: "")
-      let opacityMenu = NSMenu(title: "Opacity")
-      opacityMenu.addItem(NSMenuItem(title: "About Opacity", action: nil, keyEquivalent: ""))
+      let opacityItem = NSMenuItem(title: NSLocalizedString("Fried Egg", comment: ""), action: nil, keyEquivalent: "")
+      let opacityMenu = NSMenu(title: NSLocalizedString("Fried Egg", comment: ""))
+      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Fried Egg", comment: ""), action: nil, keyEquivalent: ""))
       opacityMenu.addItem(NSMenuItem.separator())
-      opacityMenu.addItem(withTitle: "Exit Opacity", action: #selector(self.exitApplication), keyEquivalent: "q")
+      opacityMenu.addItem(withTitle: NSLocalizedString("Quit Fried Egg", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
       opacityItem.submenu = opacityMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
       
       mainMenu.addItem(opacityItem)
       
       // File 메뉴
-      let fileItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
-      let fileMenu = NSMenu(title: "File")
-      fileMenu.addItem(withTitle: "New Window", action: #selector(self.newWindow), keyEquivalent: "n")
-      fileMenu.addItem(withTitle: "New Tab", action: #selector(self.newTab), keyEquivalent: "t")
+      let fileItem = NSMenuItem(title: NSLocalizedString("File", comment: ""), action: nil, keyEquivalent: "")
+      let fileMenu = NSMenu(title: NSLocalizedString("File", comment: ""))
+      fileMenu.addItem(withTitle: NSLocalizedString("New Window", comment: ""), action: #selector(self.newWindow), keyEquivalent: "n")
+      fileMenu.addItem(withTitle: NSLocalizedString("New Tab", comment: ""), action: #selector(self.newTab), keyEquivalent: "t")
       fileMenu.addItem(NSMenuItem.separator())
-      fileMenu.addItem(withTitle: "Close Window", action: #selector(self.closeWindow), keyEquivalent: "W")
-      fileMenu.addItem(withTitle: "Close Tab", action: #selector(self.closeTab), keyEquivalent: "w")
+      fileMenu.addItem(withTitle: NSLocalizedString("Close Window", comment: ""), action: #selector(self.closeWindow), keyEquivalent: "W")
+      fileMenu.addItem(withTitle: NSLocalizedString("Close Tab", comment: ""), action: #selector(self.closeTab), keyEquivalent: "w")
       fileItem.submenu = fileMenu
       
       mainMenu.addItem(fileItem)
       
       // Edit 메뉴
-      let editItem = NSMenuItem(title: "Edit", action: nil, keyEquivalent: "")
-      let editMenu = NSMenu(title: "Edit")
+      let editItem = NSMenuItem(title: NSLocalizedString("Edit", comment: ""), action: nil, keyEquivalent: "")
+      let editMenu = NSMenu(title: NSLocalizedString("Edit", comment: ""))
       editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
       editMenu.addItem(withTitle: "Redo", action: Selector(("redo:")), keyEquivalent: "Z")
       editMenu.addItem(NSMenuItem.separator())
-      editMenu.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-      editMenu.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-      editMenu.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-      editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+      editMenu.addItem(withTitle: NSLocalizedString("Cut", comment: ""), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+      editMenu.addItem(withTitle: NSLocalizedString("Copy", comment: ""), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+      editMenu.addItem(withTitle: NSLocalizedString("Paste", comment: ""), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+      editMenu.addItem(withTitle: NSLocalizedString("Select All", comment: ""), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
       editMenu.addItem(NSMenuItem.separator())
       editItem.submenu = editMenu
       
       mainMenu.addItem(editItem)
       
       // View 메뉴
-      let viewItem = NSMenuItem(title: "View", action: nil, keyEquivalent: "")
-      let viewMenu = NSMenu(title: "View")
-      viewMenu.addItem(withTitle: "Reload Page", action: #selector(self.refreshTab), keyEquivalent: "r")
+      let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
+      let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
+      viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
       viewMenu.addItem(NSMenuItem.separator())
       viewItem.submenu = viewMenu
       
@@ -171,13 +171,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
   }
   
-  func menuWillOpen(_ menu: NSMenu) {
-    // 메뉴 아이템의 상태 업데이트
-    print("a")
-    menu.items.forEach { item in
-      item.isEnabled = true // 또는 특정 조건에 따라 설정
-    }
-  }
+//  func menuWillOpen(_ menu: NSMenu) {
+//    // 메뉴 아이템의 상태 업데이트
+//    print("a")
+//    menu.items.forEach { item in
+//      item.isEnabled = true // 또는 특정 조건에 따라 설정
+//    }
+//  }
   
   @objc func exitApplication() {
     if self.isTerminating {

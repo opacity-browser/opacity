@@ -8,10 +8,18 @@
 import SwiftUI
 import WebKit
 
+enum WebViewErrorType {
+  case notFindHost
+  case notConnectHost
+  case lostNetworkConnect
+  case unkown
+  case noError
+}
 
 class WebviewError {
   var isError: Bool = false
   var checkError: Bool = false
+  var errorType: WebViewErrorType = .noError
   static var share = WebviewError()
 }
 
@@ -114,7 +122,28 @@ struct Webview: NSViewRepresentable {
         self.parent.tab.isBack = webView.canGoBack
         self.parent.tab.isForward = webView.canGoForward
       }
-
+      
+      if WebviewError.share.isError {
+        switch WebviewError.share.errorType {
+          case .notFindHost:
+            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), self.parent.tab.printURL)
+            let href = self.parent.tab.originURL
+            let title = NSLocalizedString("Unable to connect to site", comment: "")
+            let refreshBtn = NSLocalizedString("Refresh", comment: "")
+            
+            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
+            webView.evaluateJavaScript("setErrorPageString()")
+          case .notConnectHost:
+            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+          case .lostNetworkConnect:
+            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+          case .unkown:
+            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+          case .noError:
+            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+        }
+      }
+      
       webView.evaluateJavaScript("document.title") { (response, error) in
         if let title = response as? String {
           DispatchQueue.main.async {
@@ -124,11 +153,9 @@ struct Webview: NSViewRepresentable {
       }
       
       if WebviewError.share.isError {
-        webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(self.parent.tab.originURL)'})")
-        webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
         return
       }
-
+          
       webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
         guard let href = response as? String, let currentURL = webView.url else {
           if let webviewURL = webView.url {
@@ -211,7 +238,8 @@ struct Webview: NSViewRepresentable {
           case NSURLErrorCannotFindHost:
             // 호스트를 찾을 수 없는 경우 처리
             print("not-find-host")
-            if let schemeURL = URL(string:"friedegg://not-find-host") {
+            WebviewError.share.errorType = .notFindHost
+            if let schemeURL = URL(string:"friedegg://not-find-host?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
           case NSURLErrorCannotConnectToHost:

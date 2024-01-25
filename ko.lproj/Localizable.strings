@@ -1,0 +1,25 @@
+// App
+"lang" = "ko";
+
+// Menu
+"Fried Egg" = "Fried Egg";
+"About Fried Egg" = "Fried Egg 소개";
+"Quit Fried Egg" = "Fried Egg 종료";
+"File" = "파일";
+"New Window" = "새로운 윈도우";
+"New Tab" = "새로운 탭";
+"Close Window" = "윈도우 닫기";
+"Close Tab" = "탭 닫기";
+"Edit" = "편집";
+"Cut" = "잘라내기";
+"Copy" = "복사";
+"Paste" = "붙여넣기";
+"Select All" = "모두 선택";
+"View" = "보기";
+"Reload Page" = "페이지 새로고침";
+
+// Not find host
+"Unable to connect to site" = "Unable to connect to site";
+"The server IP address for \\'%@\\' could not be found." = "The server IP address for \\'%@\\' could not be found.";
+"Refresh" = "Refresh";
+

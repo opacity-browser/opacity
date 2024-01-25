@@ -1,0 +1,26 @@
+// App
+"lang" = "en";
+
+// Menu
+"Fried Egg" = "Fried Egg";
+"About Fried Egg" = "About Fried Egg";
+"File" = "File";
+"Quit Fried Egg" = "Quit Fried Egg";
+"New Window" = "New Window";
+"New Tab" = "New Tab";
+"Close Window" = "Close Window";
+"Close Tab" = "Close Tab";
+"Edit" = "Edit";
+"Cut" = "Cut";
+"Copy" = "Copy";
+"Paste" = "Paste";
+"Select All" = "Select All";
+"View" = "View";
+"Reload Page" = "Reload Page";
+
+// Not find host
+"Unable to connect to site" = "Unable to connect to site";
+"The server IP address for \\'%@\\' could not be found." = "The server IP address for \\'%@\\' could not be found.";
+"Refresh" = "Refresh";
+
+//NSLocalizedString("", comment: "")
