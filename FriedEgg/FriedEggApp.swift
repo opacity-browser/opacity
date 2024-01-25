@@ -15,7 +15,7 @@ struct FriedEggApp: App {
       Settings {
         
       }
-    }
+  }
 //    WindowGroup {
 //      ContentView()
 //        .environmentObject(Browser())

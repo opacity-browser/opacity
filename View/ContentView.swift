@@ -15,19 +15,22 @@ struct ContentView: View {
           TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index)
             .frame(maxWidth: .infinity, maxHeight: 38)
         }
-        // nav area
-        NavigationSplitView(columnVisibility: $columnVisibility) {
-          SidebarView()
-            .navigationSplitViewColumnWidth(min: 180, ideal: 180)
-        } detail: {
-          MainView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+        MainView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+      }
+      .toolbar {
+        ToolbarItemGroup(placement: .primaryAction) {
+          Spacer()
+          Button(action: {
+            // 버튼 액션
+          }) {
+            Image(systemName: "bell") // 아이콘 지정
+          }
         }
       }
       .onChange(of: geometry.size) { oldValue, newValue in
         windowWidth = newValue.width
       }
       .ignoresSafeArea(.container, edges: .top)
-      .frame(minWidth: 520)
       .onAppear {
         if browser.tabs.count == 0 {
           let newTab = Tab(url: DEFAULT_URL)
