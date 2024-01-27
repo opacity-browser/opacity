@@ -19,7 +19,7 @@ struct TitlebarView: View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
 
-        VStack { }.frame(width: 72)
+        VStack { }.frame(width: 74)
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in

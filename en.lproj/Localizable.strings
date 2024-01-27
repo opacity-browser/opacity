@@ -18,9 +18,16 @@
 "View" = "View";
 "Reload Page" = "Reload Page";
 
-// Not find host
-"Unable to connect to site" = "Unable to connect to site";
+// Error Page
+"Page not found" = "Page not found";
 "The server IP address for \\'%@\\' could not be found." = "The server IP address for \\'%@\\' could not be found.";
+"Unable to connect to site" = "Unable to connect to site";
+"Connection has been reset." = "Connection has been reset.";
+"No internet connection" = "No internet connection";
+"There is no internet connection." = "There is no internet connection.";
+"Unknown error" = "Unknown error";
+"An unknown error occurred." = "An unknown error occurred.";
+
 "Refresh" = "Refresh";
 
 //NSLocalizedString("", comment: "")

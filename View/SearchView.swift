@@ -32,7 +32,7 @@ struct SearchView: View {
   var body: some View {
     HStack(spacing: 0) {
       
-      VStack(spacing: 0) { }.frame(width: 11)
+      VStack(spacing: 0) { }.frame(width: 10)
       
       VStack(spacing: 0) {
         Image(systemName: "chevron.backward")
@@ -82,7 +82,7 @@ struct SearchView: View {
         }
       }
       
-      VStack(spacing: 0) { }.frame(width: 10)
+      VStack(spacing: 0) { }.frame(width: 8)
       
       VStack(spacing: 0) {
         Image(systemName: "goforward")
@@ -105,7 +105,7 @@ struct SearchView: View {
         }
       }
       
-      VStack(spacing: 0) { }.frame(width: 8)
+      VStack(spacing: 0) { }.frame(width: 6)
       
       Spacer()
       
@@ -222,7 +222,7 @@ struct SearchView: View {
       
       Spacer()
       
-      VStack(spacing: 0) { }.frame(width: 10)
+      VStack(spacing: 0) { }.frame(width: 6)
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {
