@@ -25,8 +25,6 @@
 "Connection has been reset." = "Connection has been reset.";
 "No internet connection" = "No internet connection";
 "There is no internet connection." = "There is no internet connection.";
-"This site can't be reached" = "This site can't be reached";
-"\\'%@\\' took too long to respond." = "\\'%@\\' took too long to respond.";
 "Unknown error" = "Unknown error";
 "An unknown error occurred." = "An unknown error occurred.";
 

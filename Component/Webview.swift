@@ -12,7 +12,6 @@ enum WebViewErrorType {
   case notFindHost
   case notConnectHost
   case notConnectInternet
-  case timeOut
   case unkown
   case noError
 }
@@ -145,14 +144,6 @@ struct Webview: NSViewRepresentable {
           case .notConnectInternet:
             let title = NSLocalizedString("No internet connection", comment: "")
             let message = NSLocalizedString("There is no internet connection.", comment: "")
-            let href = self.parent.tab.originURL
-            let refreshBtn = NSLocalizedString("Refresh", comment: "")
-            
-            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
-            webView.evaluateJavaScript("setErrorPageString()")
-          case .timeOut:
-            let title = NSLocalizedString("This site can't be reached", comment: "")
-            let message = String(format: NSLocalizedString("\\'%@\\' took too long to respond.", comment: ""), self.parent.tab.printURL)
             let href = self.parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
