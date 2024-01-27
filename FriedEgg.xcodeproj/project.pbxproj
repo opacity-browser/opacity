@@ -36,6 +36,10 @@
 		A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */; };
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
+		A1A1D8E62B638A9C008FD44F /* not-connect-host.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E32B638A9B008FD44F /* not-connect-host.html */; };
+		A1A1D8E72B638A9C008FD44F /* not-connect-internet.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */; };
+		A1A1D8E82B638A9C008FD44F /* unknown.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E52B638A9C008FD44F /* unknown.html */; };
+		A1A1D8EA2B655113008FD44F /* timeout.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E92B655113008FD44F /* timeout.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +82,10 @@
 		A1A1D8E02B62BB4F008FD44F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A1A1D8E12B62BB53008FD44F /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A1A1D8E32B638A9B008FD44F /* not-connect-host.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "not-connect-host.html"; sourceTree = "<group>"; };
+		A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "not-connect-internet.html"; sourceTree = "<group>"; };
+		A1A1D8E52B638A9C008FD44F /* unknown.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = unknown.html; sourceTree = "<group>"; };
+		A1A1D8E92B655113008FD44F /* timeout.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = timeout.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +102,10 @@
 		A12D053C2B600C4C00CBC6B2 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
+				A1A1D8E92B655113008FD44F /* timeout.html */,
+				A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */,
+				A1A1D8E32B638A9B008FD44F /* not-connect-host.html */,
+				A1A1D8E52B638A9C008FD44F /* unknown.html */,
 				A12D053D2B600C6100CBC6B2 /* not-find-host.html */,
 			);
 			path = HTML;
@@ -290,10 +302,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1A1D8E62B638A9C008FD44F /* not-connect-host.html in Resources */,
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A12D053E2B600C6100CBC6B2 /* not-find-host.html in Resources */,
+				A1A1D8E72B638A9C008FD44F /* not-connect-internet.html in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
+				A1A1D8EA2B655113008FD44F /* timeout.html in Resources */,
+				A1A1D8E82B638A9C008FD44F /* unknown.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

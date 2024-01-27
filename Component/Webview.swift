@@ -11,7 +11,7 @@ import WebKit
 enum WebViewErrorType {
   case notFindHost
   case notConnectHost
-  case lostNetworkConnect
+  case notConnectInternet
   case unkown
   case noError
 }
@@ -126,21 +126,39 @@ struct Webview: NSViewRepresentable {
       if WebviewError.share.isError {
         switch WebviewError.share.errorType {
           case .notFindHost:
+            let title = NSLocalizedString("Page not found", comment: "")
             let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), self.parent.tab.printURL)
             let href = self.parent.tab.originURL
-            let title = NSLocalizedString("Unable to connect to site", comment: "")
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
             webView.evaluateJavaScript("setErrorPageString()")
           case .notConnectHost:
-            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
-          case .lostNetworkConnect:
-            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+            let title = NSLocalizedString("Unable to connect to site", comment: "")
+            let message = NSLocalizedString("Connection has been reset.", comment: "")
+            let href = self.parent.tab.originURL
+            let refreshBtn = NSLocalizedString("Refresh", comment: "")
+            
+            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
+            webView.evaluateJavaScript("setErrorPageString()")
+          case .notConnectInternet:
+            let title = NSLocalizedString("No internet connection", comment: "")
+            let message = NSLocalizedString("There is no internet connection.", comment: "")
+            let href = self.parent.tab.originURL
+            let refreshBtn = NSLocalizedString("Refresh", comment: "")
+            
+            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
+            webView.evaluateJavaScript("setErrorPageString()")
           case .unkown:
-            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+            let title = NSLocalizedString("Unknown error", comment: "")
+            let message = NSLocalizedString("An unknown error occurred.", comment: "")
+            let href = self.parent.tab.originURL
+            let refreshBtn = NSLocalizedString("Refresh", comment: "")
+            
+            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
+            webView.evaluateJavaScript("setErrorPageString()")
           case .noError:
-            webView.evaluateJavaScript("setErrorHostString('\(self.parent.tab.printURL)')")
+            break
         }
       }
       
@@ -153,6 +171,7 @@ struct Webview: NSViewRepresentable {
       }
       
       if WebviewError.share.isError {
+        self.parent.tab.setDefaultFavicon()
         return
       }
           
@@ -234,6 +253,8 @@ struct Webview: NSViewRepresentable {
         WebviewError.share.checkError = true
         WebviewError.share.isError = true
         
+        print(nsError.code)
+        
         switch nsError.code {
           case NSURLErrorCannotFindHost:
             // 호스트를 찾을 수 없는 경우 처리
@@ -242,15 +263,27 @@ struct Webview: NSViewRepresentable {
             if let schemeURL = URL(string:"friedegg://not-find-host?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
-          case NSURLErrorCannotConnectToHost:
+          case NSURLErrorSecureConnectionFailed:
             // 호스트에 연결할 수 없는 경우 처리
             print("not-connect-host")
-          case NSURLErrorNetworkConnectionLost:
+            WebviewError.share.errorType = .notConnectHost
+            if let schemeURL = URL(string:"friedegg://not-connect-host?lang=\(NSLocalizedString("lang", comment: ""))") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+          case NSURLErrorNotConnectedToInternet:
             // 네트워크 연결 끊김 처리
-            print("lost-network-connect")
+            print("not-connect-internet")
+            WebviewError.share.errorType = .notConnectInternet
+            if let schemeURL = URL(string:"friedegg://not-connect-internet?lang=\(NSLocalizedString("lang", comment: ""))") {
+              webView.load(URLRequest(url: schemeURL))
+            }
           default:
             // 기타 오류 처리
-            print("unknown-error")
+            print("unknown")
+            WebviewError.share.errorType = .unkown
+            if let schemeURL = URL(string:"friedegg://unknown?lang=\(NSLocalizedString("lang", comment: ""))") {
+              webView.load(URLRequest(url: schemeURL))
+            }
         }
       }
     }
