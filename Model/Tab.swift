@@ -26,7 +26,7 @@ final class Tab: ObservableObject, Identifiable {
 //  var prevURL: URL
   
   @Published var title: String = ""
-  @Published var favicon: Image = Image("egg")
+  @Published var favicon: Image?
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
@@ -55,6 +55,7 @@ final class Tab: ObservableObject, Identifiable {
       self.inputURL = stringURL
       self.printURL = shortStringURL
       self.title = shortStringURL
+      self.favicon = nil
     }
   }
   
@@ -67,6 +68,7 @@ final class Tab: ObservableObject, Identifiable {
       self.inputURL = stringURL
       self.printURL = shortStringURL
       self.title = shortStringURL
+      self.favicon = nil
     }
   }
   
@@ -87,7 +89,7 @@ final class Tab: ObservableObject, Identifiable {
   func setDefaultFavicon() {
     DispatchQueue.main.async {
       withAnimation {
-        self.favicon = Image("egg")
+        self.favicon = nil
       }
     }
   }

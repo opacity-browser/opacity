@@ -36,16 +36,21 @@ struct BrowserTabView: View {
           
           HStack(spacing: 0) {
             
-            VStack(spacing: 0) {
-              tab.favicon
-                .resizable() // 이미지 크기 조절 가능하게 함
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: 14, maxHeight: 14)
-                .clipShape(RoundedRectangle(cornerRadius: 4))
-                .clipped()
+            if let favicon = tab.favicon {
+              VStack(spacing: 0) {
+                favicon
+                  .resizable() // 이미지 크기 조절 가능하게 함
+                  .aspectRatio(contentMode: .fill)
+                  .frame(maxWidth: 14, maxHeight: 14)
+                  .clipShape(RoundedRectangle(cornerRadius: 4))
+                  .clipped()
+              }
+              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
+              .padding(.leading, 8)
+            } else {
+              VStack(spacing: 0) { }
+                .frame(width: 4)
             }
-            .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-            .padding(.leading, 8)
             
             Text(tab.title)
               .frame(maxWidth: 160, maxHeight: 22, alignment: .leading)
