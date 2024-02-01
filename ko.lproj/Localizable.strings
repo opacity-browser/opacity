@@ -1,5 +1,6 @@
 // App
 "lang" = "ko";
+"to quit, press ⌘Q agin" = "종료하려면, ⌘Q를 한 번 더 눌러주세요.";
 
 // Menu
 "Fried Egg" = "Fried Egg";

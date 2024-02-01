@@ -11,6 +11,7 @@ struct MainView: View {
 //  @Environment(\.colorScheme) var colorScheme
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
+  @Binding var progress: Double
   
   var body: some View {
     VStack(spacing: 0) {
@@ -18,7 +19,7 @@ struct MainView: View {
       ZStack {
         if tabs.count > 0 {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, item in
-            WebviewView(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[activeTabIndex], index: index)
+            WebviewView(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[activeTabIndex], index: index, progress: $progress)
           }
         }
       }

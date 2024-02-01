@@ -29,22 +29,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
 
     let contentView = HStack(spacing: 0) {
-      Text("to quit, press ")
-        .font(.system(size: 30))
-        .bold()
-        .foregroundStyle(.white)
-      Image(systemName: "command")
-        .font(.system(size: 30))
-        .bold()
-        .foregroundStyle(.white)
-      Text("Q again")
+      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
         .font(.system(size: 30))
         .bold()
         .foregroundStyle(.white)
     }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .padding(.vertical, 10)
+      .padding(.horizontal, 20)
       .background(.black.opacity(0.4))
       .clipShape(RoundedRectangle(cornerRadius: 10))
+    
+    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
+    exitWindow.setContentSize(newContentSize)
     
     exitWindow.contentView = NSHostingController(rootView: contentView).view
     exitWindow.center()
