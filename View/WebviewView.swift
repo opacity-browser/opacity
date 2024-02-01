@@ -12,8 +12,10 @@ struct WebviewView: View {
   @Binding var activeTabIndex: Int
   @ObservedObject var tab: Tab
   var index: Int
+  @Binding var progress: Double
   
   var body: some View {
-    Webview(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[index]).zIndex(index == activeTabIndex ? Double(tabs.count) : 0)
+    Webview(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[index], progress: $progress)
+      .zIndex(index == activeTabIndex ? Double(tabs.count) : 0)
   }
 }

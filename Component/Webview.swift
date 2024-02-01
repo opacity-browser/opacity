@@ -27,6 +27,7 @@ struct Webview: NSViewRepresentable {
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
   @ObservedObject var tab: Tab
+  @Binding var progress: Double
   
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
@@ -48,7 +49,9 @@ struct Webview: NSViewRepresentable {
       return currentItem
     }
     
-//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+      parent.progress = webView.estimatedProgress
+    }
 //      print("didStartProvisionalNavigation")
 //      if let currentItem = getCurrentItem(of: webView) {
 //        print("============= did start currentItem: \(currentItem)")
@@ -116,6 +119,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+      parent.progress = webView.estimatedProgress
       print("############# didFinish")
       
       DispatchQueue.main.async {
@@ -240,6 +244,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+      parent.progress = webView.estimatedProgress
       print("didFail")
       handleWebViewError(webView: webView, error: error)
     }

@@ -12,6 +12,8 @@ struct TitlebarView: View {
   
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
+  @Binding var progress: Double
+  @Binding var showProgress: Bool
   
   @State private var isAddHover: Bool = false
   
@@ -23,7 +25,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex) {
+            BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -74,7 +76,7 @@ struct TitlebarView: View {
     }
     
     // search area
-    SearchView(tab: tabs[activeTabIndex])
+    SearchView(tab: tabs[activeTabIndex], progress: $progress, showProgress: $showProgress)
       .frame(maxWidth: .infinity,  maxHeight: 37.0)
       .background(Color("MainBlack"))
   }

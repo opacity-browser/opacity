@@ -11,8 +11,9 @@ struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
 //  @Binding var tabs: [Tab]
 //  @Binding var activeTabIndex: Int
-  
   @ObservedObject var tab: Tab
+  @Binding var progress: Double
+  @Binding var showProgress: Bool
   
   @FocusState private var textFieldFocused: Bool
   
@@ -146,11 +147,9 @@ struct SearchView: View {
 //                self.isDomain = StringURL.checkURL(url: tab.inputURL)
 //              }
               .onSubmit {
-                print("submit")
                 if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                   return
                 }
-                print("submit - process")
                 var newURL = tab.inputURL
                 if StringURL.checkURL(url: newURL) {
                   if !newURL.contains("://") {
@@ -160,6 +159,8 @@ struct SearchView: View {
                   newURL = "https://www.google.com/search?q=\(newURL)"
                 }
 
+                showProgress = true
+                progress = 0.0
                 DispatchQueue.main.async {
                   tab.updateURLBySearch(url: URL(string: newURL)!)
                 }
@@ -174,45 +175,61 @@ struct SearchView: View {
         .padding(.leading, 1)
       } else {
         HStack(spacing: 0) {
-          ZStack {
-            Rectangle()
-              .frame(maxWidth: .infinity, maxHeight: inputHeight)
-              .foregroundColor(isSearchHover ? .gray.opacity(0.3) : .gray.opacity(0.15))
-              .clipShape(RoundedRectangle(cornerRadius: 10))
-            
-            HStack(spacing: 0) {
-              HStack(spacing: 0) {
-                Image(systemName: "lock.shield")
-                  .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
-                  .background(Color("MainBlack"))
-                  .clipShape(RoundedRectangle(cornerRadius: 11))
-                  .font(.system(size: 13))
-                  .foregroundColor(Color.white.opacity(0.9))
-              }
-              .padding(.leading, 5)
-              .padding(.top, 1)
+          GeometryReader { geometry in
+            ZStack {
+              Rectangle()
+                .frame(maxWidth: .infinity, maxHeight: inputHeight)
+                .foregroundColor(isSearchHover ? .gray.opacity(0.3) : .gray.opacity(0.15))
+                .overlay {
+                  if showProgress {
+                    HStack(spacing: 0) {
+                      Rectangle()
+                        .foregroundColor(Color("PointJade"))
+                        .frame(maxWidth: geometry.size.width * CGFloat(progress), maxHeight: 2, alignment: .leading)
+                        .animation(.linear(duration: 0.5), value: progress)
+                      if progress < 1.0 {
+                        Spacer()
+                      }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .bottom)
+                  }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 8))
               
-              Text(tab.printURL)
-                .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-                .padding(.top, 5)
-                .padding(.bottom, 5)
+              HStack(spacing: 0) {
+                HStack(spacing: 0) {
+                  Image(systemName: "lock.shield")
+                    .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
+                    .background(Color("MainBlack"))
+                    .clipShape(RoundedRectangle(cornerRadius: 11))
+                    .font(.system(size: 13))
+                    .foregroundColor(Color.white.opacity(0.9))
+                }
                 .padding(.leading, 5)
-                .padding(.trailing, 10)
-                .font(.system(size: 13))
-                .fontWeight(.regular)
-                .opacity(0.9)
-                .lineLimit(1)
-                .truncationMode(.tail)
+                .padding(.top, 1)
+                
+                Text(tab.printURL)
+                  .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                  .padding(.top, 5)
+                  .padding(.bottom, 5)
+                  .padding(.leading, 5)
+                  .padding(.trailing, 10)
+                  .font(.system(size: 13))
+                  .fontWeight(.regular)
+                  .opacity(0.9)
+                  .lineLimit(1)
+                  .truncationMode(.tail)
+              }
             }
-          }
-          .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-          .onTapGesture {
-            isEditing = true
-            textFieldFocused = true
-          }
-          .onHover { hovering in
-            withAnimation {
-              isSearchHover = hovering
+            .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+            .onTapGesture {
+              isEditing = true
+              textFieldFocused = true
+            }
+            .onHover { hovering in
+              withAnimation {
+                isSearchHover = hovering
+              }
             }
           }
         }

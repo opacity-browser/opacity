@@ -6,16 +6,28 @@ struct ContentView: View {
   @State private var columnVisibility = NavigationSplitViewVisibility.detailOnly
   @State var windowWidth: CGFloat = .zero
   @State private var isAddHover: Bool = false
+  @State private var progress: Double = 0.0
+  @State private var showProgress: Bool = false
   
   var body: some View {
     GeometryReader { geometry in
       VStack(spacing: 0) {
         // tab bar area
         if browser.tabs.count > 0 {
-          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
             .frame(maxWidth: .infinity, maxHeight: 38)
+            .onChange(of: progress) { _, newValue in
+              if newValue == 1.0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                  showProgress = false
+                  progress = 0.0
+                }
+              } else if newValue > 0.0 && newValue < 1.0 {
+                showProgress = true
+              }
+            }
         }
-        MainView(tabs: $browser.tabs, activeTabIndex: $browser.index)
+        MainView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress)
       }
       .toolbar {
         ToolbarItemGroup(placement: .primaryAction) {
@@ -23,7 +35,7 @@ struct ContentView: View {
           Button(action: {
             // 버튼 액션
           }) {
-            Image(systemName: "bell") // 아이콘 지정
+            Image(systemName: "rectangle.stack") // 아이콘 지정
           }
         }
       }

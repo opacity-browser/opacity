@@ -10,10 +10,12 @@ import SwiftUI
 struct BrowserTabView: View {
   @ObservedObject var tab: Tab
   var isActive: Bool
+  @Binding var showProgress: Bool
   var onClose: () -> Void
   
   @State private var isTabHover: Bool = false
   @State private var isCloseHover: Bool = false
+  @State private var loadingAnimation: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
@@ -44,6 +46,20 @@ struct BrowserTabView: View {
                   .frame(maxWidth: 14, maxHeight: 14)
                   .clipShape(RoundedRectangle(cornerRadius: 4))
                   .clipped()
+              }
+              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
+              .padding(.leading, 8)
+            } else if showProgress {
+              VStack(spacing: 0) {
+                Circle()
+                  .trim(from: 0, to: 0.7) // 원을 부분적으로 그리기
+                  .stroke(Color("PointJade").opacity(0.5), lineWidth: 2) // 선의 색상과 두께
+                  .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
+                  .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
+                  .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
+                  .onAppear {
+                    self.loadingAnimation = true
+                  }
               }
               .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
               .padding(.leading, 8)
@@ -107,6 +123,11 @@ struct BrowserTabView: View {
       .frame(height: 36)
     }
     .frame(maxWidth: 220, maxHeight: 36)
+    .onChange(of: showProgress) { oldValue, newValue in
+      if newValue == false {
+        loadingAnimation = false
+      }
+    }
 //    .frame(height: 36)
 //    .background(.red.opacity(0.2))
 //    .offset(x: CGFloat(index * -15))
