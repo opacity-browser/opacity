@@ -75,9 +75,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
+//      TestContentView()
       ContentView()
         .environmentObject(self.browsers[newWindowNo]!)
         .background(VisualEffect())
+      
 //        .onAppear {
 //          if let windowSize = WindowSizeManager.load() {
 //            NSApplication.shared.windows.forEach({ NSWindow in
@@ -94,7 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     newWindow.center()
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
     newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
-    newWindow.styleMask.insert(.fullSizeContentView)
+//    newWindow.styleMask.insert(.fullSizeContentView)
 
     newWindow.makeKeyAndOrderFront(nil)
     newWindow.delegate = self

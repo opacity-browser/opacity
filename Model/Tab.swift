@@ -16,7 +16,12 @@ import WebKit
 //  case notConnect
 //}
 
-final class Tab: ObservableObject, Identifiable {
+final class Tab: ObservableObject, Identifiable, Equatable {
+
+  static func == (lhs: Tab, rhs: Tab) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
   var id = UUID()
   @Published var originURL: URL
   @Published var printURL: String

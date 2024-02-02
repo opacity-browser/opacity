@@ -96,25 +96,17 @@ struct BrowserTabView: View {
             }
             .buttonStyle(.plain)
             .frame(width: 30, height: 22)
-//            .contentShape(Rectangle())
             .onHover { hovering in
-                isCloseHover = hovering
+              isCloseHover = hovering
             }
-//            .background(.red.opacity(0.2))
-//            .padding(.leading, 5)
-//            .padding(.trailing, 15)
           }
           .frame(maxWidth: 220, maxHeight: 30, alignment: .leading)
           .padding(.top, 2)
-//          .frame(maxWidth: 180, maxHeight: 22)
-//          .background(.green.opacity(0.2))
-//          .offset(y: 5)
         }
         .frame(maxWidth: 220, alignment: .leading)
         .padding(.horizontal, 6)
       }
       .frame(maxWidth: 220)
-//      .background(.red.opacity(0.2))
       .onHover { hovering in
         withAnimation {
           isTabHover = hovering
@@ -128,13 +120,6 @@ struct BrowserTabView: View {
         loadingAnimation = false
       }
     }
-//    .frame(height: 36)
-//    .background(.red.opacity(0.2))
-//    .offset(x: CGFloat(index * -15))
-//    .frame(maxWidth: 160, maxHeight: 34, alignment: .leading)
-//    .background(isActive ? Color(red: 30/255, green: 30/255, blue: 30/255) : .black.opacity(0))
-//    .offset(y: 5)
-//    .clipShape((BrowserTabShape(cornerRadius: 15)))
   }
 }
 
