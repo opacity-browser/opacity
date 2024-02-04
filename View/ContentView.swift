@@ -14,7 +14,7 @@ struct ContentView: View {
       VStack(spacing: 0) {
         // tab bar area
         if browser.tabs.count > 0 {
-          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
+          TitlebarView(tabSize: $browser.tabSize, tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
             .frame(maxWidth: .infinity, maxHeight: 38)
             .onChange(of: progress) { _, newValue in
               if newValue == 1.0 {

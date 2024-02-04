@@ -8,35 +8,19 @@
 import SwiftUI
 import WebKit
 
-//enum WebviewError {
-//  case noError
-//  case notFind
-//  case notHttps
-//  case notNetwork
-//  case notConnect
-//}
-
 final class Tab: ObservableObject, Identifiable, Equatable {
-
-  static func == (lhs: Tab, rhs: Tab) -> Bool {
-    return lhs.id == rhs.id
-  }
-  
   var id = UUID()
   @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
   
   var isUpdateBySearch: Bool = false
-//  var prevURL: URL
   
   @Published var title: String = ""
   @Published var favicon: Image?
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
-  
-//  @Published var isErrorStatus: WebviewError = .noError
   
   var webview: WKWebView?
   
@@ -97,5 +81,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         self.favicon = nil
       }
     }
+  }
+  
+  static func == (lhs: Tab, rhs: Tab) -> Bool {
+    return lhs.id == rhs.id
   }
 }

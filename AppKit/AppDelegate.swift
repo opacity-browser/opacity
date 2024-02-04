@@ -20,49 +20,60 @@ import SwiftUI
 //  }
 //}
 
+class CustomWindow: NSWindow {
+  
+  override var canBecomeKey: Bool {
+    return true
+  }
+//
+//  var initialMouseLocation: NSPoint?
+//  var initialWindowLoaction: NSPoint?
+//  
+//  
+//  override func mouseDown(with event: NSEvent) {
+//    print("mouseDown")
+//    // 드래그 시작 위치를 저장
+//    initialMouseLocation = event.locationInWindow
+//    initialWindowLoaction = self.frame.origin
+//  }
+//  
+//  override func mouseDragged(with event: NSEvent) {
+//    print("mouseDrag")
+//    guard let initWindowLocation = initialWindowLoaction else {
+//      return
+//    }
+//    print("bbb")
+//    self.setFrameOrigin(initWindowLocation)
+    
+//    let tabArea = NSRect(x: 100, y: 0, width: 100, height: 50)
+//    if tabArea.contains(initialLocation) {
+//        // 여기에는 윈도우 이동을 막는 로직을 실행하지 않습니다.
+//        // 대신 필요한 다른 작업(예: 드래그 앤 드롭 처리)을 할 수 있습니다.
+//      print("aaa")
+//      self.setFrameOrigin(initialMouseLocation!)
+//    } else {
+//      // 타이틀바 영역 외부에서 드래그가 시작된 경우, 기본 윈도우 이동을 허용
+//      super.mouseDragged(with: event)
+//    }
+//  }
+}
+
+
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   private var isTerminating = false
   var browsers: [Int:Browser] = [:]
   
-  private func exitWindow() {
-    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
-    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
-
-    let contentView = HStack(spacing: 0) {
-      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
-        .font(.system(size: 30))
-        .bold()
-        .foregroundStyle(.white)
+  func windowShouldDragOnMouseDown(_ sender: NSWindow, with event: NSEvent) -> Bool {
+    print("drag")
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.browsers[windowNumber] {
+        print(String(describing: target.tabSize))
+      }
     }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .padding(.vertical, 10)
-      .padding(.horizontal, 20)
-      .background(.black.opacity(0.4))
-      .clipShape(RoundedRectangle(cornerRadius: 10))
-    
-    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
-    exitWindow.setContentSize(newContentSize)
-    
-    exitWindow.contentView = NSHostingController(rootView: contentView).view
-    exitWindow.center()
-    exitWindow.isOpaque = false
-    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
-    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
-    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
-    exitWindow.styleMask.insert(.fullSizeContentView)
-
-    exitWindow.makeKeyAndOrderFront(nil)
-    
-    let windowController = NSWindowController(window: exitWindow)
-    windowController.showWindow(self)
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-      exitWindow.close()
-      self.isTerminating = false
-    }
+    return true
   }
   
-
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
     let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
@@ -75,10 +86,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
-//      TestContentView()
       ContentView()
         .environmentObject(self.browsers[newWindowNo]!)
         .background(VisualEffect())
+//        .clipShape(RoundedRectangle(cornerRadius: 10))
       
 //        .onAppear {
 //          if let windowSize = WindowSizeManager.load() {
@@ -96,7 +107,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     newWindow.center()
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
     newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
-//    newWindow.styleMask.insert(.fullSizeContentView)
+    newWindow.styleMask.insert(.fullSizeContentView)
+//    newWindow.backgroundColor = NSColor.clear
+//    newWindow.isOpaque = false
 
     newWindow.makeKeyAndOrderFront(nil)
     newWindow.delegate = self
@@ -192,9 +205,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
   
   @objc func newTab() {
+    print("newTab")
     if let keyWindow = NSApplication.shared.keyWindow {
+      print("keywindow")
       let windowNumber = keyWindow.windowNumber
+      print(windowNumber)
       if let target = self.browsers[windowNumber] {
+        print("target")
         let newTab = Tab(url: DEFAULT_URL)
         target.tabs.append(newTab)
         target.index = target.tabs.count - 1
@@ -237,10 +254,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     return true
   }
   
-//  // 단축키에 파라미터 전송 예시
-//  @objc func menuItemAction(sender: NSMenuItem) {
-//    if let data = sender.representedObject as? String {
-//     print("Menu item selected with data: \(data)")
-//    }
-//  }
+  private func exitWindow() {
+    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
+    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
+
+    let contentView = HStack(spacing: 0) {
+      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
+        .font(.system(size: 30))
+        .bold()
+        .foregroundStyle(.white)
+    }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .padding(.vertical, 10)
+      .padding(.horizontal, 20)
+      .background(.black.opacity(0.4))
+      .clipShape(RoundedRectangle(cornerRadius: 10))
+    
+    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
+    exitWindow.setContentSize(newContentSize)
+    
+    exitWindow.contentView = NSHostingController(rootView: contentView).view
+    exitWindow.center()
+    exitWindow.isOpaque = false
+    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
+    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
+    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    exitWindow.styleMask.insert(.fullSizeContentView)
+
+    exitWindow.makeKeyAndOrderFront(nil)
+    
+    let windowController = NSWindowController(window: exitWindow)
+    windowController.showWindow(self)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+      exitWindow.close()
+      self.isTerminating = false
+    }
+  }
 }
