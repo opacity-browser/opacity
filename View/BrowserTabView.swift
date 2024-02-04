@@ -7,18 +7,27 @@
 
 import SwiftUI
 
+struct StaticColorButtonStyle: ButtonStyle {
+  func makeBody(configuration: Self.Configuration) -> some View {
+    configuration.label
+      .opacity(1) // 클릭 시 투명도 변화 없음
+  }
+}
+
 struct BrowserTabView: View {
   @Binding var tabSize: CGSize?
   @ObservedObject var tab: Tab
   var isActive: Bool
   @Binding var activeTabIndex: Int
   var index: Int
+  @Binding var dragIndex: Int
   @Binding var showProgress: Bool
   var onClose: () -> Void
   
   @State private var isTabHover: Bool = false
   @State private var isCloseHover: Bool = false
   @State private var loadingAnimation: Bool = false
+  @State private var isDrag: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
@@ -35,53 +44,89 @@ struct BrowserTabView: View {
             Button {
               activeTabIndex = index
             } label: {
-              HStack(spacing: 0) {
+              ZStack {
                 if let favicon = tab.favicon {
-                  VStack(spacing: 0) {
-                    favicon
-                      .resizable() // 이미지 크기 조절 가능하게 함
-                      .aspectRatio(contentMode: .fill)
-                      .frame(maxWidth: 14, maxHeight: 14)
-                      .clipShape(RoundedRectangle(cornerRadius: 4))
-                      .clipped()
+                  Text(tab.title)
+                    .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
+                    .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
+                    .font(.system(size: 12))
+                    .padding(.leading, 28)
+                    .padding(.trailing, 5)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+                  HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                      favicon
+                        .resizable() // 이미지 크기 조절 가능하게 함
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: 14, maxHeight: 14)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .clipped()
+                    }
+                    .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
+                    .padding(.leading, 8)
+                    Spacer()
                   }
-                  .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-                  .padding(.leading, 8)
                 } else if showProgress {
-                  VStack(spacing: 0) {
-                    Circle()
-                      .trim(from: 0, to: 0.7) // 원을 부분적으로 그리기
-                      .stroke(Color("PointJade").opacity(0.5), lineWidth: 2) // 선의 색상과 두께
-                      .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
-                      .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
-                      .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
-                      .onAppear {
-                        self.loadingAnimation = true
-                      }
+                  Text(tab.title)
+                    .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
+                    .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
+                    .font(.system(size: 12))
+                    .padding(.leading, 28)
+                    .padding(.trailing, 5)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+                  HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                      Circle()
+                        .trim(from: 0, to: 0.7) // 원을 부분적으로 그리기
+                        .stroke(Color("PointJade").opacity(0.5), lineWidth: 2) // 선의 색상과 두께
+                        .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
+                        .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
+                        .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
+                        .onAppear {
+                          self.loadingAnimation = true
+                        }
+                    }
+                    .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
+                    .padding(.leading, 8)
+                    Spacer()
                   }
-                  .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-                  .padding(.leading, 8)
                 } else {
-                  VStack(spacing: 0) { }
-                    .frame(width: 4)
+                  Text(tab.title)
+                    .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
+                    .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
+                    .font(.system(size: 12))
+                    .padding(.leading, 9)
+                    .padding(.trailing, 5)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
                 }
-                
-                Text(tab.title)
-                  .frame(maxWidth: 190, maxHeight: 22, alignment: .leading)
-                  .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-                  .font(.system(size: 12))
-                  .padding(.leading, 5)
-                  .padding(.trailing, 5)
-                  .lineLimit(1)
-                  .truncationMode(.tail)
-                  .offset(y: -1)
               }
-              .frame(height: 28)
+              .frame(height: 29)
+              .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+              .clipShape(RoundedRectangle(cornerRadius: 10))
+              .onDrag {
+                print("drag-inner-inner")
+                isDrag = true
+                onDragEvent()
+                return NSItemProvider(object: NSString(string: ""))
+              }
             }
-            .buttonStyle(PlainButtonStyle())
-            .background(Color("PointJade").opacity(!isActive && isTabHover ? 0.2 : 0))
+//            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(StaticColorButtonStyle())
+            .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .offset(y: 2)
+            .offset(y: 1)
+            .onDrag {
+              print("drag-inner")
+              isDrag = true
+              onDragEvent()
+              return NSItemProvider(object: NSString(string: ""))
+            }
             
             HStack(spacing: 0) {
               Spacer()
@@ -111,14 +156,15 @@ struct BrowserTabView: View {
               .offset(y: 1)
             }
           }
+          .offset(y: 1)
           .frame(maxWidth: 220, alignment: .leading)
           .padding(.horizontal, 6)
         }
         .frame(maxWidth: 220, maxHeight: 36)
         .onHover { hovering in
-          withAnimation {
+//          withAnimation {
             isTabHover = hovering
-          }
+//          }
         }
         .onChange(of: geometry.size) { oldValue, newValue in
           if index == 0 {
@@ -133,6 +179,11 @@ struct BrowserTabView: View {
         loadingAnimation = false
       }
     }
+  }
+  
+  func onDragEvent() {
+    activeTabIndex = index
+    dragIndex = index
   }
 }
 

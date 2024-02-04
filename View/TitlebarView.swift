@@ -18,6 +18,32 @@ struct TitlebarView: View {
   
   @State private var isAddHover: Bool = false
   
+  // drag&drop
+  @State private var cacheTabs: [Tab]?
+  @State private var cacheIndex: Int?
+  @State private var dragIndex = 0
+  @State private var enterIndex = -1
+  @State private var isDrop: Bool = false
+  
+  struct TabDropDelegate: DropDelegate {
+//    var onEnter: (DropInfo)->Void
+//    var onExit: (DropInfo)->Void
+    var onDrop: (DropInfo)->Void
+    
+//    func dropEntered(info: DropInfo) {
+//      onEnter(info)
+//    }
+//
+//    func dropExited(info: DropInfo) {
+//      onExit(info)
+//    }
+
+    func performDrop(info: DropInfo) -> Bool {
+      onDrop(info)
+      return true
+    }
+  }
+  
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
@@ -26,7 +52,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            BrowserTabView(tabSize: $tabSize, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress) {
+            BrowserTabView(tabSize: $tabSize, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, index: index, dragIndex: $dragIndex, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -37,6 +63,27 @@ struct TitlebarView: View {
             .onTapGesture {
               activeTabIndex = index
             }
+//            .onDrag {
+//              dragIndex = index
+//              print("drag")
+//              return NSItemProvider(object: tabs[index].title as NSString as NSItemProviderWriting)
+////              return NSItemProvider(object: NSString(string: ""))
+//            }
+            .onDrop(of: ["public.utf8-plain-text"], delegate: TabDropDelegate(
+//              onEnter: { _ in
+//                print("enter")
+//                withAnimation {
+//                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
+//                  activeTabIndex = index
+//                  dragIndex = index
+//                }
+//              }, onExit: { _ in
+//                print("exit")
+//              }, 
+              onDrop: { _ in
+                print("drop")
+              }
+            ))
             .gesture(
               DragGesture()
                 .onChanged({ value in
@@ -45,7 +92,7 @@ struct TitlebarView: View {
             )
           }
         }
-        .animation(.linear(duration: 0.15), value: tabs)
+//        .animation(.linear(duration: 0.15), value: tabs)
         
         Button(action: {
           let newTab = Tab(url: DEFAULT_URL)
@@ -70,7 +117,7 @@ struct TitlebarView: View {
         
         Spacer()
       }
-      .animation(.linear(duration: 0.1), value: tabs)
+//      .animation(.linear(duration: 0.1), value: tabs)
       .frame(maxWidth: .infinity, maxHeight: 36, alignment: .leading)
       
       Divider()
