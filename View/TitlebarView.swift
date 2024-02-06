@@ -59,6 +59,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
+            Text("\(index)")
             BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
@@ -70,22 +71,22 @@ struct TitlebarView: View {
 //            .onTapGesture {
 //              activeTabIndex = index
 //            }
-            .onDrop(of: ["public.utf8-plain-text"], delegate: TabDropDelegate(
-              onEnter: { value in
-                print("enter")
-//                print(value)
-//                withAnimation {
-                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
-                  activeTabIndex = index
-                  dragIndex = index
-//                }
-              }, onExit: { _ in
-                print("exit")
-              }, 
-              onDrop: { _ in
-                print("drop")
-              }
-            ))
+//            .onDrop(of: ["public.utf8-plain-text"], delegate: TabDropDelegate(
+//              onEnter: { value in
+//                print("enter")
+////                print(value)
+////                withAnimation {
+//                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
+//                  activeTabIndex = index
+//                  dragIndex = index
+////                }
+//              }, onExit: { _ in
+//                print("exit")
+//              }, 
+//              onDrop: { _ in
+//                print("drop")
+//              }
+//            ))
 //            .gesture(
 //              DragGesture()
 //                .onChanged({ value in

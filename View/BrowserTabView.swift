@@ -42,6 +42,7 @@ struct BrowserTabView: View {
           Button {
 //            activeTabIndex = index
           } label: {
+            Text("\(index)")
             TabItemView(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
 //            Text("Abc")
           }

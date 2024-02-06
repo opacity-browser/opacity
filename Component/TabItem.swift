@@ -11,7 +11,6 @@ struct TabItem: View {
   @ObservedObject var tab: Tab
   var isActive: Bool
   @Binding var activeTabIndex: Int
-  var index: Int
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
@@ -68,7 +67,7 @@ struct TabItem: View {
           Spacer()
         }
       } else {
-        Text("\(tab.title) - \(index)")
+        Text(tab.title)
           .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
           .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
           .font(.system(size: 12))

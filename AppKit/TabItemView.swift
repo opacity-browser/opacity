@@ -17,14 +17,16 @@ struct TabItemView: NSViewRepresentable {
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
-    
+  
   func makeNSView(context: Context) -> NSView {
     let containerView = TabDragSource()
     containerView.appDelegate = appDelegate
-//    containerView.activeIndex = activeTabIndex
-//    containerView.index = index
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    containerView.dragDelegate = context.coordinator
+    containerView.tab = tab
+    containerView.dragIndex = dragIndex
+    containerView.index = index
     
+    let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -33,22 +35,27 @@ struct TabItemView: NSViewRepresentable {
       hostingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
       hostingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
       hostingView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: -20),
-//      hostingView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
       hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
     ])
     
-//    context.coordinator.view = containerView
-    containerView.dragDelegate = context.coordinator
     return containerView
   }
   
   func updateNSView(_ nsView: NSView, context: Context) {
-//    if let customView = nsView as? TabDragSource {
-//      print("good")
-//      customView.activeIndex = activeTabIndex
-//      customView.index = index
+    context.coordinator.thisIndex = index
+    
+    if let customView = nsView as? TabDragSource {
+      customView.tab = tab
+      customView.dragIndex = dragIndex
+      customView.index = index
+    }
+
+//    for subview in nsView.subviews {
+//      if let hostingView = subview as? NSHostingView<TabItem> {
+//        hostingView.rootView = TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+//        break
+//      }
 //    }
-//    nsView.activeIndex = activeTabIndex
   }
   
   func makeCoordinator() -> Coordinator {
@@ -57,6 +64,7 @@ struct TabItemView: NSViewRepresentable {
   
   class Coordinator: NSObject, NSDraggingSource {
     var parent: TabItemView
+    var thisIndex: Int?
     
     init(_ parent: TabItemView) {
       self.parent = parent
@@ -69,10 +77,9 @@ struct TabItemView: NSViewRepresentable {
     }
 
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
-      print(parent.index)
       print("드래그 시작")
-      parent.activeTabIndex = parent.index
-      parent.dragIndex = parent.index
+      parent.activeTabIndex = thisIndex!
+      parent.dragIndex = thisIndex!
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
@@ -86,7 +93,10 @@ class TabDragSource: NSView {
   var appDelegate: AppDelegate?
   var dragDelegate: NSDraggingSource?
 //  var activeIndex: Int?
-//  var index: Int?
+  var tab: Tab?
+  var dragIndex: Int?
+  var index: Int?
+  
   
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)

@@ -67,16 +67,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     print("AppDelegate's method has been called!")
   }
   
-  func windowShouldDragOnMouseDown(_ sender: NSWindow, with event: NSEvent) -> Bool {
-    print("drag")
-    if let keyWindow = NSApplication.shared.keyWindow {
-      let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
-        print(String(describing: target.tabSize))
-      }
-    }
-    return true
-  }
+//  func windowShouldDragOnMouseDown(_ sender: NSWindow, with event: NSEvent) -> Bool {
+//    print("drag")
+//    if let keyWindow = NSApplication.shared.keyWindow {
+//      let windowNumber = keyWindow.windowNumber
+//      if let target = self.browsers[windowNumber] {
+//        print(String(describing: target.tabSize))
+//      }
+//    }
+//    return true
+//  }
   
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
