@@ -8,57 +8,6 @@
 import Cocoa
 import SwiftUI
 
-//class WindowController: NSWindowController {
-//  var browser: Browser = Browser()
-//  
-//  override init(window: NSWindow?) {
-//      super.init(window: window)
-//  }
-//  
-//  required init?(coder: NSCoder) {
-//      fatalError("init(coder:) has not been implemented")
-//  }
-//}
-
-class CustomWindow: NSWindow {
-  
-  override var canBecomeKey: Bool {
-    return true
-  }
-//
-//  var initialMouseLocation: NSPoint?
-//  var initialWindowLoaction: NSPoint?
-//  
-//  
-//  override func mouseDown(with event: NSEvent) {
-//    print("mouseDown")
-//    // 드래그 시작 위치를 저장
-//    initialMouseLocation = event.locationInWindow
-//    initialWindowLoaction = self.frame.origin
-//  }
-//  
-//  override func mouseDragged(with event: NSEvent) {
-//    print("mouseDrag")
-//    guard let initWindowLocation = initialWindowLoaction else {
-//      return
-//    }
-//    print("bbb")
-//    self.setFrameOrigin(initWindowLocation)
-    
-//    let tabArea = NSRect(x: 100, y: 0, width: 100, height: 50)
-//    if tabArea.contains(initialLocation) {
-//        // 여기에는 윈도우 이동을 막는 로직을 실행하지 않습니다.
-//        // 대신 필요한 다른 작업(예: 드래그 앤 드롭 처리)을 할 수 있습니다.
-//      print("aaa")
-//      self.setFrameOrigin(initialMouseLocation!)
-//    } else {
-//      // 타이틀바 영역 외부에서 드래그가 시작된 경우, 기본 윈도우 이동을 허용
-//      super.mouseDragged(with: event)
-//    }
-//  }
-}
-
-
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   private var isTerminating = false
   var browsers: [Int:Browser] = [:]
@@ -66,17 +15,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   func someMethodToCall() {
     print("AppDelegate's method has been called!")
   }
-  
-//  func windowShouldDragOnMouseDown(_ sender: NSWindow, with event: NSEvent) -> Bool {
-//    print("drag")
-//    if let keyWindow = NSApplication.shared.keyWindow {
-//      let windowNumber = keyWindow.windowNumber
-//      if let target = self.browsers[windowNumber] {
-//        print(String(describing: target.tabSize))
-//      }
-//    }
-//    return true
-//  }
   
   private func createWindow() {
     // 윈도우 사이즈 및 스타일 정의

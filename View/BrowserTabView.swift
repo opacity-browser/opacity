@@ -15,6 +15,7 @@ struct StaticColorButtonStyle: ButtonStyle {
 }
 
 struct BrowserTabView: View {
+  @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   var isActive: Bool
   @Binding var activeTabIndex: Int
@@ -40,22 +41,13 @@ struct BrowserTabView: View {
         
         ZStack {
           Button {
-//            activeTabIndex = index
+            
           } label: {
-            Text("\(index)")
-            TabItemView(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
-//            Text("Abc")
+            TabItemView(tabs: $tabs, tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
           }
           .buttonStyle(StaticColorButtonStyle())
-//          .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
           .clipShape(RoundedRectangle(cornerRadius: 10))
           .offset(y: 1)
-//          .onDrag {
-//            print("drag-inner")
-//            onDragEvent()
-//            let data = "\(index)".data(using: .utf8)
-//            return NSItemProvider(object: NSString(string: String(describing: data)))
-//          }
           
           HStack(spacing: 0) {
             Spacer()
@@ -101,10 +93,5 @@ struct BrowserTabView: View {
       }
     }
   }
-  
-//  func onDragEvent() {
-//    activeTabIndex = index
-//    dragIndex = index
-//  }
 }
 

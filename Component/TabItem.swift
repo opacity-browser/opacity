@@ -23,10 +23,11 @@ struct TabItem: View {
           .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
           .font(.system(size: 12))
           .padding(.leading, 28)
-          .padding(.trailing, 5)
+          .padding(.trailing, 20)
           .lineLimit(1)
           .truncationMode(.tail)
-//          .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+//          .background(.blue.opacity(0.2))
+
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             favicon
@@ -46,10 +47,11 @@ struct TabItem: View {
           .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
           .font(.system(size: 12))
           .padding(.leading, 28)
-          .padding(.trailing, 5)
+          .padding(.trailing, 20)
           .lineLimit(1)
           .truncationMode(.tail)
-//          .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+//          .background(.blue.opacity(0.2))
+
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             Circle()
@@ -72,21 +74,15 @@ struct TabItem: View {
           .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
           .font(.system(size: 12))
           .padding(.leading, 9)
-          .padding(.trailing, 5)
+          .padding(.trailing, 20)
           .lineLimit(1)
           .truncationMode(.tail)
-//          .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+//          .background(.blue.opacity(0.2))
       }
     }
     .frame(height: 30)
     .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
     .clipShape(RoundedRectangle(cornerRadius: 10))
     .offset(y: 1)
-//      .onDrag {
-//        print("drag-inner-inner")
-//        onDragEvent()
-//        let data = "\(index)".data(using: .utf8)
-//        return NSItemProvider(object: NSString(string: String(describing: data)))
-//      }
   }
 }

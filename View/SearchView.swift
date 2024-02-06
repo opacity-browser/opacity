@@ -9,15 +9,11 @@ import SwiftUI
 
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
-//  @Binding var tabs: [Tab]
-//  @Binding var activeTabIndex: Int
   @ObservedObject var tab: Tab
   @Binding var progress: Double
   @Binding var showProgress: Bool
   
   @FocusState private var textFieldFocused: Bool
-  
-//  @State private var isDomain: Bool = true
   
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
@@ -259,8 +255,6 @@ struct SearchView: View {
         }
       }
       .padding(.trailing, 10)
-      
-//      VStack{ }.frame(maxWidth: 10)
     }
     .frame(height: 29)
 //    .background(.red.opacity(0.2))

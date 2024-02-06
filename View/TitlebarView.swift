@@ -19,37 +19,6 @@ struct TitlebarView: View {
   
   // drag&drop
   @State private var dragIndex = 0
-//  @State private var enterIndex = -1
-//  @State private var isDrop: Bool = false
-  
-  struct TabDropDelegate: DropDelegate {
-    var onEnter: (DropInfo)->Void
-    var onExit: (DropInfo)->Void
-    var onDrop: (DropInfo)->Void
-    
-    func dropEntered(info: DropInfo) {
-      onEnter(info)
-    }
-
-    func dropExited(info: DropInfo) {
-      onExit(info)
-    }
-    
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-      return DropProposal(operation: .move)
-    }
-
-    func performDrop(info: DropInfo) -> Bool {
-      onDrop(info)
-      return true
-    }
-    
-//    func validateDrop(info: DropInfo) -> Bool {
-//        // 드래그된 아이템의 유형을 검사하여 URL인 경우에만 드랍을 허용
-//      print("validate")
-//      return info.hasItemsConforming(to: [.url])
-//    }
-  }
   
   var body: some View {
     VStack(spacing: 0) {
@@ -59,8 +28,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            Text("\(index)")
-            BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress) {
+            BrowserTabView(tabs: $tabs, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -68,31 +36,6 @@ struct TitlebarView: View {
               }
             }
             .contentShape(Rectangle())
-//            .onTapGesture {
-//              activeTabIndex = index
-//            }
-//            .onDrop(of: ["public.utf8-plain-text"], delegate: TabDropDelegate(
-//              onEnter: { value in
-//                print("enter")
-////                print(value)
-////                withAnimation {
-//                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
-//                  activeTabIndex = index
-//                  dragIndex = index
-////                }
-//              }, onExit: { _ in
-//                print("exit")
-//              }, 
-//              onDrop: { _ in
-//                print("drop")
-//              }
-//            ))
-//            .gesture(
-//              DragGesture()
-//                .onChanged({ value in
-//                  print(value.location)
-//                })
-//            )
           }
         }
 //        .animation(.linear(duration: 0.15), value: tabs)
@@ -109,7 +52,6 @@ struct TitlebarView: View {
             .clipShape(RoundedRectangle(cornerRadius: 6))
         }
         .padding(.top, 1)
-//        .padding(.leading, 5)
         .buttonStyle(.plain)
         .contentShape(Rectangle())
         .onHover { isHover in
@@ -120,7 +62,6 @@ struct TitlebarView: View {
         
         Spacer()
       }
-//      .animation(.linear(duration: 0.1), value: tabs)
       .frame(maxWidth: .infinity, maxHeight: 36, alignment: .leading)
       
       Divider()
@@ -138,8 +79,6 @@ struct TitlebarView: View {
         .background(Color("MainBlack"))
     }
     .frame(maxWidth: .infinity, maxHeight: 80)
-//    .offset(y: 5)
-//    .frame(width: 500)
     .background(.red)
   }
 }

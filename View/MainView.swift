@@ -16,8 +16,6 @@ struct MainView: View {
   var body: some View {
     VStack(spacing: 0) {
       // webview area
-//      DraggableNSView()
-//                  .onDrop(of: ["public.utf8-plain-text"], delegate: DropDelegateImpl())
       ZStack {
         if tabs.count > 0 {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, item in
@@ -28,13 +26,4 @@ struct MainView: View {
     }
     .multilineTextAlignment(.leading)
   }
-}
-
-
-struct DropDelegateImpl: DropDelegate {
-    func performDrop(info: DropInfo) -> Bool {
-        // SwiftUI에서의 드랍 처리
-      print("dddrrroopp")
-        return true
-    }
 }
