@@ -63,6 +63,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   private var isTerminating = false
   var browsers: [Int:Browser] = [:]
   
+  func someMethodToCall() {
+    print("AppDelegate's method has been called!")
+  }
+  
   func windowShouldDragOnMouseDown(_ sender: NSWindow, with event: NSEvent) -> Bool {
     print("drag")
     if let keyWindow = NSApplication.shared.keyWindow {
@@ -205,13 +209,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
   
   @objc func newTab() {
-    print("newTab")
     if let keyWindow = NSApplication.shared.keyWindow {
-      print("keywindow")
       let windowNumber = keyWindow.windowNumber
-      print(windowNumber)
       if let target = self.browsers[windowNumber] {
-        print("target")
         let newTab = Tab(url: DEFAULT_URL)
         target.tabs.append(newTab)
         target.index = target.tabs.count - 1

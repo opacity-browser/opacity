@@ -10,7 +10,6 @@ import SwiftUI
 struct TitlebarView: View {
   @Environment(\.colorScheme) var colorScheme
 
-  @Binding var tabSize: CGSize?
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
   @Binding var progress: Double
@@ -19,29 +18,37 @@ struct TitlebarView: View {
   @State private var isAddHover: Bool = false
   
   // drag&drop
-  @State private var cacheTabs: [Tab]?
-  @State private var cacheIndex: Int?
   @State private var dragIndex = 0
-  @State private var enterIndex = -1
-  @State private var isDrop: Bool = false
+//  @State private var enterIndex = -1
+//  @State private var isDrop: Bool = false
   
   struct TabDropDelegate: DropDelegate {
-//    var onEnter: (DropInfo)->Void
-//    var onExit: (DropInfo)->Void
+    var onEnter: (DropInfo)->Void
+    var onExit: (DropInfo)->Void
     var onDrop: (DropInfo)->Void
     
-//    func dropEntered(info: DropInfo) {
-//      onEnter(info)
-//    }
-//
-//    func dropExited(info: DropInfo) {
-//      onExit(info)
-//    }
+    func dropEntered(info: DropInfo) {
+      onEnter(info)
+    }
+
+    func dropExited(info: DropInfo) {
+      onExit(info)
+    }
+    
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+      return DropProposal(operation: .move)
+    }
 
     func performDrop(info: DropInfo) -> Bool {
       onDrop(info)
       return true
     }
+    
+//    func validateDrop(info: DropInfo) -> Bool {
+//        // 드래그된 아이템의 유형을 검사하여 URL인 경우에만 드랍을 허용
+//      print("validate")
+//      return info.hasItemsConforming(to: [.url])
+//    }
   }
   
   var body: some View {
@@ -52,7 +59,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            BrowserTabView(tabSize: $tabSize, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, index: index, dragIndex: $dragIndex, showProgress: $showProgress) {
+            BrowserTabView(tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -60,36 +67,31 @@ struct TitlebarView: View {
               }
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-              activeTabIndex = index
-            }
-//            .onDrag {
-//              dragIndex = index
-//              print("drag")
-//              return NSItemProvider(object: tabs[index].title as NSString as NSItemProviderWriting)
-////              return NSItemProvider(object: NSString(string: ""))
+//            .onTapGesture {
+//              activeTabIndex = index
 //            }
             .onDrop(of: ["public.utf8-plain-text"], delegate: TabDropDelegate(
-//              onEnter: { _ in
-//                print("enter")
+              onEnter: { value in
+                print("enter")
+//                print(value)
 //                withAnimation {
-//                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
-//                  activeTabIndex = index
-//                  dragIndex = index
+                  tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIndex), toOffset: dragIndex > index ? index : index + 1)
+                  activeTabIndex = index
+                  dragIndex = index
 //                }
-//              }, onExit: { _ in
-//                print("exit")
-//              }, 
+              }, onExit: { _ in
+                print("exit")
+              }, 
               onDrop: { _ in
                 print("drop")
               }
             ))
-            .gesture(
-              DragGesture()
-                .onChanged({ value in
-                  print(value.location)
-                })
-            )
+//            .gesture(
+//              DragGesture()
+//                .onChanged({ value in
+//                  print(value.location)
+//                })
+//            )
           }
         }
 //        .animation(.linear(duration: 0.15), value: tabs)
@@ -124,15 +126,19 @@ struct TitlebarView: View {
         .frame(maxWidth: .infinity, maxHeight: 2)
         .border(Color("MainBlack"))
         .offset(y: 1)
-//      Divider()
-//        .frame(maxWidth: .infinity, maxHeight: 2)
-//        .border(Color("MainBlack"))
-//        .offset(y: 1)
+      Divider()
+        .frame(maxWidth: .infinity, maxHeight: 2)
+        .border(Color("MainBlack"))
+        .offset(y: 1)
+      
+      // search area
+      SearchView(tab: tabs[activeTabIndex], progress: $progress, showProgress: $showProgress)
+        .frame(maxWidth: .infinity,  maxHeight: 40.0)
+        .background(Color("MainBlack"))
     }
-    
-    // search area
-    SearchView(tab: tabs[activeTabIndex], progress: $progress, showProgress: $showProgress)
-      .frame(maxWidth: .infinity,  maxHeight: 37.0)
-      .background(Color("MainBlack"))
+    .frame(maxWidth: .infinity, maxHeight: 80)
+//    .offset(y: 5)
+//    .frame(width: 500)
+    .background(.red)
   }
 }
