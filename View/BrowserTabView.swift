@@ -15,11 +15,11 @@ struct StaticColorButtonStyle: ButtonStyle {
 }
 
 struct BrowserTabView: View {
+  @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   var isActive: Bool
   @Binding var activeTabIndex: Int
-  @Binding var dragIndex: Int
   var index: Int
   @Binding var showProgress: Bool
   var onClose: () -> Void
@@ -43,7 +43,8 @@ struct BrowserTabView: View {
           Button {
             
           } label: {
-            TabItemView(tabs: $tabs, tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+            TabItemView(service: service, tabs: $tabs, tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+//            TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
           }
           .buttonStyle(StaticColorButtonStyle())
           .clipShape(RoundedRectangle(cornerRadius: 10))

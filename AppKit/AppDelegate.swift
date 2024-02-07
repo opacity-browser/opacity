@@ -9,14 +9,16 @@ import Cocoa
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+  static var shared: AppDelegate!
+  
   private var isTerminating = false
-  var browsers: [Int:Browser] = [:]
+  var service: Service = Service()
   
   func someMethodToCall() {
     print("AppDelegate's method has been called!")
   }
   
-  private func createWindow() {
+  func createWindow() {
     // 윈도우 사이즈 및 스타일 정의
     let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
     let newWindow = NSWindow(contentRect: windowRect,
@@ -24,12 +26,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                              backing: .buffered, defer: false)
     
     let newWindowNo = newWindow.windowNumber
-    self.browsers[newWindowNo] = Browser()
-
+    self.service.browsers[newWindowNo] = Browser()
+    
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
       ContentView()
-        .environmentObject(self.browsers[newWindowNo]!)
+        .environmentObject(self.service)
+        .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
 //        .clipShape(RoundedRectangle(cornerRadius: 10))
       
@@ -50,8 +53,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
     newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
     newWindow.styleMask.insert(.fullSizeContentView)
-//    newWindow.backgroundColor = NSColor.clear
-//    newWindow.isOpaque = false
 
     newWindow.makeKeyAndOrderFront(nil)
     newWindow.delegate = self
@@ -61,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    AppDelegate.shared = self
     createWindow()
     
     DispatchQueue.main.async {
@@ -149,7 +151,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func newTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
+      if let target = self.service.browsers[windowNumber] {
         let newTab = Tab(url: DEFAULT_URL)
         target.tabs.append(newTab)
         target.index = target.tabs.count - 1
@@ -166,7 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
+      if let target = self.service.browsers[windowNumber] {
         target.tabs.remove(at: target.index)
         target.index = target.tabs.count > target.index ? target.index : target.tabs.count - 1
         if target.tabs.count == 0 {
@@ -179,7 +181,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func refreshTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
+      if let target = self.service.browsers[windowNumber] {
         target.tabs[target.index].webview?.reload()
       }
     }

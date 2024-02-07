@@ -10,15 +10,13 @@ import SwiftUI
 struct TitlebarView: View {
   @Environment(\.colorScheme) var colorScheme
 
+  @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @Binding var activeTabIndex: Int
   @Binding var progress: Double
   @Binding var showProgress: Bool
   
   @State private var isAddHover: Bool = false
-  
-  // drag&drop
-  @State private var dragIndex = 0
   
   var body: some View {
     VStack(spacing: 0) {
@@ -28,7 +26,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            BrowserTabView(tabs: $tabs, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, dragIndex: $dragIndex, index: index, showProgress: $showProgress) {
+            BrowserTabView(service: service, tabs: $tabs, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress) {
               tabs.remove(at: index)
               activeTabIndex = tabs.count > index ? index : tabs.count - 1
               if(tabs.count == 0) {
@@ -79,6 +77,6 @@ struct TitlebarView: View {
         .background(Color("MainBlack"))
     }
     .frame(maxWidth: .infinity, maxHeight: 80)
-    .background(.red)
+//    .background(.red)
   }
 }

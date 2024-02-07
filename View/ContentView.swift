@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+  @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
 
   @State private var columnVisibility = NavigationSplitViewVisibility.detailOnly
@@ -14,7 +15,7 @@ struct ContentView: View {
       VStack(spacing: 0) {
         // tab bar area
         if browser.tabs.count > 0 {
-          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
+          TitlebarView(service: service, tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
             .frame(maxWidth: .infinity)
             .onChange(of: progress) { _, newValue in
               if newValue == 1.0 {

@@ -8,28 +8,37 @@
 import SwiftUI
 
 struct TabItemView: NSViewRepresentable {
-  @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   var isActive: Bool
   @Binding var activeTabIndex: Int
-  @Binding var dragIndex: Int
   var index: Int
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
   
-  func moveTab(_ dragIdx: Int, _ idx: Int) {
-    tabs.move(fromOffsets: Foundation.IndexSet(integer: dragIdx), toOffset: dragIdx > idx ? idx : idx + 1)
-    activeTabIndex = idx
+  func moveTab(_ idx: Int) {
+    if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
+      let removedItem = tabs.remove(at: targetIndex)
+      tabs.insert(removedItem, at: idx)
+      activeTabIndex = idx
+    } else {
+      service.isMoveTab = true
+      for (_, browser) in service.browsers {
+        if let targetTab = browser.tabs.first(where: { $0.id == service.dragTabId }) {
+          tabs.insert(targetTab, at: idx + 1)
+          activeTabIndex = idx + 1
+          break
+        }
+      }
+    }
   }
   
   func makeNSView(context: Context) -> NSView {
     let containerView = TabDragSource()
-    containerView.appDelegate = appDelegate
     containerView.dragDelegate = context.coordinator
     containerView.moveTab = moveTab
-    containerView.dragIndex = dragIndex
     containerView.index = index
     
     let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
@@ -44,15 +53,16 @@ struct TabItemView: NSViewRepresentable {
       hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
     ])
     
+    context.coordinator.tabItemNSView = containerView
     return containerView
   }
   
   func updateNSView(_ nsView: NSView, context: Context) {
     context.coordinator.thisIndex = index
+    context.coordinator.tabId = tab.id
     
     if let customView = nsView as? TabDragSource {
-      if customView.dragIndex != dragIndex || customView.index != index {
-        customView.dragIndex = dragIndex
+      if customView.index != index {
         customView.index = index
       }
     }
@@ -72,6 +82,8 @@ struct TabItemView: NSViewRepresentable {
   class Coordinator: NSObject, NSDraggingSource {
     var parent: TabItemView
     var thisIndex: Int?
+    var tabId: UUID?
+    weak var tabItemNSView: TabDragSource?
     
     init(_ parent: TabItemView) {
       self.parent = parent
@@ -86,11 +98,40 @@ struct TabItemView: NSViewRepresentable {
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
       print("드래그 시작")
       parent.activeTabIndex = thisIndex!
-      parent.dragIndex = thisIndex!
+      parent.service.dragTabId = tabId!
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
       print("드래그 종료, 위치: \(screenPoint)")
+      guard let window = tabItemNSView?.window else { return }
+      
+      // 스크린 좌표계에서의 윈도우 프레임과 드래그 종료 위치 비교
+      if !window.frame.contains(screenPoint) {
+        print("드래그가 윈도우 영역 밖에서 종료되었습니다.")
+        if let targetIndex = parent.tabs.firstIndex(where: { $0.id == parent.service.dragTabId }) {
+          if(parent.tabs.count == 1) {
+            if parent.service.isMoveTab {
+              if let keyWindow = NSApplication.shared.keyWindow {
+                keyWindow.close()
+              }
+            }
+          }
+          
+          if(parent.tabs.count > 1) {
+            parent.activeTabIndex = parent.tabs.count - 2
+            parent.tabs.remove(at: targetIndex)
+            
+            if parent.service.isMoveTab == false {
+              AppDelegate.shared.createWindow()
+            }
+          }
+        }
+      } else {
+        print("드래그가 윈도우 영역 안에서 종료되었습니다.")
+      }
+      
+      parent.service.dragTabId = nil
+      parent.service.isMoveTab = false
     }
   }
 }
@@ -99,10 +140,8 @@ struct TabItemView: NSViewRepresentable {
 class TabDragSource: NSView {
   var appDelegate: AppDelegate?
   var dragDelegate: NSDraggingSource?
-  var dragIndex: Int?
   var index: Int?
-  var moveTab: ((Int, Int) -> Void)?
-  
+  var moveTab: ((Int) -> Void)?
   
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
@@ -137,17 +176,17 @@ class TabDragSource: NSView {
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    
-    print("드래그 시작 인덱스: \(self.dragIndex!)")
     print("현재 요소 인덱스: \(self.index!)")
-    self.moveTab!(self.dragIndex!, self.index!)
-    print("---------------")
+    if let thisIndex = self.index, let moveFunc = self.moveTab {
+      print("action")
+      moveFunc(thisIndex)
+    }
     // 드래그된 데이터 처리 로직
     // 예: 드래그된 문자열 가져오기
-    guard let draggedData = sender.draggingPasteboard.string(forType: .string) else { return false }
-    print("Dragged Data: \(draggedData)")
-
-    appDelegate!.someMethodToCall()
+//    guard let draggedData = sender.draggingPasteboard.string(forType: .string) else { return false }
+//    print("Dragged Data: \(draggedData)")
+//
+//    appDelegate!.someMethodToCall()
     return true
   }
   

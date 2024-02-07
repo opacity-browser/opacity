@@ -9,8 +9,5 @@ import SwiftUI
 
 final class Browser: ObservableObject {
   @Published var tabs: [Tab] = []
-  @Published var index: Int = -1
-  @Published var tabSize: CGSize?
-  var tabPosition: CGPoint = CGPoint(x: 74, y: 0)
-  
+  @Published var index: Int = -1  
 }

@@ -19,7 +19,7 @@ struct TabItem: View {
     ZStack {
       if let favicon = tab.favicon {
         Text(tab.title)
-          .frame(maxWidth: 220, maxHeight: 28, alignment: .leading)
+          .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
           .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
           .font(.system(size: 12))
           .padding(.leading, 28)
