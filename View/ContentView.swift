@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
+  
+  var windowNo: Int
 
   @State private var columnVisibility = NavigationSplitViewVisibility.detailOnly
   @State var windowWidth: CGFloat = .zero
@@ -15,7 +17,7 @@ struct ContentView: View {
       VStack(spacing: 0) {
         // tab bar area
         if browser.tabs.count > 0 {
-          TitlebarView(service: service, tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
+          TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, progress: $progress, showProgress: $showProgress)
             .frame(maxWidth: .infinity)
             .onChange(of: progress) { _, newValue in
               if newValue == 1.0 {
@@ -28,7 +30,7 @@ struct ContentView: View {
               }
             }
         }
-        MainView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress)
+        MainView(service: service, windowNo: windowNo, tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress)
       }
       .toolbar {
         ToolbarItemGroup(placement: .primaryAction) {

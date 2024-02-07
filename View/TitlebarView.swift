@@ -12,7 +12,7 @@ struct TitlebarView: View {
 
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
-  @Binding var activeTabIndex: Int
+  @Binding var activeTabId: UUID?
   @Binding var progress: Double
   @Binding var showProgress: Bool
   
@@ -25,10 +25,11 @@ struct TitlebarView: View {
         VStack { }.frame(width: 74)
         
         HStack(spacing: 0) {
-          ForEach(Array(tabs.enumerated()), id: \.element.id) { index, _ in
-            BrowserTabView(service: service, tabs: $tabs, tab: tabs[index], isActive: index == activeTabIndex, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress) {
+          ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
+            BrowserTabView(service: service, tabs: $tabs, tab: tab, isActive: tab.id == activeTabId, activeTabId: $activeTabId, index: index, showProgress: $showProgress) {
               tabs.remove(at: index)
-              activeTabIndex = tabs.count > index ? index : tabs.count - 1
+              let activeTabIndex = tabs.count > index ? index : tabs.count - 1
+              activeTabId = tabs[activeTabIndex].id
               if(tabs.count == 0) {
                 NSApplication.shared.keyWindow?.close()
               }
@@ -36,12 +37,17 @@ struct TitlebarView: View {
             .contentShape(Rectangle())
           }
         }
+        .onAppear {
+          activeTabId = tabs[0].id
+        }
 //        .animation(.linear(duration: 0.15), value: tabs)
         
         Button(action: {
           let newTab = Tab(url: DEFAULT_URL)
           tabs.append(newTab)
-          activeTabIndex = tabs.count - 1
+          activeTabId = newTab.id
+//          let activeTabIndex = tabs.count - 1
+//          activeTabId = tabs[activeTabIndex].id
         }) {
           Image(systemName: "plus")
             .font(.system(size: 11))
@@ -72,9 +78,11 @@ struct TitlebarView: View {
         .offset(y: 1)
       
       // search area
-      SearchView(tab: tabs[activeTabIndex], progress: $progress, showProgress: $showProgress)
-        .frame(maxWidth: .infinity,  maxHeight: 40.0)
-        .background(Color("MainBlack"))
+      if let activeTab = tabs.first(where: { $0.id == activeTabId }) {
+        SearchView(tab: activeTab, progress: $progress, showProgress: $showProgress)
+          .frame(maxWidth: .infinity,  maxHeight: 40.0)
+          .background(Color("MainBlack"))
+      }
     }
     .frame(maxWidth: .infinity, maxHeight: 80)
 //    .background(.red)

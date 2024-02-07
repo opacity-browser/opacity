@@ -12,7 +12,7 @@ struct TabItemView: NSViewRepresentable {
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   var isActive: Bool
-  @Binding var activeTabIndex: Int
+  @Binding var activeTabId: UUID?
   var index: Int
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
@@ -22,13 +22,13 @@ struct TabItemView: NSViewRepresentable {
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
       let removedItem = tabs.remove(at: targetIndex)
       tabs.insert(removedItem, at: idx)
-      activeTabIndex = idx
+      activeTabId = removedItem.id
     } else {
       service.isMoveTab = true
       for (_, browser) in service.browsers {
         if let targetTab = browser.tabs.first(where: { $0.id == service.dragTabId }) {
           tabs.insert(targetTab, at: idx + 1)
-          activeTabIndex = idx + 1
+          activeTabId = targetTab.id
           break
         }
       }
@@ -41,7 +41,7 @@ struct TabItemView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -97,7 +97,7 @@ struct TabItemView: NSViewRepresentable {
 
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
       print("드래그 시작")
-      parent.activeTabIndex = thisIndex!
+      parent.activeTabId = tabId!
       parent.service.dragTabId = tabId!
     }
     
@@ -118,7 +118,7 @@ struct TabItemView: NSViewRepresentable {
           }
           
           if(parent.tabs.count > 1) {
-            parent.activeTabIndex = parent.tabs.count - 2
+            parent.activeTabId = parent.tabs[parent.tabs.count - 2].id
             parent.tabs.remove(at: targetIndex)
             
             if parent.service.isMoveTab == false {

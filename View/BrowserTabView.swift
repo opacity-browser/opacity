@@ -19,7 +19,7 @@ struct BrowserTabView: View {
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   var isActive: Bool
-  @Binding var activeTabIndex: Int
+  @Binding var activeTabId: UUID?
   var index: Int
   @Binding var showProgress: Bool
   var onClose: () -> Void
@@ -37,13 +37,13 @@ struct BrowserTabView: View {
           .foregroundColor(Color("MainBlack").opacity(isActive ? 1 : 0))
           .clipShape((BrowserTabShape(cornerRadius: 10)))
           .offset(y: 3)
-          .animation(.linear(duration: 0.15), value: activeTabIndex)
+          .animation(.linear(duration: 0.15), value: activeTabId)
         
         ZStack {
           Button {
             
           } label: {
-            TabItemView(service: service, tabs: $tabs, tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+            TabItemView(service: service, tabs: $tabs, tab: tab, isActive: isActive, activeTabId: $activeTabId, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
 //            TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
           }
           .buttonStyle(StaticColorButtonStyle())

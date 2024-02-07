@@ -30,7 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
-      ContentView()
+      ContentView(windowNo: newWindowNo)
         .environmentObject(self.service)
         .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
@@ -154,7 +154,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       if let target = self.service.browsers[windowNumber] {
         let newTab = Tab(url: DEFAULT_URL)
         target.tabs.append(newTab)
-        target.index = target.tabs.count - 1
+        target.activeTabId = newTab.id
       }
     }
   }
@@ -169,10 +169,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
-        target.tabs.remove(at: target.index)
-        target.index = target.tabs.count > target.index ? target.index : target.tabs.count - 1
-        if target.tabs.count == 0 {
-          keyWindow.close()
+        if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == target.activeTabId }) {
+          target.tabs.remove(at: targetRemoveIndex)
+          if target.tabs.count == 0 {
+            keyWindow.close()
+          } else {
+            let targetIndex = target.tabs.count > targetRemoveIndex ? targetRemoveIndex : target.tabs.count - 1
+            target.activeTabId = target.tabs[targetIndex].id
+          }
         }
       }
     }
@@ -182,7 +186,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
-        target.tabs[target.index].webview?.reload()
+        target.tabs.first(where: { $0.id == target.activeTabId })?.webview?.reload()
       }
     }
   }

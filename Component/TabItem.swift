@@ -10,7 +10,6 @@ import SwiftUI
 struct TabItem: View {
   @ObservedObject var tab: Tab
   var isActive: Bool
-  @Binding var activeTabIndex: Int
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
