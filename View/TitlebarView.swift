@@ -27,11 +27,19 @@ struct TitlebarView: View {
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
             BrowserTabView(service: service, tabs: $tabs, tab: tab, isActive: tab.id == activeTabId, activeTabId: $activeTabId, index: index, showProgress: $showProgress) {
-              tabs.remove(at: index)
-              let activeTabIndex = tabs.count > index ? index : tabs.count - 1
-              activeTabId = tabs[activeTabIndex].id
-              if(tabs.count == 0) {
-                NSApplication.shared.keyWindow?.close()
+              if let tabIndex = tabs.firstIndex(where: { $0.id == tab.id }) {
+                tabs.remove(at: tabIndex)
+                let activeTabIndex = tabs.count > tabIndex ? tabIndex : tabs.count - 1
+                activeTabId = tabs[activeTabIndex].id
+                if(tabs.count == 0) {
+                  if let keyWindow = NSApplication.shared.keyWindow {
+                    let windowNumber = keyWindow.windowNumber
+                    if self.service.browsers[windowNumber] != nil {
+                      self.service.browsers[windowNumber] = nil
+                    }
+                    NSApplication.shared.keyWindow?.close()
+                  }
+                }
               }
             }
             .contentShape(Rectangle())
@@ -43,11 +51,9 @@ struct TitlebarView: View {
 //        .animation(.linear(duration: 0.15), value: tabs)
         
         Button(action: {
-          let newTab = Tab(url: DEFAULT_URL)
-          tabs.append(newTab)
-          activeTabId = newTab.id
-//          let activeTabIndex = tabs.count - 1
-//          activeTabId = tabs[activeTabIndex].id
+            let newTab = Tab(url: DEFAULT_URL)
+            tabs.append(newTab)
+            activeTabId = newTab.id
         }) {
           Image(systemName: "plus")
             .font(.system(size: 11))

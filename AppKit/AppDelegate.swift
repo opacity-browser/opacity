@@ -14,11 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   private var isTerminating = false
   var service: Service = Service()
   
-  func someMethodToCall() {
-    print("AppDelegate's method has been called!")
-  }
-  
-  func createWindow() {
+  func createWindow(_ tabId: UUID? = nil) {
     // 윈도우 사이즈 및 스타일 정의
     let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
     let newWindow = NSWindow(contentRect: windowRect,
@@ -28,9 +24,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let newWindowNo = newWindow.windowNumber
     self.service.browsers[newWindowNo] = Browser()
     
+    if let testTabId = tabId {
+      print("tabId: \(testTabId)")
+    }
+    
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
-      ContentView(windowNo: newWindowNo)
+      ContentView(tabId: tabId)
         .environmentObject(self.service)
         .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
@@ -64,7 +64,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   func applicationDidFinishLaunching(_ notification: Notification) {
     AppDelegate.shared = self
     createWindow()
-    
+    setMainMenu()
+  }
+  
+  func createNewWindow(_ tabId: UUID) {
+    createWindow(tabId)
+    setMainMenu()
+  }
+  
+  func setMainMenu() {
     DispatchQueue.main.async {
       let mainMenu = NSMenu()
       
@@ -161,6 +169,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   
   @objc func closeWindow() {
     if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if self.service.browsers[windowNumber] != nil {
+        self.service.browsers[windowNumber] = nil
+      }
       keyWindow.close()
     }
   }

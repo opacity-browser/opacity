@@ -25,7 +25,7 @@ class WebviewError {
 
 struct Webview: NSViewRepresentable {
   @Binding var tabs: [Tab]
-  @Binding var activeTabIndex: Int
+  @Binding var activeTabId: UUID?
   @ObservedObject var tab: Tab
   @Binding var progress: Double
   
@@ -220,7 +220,7 @@ struct Webview: NSViewRepresentable {
         if let requestURL = navigationAction.request.url {
           let newTab = Tab(url: requestURL)
           self.parent.tabs.append(newTab)
-          self.parent.activeTabIndex = parent.tabs.count - 1
+          self.parent.activeTabId = newTab.id
         }
       }
       return nil

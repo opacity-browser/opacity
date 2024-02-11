@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-final class Browser: ObservableObject {
+final class Browser: ObservableObject, Identifiable {
+  var id = UUID()
   @Published var tabs: [Tab] = []
   @Published var index: Int = -1
   @Published var activeTabId: UUID?
