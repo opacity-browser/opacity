@@ -24,18 +24,8 @@ class WebviewError {
 }
 
 struct Webview: NSViewRepresentable {
-//  var webview: WKWebView
-//  @Binding var tabs: [Tab]
   @ObservedObject var browser: Browser
-//  @Binding var activeTabId: UUID?
-//  @ObservedObject var tab: Tab
-//  @Binding var progress: Double
-  var tabId: UUID
-  
-  func getTab() -> Tab? {
-    let tab = self.browser.tabs.first(where: { $0.id == self.tabId })
-    return tab != nil ? tab : nil
-  }
+  @ObservedObject var tab: Tab
   
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
@@ -58,22 +48,8 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-      guard let tab = parent.getTab() else {
-        return
-      }
-      
-      tab.pageProgress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
     }
-//      print("didStartProvisionalNavigation")
-//      if let currentItem = getCurrentItem(of: webView) {
-//        print("============= did start currentItem: \(currentItem)")
-//      }
-//      WebviewError.share.isError = false
-//      if WebviewError.share.checkError {
-//        WebviewError.share.checkError = false
-//        WebviewError.share.isError = true
-//      }
-//    }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
       print("============= didComit currentItem: \(getCurrentItem(of: webView)!)")
@@ -119,40 +95,33 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-      guard let tab = parent.getTab() else {
-        return
-      }
       
       print("############# 리다이렉트 호출: didReceiveServerRedirectForProvisionalNavigation")
       print("webview redirect url: \(String(describing: webView.url))")
-      print("tab origin url: \(String(describing: tab.originURL))")
+      print("tab origin url: \(String(describing: parent.tab.originURL))")
 
       if let webviewURL = webView.url {
-        if String(describing: webviewURL) != String(describing: tab.originURL) {
+        if String(describing: webviewURL) != String(describing: parent.tab.originURL) {
           webView.load(URLRequest(url: webviewURL))
         }
       }
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-      guard let tab = parent.getTab() else {
-        return
-      }
-      
-      tab.pageProgress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
       print("############# didFinish")
       
       DispatchQueue.main.async {
-        tab.isBack = webView.canGoBack
-        tab.isForward = webView.canGoForward
+        self.parent.tab.isBack = webView.canGoBack
+        self.parent.tab.isForward = webView.canGoForward
       }
       
       if WebviewError.share.isError {
         switch WebviewError.share.errorType {
           case .notFindHost:
             let title = NSLocalizedString("Page not found", comment: "")
-            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), tab.printURL)
-            let href = tab.originURL
+            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), parent.tab.printURL)
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -160,7 +129,7 @@ struct Webview: NSViewRepresentable {
           case .notConnectHost:
             let title = NSLocalizedString("Unable to connect to site", comment: "")
             let message = NSLocalizedString("Connection has been reset.", comment: "")
-            let href = tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -168,7 +137,7 @@ struct Webview: NSViewRepresentable {
           case .notConnectInternet:
             let title = NSLocalizedString("No internet connection", comment: "")
             let message = NSLocalizedString("There is no internet connection.", comment: "")
-            let href = tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -176,7 +145,7 @@ struct Webview: NSViewRepresentable {
           case .unkown:
             let title = NSLocalizedString("Unknown error", comment: "")
             let message = NSLocalizedString("An unknown error occurred.", comment: "")
-            let href = tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -189,13 +158,13 @@ struct Webview: NSViewRepresentable {
       webView.evaluateJavaScript("document.title") { (response, error) in
         if let title = response as? String {
           DispatchQueue.main.async {
-            tab.title = title
+            self.parent.tab.title = title
           }
         }
       }
       
       if WebviewError.share.isError {
-        tab.setDefaultFavicon()
+        self.parent.tab.setDefaultFavicon()
         return
       }
           
@@ -203,9 +172,9 @@ struct Webview: NSViewRepresentable {
         guard let href = response as? String, let currentURL = webView.url else {
           if let webviewURL = webView.url {
             let faviconURL = webviewURL.scheme! + "://" + webviewURL.host! + "/favicon.ico"
-            tab.loadFavicon(url: URL(string: faviconURL)!)
+            self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
           } else {
-            tab.setDefaultFavicon()
+            self.parent.tab.setDefaultFavicon()
           }
           return
         }
@@ -230,7 +199,7 @@ struct Webview: NSViewRepresentable {
           faviconURL = URL(string: href, relativeTo: currentURL)!
         }
 
-        tab.loadFavicon(url: faviconURL)
+        self.parent.tab.loadFavicon(url: faviconURL)
       }
     }
     
@@ -262,10 +231,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-      guard let tab = parent.getTab() else {
-        return
-      }
-      tab.pageProgress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
       print("didFail")
       handleWebViewError(webView: webView, error: error)
     }
@@ -316,25 +282,15 @@ struct Webview: NSViewRepresentable {
   }
       
   func makeNSView(context: Context) -> WKWebView {
-    guard let tab = self.getTab() else {
-      return WKWebView()
-    }
+    tab.webview.navigationDelegate = context.coordinator
+    tab.webview.uiDelegate = context.coordinator
+    tab.webview.allowsBackForwardNavigationGestures = true
+    tab.webview.isInspectable = true
     
-    let newWebview = tab.webview
-    
-    newWebview.navigationDelegate = context.coordinator
-    newWebview.uiDelegate = context.coordinator
-    newWebview.allowsBackForwardNavigationGestures = true
-    newWebview.isInspectable = true
-    
-    return newWebview
+    return tab.webview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-    guard let tab = self.getTab() else {
-      return
-    }
-    
     print("############# 웹뷰 업데이트 호출: update")
     print("webview url: \(String(describing: webView.url))")
     print("tab origin url: \(String(describing: tab.originURL))")

@@ -7,13 +7,12 @@ struct ContentView: View {
   var tabId: UUID?
 
   @State private var isAddHover: Bool = false
-//  @State private var progress: Double = 0.0
   @State private var showProgress: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       // tab bar area
-      if browser.tabs.count > 0, let tab = getTab() {
+      if browser.tabs.count > 0, let tab = browser.tabs.first(where: { $0.id == browser.activeTabId }) {
         TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
           .frame(maxWidth: .infinity)
           .onChange(of: tab.pageProgress) { _, newValue in
@@ -28,7 +27,6 @@ struct ContentView: View {
           }
       }
       if let _ = browser.activeTabId {
-//        MainView(browser: browser, activeTabId: $browser.activeTabId, progress: $progress)
         MainView(browser: browser)
       }
     }
@@ -52,20 +50,18 @@ struct ContentView: View {
       for (_, targetBrowser) in service.browsers {
         if let targetTabIndex = targetBrowser.tabs.firstIndex(where: { $0.id == baseTabId }) {
           let targetTab = targetBrowser.tabs[targetTabIndex]
-          browser.tabs.append(targetTab)
-          browser.activeTabId = targetTab.id
-          targetBrowser.tabs.remove(at: targetTabIndex)
-          if targetBrowser.tabs.count > 0 {
-            targetBrowser.activeTabId = targetBrowser.tabs[targetBrowser.tabs.count - 1].id
+          DispatchQueue.main.async {
+            browser.tabs.append(targetTab)
+            browser.activeTabId = targetTab.id
+            
+            targetBrowser.tabs.remove(at: targetTabIndex)
+            if targetBrowser.tabs.count > 0 {
+              targetBrowser.activeTabId = targetBrowser.tabs[targetBrowser.tabs.count - 1].id
+            }
           }
           break
         }
       }
     }
-  }
-  
-  func getTab() -> Tab? {
-    let tab = browser.tabs.first(where: { $0.id == browser.activeTabId })
-    return tab != nil ? tab : nil
   }
 }

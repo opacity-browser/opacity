@@ -23,9 +23,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isForward: Bool = false
   
   @Published var pageProgress: Double = 0.0
-  @Published var test: Bool = false
   
-//  var printWebview: Webview?
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     

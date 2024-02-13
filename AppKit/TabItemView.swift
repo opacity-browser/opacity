@@ -107,14 +107,12 @@ struct TabItemView: NSViewRepresentable {
               if parent.service.isMoveTab {
                 AppDelegate.shared.closeTab()
               }
-            }
-            
-            if(parent.tabs.count > 1) {
-              if parent.service.isMoveTab == false {
-                AppDelegate.shared.createNewWindow(dragId)
-              } else {
+            } else {
+              if parent.service.isMoveTab {
                 parent.activeTabId = parent.tabs[parent.tabs.count - 2].id
                 parent.tabs.remove(at: targetIndex)
+              } else {
+                AppDelegate.shared.createNewWindow(dragId)
               }
             }
           }
