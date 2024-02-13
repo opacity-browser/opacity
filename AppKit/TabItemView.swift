@@ -66,13 +66,6 @@ struct TabItemView: NSViewRepresentable {
         customView.index = index
       }
     }
-
-//    for subview in nsView.subviews {
-//      if let hostingView = subview as? NSHostingView<TabItem> {
-//        hostingView.rootView = TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
-//        break
-//      }
-//    }
   }
   
   func makeCoordinator() -> Coordinator {
@@ -112,13 +105,7 @@ struct TabItemView: NSViewRepresentable {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
             if(parent.tabs.count == 1) {
               if parent.service.isMoveTab {
-                if let keyWindow = NSApplication.shared.keyWindow {
-                  let windowNumber = keyWindow.windowNumber
-                  if parent.service.browsers[windowNumber] != nil {
-                    parent.service.browsers[windowNumber] = nil
-                  }
-                  keyWindow.close()
-                }
+                AppDelegate.shared.closeTab()
               }
             }
             

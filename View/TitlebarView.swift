@@ -13,7 +13,6 @@ struct TitlebarView: View {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @Binding var activeTabId: UUID?
-  @Binding var progress: Double
   @Binding var showProgress: Bool
   
   @State private var isAddHover: Bool = false
@@ -27,20 +26,7 @@ struct TitlebarView: View {
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
             BrowserTabView(service: service, tabs: $tabs, tab: tab, isActive: tab.id == activeTabId, activeTabId: $activeTabId, index: index, showProgress: $showProgress) {
-              if let tabIndex = tabs.firstIndex(where: { $0.id == tab.id }) {
-                tabs.remove(at: tabIndex)
-                let activeTabIndex = tabs.count > tabIndex ? tabIndex : tabs.count - 1
-                activeTabId = tabs[activeTabIndex].id
-                if(tabs.count == 0) {
-                  if let keyWindow = NSApplication.shared.keyWindow {
-                    let windowNumber = keyWindow.windowNumber
-                    if self.service.browsers[windowNumber] != nil {
-                      self.service.browsers[windowNumber] = nil
-                    }
-                    NSApplication.shared.keyWindow?.close()
-                  }
-                }
-              }
+              AppDelegate.shared.closeTab()
             }
             .contentShape(Rectangle())
           }
@@ -48,12 +34,14 @@ struct TitlebarView: View {
         .onAppear {
           activeTabId = tabs[0].id
         }
-//        .animation(.linear(duration: 0.15), value: tabs)
         
         Button(action: {
-            let newTab = Tab(url: DEFAULT_URL)
-            tabs.append(newTab)
-            activeTabId = newTab.id
+          if let keyWindow = NSApplication.shared.keyWindow {
+            let windowNumber = keyWindow.windowNumber
+            if let target = self.service.browsers[windowNumber] {
+              target.newTab()
+            }
+          }
         }) {
           Image(systemName: "plus")
             .font(.system(size: 11))
@@ -85,7 +73,7 @@ struct TitlebarView: View {
       
       // search area
       if let activeTab = tabs.first(where: { $0.id == activeTabId }) {
-        SearchView(tab: activeTab, progress: $progress, showProgress: $showProgress)
+        SearchView(tab: activeTab, showProgress: $showProgress)
           .frame(maxWidth: .infinity,  maxHeight: 40.0)
           .background(Color("MainBlack"))
       }

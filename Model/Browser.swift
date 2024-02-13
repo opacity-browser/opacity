@@ -12,4 +12,10 @@ final class Browser: ObservableObject, Identifiable {
   @Published var tabs: [Tab] = []
   @Published var index: Int = -1
   @Published var activeTabId: UUID?
+  
+  func newTab(_ url: URL = DEFAULT_URL) {
+    let newTab = Tab(url: url)
+    self.tabs.append(newTab)
+    self.activeTabId = newTab.id
+  }
 }

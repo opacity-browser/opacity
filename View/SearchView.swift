@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
   @ObservedObject var tab: Tab
-  @Binding var progress: Double
   @Binding var showProgress: Bool
   
   @FocusState private var textFieldFocused: Bool
@@ -48,9 +47,7 @@ struct SearchView: View {
       }
       .onTapGesture {
         if tab.isBack {
-          if let webview = tab.webview {
-            webview.goBack()
-          }
+          tab.webview.goBack()
         }
       }
       
@@ -73,9 +70,7 @@ struct SearchView: View {
       }
       .onTapGesture {
         if tab.isForward {
-          if let webview = tab.webview {
-            webview.goForward()
-          }
+          tab.webview.goForward()
         }
       }
       
@@ -97,9 +92,7 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if let webview = tab.webview {
-          webview.reload()
-        }
+        tab.webview.reload()
       }
       
       VStack(spacing: 0) { }.frame(width: 6)
@@ -156,7 +149,7 @@ struct SearchView: View {
                 }
 
                 showProgress = true
-                progress = 0.0
+                tab.pageProgress = 0.0
                 DispatchQueue.main.async {
                   tab.updateURLBySearch(url: URL(string: newURL)!)
                 }
@@ -181,9 +174,9 @@ struct SearchView: View {
                     HStack(spacing: 0) {
                       Rectangle()
                         .foregroundColor(Color("PointJade"))
-                        .frame(maxWidth: geometry.size.width * CGFloat(progress), maxHeight: 2, alignment: .leading)
-                        .animation(.linear(duration: 0.5), value: progress)
-                      if progress < 1.0 {
+                        .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
+                        .animation(.linear(duration: 0.5), value: tab.pageProgress)
+                      if tab.pageProgress < 1.0 {
                         Spacer()
                       }
                     }
@@ -255,6 +248,8 @@ struct SearchView: View {
         }
       }
       .padding(.trailing, 10)
+      
+//      VStack{ }.frame(maxWidth: 10)
     }
     .frame(height: 29)
 //    .background(.red.opacity(0.2))

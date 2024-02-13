@@ -22,7 +22,30 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
-  var webview: WKWebView?
+  @Published var pageProgress: Double = 0.0
+  @Published var test: Bool = false
+  
+//  var printWebview: Webview?
+  lazy var webview: WKWebView = {
+    let config = WKWebViewConfiguration()
+    
+    let prefs = WKWebpagePreferences()
+    prefs.allowsContentJavaScript = true
+    config.defaultWebpagePreferences = prefs
+    
+    let schemeHandler = SchemeHandler()
+    config.setURLSchemeHandler(schemeHandler, forURLScheme: "friedegg")
+    
+    //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
+    //    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+    //    config.userContentController.addUserScript(userScript)
+    
+    let preferences = WKPreferences()
+    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
+    config.preferences = preferences
+    
+    return WKWebView(frame: .zero, configuration: config)
+  }()
   
   init(url: URL = DEFAULT_URL) {
     let stringURL = String(describing: url)

@@ -7,4 +7,4 @@
 
 import SwiftUI
 
-let DEFAULT_URL: URL = URL(string: "https://naver.com")!
+let DEFAULT_URL: URL = URL(string: "https://github.com")!

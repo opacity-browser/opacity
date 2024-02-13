@@ -34,19 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         .environmentObject(self.service)
         .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
-//        .clipShape(RoundedRectangle(cornerRadius: 10))
-      
-//        .onAppear {
-//          if let windowSize = WindowSizeManager.load() {
-//            NSApplication.shared.windows.forEach({ NSWindow in
-//              NSWindow.setContentSize(windowSize)
-//            })
-//          }
-//        }
-//        .onDisappear {
-//          WindowSizeManager.save(windowSize: geometry.size)
-//        }
     }
+    
+//    let contentView = TestContentView()
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
     newWindow.center()
@@ -160,9 +150,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
-        let newTab = Tab(url: DEFAULT_URL)
-        target.tabs.append(newTab)
-        target.activeTabId = newTab.id
+        target.newTab()
       }
     }
   }
@@ -198,7 +186,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
-        target.tabs.first(where: { $0.id == target.activeTabId })?.webview?.reload()
+        target.tabs.first(where: { $0.id == target.activeTabId })?.webview.reload()
       }
     }
   }

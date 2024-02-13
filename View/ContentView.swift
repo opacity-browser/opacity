@@ -7,20 +7,20 @@ struct ContentView: View {
   var tabId: UUID?
 
   @State private var isAddHover: Bool = false
-  @State private var progress: Double = 0.0
+//  @State private var progress: Double = 0.0
   @State private var showProgress: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       // tab bar area
-      if browser.tabs.count > 0 {
-        TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, progress: $progress, showProgress: $showProgress)
+      if browser.tabs.count > 0, let tab = getTab() {
+        TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
           .frame(maxWidth: .infinity)
-          .onChange(of: progress) { _, newValue in
+          .onChange(of: tab.pageProgress) { _, newValue in
             if newValue == 1.0 {
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showProgress = false
-                progress = 0.0
+                tab.pageProgress = 0.0
               }
             } else if newValue > 0.0 && newValue < 1.0 {
               showProgress = true
@@ -28,7 +28,8 @@ struct ContentView: View {
           }
       }
       if let _ = browser.activeTabId {
-        MainView(tabs: $browser.tabs, activeTabId: $browser.activeTabId, progress: $progress)
+//        MainView(browser: browser, activeTabId: $browser.activeTabId, progress: $progress)
+        MainView(browser: browser)
       }
     }
     .toolbar {
@@ -44,23 +45,16 @@ struct ContentView: View {
     .ignoresSafeArea(.container, edges: .top)
     .onAppear {
       guard let baseTabId = tabId else {
-        let newTab = Tab(url: DEFAULT_URL)
-        browser.tabs.append(newTab)
-        browser.activeTabId = newTab.id
+        browser.newTab()
         return
       }
       
       for (_, targetBrowser) in service.browsers {
-        print("service 반복")
         if let targetTabIndex = targetBrowser.tabs.firstIndex(where: { $0.id == baseTabId }) {
-          print("초기 tab index: \(targetTabIndex)")
-          print("타겟 브라우저 탭 정보 1: \(targetBrowser.tabs.count)")
           let targetTab = targetBrowser.tabs[targetTabIndex]
           browser.tabs.append(targetTab)
           browser.activeTabId = targetTab.id
-          print("새로운 브라우저에 base Tab ID의 탭 추가")
           targetBrowser.tabs.remove(at: targetTabIndex)
-          print("타겟 브라우저 탭 정보 2: \(targetBrowser.tabs.count)")
           if targetBrowser.tabs.count > 0 {
             targetBrowser.activeTabId = targetBrowser.tabs[targetBrowser.tabs.count - 1].id
           }
@@ -68,5 +62,10 @@ struct ContentView: View {
         }
       }
     }
+  }
+  
+  func getTab() -> Tab? {
+    let tab = browser.tabs.first(where: { $0.id == browser.activeTabId })
+    return tab != nil ? tab : nil
   }
 }
