@@ -11,7 +11,6 @@ struct TabItemView: NSViewRepresentable {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
-  var isActive: Bool
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var showProgress: Bool
@@ -41,7 +40,7 @@ struct TabItemView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, isActive: isActive, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)

@@ -21,9 +21,10 @@ struct SearchView: View {
   @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
   
-  let inputHeight: Double = 29
-  let iconHeight: Double = 22
+  let inputHeight: Double = 32
+  let iconHeight: Double = 24
   let iconRadius: Double = 6
+  let textSize: Double = 13.5
   
   var body: some View {
     HStack(spacing: 0) {
@@ -126,10 +127,11 @@ struct SearchView: View {
                   isEditing = false
                 }
               })
+              .foregroundColor(.white.opacity(0.85))
               .padding(.leading, 5)
               .frame(maxHeight: inputHeight)
               .textFieldStyle(PlainTextFieldStyle())
-              .font(.system(size: 13))
+              .font(.system(size: textSize))
               .fontWeight(.regular)
               .focused($textFieldFocused)
 //              .onChange(of: tab.inputURL) {
@@ -199,11 +201,12 @@ struct SearchView: View {
                 
                 Text(tab.printURL)
                   .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                  .foregroundColor(.white.opacity(0.85))
                   .padding(.top, 5)
                   .padding(.bottom, 5)
                   .padding(.leading, 5)
                   .padding(.trailing, 10)
-                  .font(.system(size: 13))
+                  .font(.system(size: textSize))
                   .fontWeight(.regular)
                   .opacity(0.9)
                   .lineLimit(1)
@@ -251,7 +254,7 @@ struct SearchView: View {
       
 //      VStack{ }.frame(maxWidth: 10)
     }
-    .frame(height: 29)
+    .frame(height: 32)
 //    .background(.red.opacity(0.2))
     .offset(y: -1.5)
   }

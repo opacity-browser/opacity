@@ -25,7 +25,7 @@ struct TitlebarView: View {
         
         HStack(spacing: 0) {
           ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
-            BrowserTabView(service: service, tabs: $tabs, tab: tab, isActive: tab.id == activeTabId, activeTabId: $activeTabId, index: index, showProgress: $showProgress) {
+            BrowserTabView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, showProgress: $showProgress) {
               AppDelegate.shared.closeTab()
             }
             .contentShape(Rectangle())

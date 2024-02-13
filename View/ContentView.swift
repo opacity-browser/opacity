@@ -11,22 +11,9 @@ struct ContentView: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      // tab bar area
-      if browser.tabs.count > 0, let tab = browser.tabs.first(where: { $0.id == browser.activeTabId }) {
+      if browser.tabs.count > 0, let _ = browser.activeTabId {
         TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
           .frame(maxWidth: .infinity)
-          .onChange(of: tab.pageProgress) { _, newValue in
-            if newValue == 1.0 {
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                showProgress = false
-                tab.pageProgress = 0.0
-              }
-            } else if newValue > 0.0 && newValue < 1.0 {
-              showProgress = true
-            }
-          }
-      }
-      if let _ = browser.activeTabId {
         MainView(browser: browser)
       }
     }

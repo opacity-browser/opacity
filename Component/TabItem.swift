@@ -9,24 +9,27 @@ import SwiftUI
 
 struct TabItem: View {
   @ObservedObject var tab: Tab
-  var isActive: Bool
+  @Binding var activeTabId: UUID?
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
   
+  var isActive: Bool {
+    return tab.id == activeTabId
+  }
+  
   var body: some View {
     ZStack {
+      Text(tab.title)
+        .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
+        .foregroundColor(isActive || isTabHover ? .white.opacity(0.85) : .white.opacity(0.6))
+        .font(.system(size: 12))
+        .padding(.leading, tab.favicon != nil || showProgress ? 28 : 9)
+        .padding(.trailing, 20)
+        .lineLimit(1)
+        .truncationMode(.tail)
+      
       if let favicon = tab.favicon {
-        Text(tab.title)
-          .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
-          .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-          .font(.system(size: 12))
-          .padding(.leading, 28)
-          .padding(.trailing, 20)
-          .lineLimit(1)
-          .truncationMode(.tail)
-//          .background(.blue.opacity(0.2))
-
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             favicon
@@ -41,16 +44,6 @@ struct TabItem: View {
           Spacer()
         }
       } else if showProgress {
-        Text(tab.title)
-          .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
-          .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-          .font(.system(size: 12))
-          .padding(.leading, 28)
-          .padding(.trailing, 20)
-          .lineLimit(1)
-          .truncationMode(.tail)
-//          .background(.blue.opacity(0.2))
-
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             Circle()
@@ -67,21 +60,11 @@ struct TabItem: View {
           .padding(.leading, 8)
           Spacer()
         }
-      } else {
-        Text(tab.title)
-          .frame(maxWidth: 220, maxHeight: 29, alignment: .leading)
-          .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-          .font(.system(size: 12))
-          .padding(.leading, 9)
-          .padding(.trailing, 20)
-          .lineLimit(1)
-          .truncationMode(.tail)
-//          .background(.blue.opacity(0.2))
       }
     }
     .frame(height: 30)
     .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
     .clipShape(RoundedRectangle(cornerRadius: 10))
-    .offset(y: 1)
+    .offset(y: 1.5)
   }
 }

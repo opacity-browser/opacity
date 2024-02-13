@@ -18,7 +18,6 @@ struct BrowserTabView: View {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
-  var isActive: Bool
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var showProgress: Bool
@@ -27,7 +26,10 @@ struct BrowserTabView: View {
   @State var isTabHover: Bool = false
   @State var loadingAnimation: Bool = false
   @State private var isCloseHover: Bool = false
-
+  
+  var isActive: Bool {
+    return tab.id == activeTabId
+  }
   
   var body: some View {
     VStack(spacing: 0) {
@@ -43,7 +45,7 @@ struct BrowserTabView: View {
           Button {
             
           } label: {
-            TabItemView(service: service, tabs: $tabs, tab: tab, isActive: isActive, activeTabId: $activeTabId, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+            TabItemView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
 //            TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
           }
           .buttonStyle(StaticColorButtonStyle())
@@ -91,6 +93,19 @@ struct BrowserTabView: View {
     .onChange(of: showProgress) { oldValue, newValue in
       if newValue == false {
         loadingAnimation = false
+      }
+    }
+    .onChange(of: tab.pageProgress) { _, newValue in
+      print("change page progress: \(newValue)")
+      if newValue == 1.0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          withAnimation(.easeInOut(duration: 0.15)) {
+            showProgress = false
+          }
+          tab.pageProgress = 0.0
+        }
+      } else if newValue > 0.0 && newValue < 1.0 {
+        showProgress = true
       }
     }
   }
