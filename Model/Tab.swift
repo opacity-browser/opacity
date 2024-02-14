@@ -8,22 +8,13 @@
 import SwiftUI
 import WebKit
 
-//enum WebviewError {
-//  case noError
-//  case notFind
-//  case notHttps
-//  case notNetwork
-//  case notConnect
-//}
-
-final class Tab: ObservableObject, Identifiable {
+final class Tab: ObservableObject, Identifiable, Equatable {
   var id = UUID()
   @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
   
   var isUpdateBySearch: Bool = false
-//  var prevURL: URL
   
   @Published var title: String = ""
   @Published var favicon: Image?
@@ -31,9 +22,28 @@ final class Tab: ObservableObject, Identifiable {
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
-//  @Published var isErrorStatus: WebviewError = .noError
+  @Published var pageProgress: Double = 0.0
   
-  var webview: WKWebView?
+  lazy var webview: WKWebView = {
+    let config = WKWebViewConfiguration()
+    
+    let prefs = WKWebpagePreferences()
+    prefs.allowsContentJavaScript = true
+    config.defaultWebpagePreferences = prefs
+    
+    let schemeHandler = SchemeHandler()
+    config.setURLSchemeHandler(schemeHandler, forURLScheme: "friedegg")
+    
+    //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
+    //    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+    //    config.userContentController.addUserScript(userScript)
+    
+    let preferences = WKPreferences()
+    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
+    config.preferences = preferences
+    
+    return WKWebView(frame: .zero, configuration: config)
+  }()
   
   init(url: URL = DEFAULT_URL) {
     let stringURL = String(describing: url)
@@ -92,5 +102,9 @@ final class Tab: ObservableObject, Identifiable {
         self.favicon = nil
       }
     }
+  }
+  
+  static func == (lhs: Tab, rhs: Tab) -> Bool {
+    return lhs.id == rhs.id
   }
 }

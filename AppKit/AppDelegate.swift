@@ -8,62 +8,13 @@
 import Cocoa
 import SwiftUI
 
-//class WindowController: NSWindowController {
-//  var browser: Browser = Browser()
-//  
-//  override init(window: NSWindow?) {
-//      super.init(window: window)
-//  }
-//  
-//  required init?(coder: NSCoder) {
-//      fatalError("init(coder:) has not been implemented")
-//  }
-//}
-
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+  static var shared: AppDelegate!
+  
   private var isTerminating = false
-  var browsers: [Int:Browser] = [:]
+  var service: Service = Service()
   
-  private func exitWindow() {
-    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
-    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
-
-    let contentView = HStack(spacing: 0) {
-      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
-        .font(.system(size: 30))
-        .bold()
-        .foregroundStyle(.white)
-    }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .padding(.vertical, 10)
-      .padding(.horizontal, 20)
-      .background(.black.opacity(0.4))
-      .clipShape(RoundedRectangle(cornerRadius: 10))
-    
-    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
-    exitWindow.setContentSize(newContentSize)
-    
-    exitWindow.contentView = NSHostingController(rootView: contentView).view
-    exitWindow.center()
-    exitWindow.isOpaque = false
-    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
-    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
-    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
-    exitWindow.styleMask.insert(.fullSizeContentView)
-
-    exitWindow.makeKeyAndOrderFront(nil)
-    
-    let windowController = NSWindowController(window: exitWindow)
-    windowController.showWindow(self)
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-      exitWindow.close()
-      self.isTerminating = false
-    }
-  }
-  
-
-  private func createWindow() {
+  func createWindow(_ tabId: UUID? = nil) {
     // 윈도우 사이즈 및 스타일 정의
     let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
     let newWindow = NSWindow(contentRect: windowRect,
@@ -71,24 +22,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                              backing: .buffered, defer: false)
     
     let newWindowNo = newWindow.windowNumber
-    self.browsers[newWindowNo] = Browser()
-
+    self.service.browsers[newWindowNo] = Browser()
+    
+    if let testTabId = tabId {
+      print("tabId: \(testTabId)")
+    }
+    
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
-      ContentView()
-        .environmentObject(self.browsers[newWindowNo]!)
+      ContentView(tabId: tabId)
+        .environmentObject(self.service)
+        .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
-//        .onAppear {
-//          if let windowSize = WindowSizeManager.load() {
-//            NSApplication.shared.windows.forEach({ NSWindow in
-//              NSWindow.setContentSize(windowSize)
-//            })
-//          }
-//        }
-//        .onDisappear {
-//          WindowSizeManager.save(windowSize: geometry.size)
-//        }
     }
+    
+//    let contentView = TestContentView()
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
     newWindow.center()
@@ -104,8 +52,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    AppDelegate.shared = self
     createWindow()
-    
+    setMainMenu()
+  }
+  
+  func createNewWindow(_ tabId: UUID) {
+    createWindow(tabId)
+    setMainMenu()
+  }
+  
+  func setMainMenu() {
     DispatchQueue.main.async {
       let mainMenu = NSMenu()
       
@@ -192,16 +149,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func newTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
-        let newTab = Tab(url: DEFAULT_URL)
-        target.tabs.append(newTab)
-        target.index = target.tabs.count - 1
+      if let target = self.service.browsers[windowNumber] {
+        target.newTab()
       }
     }
   }
   
   @objc func closeWindow() {
     if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if self.service.browsers[windowNumber] != nil {
+        self.service.browsers[windowNumber] = nil
+      }
       keyWindow.close()
     }
   }
@@ -209,11 +168,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
-        target.tabs.remove(at: target.index)
-        target.index = target.tabs.count > target.index ? target.index : target.tabs.count - 1
-        if target.tabs.count == 0 {
-          keyWindow.close()
+      if let target = self.service.browsers[windowNumber] {
+        if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == target.activeTabId }) {
+          target.tabs.remove(at: targetRemoveIndex)
+          if target.tabs.count == 0 {
+            keyWindow.close()
+          } else {
+            let targetIndex = target.tabs.count > targetRemoveIndex ? targetRemoveIndex : target.tabs.count - 1
+            target.activeTabId = target.tabs[targetIndex].id
+          }
         }
       }
     }
@@ -222,8 +185,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func refreshTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.browsers[windowNumber] {
-        target.tabs[target.index].webview?.reload()
+      if let target = self.service.browsers[windowNumber] {
+        target.tabs.first(where: { $0.id == target.activeTabId })?.webview.reload()
       }
     }
   }
@@ -235,10 +198,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     return true
   }
   
-//  // 단축키에 파라미터 전송 예시
-//  @objc func menuItemAction(sender: NSMenuItem) {
-//    if let data = sender.representedObject as? String {
-//     print("Menu item selected with data: \(data)")
-//    }
-//  }
+  private func exitWindow() {
+    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
+    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
+
+    let contentView = HStack(spacing: 0) {
+      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
+        .font(.system(size: 30))
+        .bold()
+        .foregroundStyle(.white)
+    }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .padding(.vertical, 10)
+      .padding(.horizontal, 20)
+      .background(.black.opacity(0.4))
+      .clipShape(RoundedRectangle(cornerRadius: 10))
+    
+    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
+    exitWindow.setContentSize(newContentSize)
+    
+    exitWindow.contentView = NSHostingController(rootView: contentView).view
+    exitWindow.center()
+    exitWindow.isOpaque = false
+    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
+    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
+    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    exitWindow.styleMask.insert(.fullSizeContentView)
+
+    exitWindow.makeKeyAndOrderFront(nil)
+    
+    let windowController = NSWindowController(window: exitWindow)
+    windowController.showWindow(self)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+      exitWindow.close()
+      self.isTerminating = false
+    }
+  }
 }

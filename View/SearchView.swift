@@ -9,15 +9,10 @@ import SwiftUI
 
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
-//  @Binding var tabs: [Tab]
-//  @Binding var activeTabIndex: Int
   @ObservedObject var tab: Tab
-  @Binding var progress: Double
   @Binding var showProgress: Bool
   
   @FocusState private var textFieldFocused: Bool
-  
-//  @State private var isDomain: Bool = true
   
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
@@ -26,9 +21,10 @@ struct SearchView: View {
   @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
   
-  let inputHeight: Double = 29
-  let iconHeight: Double = 22
+  let inputHeight: Double = 32
+  let iconHeight: Double = 24
   let iconRadius: Double = 6
+  let textSize: Double = 13.5
   
   var body: some View {
     HStack(spacing: 0) {
@@ -52,9 +48,7 @@ struct SearchView: View {
       }
       .onTapGesture {
         if tab.isBack {
-          if let webview = tab.webview {
-            webview.goBack()
-          }
+          tab.webview.goBack()
         }
       }
       
@@ -77,9 +71,7 @@ struct SearchView: View {
       }
       .onTapGesture {
         if tab.isForward {
-          if let webview = tab.webview {
-            webview.goForward()
-          }
+          tab.webview.goForward()
         }
       }
       
@@ -101,9 +93,7 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        if let webview = tab.webview {
-          webview.reload()
-        }
+        tab.webview.reload()
       }
       
       VStack(spacing: 0) { }.frame(width: 6)
@@ -137,10 +127,11 @@ struct SearchView: View {
                   isEditing = false
                 }
               })
+              .foregroundColor(.white.opacity(0.85))
               .padding(.leading, 5)
               .frame(maxHeight: inputHeight)
               .textFieldStyle(PlainTextFieldStyle())
-              .font(.system(size: 13))
+              .font(.system(size: textSize))
               .fontWeight(.regular)
               .focused($textFieldFocused)
 //              .onChange(of: tab.inputURL) {
@@ -160,7 +151,7 @@ struct SearchView: View {
                 }
 
                 showProgress = true
-                progress = 0.0
+                tab.pageProgress = 0.0
                 DispatchQueue.main.async {
                   tab.updateURLBySearch(url: URL(string: newURL)!)
                 }
@@ -185,9 +176,9 @@ struct SearchView: View {
                     HStack(spacing: 0) {
                       Rectangle()
                         .foregroundColor(Color("PointJade"))
-                        .frame(maxWidth: geometry.size.width * CGFloat(progress), maxHeight: 2, alignment: .leading)
-                        .animation(.linear(duration: 0.5), value: progress)
-                      if progress < 1.0 {
+                        .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
+                        .animation(.linear(duration: 0.5), value: tab.pageProgress)
+                      if tab.pageProgress < 1.0 {
                         Spacer()
                       }
                     }
@@ -210,11 +201,12 @@ struct SearchView: View {
                 
                 Text(tab.printURL)
                   .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                  .foregroundColor(.white.opacity(0.85))
                   .padding(.top, 5)
                   .padding(.bottom, 5)
                   .padding(.leading, 5)
                   .padding(.trailing, 10)
-                  .font(.system(size: 13))
+                  .font(.system(size: textSize))
                   .fontWeight(.regular)
                   .opacity(0.9)
                   .lineLimit(1)
@@ -262,8 +254,8 @@ struct SearchView: View {
       
 //      VStack{ }.frame(maxWidth: 10)
     }
-    .frame(height: 29)
+    .frame(height: 32)
 //    .background(.red.opacity(0.2))
-    .offset(y: -1.5)
+    .offset(y: -2.2)
   }
 }

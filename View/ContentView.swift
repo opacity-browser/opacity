@@ -1,53 +1,52 @@
 import SwiftUI
 
 struct ContentView: View {
+  @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
+  
+  var tabId: UUID?
 
-  @State private var columnVisibility = NavigationSplitViewVisibility.detailOnly
-  @State var windowWidth: CGFloat = .zero
   @State private var isAddHover: Bool = false
-  @State private var progress: Double = 0.0
   @State private var showProgress: Bool = false
   
   var body: some View {
-    GeometryReader { geometry in
-      VStack(spacing: 0) {
-        // tab bar area
-        if browser.tabs.count > 0 {
-          TitlebarView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress, showProgress: $showProgress)
-            .frame(maxWidth: .infinity, maxHeight: 38)
-            .onChange(of: progress) { _, newValue in
-              if newValue == 1.0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                  showProgress = false
-                  progress = 0.0
-                }
-              } else if newValue > 0.0 && newValue < 1.0 {
-                showProgress = true
-              }
+    VStack(spacing: 0) {
+      if browser.tabs.count > 0, let _ = browser.activeTabId {
+        TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
+          .frame(maxWidth: .infinity)
+        MainView(browser: browser)
+      }
+    }
+    .toolbar {
+      ToolbarItemGroup(placement: .primaryAction) {
+        Spacer()
+        Button(action: {
+          // 버튼 액션
+        }) {
+          Image(systemName: "rectangle.stack") // 아이콘 지정
+        }
+      }
+    }
+    .ignoresSafeArea(.container, edges: .top)
+    .onAppear {
+      guard let baseTabId = tabId else {
+        browser.newTab()
+        return
+      }
+      
+      for (_, targetBrowser) in service.browsers {
+        if let targetTabIndex = targetBrowser.tabs.firstIndex(where: { $0.id == baseTabId }) {
+          let targetTab = targetBrowser.tabs[targetTabIndex]
+          DispatchQueue.main.async {
+            browser.tabs.append(targetTab)
+            browser.activeTabId = targetTab.id
+            
+            targetBrowser.tabs.remove(at: targetTabIndex)
+            if targetBrowser.tabs.count > 0 {
+              targetBrowser.activeTabId = targetBrowser.tabs[targetBrowser.tabs.count - 1].id
             }
-        }
-        MainView(tabs: $browser.tabs, activeTabIndex: $browser.index, progress: $progress)
-      }
-      .toolbar {
-        ToolbarItemGroup(placement: .primaryAction) {
-          Spacer()
-          Button(action: {
-            // 버튼 액션
-          }) {
-            Image(systemName: "rectangle.stack") // 아이콘 지정
           }
-        }
-      }
-      .onChange(of: geometry.size) { oldValue, newValue in
-        windowWidth = newValue.width
-      }
-      .ignoresSafeArea(.container, edges: .top)
-      .onAppear {
-        if browser.tabs.count == 0 {
-          let newTab = Tab(url: DEFAULT_URL)
-          browser.tabs.append(newTab)
-          browser.index = 0
+          break
         }
       }
     }

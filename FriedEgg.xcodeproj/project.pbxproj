@@ -10,6 +10,14 @@
 		A12D053B2B5FD8E900CBC6B2 /* WebviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12D053A2B5FD8E900CBC6B2 /* WebviewView.swift */; };
 		A12D053E2B600C6100CBC6B2 /* not-find-host.html in Resources */ = {isa = PBXBuildFile; fileRef = A12D053D2B600C6100CBC6B2 /* not-find-host.html */; };
 		A134711E2B43F00800A3AE59 /* FriedEggApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* FriedEggApp.swift */; };
+		A14246142B70B6F70062C516 /* BrowserTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246132B70B6F70062C516 /* BrowserTab.swift */; };
+		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
+		A14246182B71F1A80062C516 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemView.swift */; };
+		A142461A2B735E5F0062C516 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246192B735E5F0062C516 /* Service.swift */; };
+		A142461C2B7B100D0062C516 /* WebViewHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142461B2B7B100D0062C516 /* WebViewHostingController.swift */; };
+		A142461E2B7B106C0062C516 /* TestContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142461D2B7B106C0062C516 /* TestContentView.swift */; };
+		A14246202B7B10FA0062C516 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142461F2B7B10FA0062C516 /* WebView.swift */; };
+		A14246222B7C64FE0062C516 /* TabAreaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246212B7C64FE0062C516 /* TabAreaView.swift */; };
 		A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54102B5574B9007020CA /* TitlebarView.swift */; };
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
@@ -41,6 +49,14 @@
 		A12D053A2B5FD8E900CBC6B2 /* WebviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebviewView.swift; sourceTree = "<group>"; };
 		A12D053D2B600C6100CBC6B2 /* not-find-host.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "not-find-host.html"; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* FriedEggApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = FriedEggApp.swift; path = FriedEgg/FriedEggApp.swift; sourceTree = "<group>"; tabWidth = 2; };
+		A14246132B70B6F70062C516 /* BrowserTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTab.swift; sourceTree = "<group>"; };
+		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
+		A14246172B71F1A80062C516 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
+		A14246192B735E5F0062C516 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		A142461B2B7B100D0062C516 /* WebViewHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewHostingController.swift; sourceTree = "<group>"; };
+		A142461D2B7B106C0062C516 /* TestContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestContentView.swift; sourceTree = "<group>"; };
+		A142461F2B7B10FA0062C516 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		A14246212B7C64FE0062C516 /* TabAreaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabAreaView.swift; sourceTree = "<group>"; };
 		A15D54102B5574B9007020CA /* TitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarView.swift; sourceTree = "<group>"; };
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -100,6 +116,16 @@
 			path = HTML;
 			sourceTree = "<group>";
 		};
+		A142460E2B70A7030062C516 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				A142461B2B7B100D0062C516 /* WebViewHostingController.swift */,
+				A142461D2B7B106C0062C516 /* TestContentView.swift */,
+				A142461F2B7B10FA0062C516 /* WebView.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		A15D54122B561BCF007020CA /* Shape */ = {
 			isa = PBXGroup;
 			children = (
@@ -111,8 +137,12 @@
 		A15D54192B56B3F4007020CA /* AppKit */ = {
 			isa = PBXGroup;
 			children = (
+				A188C95C2B4EBBC700B39BC8 /* Webview.swift */,
 				A15D541A2B56B40F007020CA /* AppDelegate.swift */,
 				A15D54222B590B4D007020CA /* VisualEffect.swift */,
+				A14246132B70B6F70062C516 /* BrowserTab.swift */,
+				A14246172B71F1A80062C516 /* TabItemView.swift */,
+				A14246212B7C64FE0062C516 /* TabAreaView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -136,6 +166,7 @@
 		A169200A2B2FA82100F8B4C0 /* FriedEgg */ = {
 			isa = PBXGroup;
 			children = (
+				A142460E2B70A7030062C516 /* Test */,
 				A12D053C2B600C4C00CBC6B2 /* HTML */,
 				A15D54192B56B3F4007020CA /* AppKit */,
 				A15D54122B561BCF007020CA /* Shape */,
@@ -182,6 +213,7 @@
 				A188C9442B4A948C00B39BC8 /* Tab.swift */,
 				A188C9672B4ED3F600B39BC8 /* Browser.swift */,
 				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
+				A14246192B735E5F0062C516 /* Service.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -189,8 +221,8 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A14246152B71EF190062C516 /* TabItem.swift */,
 				A188C9502B4D3D6000B39BC8 /* ExpandList.swift */,
-				A188C95C2B4EBBC700B39BC8 /* Webview.swift */,
 				A15D54242B590CA6007020CA /* SidebarButton.swift */,
 				A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */,
 			);
@@ -307,16 +339,22 @@
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffect.swift in Sources */,
+				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
+				A14246222B7C64FE0062C516 /* TabAreaView.swift in Sources */,
+				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
+				A142461C2B7B100D0062C516 /* WebViewHostingController.swift in Sources */,
 				A12D053B2B5FD8E900CBC6B2 /* WebviewView.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* FriedEggApp.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
+				A14246202B7B10FA0062C516 /* WebView.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
+				A14246142B70B6F70062C516 /* BrowserTab.swift in Sources */,
 				A188C95D2B4EBBC700B39BC8 /* Webview.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* SearchView.swift in Sources */,
@@ -325,6 +363,8 @@
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
 				A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
+				A14246182B71F1A80062C516 /* TabItemView.swift in Sources */,
+				A142461E2B7B106C0062C516 /* TestContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,75 +7,53 @@
 
 import SwiftUI
 
+struct StaticColorButtonStyle: ButtonStyle {
+  func makeBody(configuration: Self.Configuration) -> some View {
+    configuration.label
+      .opacity(1) // 클릭 시 투명도 변화 없음
+  }
+}
+
 struct BrowserTabView: View {
+  @ObservedObject var service: Service
+  @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
-  var isActive: Bool
+  @Binding var activeTabId: UUID?
+  var index: Int
   @Binding var showProgress: Bool
   var onClose: () -> Void
   
-  @State private var isTabHover: Bool = false
+  @State var isTabHover: Bool = false
+  @State var loadingAnimation: Bool = false
   @State private var isCloseHover: Bool = false
-  @State private var loadingAnimation: Bool = false
+  
+  var isActive: Bool {
+    return tab.id == activeTabId
+  }
   
   var body: some View {
     VStack(spacing: 0) {
       ZStack {
-        if isActive {
-          Rectangle()
-            .frame(maxWidth: 220, maxHeight: 32, alignment: .leading)
-            .foregroundColor(Color("MainBlack"))
-            .clipShape((BrowserTabShape(cornerRadius: 10)))
-            .offset(y: 3)
-        }
+        Rectangle()
+          .frame(maxWidth: 220, maxHeight: 33, alignment: .leading)
+          .foregroundColor(Color("MainBlack").opacity(isActive ? 1 : 0))
+          .clipShape((BrowserTabShape(cornerRadius: 10)))
+          .offset(y: 3)
+          .animation(.linear(duration: 0.15), value: activeTabId)
+        
         ZStack {
-          if !isActive && isTabHover {
-            Rectangle()
-              .frame(maxWidth: 220, maxHeight: 26, alignment: .leading)
-              .foregroundColor(Color("PointJade").opacity(0.2))
-              .clipShape(RoundedRectangle(cornerRadius: 10))
-              .offset(y: 1)
+          Button {
+            
+          } label: {
+            TabItemView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+//            TabItem(tab: tab, isActive: isActive, activeTabIndex: $activeTabIndex, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
           }
+          .buttonStyle(StaticColorButtonStyle())
+          .clipShape(RoundedRectangle(cornerRadius: 10))
+          .offset(y: 1)
           
           HStack(spacing: 0) {
-            
-            if let favicon = tab.favicon {
-              VStack(spacing: 0) {
-                favicon
-                  .resizable() // 이미지 크기 조절 가능하게 함
-                  .aspectRatio(contentMode: .fill)
-                  .frame(maxWidth: 14, maxHeight: 14)
-                  .clipShape(RoundedRectangle(cornerRadius: 4))
-                  .clipped()
-              }
-              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-              .padding(.leading, 8)
-            } else if showProgress {
-              VStack(spacing: 0) {
-                Circle()
-                  .trim(from: 0, to: 0.7) // 원을 부분적으로 그리기
-                  .stroke(Color("PointJade").opacity(0.5), lineWidth: 2) // 선의 색상과 두께
-                  .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
-                  .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
-                  .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
-                  .onAppear {
-                    self.loadingAnimation = true
-                  }
-              }
-              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-              .padding(.leading, 8)
-            } else {
-              VStack(spacing: 0) { }
-                .frame(width: 4)
-            }
-            
-            Text(tab.title)
-              .frame(maxWidth: 160, maxHeight: 22, alignment: .leading)
-              .foregroundColor(isActive || isTabHover ? .white : .white.opacity(0.6))
-              .font(.system(size: 11))
-              .padding(.leading, 5)
-              .padding(.trailing, 5)
-              .lineLimit(1)
-              .truncationMode(.tail)
+            Spacer()
             
             Button {
               onClose()
@@ -96,45 +74,40 @@ struct BrowserTabView: View {
             }
             .buttonStyle(.plain)
             .frame(width: 30, height: 22)
-//            .contentShape(Rectangle())
             .onHover { hovering in
-                isCloseHover = hovering
+              isCloseHover = hovering
             }
-//            .background(.red.opacity(0.2))
-//            .padding(.leading, 5)
-//            .padding(.trailing, 15)
+            .offset(y: 1)
           }
-          .frame(maxWidth: 220, maxHeight: 30, alignment: .leading)
-          .padding(.top, 2)
-//          .frame(maxWidth: 180, maxHeight: 22)
-//          .background(.green.opacity(0.2))
-//          .offset(y: 5)
         }
+//        .offset(y: 1)
         .frame(maxWidth: 220, alignment: .leading)
         .padding(.horizontal, 6)
       }
-      .frame(maxWidth: 220)
-//      .background(.red.opacity(0.2))
+      .frame(maxWidth: 220, maxHeight: 38)
       .onHover { hovering in
-        withAnimation {
-          isTabHover = hovering
-        }
+        isTabHover = hovering
       }
-      .frame(height: 36)
     }
-    .frame(maxWidth: 220, maxHeight: 36)
+    .frame(maxWidth: 220, maxHeight: 38)
     .onChange(of: showProgress) { oldValue, newValue in
       if newValue == false {
         loadingAnimation = false
       }
     }
-//    .frame(height: 36)
-//    .background(.red.opacity(0.2))
-//    .offset(x: CGFloat(index * -15))
-//    .frame(maxWidth: 160, maxHeight: 34, alignment: .leading)
-//    .background(isActive ? Color(red: 30/255, green: 30/255, blue: 30/255) : .black.opacity(0))
-//    .offset(y: 5)
-//    .clipShape((BrowserTabShape(cornerRadius: 15)))
+    .onChange(of: tab.pageProgress) { _, newValue in
+      print("change page progress: \(newValue)")
+      if newValue == 1.0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          withAnimation(.easeInOut(duration: 0.15)) {
+            showProgress = false
+          }
+          tab.pageProgress = 0.0
+        }
+      } else if newValue > 0.0 && newValue < 1.0 {
+        showProgress = true
+      }
+    }
   }
 }
 

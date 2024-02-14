@@ -24,10 +24,8 @@ class WebviewError {
 }
 
 struct Webview: NSViewRepresentable {
-  @Binding var tabs: [Tab]
-  @Binding var activeTabIndex: Int
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @Binding var progress: Double
   
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
@@ -50,18 +48,8 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-      parent.progress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
     }
-//      print("didStartProvisionalNavigation")
-//      if let currentItem = getCurrentItem(of: webView) {
-//        print("============= did start currentItem: \(currentItem)")
-//      }
-//      WebviewError.share.isError = false
-//      if WebviewError.share.checkError {
-//        WebviewError.share.checkError = false
-//        WebviewError.share.isError = true
-//      }
-//    }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
       print("============= didComit currentItem: \(getCurrentItem(of: webView)!)")
@@ -107,6 +95,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+      
       print("############# 리다이렉트 호출: didReceiveServerRedirectForProvisionalNavigation")
       print("webview redirect url: \(String(describing: webView.url))")
       print("tab origin url: \(String(describing: parent.tab.originURL))")
@@ -119,7 +108,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-      parent.progress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
       print("############# didFinish")
       
       DispatchQueue.main.async {
@@ -131,8 +120,8 @@ struct Webview: NSViewRepresentable {
         switch WebviewError.share.errorType {
           case .notFindHost:
             let title = NSLocalizedString("Page not found", comment: "")
-            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), self.parent.tab.printURL)
-            let href = self.parent.tab.originURL
+            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), parent.tab.printURL)
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -140,7 +129,7 @@ struct Webview: NSViewRepresentable {
           case .notConnectHost:
             let title = NSLocalizedString("Unable to connect to site", comment: "")
             let message = NSLocalizedString("Connection has been reset.", comment: "")
-            let href = self.parent.tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -148,7 +137,7 @@ struct Webview: NSViewRepresentable {
           case .notConnectInternet:
             let title = NSLocalizedString("No internet connection", comment: "")
             let message = NSLocalizedString("There is no internet connection.", comment: "")
-            let href = self.parent.tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -156,7 +145,7 @@ struct Webview: NSViewRepresentable {
           case .unkown:
             let title = NSLocalizedString("Unknown error", comment: "")
             let message = NSLocalizedString("An unknown error occurred.", comment: "")
-            let href = self.parent.tab.originURL
+            let href = parent.tab.originURL
             let refreshBtn = NSLocalizedString("Refresh", comment: "")
             
             webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
@@ -215,12 +204,10 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-      print("############# 새창으로 웹뷰 호출")
+      print("############# 새탭으로 웹뷰 호출")
       if navigationAction.targetFrame == nil {
         if let requestURL = navigationAction.request.url {
-          let newTab = Tab(url: requestURL)
-          self.parent.tabs.append(newTab)
-          self.parent.activeTabIndex = parent.tabs.count - 1
+          self.parent.browser.newTab(requestURL)
         }
       }
       return nil
@@ -244,7 +231,7 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-      parent.progress = webView.estimatedProgress
+      parent.tab.pageProgress = webView.estimatedProgress
       print("didFail")
       handleWebViewError(webView: webView, error: error)
     }
@@ -295,35 +282,12 @@ struct Webview: NSViewRepresentable {
   }
       
   func makeNSView(context: Context) -> WKWebView {
-    let config = WKWebViewConfiguration()
+    tab.webview.navigationDelegate = context.coordinator
+    tab.webview.uiDelegate = context.coordinator
+    tab.webview.allowsBackForwardNavigationGestures = true
+    tab.webview.isInspectable = true
     
-    let prefs = WKWebpagePreferences()
-    prefs.allowsContentJavaScript = true
-    config.defaultWebpagePreferences = prefs
-    
-    let schemeHandler = SchemeHandler()
-    config.setURLSchemeHandler(schemeHandler, forURLScheme: "friedegg")
-    
-//    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
-//    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-//    config.userContentController.addUserScript(userScript)
-    
-    let preferences = WKPreferences()
-    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
-    config.preferences = preferences
-    
-//    let contentController = WKUserContentController()
-//    config.userContentController = contentController
-    
-    let newWebview = WKWebView(frame: .zero, configuration: config)
-    
-    newWebview.navigationDelegate = context.coordinator
-    newWebview.uiDelegate = context.coordinator
-    newWebview.allowsBackForwardNavigationGestures = true
-    newWebview.isInspectable = true
-    
-    tab.webview = newWebview
-    return newWebview
+    return tab.webview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {

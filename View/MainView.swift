@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct MainView: View {
-//  @Environment(\.colorScheme) var colorScheme
-  @Binding var tabs: [Tab]
-  @Binding var activeTabIndex: Int
-  @Binding var progress: Double
-  
+  @ObservedObject var browser: Browser
+
   var body: some View {
     VStack(spacing: 0) {
       // webview area
       ZStack {
-        if tabs.count > 0 {
-          ForEach(Array(tabs.enumerated()), id: \.element.id) { index, item in
-            WebviewView(tabs: $tabs, activeTabIndex: $activeTabIndex, tab: tabs[activeTabIndex], index: index, progress: $progress)
+        if browser.tabs.count > 0 {
+          ForEach(Array(browser.tabs.enumerated()), id: \.element.id) { index, tab in
+            if let activeId = browser.activeTabId {
+              Webview(browser: browser, tab: browser.tabs[index])
+                .zIndex(tab.id == activeId ? Double(browser.tabs.count) : 0)
+            }
           }
         }
       }
