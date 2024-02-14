@@ -13,20 +13,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   
   private var isTerminating = false
   var service: Service = Service()
-  
-  func createWindow(_ tabId: UUID? = nil) {
+
+  func createWindow(tabId: UUID? = nil, frame: NSRect? = nil) {
     // 윈도우 사이즈 및 스타일 정의
-    let windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
+    var windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
+    var isWindowCenter = true
+    
+    if let frameString = UserDefaults.standard.string(forKey: "lastWindowFrame") {
+      isWindowCenter = false
+      windowRect = NSRectFromString(frameString)
+    }
+    
+    if let paramFrame = frame {
+      isWindowCenter = false
+      windowRect = paramFrame
+    }
+    
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)
     
     let newWindowNo = newWindow.windowNumber
     self.service.browsers[newWindowNo] = Browser()
-    
-    if let testTabId = tabId {
-      print("tabId: \(testTabId)")
-    }
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = GeometryReader { geometry in
@@ -36,10 +44,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         .background(VisualEffect())
     }
     
-//    let contentView = TestContentView()
-    
     newWindow.contentView = NSHostingController(rootView: contentView).view
-    newWindow.center()
+    if isWindowCenter {
+      newWindow.center()
+    }
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
     newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
     newWindow.styleMask.insert(.fullSizeContentView)
@@ -50,6 +58,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let windowController = NSWindowController(window: newWindow)
     windowController.showWindow(self)
   }
+  
+  func windowWillClose(_ notification: Notification) {
+      guard let window = notification.object as? NSWindow else { return }
+      let frameString = NSStringFromRect(window.frame)
+      UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
+  }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     AppDelegate.shared = self
@@ -58,7 +72,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
   
   func createNewWindow(_ tabId: UUID) {
-    createWindow(tabId)
+    createWindow(tabId: tabId)
     setMainMenu()
   }
   
@@ -143,7 +157,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   }
   
   @objc func newWindow() {
-    createWindow()
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowFrame = keyWindow.frame
+      let newWindowFrame = NSRect(x: windowFrame.minX + 30, y: windowFrame.minY - 20, width: windowFrame.width, height: windowFrame.height)
+      createWindow(frame: newWindowFrame)
+    }
   }
   
   @objc func newTab() {
