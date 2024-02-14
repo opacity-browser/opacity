@@ -97,8 +97,14 @@ struct TabItemView: NSViewRepresentable {
       print("드래그 종료, 위치: \(screenPoint)")
       guard let window = tabItemNSView?.window else { return }
       
-      // 스크린 좌표계에서의 윈도우 프레임과 드래그 종료 위치 비교
-      if !window.frame.contains(screenPoint) {
+      let windowFrame = window.frame
+      let windowPoint = window.convertPoint(fromScreen: screenPoint)
+      let titleBarHeight: CGFloat = 80
+      let titleBarRect = NSRect(x: 0, y: windowFrame.height - titleBarHeight, width: windowFrame.width, height: titleBarHeight)
+      
+      if titleBarRect.contains(windowPoint) {
+        print("드래그가 윈도우 영역 안에서 종료되었습니다.")
+      } else {
         print("드래그가 윈도우 영역 밖에서 종료되었습니다.")
         if let dragId = parent.service.dragTabId {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
@@ -108,16 +114,15 @@ struct TabItemView: NSViewRepresentable {
               }
             } else {
               if parent.service.isMoveTab {
-                parent.activeTabId = parent.tabs[parent.tabs.count - 2].id
                 parent.tabs.remove(at: targetIndex)
+                let newActiveTabIndex = targetIndex == 0 ? 0 : targetIndex - 1
+                parent.activeTabId = parent.tabs[newActiveTabIndex].id
               } else {
                 AppDelegate.shared.createNewWindow(dragId)
               }
             }
           }
         }
-      } else {
-        print("드래그가 윈도우 영역 안에서 종료되었습니다.")
       }
       
       parent.service.dragTabId = nil

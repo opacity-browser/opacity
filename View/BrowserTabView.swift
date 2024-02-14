@@ -35,7 +35,7 @@ struct BrowserTabView: View {
     VStack(spacing: 0) {
       ZStack {
         Rectangle()
-          .frame(maxWidth: 220, maxHeight: 34, alignment: .leading)
+          .frame(maxWidth: 220, maxHeight: 33, alignment: .leading)
           .foregroundColor(Color("MainBlack").opacity(isActive ? 1 : 0))
           .clipShape((BrowserTabShape(cornerRadius: 10)))
           .offset(y: 3)
@@ -84,12 +84,12 @@ struct BrowserTabView: View {
         .frame(maxWidth: 220, alignment: .leading)
         .padding(.horizontal, 6)
       }
-      .frame(maxWidth: 220, maxHeight: 36)
+      .frame(maxWidth: 220, maxHeight: 38)
       .onHover { hovering in
         isTabHover = hovering
       }
     }
-    .frame(maxWidth: 220, maxHeight: 36)
+    .frame(maxWidth: 220, maxHeight: 38)
     .onChange(of: showProgress) { oldValue, newValue in
       if newValue == false {
         loadingAnimation = false

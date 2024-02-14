@@ -256,6 +256,6 @@ struct SearchView: View {
     }
     .frame(height: 32)
 //    .background(.red.opacity(0.2))
-    .offset(y: -1.5)
+    .offset(y: -2.2)
   }
 }
