@@ -17,6 +17,7 @@ struct SearchView: View {
   @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
+  @State private var isTopHover: Bool = false
   @State private var isBackHover: Bool = false
   @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
@@ -83,6 +84,7 @@ struct SearchView: View {
           .foregroundColor(Color("Icon"))
           .font(.system(size: 13.5))
           .fontWeight(.regular)
+          .offset(y: -0.5)
       }
       .frame(maxWidth: iconHeight, maxHeight: iconHeight)
       .background(isRefreshHober ? .gray.opacity(0.2) : .gray.opacity(0))
@@ -232,6 +234,28 @@ struct SearchView: View {
       Spacer()
       
       VStack(spacing: 0) { }.frame(width: 6)
+      
+      VStack(spacing: 0) {
+        VStack(spacing: 0) {
+          Image(systemName: "arrow.up.to.line.compact")
+            .foregroundColor(Color("Icon"))
+            .font(.system(size: 14))
+            .fontWeight(.regular)
+            .offset(y: 1)
+        }
+        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+        .background(isTopHover ? .gray.opacity(0.2) : .gray.opacity(0))
+        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+        .onHover { hovering in
+          withAnimation {
+            isTopHover = hovering
+          }
+        }
+        .onTapGesture {
+          tab.webview.evaluateJavaScript("window.scrollTo(0, 0)")
+        }
+      }
+      .padding(.trailing, 8)
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {
