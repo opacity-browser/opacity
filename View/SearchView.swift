@@ -202,7 +202,7 @@ struct SearchView: View {
                 .padding(.top, 1)
                 
                 Text(tab.printURL)
-                  .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                  .frame(minWidth: 200, maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
                   .foregroundColor(.white.opacity(0.85))
                   .padding(.top, 5)
                   .padding(.bottom, 5)

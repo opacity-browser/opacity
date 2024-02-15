@@ -13,6 +13,7 @@ struct TabItemView: NSViewRepresentable {
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   var index: Int
+  @Binding var tabWidth: CGFloat
   @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
@@ -40,7 +41,7 @@ struct TabItemView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -59,6 +60,13 @@ struct TabItemView: NSViewRepresentable {
   func updateNSView(_ nsView: NSView, context: Context) {
     context.coordinator.thisIndex = index
     context.coordinator.tabId = tab.id
+    
+    for subview in nsView.subviews {
+      if let hostingView = subview as? NSHostingView<TabItem> {
+        hostingView.rootView = TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+        hostingView.layout()
+      }
+    }
     
     if let customView = nsView as? TabDragSource {
       if customView.index != index {
@@ -81,20 +89,16 @@ struct TabItemView: NSViewRepresentable {
       self.parent = parent
     }
     
-    // 여기에서 NSDraggingSource 프로토콜 메서드 구현
     func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor context: NSDraggingContext) -> NSDragOperation {
-      // parent.boundValue를 사용하여 필요한 로직 구현
       return .move
     }
 
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
-      print("드래그 시작")
       parent.activeTabId = tabId!
       parent.service.dragTabId = tabId!
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
-      print("드래그 종료, 위치: \(screenPoint)")
       guard let window = tabItemNSView?.window else { return }
       
       let windowFrame = window.frame
@@ -102,10 +106,8 @@ struct TabItemView: NSViewRepresentable {
       let titleBarHeight: CGFloat = 80
       let titleBarRect = NSRect(x: 0, y: windowFrame.height - titleBarHeight, width: windowFrame.width, height: titleBarHeight)
       
-      if titleBarRect.contains(windowPoint) {
-        print("드래그가 윈도우 영역 안에서 종료되었습니다.")
-      } else {
-        print("드래그가 윈도우 영역 밖에서 종료되었습니다.")
+      if !titleBarRect.contains(windowPoint) {
+        print("Exit outside of window")
         if let dragId = parent.service.dragTabId {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
             if(parent.tabs.count == 1) {
@@ -153,9 +155,8 @@ class TabDragSource: NSView {
     let draggedImage = self.snapshot()
     
     let draggingItem = NSDraggingItem(pasteboardWriter: NSString(string: "Drag Content"))
-    draggingItem.setDraggingFrame(self.bounds, contents: draggedImage) // 콘텐츠 설정
+    draggingItem.setDraggingFrame(self.bounds, contents: draggedImage) // Content
     
-    // beginDraggingSession 호출
     let session = self.beginDraggingSession(with: [draggingItem], event: event, source: dragDelegate)
     session.animatesToStartingPositionsOnCancelOrFail = true
   }
@@ -166,18 +167,14 @@ class TabDragSource: NSView {
   }
   
   override func draggingExited(_ sender: NSDraggingInfo?) {
-      // 드래그 아이템이 대상 영역을 떠났을 때 호출
     print("drag exited")
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    print("현재 요소 인덱스: \(self.index!)")
     if let thisIndex = self.index, let moveFunc = self.moveTab {
-      print("action")
       moveFunc(thisIndex)
     }
-    // 드래그된 데이터 처리 로직
-    // 예: 드래그된 문자열 가져오기
+//    Dragged data processing logic
 //    guard let draggedData = sender.draggingPasteboard.string(forType: .string) else { return false }
 //    print("Dragged Data: \(draggedData)")
 //

@@ -13,7 +13,6 @@ struct ContentView: View {
     VStack(spacing: 0) {
       if browser.tabs.count > 0, let _ = browser.activeTabId {
         TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
-          .frame(maxWidth: .infinity)
         MainView(browser: browser)
       }
     }
@@ -43,7 +42,8 @@ struct ContentView: View {
             
             targetBrowser.tabs.remove(at: targetTabIndex)
             if targetBrowser.tabs.count > 0 {
-              targetBrowser.activeTabId = targetBrowser.tabs[targetBrowser.tabs.count - 1].id
+              let newTargetTabIndex = targetTabIndex == 0 ? 0 : targetTabIndex - 1
+              targetBrowser.activeTabId = targetBrowser.tabs[newTargetTabIndex].id
             }
           }
           break
