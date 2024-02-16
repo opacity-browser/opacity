@@ -29,8 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       windowRect = paramFrame
     }
     
-    print("bbb: \(windowRect)")
-    
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)
@@ -73,8 +71,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     setMainMenu()
   }
   
-  func createNewWindow(_ tabId: UUID) {
-    createWindow(tabId: tabId)
+  func createNewWindow(tabId: UUID, frame: NSRect? = nil) {
+    createWindow(tabId: tabId, frame: frame)
     setMainMenu()
   }
   

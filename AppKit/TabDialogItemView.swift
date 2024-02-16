@@ -1,22 +1,18 @@
 //
-//  TabItemView.swift
+//  TabDialogItemView.swift
 //  FriedEgg
 //
-//  Created by Falsy on 2/6/24.
+//  Created by Falsy on 2/16/24.
 //
 
 import SwiftUI
 
-struct TabItemView: NSViewRepresentable {
+struct TabDialogItemView: NSViewRepresentable {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   var index: Int
-  @Binding var tabWidth: CGFloat
-  @Binding var showProgress: Bool
-  @Binding var isTabHover: Bool
-  @Binding var loadingAnimation: Bool
   
   func moveTab(_ idx: Int) {
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
@@ -36,12 +32,12 @@ struct TabItemView: NSViewRepresentable {
   }
   
   func makeNSView(context: Context) -> NSView {
-    let containerView = TabDragSource()
+    let containerView = TabDialogDragSource()
     containerView.dragDelegate = context.coordinator
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabDialogItem(tab: tab, activeTabId: $activeTabId))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -49,11 +45,11 @@ struct TabItemView: NSViewRepresentable {
     NSLayoutConstraint.activate([
       hostingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
       hostingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-      hostingView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: -20),
+      hostingView.topAnchor.constraint(equalTo: containerView.topAnchor),
       hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
     ])
     
-    context.coordinator.tabItemNSView = containerView
+    context.coordinator.tabDialogItemNSView = containerView
     return containerView
   }
   
@@ -62,13 +58,13 @@ struct TabItemView: NSViewRepresentable {
     context.coordinator.tabId = tab.id
     
     for subview in nsView.subviews {
-      if let hostingView = subview as? NSHostingView<TabItem> {
-        hostingView.rootView = TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+      if let hostingView = subview as? NSHostingView<TabDialogItem> {
+        hostingView.rootView = TabDialogItem(tab: tab, activeTabId: $activeTabId)
         hostingView.layout()
       }
     }
     
-    if let customView = nsView as? TabDragSource {
+    if let customView = nsView as? TabDialogDragSource {
       if customView.index != index {
         customView.index = index
       }
@@ -80,12 +76,12 @@ struct TabItemView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, NSDraggingSource {
-    var parent: TabItemView
+    var parent: TabDialogItemView
     var thisIndex: Int?
     var tabId: UUID?
-    weak var tabItemNSView: TabDragSource?
+    weak var tabDialogItemNSView: TabDialogDragSource?
     
-    init(_ parent: TabItemView) {
+    init(_ parent: TabDialogItemView) {
       self.parent = parent
     }
     
@@ -99,14 +95,16 @@ struct TabItemView: NSViewRepresentable {
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
-      guard let window = tabItemNSView?.window else { return }
+      
+      guard let window = NSApp.mainWindow else { return }
+      guard let dialog = tabDialogItemNSView?.window else { return }
       
       let windowFrame = window.frame
       let windowPoint = window.convertPoint(fromScreen: screenPoint)
       let titleBarHeight: CGFloat = 80
       let titleBarRect = NSRect(x: 0, y: windowFrame.height - titleBarHeight, width: windowFrame.width, height: titleBarHeight)
       
-      if !titleBarRect.contains(windowPoint) {
+      if !dialog.frame.contains(screenPoint) &&  !titleBarRect.contains(windowPoint) {
         print("Exit outside of window")
         if let dragId = parent.service.dragTabId {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
@@ -135,7 +133,7 @@ struct TabItemView: NSViewRepresentable {
 }
 
 
-class TabDragSource: NSView {
+class TabDialogDragSource: NSView {
   var appDelegate: AppDelegate?
   var dragDelegate: NSDraggingSource?
   var index: Int?
@@ -151,6 +149,7 @@ class TabDragSource: NSView {
   }
   
   override func mouseDown(with event: NSEvent) {
+    print("mouse down")
     guard let dragDelegate = dragDelegate else { return }
     
     let draggedImage = self.snapshot()
@@ -197,3 +196,4 @@ class TabDragSource: NSView {
       return image
   }
 }
+

@@ -6,6 +6,7 @@ struct ContentView: View {
   
   var tabId: UUID?
 
+  @State private var isMoreTabDialog = false
   @State private var isAddHover: Bool = false
   @State private var showProgress: Bool = false
   
@@ -20,9 +21,12 @@ struct ContentView: View {
       ToolbarItemGroup(placement: .primaryAction) {
         Spacer()
         Button(action: {
-          // 버튼 액션
+          self.isMoreTabDialog.toggle()
         }) {
-          Image(systemName: "rectangle.stack") // 아이콘 지정
+          Image(systemName: "rectangle.stack")
+            .popover(isPresented: $isMoreTabDialog, arrowEdge: .bottom) {
+              TabDialog(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
+            }
         }
       }
     }

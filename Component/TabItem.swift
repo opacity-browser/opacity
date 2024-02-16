@@ -60,7 +60,7 @@ struct TabItem: View {
             .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
             .foregroundColor(isActive || isTabHover ? .white.opacity(0.85) : .white.opacity(0.6))
             .font(.system(size: 12))
-            .padding(.leading, tab.favicon != nil || showProgress ? 5 : 20)
+            .padding(.leading, tab.favicon != nil || showProgress ? 5 : 8)
             .padding(.trailing, 25)
             .lineLimit(1)
             .truncationMode(.tail)

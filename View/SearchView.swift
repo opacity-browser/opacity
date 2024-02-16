@@ -21,6 +21,7 @@ struct SearchView: View {
   @State private var isBackHover: Bool = false
   @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
+  @State private var isMoreMenuDialog: Bool = false
   
   let inputHeight: Double = 32
   let iconHeight: Double = 24
@@ -273,6 +274,12 @@ struct SearchView: View {
             isMoreHover = hovering
           }
         }
+        .onTapGesture {
+          self.isMoreMenuDialog.toggle()
+        }
+        .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
+          ListView()
+        }
       }
       .padding(.trailing, 10)
       
@@ -280,6 +287,18 @@ struct SearchView: View {
     }
     .frame(height: 32)
 //    .background(.red.opacity(0.2))
-    .offset(y: -2.2)
+    .offset(y: -2.5)
   }
+}
+
+
+struct ListView: View {
+    var body: some View {
+        List {
+            Text("Item 1")
+            Text("Item 2")
+            Text("Item 3")
+        }
+        .frame(width: 200, height: 300)
+    }
 }
