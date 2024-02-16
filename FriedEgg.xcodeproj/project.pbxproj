@@ -18,6 +18,9 @@
 		A142461E2B7B106C0062C516 /* TestContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142461D2B7B106C0062C516 /* TestContentView.swift */; };
 		A14246202B7B10FA0062C516 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142461F2B7B10FA0062C516 /* WebView.swift */; };
 		A14246222B7C64FE0062C516 /* TabAreaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246212B7C64FE0062C516 /* TabAreaView.swift */; };
+		A14246242B7E51450062C516 /* TabDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246232B7E51450062C516 /* TabDialog.swift */; };
+		A14246262B7E7DA30062C516 /* TabDialogItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246252B7E7DA30062C516 /* TabDialogItemView.swift */; };
+		A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246272B7E7E010062C516 /* TabDialogItem.swift */; };
 		A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54102B5574B9007020CA /* TitlebarView.swift */; };
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
@@ -57,6 +60,9 @@
 		A142461D2B7B106C0062C516 /* TestContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestContentView.swift; sourceTree = "<group>"; };
 		A142461F2B7B10FA0062C516 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		A14246212B7C64FE0062C516 /* TabAreaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabAreaView.swift; sourceTree = "<group>"; };
+		A14246232B7E51450062C516 /* TabDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialog.swift; sourceTree = "<group>"; };
+		A14246252B7E7DA30062C516 /* TabDialogItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItemView.swift; sourceTree = "<group>"; };
+		A14246272B7E7E010062C516 /* TabDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItem.swift; sourceTree = "<group>"; };
 		A15D54102B5574B9007020CA /* TitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarView.swift; sourceTree = "<group>"; };
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +149,7 @@
 				A14246132B70B6F70062C516 /* BrowserTab.swift */,
 				A14246172B71F1A80062C516 /* TabItemView.swift */,
 				A14246212B7C64FE0062C516 /* TabAreaView.swift */,
+				A14246252B7E7DA30062C516 /* TabDialogItemView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -225,6 +232,8 @@
 				A188C9502B4D3D6000B39BC8 /* ExpandList.swift */,
 				A15D54242B590CA6007020CA /* SidebarButton.swift */,
 				A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */,
+				A14246232B7E51450062C516 /* TabDialog.swift */,
+				A14246272B7E7E010062C516 /* TabDialogItem.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -340,6 +349,7 @@
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffect.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
+				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
 				A14246222B7C64FE0062C516 /* TabAreaView.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
@@ -348,6 +358,7 @@
 				A134711E2B43F00800A3AE59 /* FriedEggApp.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
+				A14246262B7E7DA30062C516 /* TabDialogItemView.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A14246202B7B10FA0062C516 /* WebView.swift in Sources */,
@@ -359,6 +370,7 @@
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* SearchView.swift in Sources */,
 				A15D541D2B56BD32007020CA /* WindowSizeManager.swift in Sources */,
+				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
 				A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */,

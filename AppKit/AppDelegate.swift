@@ -37,17 +37,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     self.service.browsers[newWindowNo] = Browser()
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
-    let contentView = GeometryReader { geometry in
-      ContentView(tabId: tabId)
+    let contentView = ContentView(tabId: tabId)
         .environmentObject(self.service)
         .environmentObject(self.service.browsers[newWindowNo]!)
         .background(VisualEffect())
-    }
+        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
     if isWindowCenter {
       newWindow.center()
     }
+    
     newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
     newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
     newWindow.styleMask.insert(.fullSizeContentView)
@@ -71,8 +71,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     setMainMenu()
   }
   
-  func createNewWindow(_ tabId: UUID) {
-    createWindow(tabId: tabId)
+  func createNewWindow(tabId: UUID, frame: NSRect? = nil) {
+    createWindow(tabId: tabId, frame: frame)
     setMainMenu()
   }
   
@@ -159,7 +159,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func newWindow() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowFrame = keyWindow.frame
-      let newWindowFrame = NSRect(x: windowFrame.minX + 30, y: windowFrame.minY - 20, width: windowFrame.width, height: windowFrame.height)
+      let newWindowFrame = NSRect(x: windowFrame.origin.x + 30, y: windowFrame.origin.y - 20, width: windowFrame.width, height: windowFrame.height)
       createWindow(frame: newWindowFrame)
     }
   }
