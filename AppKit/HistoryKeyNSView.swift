@@ -27,22 +27,24 @@ struct HistoryKeyNSView<Content: View>: NSViewRepresentable {
 class HistoryKeyButtonNSView<Content: View>: NSHostingView<Content> {
   var clickAction: (() -> Void)?
   var longPressAction: (() -> Void)?
-  private var clickStartTime: Date?
+  private var longPressTimer: Timer?
   
   override func mouseDown(with event: NSEvent) {
     super.mouseDown(with: event)
-    clickStartTime = Date()
+    longPressTimer?.invalidate()
+    // 0.5초 후에 실행될 타이머를 설정합니다.
+    longPressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+      DispatchQueue.main.async {
+        self?.longPressAction?()
+      }
+    }
   }
   
   override func mouseUp(with event: NSEvent) {
     super.mouseUp(with: event)
-    guard let clickStartTime = clickStartTime else { return }
-    
-    let clickDuration = Date().timeIntervalSince(clickStartTime)
-    if clickDuration < 0.5 {
+    if longPressTimer != nil && longPressTimer!.isValid {
+      longPressTimer?.invalidate()
       clickAction?()
-    } else {
-      longPressAction?()
     }
   }
 }

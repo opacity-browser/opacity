@@ -19,7 +19,6 @@ struct HistoryDialog: View {
       VStack(spacing: 0) {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
-            Text("count: \(historyList.count)")
             ForEach(historyList, id: \.self) { item in
               VStack {
                 Text(item.title ?? "Unknown")
