@@ -6,25 +6,48 @@
 //
 import SwiftUI
 
-struct HistoryKeyNSView<Content: View>: NSViewRepresentable {
-  let content: Content
+struct HistoryKeyNSView: NSViewRepresentable {
+  @ObservedObject var tab: Tab
+  var isBack: Bool
   var clickAction: () -> Void
   var longPressAction: () -> Void
   
-  func makeNSView(context: Context) -> HistoryKeyButtonNSView<Content> {
-    let hostingView = HistoryKeyButtonNSView(rootView: content)
-    hostingView.clickAction = clickAction
-    hostingView.longPressAction = longPressAction
+  func makeNSView(context: Context) -> NSView {
+    let containerView = HistoryKeyButtonNSView()
+    containerView.clickAction = clickAction
+    containerView.longPressAction = longPressAction
     
-    return hostingView
+    let hostingView = NSHostingView(rootView: HistoryKeyButton(tab: tab, isBack: isBack))
+    hostingView.translatesAutoresizingMaskIntoConstraints = false
+    
+    containerView.addSubview(hostingView)
+    
+    NSLayoutConstraint.activate([
+      hostingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+      hostingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+      hostingView.topAnchor.constraint(equalTo: containerView.topAnchor),
+      hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
+    ])
+    
+    return containerView
   }
   
-  func updateNSView(_ nsView: HistoryKeyButtonNSView<Content>, context: Context) {
-    nsView.rootView = content
+  func updateNSView(_ nsView: NSView, context: Context) {
+    for subview in nsView.subviews {
+      if let hostingView = subview as? NSHostingView<HistoryKeyButton> {
+        hostingView.rootView = HistoryKeyButton(tab: tab, isBack: isBack)
+        hostingView.layout()
+      }
+    }
+    
+    if let customView = nsView as? HistoryKeyButtonNSView {
+      customView.clickAction = clickAction
+      customView.longPressAction = longPressAction
+    }
   }
 }
 
-class HistoryKeyButtonNSView<Content: View>: NSHostingView<Content> {
+class HistoryKeyButtonNSView: NSView {
   var clickAction: (() -> Void)?
   var longPressAction: (() -> Void)?
   private var longPressTimer: Timer?
@@ -32,7 +55,6 @@ class HistoryKeyButtonNSView<Content: View>: NSHostingView<Content> {
   override func mouseDown(with event: NSEvent) {
     super.mouseDown(with: event)
     longPressTimer?.invalidate()
-    // 0.5초 후에 실행될 타이머를 설정합니다.
     longPressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
       DispatchQueue.main.async {
         self?.longPressAction?()

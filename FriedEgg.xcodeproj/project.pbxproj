@@ -23,6 +23,9 @@
 		A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */; };
 		A142462E2B80B39E0062C516 /* ForwardKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */; };
 		A14246302B80E3CD0062C516 /* HistoryDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462F2B80E3CD0062C516 /* HistoryDialog.swift */; };
+		A14246322B810D100062C516 /* HistorySite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246312B810D100062C516 /* HistorySite.swift */; };
+		A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246332B8132E50062C516 /* HistoryDialogItem.swift */; };
+		A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246352B813A5B0062C516 /* HistoryKeyButton.swift */; };
 		A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54102B5574B9007020CA /* TitlebarView.swift */; };
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
@@ -67,6 +70,9 @@
 		A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryKeyNSView.swift; sourceTree = "<group>"; };
 		A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardKeyButton.swift; sourceTree = "<group>"; };
 		A142462F2B80E3CD0062C516 /* HistoryDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDialog.swift; sourceTree = "<group>"; };
+		A14246312B810D100062C516 /* HistorySite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySite.swift; sourceTree = "<group>"; };
+		A14246332B8132E50062C516 /* HistoryDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDialogItem.swift; sourceTree = "<group>"; };
+		A14246352B813A5B0062C516 /* HistoryKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryKeyButton.swift; sourceTree = "<group>"; };
 		A15D54102B5574B9007020CA /* TitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarView.swift; sourceTree = "<group>"; };
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -224,6 +230,7 @@
 				A188C9672B4ED3F600B39BC8 /* Browser.swift */,
 				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
 				A14246192B735E5F0062C516 /* Service.swift */,
+				A14246312B810D100062C516 /* HistorySite.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -240,6 +247,8 @@
 				A14246292B7FADF70062C516 /* BackKeyButton.swift */,
 				A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */,
 				A142462F2B80E3CD0062C516 /* HistoryDialog.swift */,
+				A14246332B8132E50062C516 /* HistoryDialogItem.swift */,
+				A14246352B813A5B0062C516 /* HistoryKeyButton.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -364,17 +373,20 @@
 				A142461C2B7B100D0062C516 /* WebViewHostingController.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* FriedEggApp.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
+				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A14246202B7B10FA0062C516 /* WebView.swift in Sources */,
+				A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
 				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
+				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* SearchView.swift in Sources */,
 				A15D541D2B56BD32007020CA /* WindowSizeManager.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,

@@ -35,7 +35,8 @@ struct SearchView: View {
       VStack(spacing: 0) { }.frame(width: 10)
       
       HistoryKeyNSView(
-        content: BackKeyButton(tab: tab),
+        tab: tab,
+        isBack: true,
         clickAction: {
           if tab.isBack {
             tab.webview.goBack()
@@ -54,7 +55,8 @@ struct SearchView: View {
       VStack(spacing: 0) { }.frame(width: 8)
       
       HistoryKeyNSView(
-        content: ForwardKeyButton(tab: tab),
+        tab: tab,
+        isBack: false,
         clickAction: {
           if tab.isForward {
              tab.webview.goForward()

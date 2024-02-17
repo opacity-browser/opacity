@@ -17,11 +17,12 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   var isUpdateBySearch: Bool = false
   
   @Published var title: String = ""
-  @Published var favicon: Image?
+  @Published var favicon: Image? = nil
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
+  @Published var historySiteDataList: [HistorySite] = []
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
   
@@ -88,7 +89,6 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   func loadFavicon(url: URL) {
     URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, let uiImage = NSImage(data: data) else {
-        self.setDefaultFavicon()
         return
       }
       DispatchQueue.main.async {
@@ -97,14 +97,6 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         }
       }
     }.resume()
-  }
-  
-  func setDefaultFavicon() {
-    DispatchQueue.main.async {
-      withAnimation {
-        self.favicon = nil
-      }
-    }
   }
   
   static func == (lhs: Tab, rhs: Tab) -> Bool {

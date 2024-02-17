@@ -20,15 +20,12 @@ struct HistoryDialog: View {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
             ForEach(historyList, id: \.self) { item in
-              VStack {
-                Text(item.title ?? "Unknown")
-                Text(item.url.absoluteString)
-              }
+              HistoryDialogItem(tab: tab, item: item)
             }
-            Spacer()
           }
+          .padding(5)
         }
-        .frame(width: 250, height: 400)
+        .frame(maxWidth: 250, maxHeight: 300)
       }
       .padding(.vertical, 5)
     }
