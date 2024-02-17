@@ -22,6 +22,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
+  @Published var historyBackList: [WKBackForwardListItem] = []
+  @Published var historyForwardList: [WKBackForwardListItem] = []
+  
   @Published var pageProgress: Double = 0.0
   
   lazy var webview: WKWebView = {

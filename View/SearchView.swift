@@ -18,63 +18,56 @@ struct SearchView: View {
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
   @State private var isTopHover: Bool = false
-  @State private var isBackHover: Bool = false
-  @State private var isForwardHober: Bool = false
   @State private var isRefreshHober: Bool = false
-  @State private var isMoreMenuDialog: Bool = false
   
-  let inputHeight: Double = 32
-  let iconHeight: Double = 24
-  let iconRadius: Double = 6
-  let textSize: Double = 13.5
+  @State private var isMoreMenuDialog: Bool = false
+  @State private var isBackDialog: Bool = false
+  @State private var isForwardDialog: Bool = false
+  
+  let inputHeight: CGFloat = 32
+  let iconHeight: CGFloat = 24
+  let iconRadius: CGFloat = 6
+  let textSize: CGFloat = 13.5
   
   var body: some View {
     HStack(spacing: 0) {
       
       VStack(spacing: 0) { }.frame(width: 10)
       
-      VStack(spacing: 0) {
-        Image(systemName: "chevron.backward")
-          .foregroundColor(Color("Icon"))
-          .fontWeight(.regular)
-          .font(.system(size: 14))
-          .opacity(tab.isBack ? 1 : 0.4)
-      }
-      .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isBackHover && tab.isBack ? .gray.opacity(0.2) : .gray.opacity(0))
-      .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-      .onHover { hovering in
-        withAnimation {
-          isBackHover = hovering
-        }
-      }
-      .onTapGesture {
-        if tab.isBack {
-          tab.webview.goBack()
-        }
+      HistoryKeyNSView(
+        content: BackKeyButton(tab: tab),
+        clickAction: {
+          if tab.isBack {
+            tab.webview.goBack()
+          }
+        },
+        longPressAction: {
+          if tab.isBack {
+            self.isBackDialog.toggle()
+          }
+        })
+      .frame(width: 24, height: 24)
+      .popover(isPresented: $isBackDialog, arrowEdge: .bottom) {
+        HistoryDialog(tab: tab, isBack: true)
       }
       
       VStack(spacing: 0) { }.frame(width: 8)
       
-      VStack(spacing: 0) {
-        Image(systemName: "chevron.forward")
-          .foregroundColor(Color("Icon"))
-          .fontWeight(.regular)
-          .font(.system(size: 14))
-          .opacity(tab.isForward ? 1 : 0.4)
-      }
-      .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-      .background(isForwardHober && tab.isForward ? .gray.opacity(0.2) : .gray.opacity(0))
-      .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-      .onHover { hovering in
-        withAnimation {
-          isForwardHober = hovering
-        }
-      }
-      .onTapGesture {
-        if tab.isForward {
-          tab.webview.goForward()
-        }
+      HistoryKeyNSView(
+        content: ForwardKeyButton(tab: tab),
+        clickAction: {
+          if tab.isForward {
+             tab.webview.goForward()
+           }
+        },
+        longPressAction: {
+          if tab.isForward {
+            self.isForwardDialog.toggle()
+          }
+        })
+      .frame(width: 24, height: 24)
+      .popover(isPresented: $isForwardDialog, arrowEdge: .bottom) {
+        HistoryDialog(tab: tab, isBack: false)
       }
       
       VStack(spacing: 0) { }.frame(width: 8)
@@ -282,11 +275,8 @@ struct SearchView: View {
         }
       }
       .padding(.trailing, 10)
-      
-//      VStack{ }.frame(maxWidth: 10)
     }
     .frame(height: 32)
-//    .background(.red.opacity(0.2))
     .offset(y: -2.5)
   }
 }

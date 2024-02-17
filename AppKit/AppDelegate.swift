@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let contentView = ContentView(tabId: tabId)
         .environmentObject(self.service)
         .environmentObject(self.service.browsers[newWindowNo]!)
-        .background(VisualEffect())
+        .background(VisualEffectNSView())
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
     
     newWindow.contentView = NSHostingController(rootView: contentView).view

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TabDialogItemView: NSViewRepresentable {
+struct TabDialogItemNSView: NSViewRepresentable {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
@@ -76,12 +76,12 @@ struct TabDialogItemView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, NSDraggingSource {
-    var parent: TabDialogItemView
+    var parent: TabDialogItemNSView
     var thisIndex: Int?
     var tabId: UUID?
     weak var tabDialogItemNSView: TabDialogDragSource?
     
-    init(_ parent: TabDialogItemView) {
+    init(_ parent: TabDialogItemNSView) {
       self.parent = parent
     }
     

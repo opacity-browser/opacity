@@ -20,7 +20,7 @@ struct MainView: View {
 //              Webview(browser: browser, tab: browser.tabs[index])
 //            }
             if let activeId = browser.activeTabId {
-              Webview(browser: browser, tab: browser.tabs[index])
+              WebNSView(browser: browser, tab: browser.tabs[index])
                 .zIndex(tab.id == activeId ? Double(browser.tabs.count) : 0)
             }
           }

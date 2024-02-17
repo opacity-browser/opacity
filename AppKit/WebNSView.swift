@@ -23,7 +23,7 @@ class WebviewError {
   static var share = WebviewError()
 }
 
-struct Webview: NSViewRepresentable {
+struct WebNSView: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -32,11 +32,11 @@ struct Webview: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
-    var parent: Webview
+    var parent: WebNSView
     var errorPages: [WKBackForwardListItem: URL] = [:]
     var errorOriginURL: URL?
     
-    init(_ parent: Webview) {
+    init(_ parent: WebNSView) {
       self.parent = parent
     }
     
@@ -114,6 +114,8 @@ struct Webview: NSViewRepresentable {
       DispatchQueue.main.async {
         self.parent.tab.isBack = webView.canGoBack
         self.parent.tab.isForward = webView.canGoForward
+        self.parent.tab.historyBackList = webView.backForwardList.backList
+        self.parent.tab.historyForwardList = webView.backForwardList.forwardList
       }
       
       if WebviewError.share.isError {

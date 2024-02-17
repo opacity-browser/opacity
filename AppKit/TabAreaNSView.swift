@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TabAreaView: NSViewRepresentable {
+struct TabAreaNSView: NSViewRepresentable {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @Binding var activeTabId: UUID?
@@ -61,10 +61,10 @@ struct TabAreaView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, NSDraggingSource {
-    var parent: TabAreaView
+    var parent: TabAreaNSView
     weak var tabAreaNSView: TabAreaDragSource?
     
-    init(_ parent: TabAreaView) {
+    init(_ parent: TabAreaNSView) {
       self.parent = parent
     }
     

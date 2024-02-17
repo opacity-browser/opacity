@@ -47,7 +47,7 @@ struct BrowserTabView: View {
             Button {
               
             } label: {
-              TabItemView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+              TabItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
             }
             .buttonStyle(StaticColorButtonStyle())
             .clipShape(RoundedRectangle(cornerRadius: 10))

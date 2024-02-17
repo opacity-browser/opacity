@@ -52,7 +52,7 @@ struct TabDialog: View {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
             ForEach(Array(filteredItems.enumerated()), id: \.element.id) { index, tab in
-              TabDialogItemView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index)
+              TabDialogItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index)
             }
             Spacer()
           }

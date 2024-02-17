@@ -23,7 +23,7 @@ struct TitlebarView: View {
       GeometryReader { geometry in
         VStack(spacing: 0) {
           ZStack {
-            TabAreaView(service: service, tabs: $tabs, activeTabId: $activeTabId)
+            TabAreaNSView(service: service, tabs: $tabs, activeTabId: $activeTabId)
             
             HStack(spacing: 0) {
               
