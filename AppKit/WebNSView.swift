@@ -23,7 +23,7 @@ class WebviewError {
   static var share = WebviewError()
 }
 
-struct Webview: NSViewRepresentable {
+struct WebNSView: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -32,11 +32,11 @@ struct Webview: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
-    var parent: Webview
+    var parent: WebNSView
     var errorPages: [WKBackForwardListItem: URL] = [:]
     var errorOriginURL: URL?
     
-    init(_ parent: Webview) {
+    init(_ parent: WebNSView) {
       self.parent = parent
     }
     
@@ -108,12 +108,15 @@ struct Webview: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-      parent.tab.pageProgress = webView.estimatedProgress
       print("############# didFinish")
+      let group = DispatchGroup()
       
       DispatchQueue.main.async {
+        self.parent.tab.pageProgress = webView.estimatedProgress
         self.parent.tab.isBack = webView.canGoBack
         self.parent.tab.isForward = webView.canGoForward
+        self.parent.tab.historyBackList = webView.backForwardList.backList
+        self.parent.tab.historyForwardList = webView.backForwardList.forwardList
       }
       
       if WebviewError.share.isError {
@@ -154,27 +157,30 @@ struct Webview: NSViewRepresentable {
             break
         }
       }
-      
+    
+      var cacheTitle: String?
+      group.enter()
       webView.evaluateJavaScript("document.title") { (response, error) in
         if let title = response as? String {
           DispatchQueue.main.async {
+            cacheTitle = title
             self.parent.tab.title = title
+            group.leave()
           }
         }
       }
       
-      if WebviewError.share.isError {
-        self.parent.tab.setDefaultFavicon()
-        return
-      }
-          
+      var cacheFaviconURL: URL?
+      group.enter()
       webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
         guard let href = response as? String, let currentURL = webView.url else {
           if let webviewURL = webView.url {
             let faviconURL = webviewURL.scheme! + "://" + webviewURL.host! + "/favicon.ico"
-            self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
-          } else {
-            self.parent.tab.setDefaultFavicon()
+            DispatchQueue.main.async {
+              cacheFaviconURL = URL(string: faviconURL)!
+              self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
+              group.leave()
+            }
           }
           return
         }
@@ -199,7 +205,21 @@ struct Webview: NSViewRepresentable {
           faviconURL = URL(string: href, relativeTo: currentURL)!
         }
 
-        self.parent.tab.loadFavicon(url: faviconURL)
+        DispatchQueue.main.async {
+          cacheFaviconURL = faviconURL
+          self.parent.tab.loadFavicon(url: faviconURL)
+          group.leave()
+        }
+      }
+      
+      group.notify(queue: .main) {
+        if let title = cacheTitle {
+          let historySite = HistorySite(title: title, url: self.parent.tab.originURL)
+          if let faviconURL = cacheFaviconURL {
+            historySite.loadFavicon(url: faviconURL)
+          }
+          self.parent.tab.historySiteDataList.append(historySite)
+        }
       }
     }
     

@@ -60,7 +60,7 @@ struct TabItem: View {
             .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
             .foregroundColor(isActive || isTabHover ? .white.opacity(0.85) : .white.opacity(0.6))
             .font(.system(size: 12))
-            .padding(.leading, tab.favicon != nil || showProgress ? 5 : 8)
+            .padding(.leading, tab.favicon != nil || showProgress ? 5 : 10)
             .padding(.trailing, 25)
             .lineLimit(1)
             .truncationMode(.tail)
@@ -70,7 +70,7 @@ struct TabItem: View {
       .opacity(tabWidth < 60 && isActive ? 0 : 1)
     }
     .frame(maxWidth: .infinity)
-    .background(isTabHover ? Color("MainBlack").opacity(0.3) : Color("MainBlack").opacity(0))
+    .background(Color("MainBlack").opacity(isTabHover ? 0.5 : 0))
     .clipShape(RoundedRectangle(cornerRadius: 10))
     .offset(y: 1.5)
   }

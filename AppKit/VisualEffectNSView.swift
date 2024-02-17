@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VisualEffect: NSViewRepresentable {
+struct VisualEffectNSView: NSViewRepresentable {
     func makeNSView(context: Self.Context) -> NSView {
         let view = NSVisualEffectView()
         view.material = .sidebar

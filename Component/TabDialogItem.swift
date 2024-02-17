@@ -60,7 +60,7 @@ struct TabDialogItem: View {
       }
       .padding(5)
       .padding(.bottom, 4)
-      .background(Color("MainBlack").opacity(tab.id == activeTabId ? 1 : isTabHover ? 0.3 : 0))
+      .background(Color("MainBlack").opacity(tab.id == activeTabId ? 1 : isTabHover ? 0.5 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     .frame(width: 230, alignment: .leading)

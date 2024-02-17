@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TabItemView: NSViewRepresentable {
+struct TabItemNSView: NSViewRepresentable {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
@@ -80,12 +80,12 @@ struct TabItemView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, NSDraggingSource {
-    var parent: TabItemView
+    var parent: TabItemNSView
     var thisIndex: Int?
     var tabId: UUID?
     weak var tabItemNSView: TabDragSource?
     
-    init(_ parent: TabItemView) {
+    init(_ parent: TabItemNSView) {
       self.parent = parent
     }
     
