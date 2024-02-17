@@ -44,12 +44,12 @@ struct SearchView: View {
         },
         longPressAction: {
           if tab.isBack {
-            self.isBackDialog.toggle()
+            self.isBackDialog = true
           }
         })
       .frame(width: 24, height: 24)
       .popover(isPresented: $isBackDialog, arrowEdge: .bottom) {
-        HistoryDialog(tab: tab, isBack: true)
+        HistoryDialog(tab: tab, isBack: true, closeDialog: $isBackDialog)
       }
       
       VStack(spacing: 0) { }.frame(width: 8)
@@ -64,12 +64,12 @@ struct SearchView: View {
         },
         longPressAction: {
           if tab.isForward {
-            self.isForwardDialog.toggle()
+            self.isForwardDialog = true
           }
         })
       .frame(width: 24, height: 24)
       .popover(isPresented: $isForwardDialog, arrowEdge: .bottom) {
-        HistoryDialog(tab: tab, isBack: false)
+        HistoryDialog(tab: tab, isBack: false, closeDialog: $isForwardDialog)
       }
       
       VStack(spacing: 0) { }.frame(width: 8)

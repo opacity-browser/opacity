@@ -19,9 +19,7 @@
 		A14246242B7E51450062C516 /* TabDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246232B7E51450062C516 /* TabDialog.swift */; };
 		A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */; };
 		A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246272B7E7E010062C516 /* TabDialogItem.swift */; };
-		A142462A2B7FADF70062C516 /* BackKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246292B7FADF70062C516 /* BackKeyButton.swift */; };
 		A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */; };
-		A142462E2B80B39E0062C516 /* ForwardKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */; };
 		A14246302B80E3CD0062C516 /* HistoryDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142462F2B80E3CD0062C516 /* HistoryDialog.swift */; };
 		A14246322B810D100062C516 /* HistorySite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246312B810D100062C516 /* HistorySite.swift */; };
 		A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246332B8132E50062C516 /* HistoryDialogItem.swift */; };
@@ -66,9 +64,7 @@
 		A14246232B7E51450062C516 /* TabDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialog.swift; sourceTree = "<group>"; };
 		A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItemNSView.swift; sourceTree = "<group>"; };
 		A14246272B7E7E010062C516 /* TabDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItem.swift; sourceTree = "<group>"; };
-		A14246292B7FADF70062C516 /* BackKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackKeyButton.swift; sourceTree = "<group>"; };
 		A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryKeyNSView.swift; sourceTree = "<group>"; };
-		A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardKeyButton.swift; sourceTree = "<group>"; };
 		A142462F2B80E3CD0062C516 /* HistoryDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDialog.swift; sourceTree = "<group>"; };
 		A14246312B810D100062C516 /* HistorySite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySite.swift; sourceTree = "<group>"; };
 		A14246332B8132E50062C516 /* HistoryDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDialogItem.swift; sourceTree = "<group>"; };
@@ -244,8 +240,6 @@
 				A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */,
 				A14246232B7E51450062C516 /* TabDialog.swift */,
 				A14246272B7E7E010062C516 /* TabDialogItem.swift */,
-				A14246292B7FADF70062C516 /* BackKeyButton.swift */,
-				A142462D2B80B39E0062C516 /* ForwardKeyButton.swift */,
 				A142462F2B80E3CD0062C516 /* HistoryDialog.swift */,
 				A14246332B8132E50062C516 /* HistoryDialogItem.swift */,
 				A14246352B813A5B0062C516 /* HistoryKeyButton.swift */,
@@ -363,7 +357,6 @@
 				A14246302B80E3CD0062C516 /* HistoryDialog.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
-				A142462A2B7FADF70062C516 /* BackKeyButton.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
@@ -392,7 +385,6 @@
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
-				A142462E2B80B39E0062C516 /* ForwardKeyButton.swift in Sources */,
 				A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,

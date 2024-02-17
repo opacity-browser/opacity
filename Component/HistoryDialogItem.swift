@@ -11,6 +11,7 @@ import WebKit
 struct HistoryDialogItem: View {
   @ObservedObject var tab: Tab
   var item: WKBackForwardListItem
+  @Binding var closeDialog: Bool
   
   @State private var isHistoryHover: Bool = false
   
@@ -47,6 +48,10 @@ struct HistoryDialogItem: View {
       }
       .background(Color("MainBlack").opacity(isHistoryHover ? 0.5 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 5))
+      .onTapGesture {
+        tab.webview.go(to: item)
+        closeDialog = false
+      }
     }
     .padding(.horizontal, 5)
   }

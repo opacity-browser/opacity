@@ -10,6 +10,7 @@ import SwiftUI
 struct HistoryDialog: View {
   @ObservedObject var tab: Tab
   var isBack: Bool
+  @Binding var closeDialog: Bool
   
   var body: some View {
     
@@ -20,7 +21,7 @@ struct HistoryDialog: View {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
             ForEach(historyList, id: \.self) { item in
-              HistoryDialogItem(tab: tab, item: item)
+              HistoryDialogItem(tab: tab, item: item, closeDialog: $closeDialog)
             }
           }
           .padding(5)
