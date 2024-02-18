@@ -119,6 +119,13 @@ struct WebNSView: NSViewRepresentable {
         self.parent.tab.historyForwardList = webView.backForwardList.forwardList
       }
       
+      var historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
+      var historyUrlList = historyList.compactMap { $0.url }
+      
+      self.parent.tab.historySiteDataList = self.parent.tab.historySiteDataList.filter { item in
+        historyUrlList.contains(item.url)
+      }
+      
       if WebviewError.share.isError {
         switch WebviewError.share.errorType {
           case .notFindHost:
