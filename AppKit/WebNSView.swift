@@ -119,8 +119,8 @@ struct WebNSView: NSViewRepresentable {
         self.parent.tab.historyForwardList = webView.backForwardList.forwardList
       }
       
-      var historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
-      var historyUrlList = historyList.compactMap { $0.url }
+      let historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
+      let historyUrlList = historyList.compactMap { $0.url }
       
       self.parent.tab.historySiteDataList = self.parent.tab.historySiteDataList.filter { item in
         historyUrlList.contains(item.url)
@@ -279,28 +279,28 @@ struct WebNSView: NSViewRepresentable {
             // 호스트를 찾을 수 없는 경우 처리
             print("not-find-host")
             WebviewError.share.errorType = .notFindHost
-            if let schemeURL = URL(string:"friedegg://not-find-host?lang=\(NSLocalizedString("lang", comment: ""))") {
+            if let schemeURL = URL(string:"opacity://not-find-host?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
           case NSURLErrorSecureConnectionFailed:
             // 호스트에 연결할 수 없는 경우 처리
             print("not-connect-host")
             WebviewError.share.errorType = .notConnectHost
-            if let schemeURL = URL(string:"friedegg://not-connect-host?lang=\(NSLocalizedString("lang", comment: ""))") {
+            if let schemeURL = URL(string:"opacity://not-connect-host?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
           case NSURLErrorNotConnectedToInternet:
             // 네트워크 연결 끊김 처리
             print("not-connect-internet")
             WebviewError.share.errorType = .notConnectInternet
-            if let schemeURL = URL(string:"friedegg://not-connect-internet?lang=\(NSLocalizedString("lang", comment: ""))") {
+            if let schemeURL = URL(string:"opacity://not-connect-internet?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
           default:
             // 기타 오류 처리
             print("unknown")
             WebviewError.share.errorType = .unkown
-            if let schemeURL = URL(string:"friedegg://unknown?lang=\(NSLocalizedString("lang", comment: ""))") {
+            if let schemeURL = URL(string:"opacity://unknown?lang=\(NSLocalizedString("lang", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
         }

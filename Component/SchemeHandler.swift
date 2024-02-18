@@ -1,6 +1,6 @@
 //
 //  SchemeHandler.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 1/24/24.
 //

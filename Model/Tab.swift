@@ -36,7 +36,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.defaultWebpagePreferences = prefs
     
     let schemeHandler = SchemeHandler()
-    config.setURLSchemeHandler(schemeHandler, forURLScheme: "friedegg")
+    config.setURLSchemeHandler(schemeHandler, forURLScheme: "opacity")
     
     //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
     //    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
