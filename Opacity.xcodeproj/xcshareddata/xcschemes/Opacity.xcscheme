@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A16920072B2FA82100F8B4C0"
-               BuildableName = "Fried Egg.app"
+               BuildableName = "Opacity.app"
                BlueprintName = "Opacity"
                ReferencedContainer = "container:Opacity.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A16920072B2FA82100F8B4C0"
-            BuildableName = "Fried Egg.app"
+            BuildableName = "Opacity.app"
             BlueprintName = "Opacity"
             ReferencedContainer = "container:Opacity.xcodeproj">
          </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A16920072B2FA82100F8B4C0"
-            BuildableName = "Fried Egg.app"
+            BuildableName = "Opacity.app"
             BlueprintName = "Opacity"
             ReferencedContainer = "container:Opacity.xcodeproj">
          </BuildableReference>

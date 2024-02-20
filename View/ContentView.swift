@@ -8,12 +8,11 @@ struct ContentView: View {
 
   @State private var isMoreTabDialog = false
   @State private var isAddHover: Bool = false
-  @State private var showProgress: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       if browser.tabs.count > 0, let _ = browser.activeTabId {
-        TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId, showProgress: $showProgress)
+        TitlebarView(service: service, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
         MainView(browser: browser)
       }
     }
@@ -33,7 +32,7 @@ struct ContentView: View {
     .ignoresSafeArea(.container, edges: .top)
     .onAppear {
       guard let baseTabId = tabId else {
-        browser.newTab()
+        browser.initTab()
         return
       }
       

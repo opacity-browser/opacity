@@ -13,7 +13,6 @@ struct TitlebarView: View {
   @ObservedObject var service: Service
   @Binding var tabs: [Tab]
   @Binding var activeTabId: UUID?
-  @Binding var showProgress: Bool
   
   @State var tabWidth: CGFloat = 220
   @State private var isAddHover: Bool = false
@@ -33,7 +32,7 @@ struct TitlebarView: View {
                 HStack(spacing: 0) {
                   ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
                     if Int(geometry.size.width / 60) > index {
-                      BrowserTabView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, showProgress: $showProgress) {
+                      BrowserTabView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth) {
                         AppDelegate.shared.closeTab()
                       }
                       .contentShape(Rectangle())
@@ -81,7 +80,7 @@ struct TitlebarView: View {
           
           // search area
           if let activeTab = tabs.first(where: { $0.id == activeTabId }) {
-            SearchView(tab: activeTab, showProgress: $showProgress)
+            SearchView(tab: activeTab)
               .frame(maxWidth: .infinity,  maxHeight: 41)
               .background(Color("MainBlack"))
           }

@@ -10,11 +10,9 @@ import SwiftUI
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
   @ObservedObject var tab: Tab
-  @Binding var showProgress: Bool
   
-  @FocusState private var textFieldFocused: Bool
+  @FocusState private var isTextFieldFocused: Bool
   
-  @State private var isEditing: Bool = false
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
   @State private var isTopHover: Bool = false
@@ -98,7 +96,7 @@ struct SearchView: View {
       
       Spacer()
       
-      if isEditing {
+      if tab.isEditSearch {
         HStack(spacing: 0) {
           ZStack {
             Rectangle()
@@ -122,7 +120,7 @@ struct SearchView: View {
               
               TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                 if !isEdit {
-                  isEditing = false
+                  tab.isEditSearch = false
                 }
               })
               .foregroundColor(.white.opacity(0.85))
@@ -131,7 +129,7 @@ struct SearchView: View {
               .textFieldStyle(PlainTextFieldStyle())
               .font(.system(size: textSize))
               .fontWeight(.regular)
-              .focused($textFieldFocused)
+              .focused($isTextFieldFocused)
 //              .onChange(of: tab.inputURL) {
 //                self.isDomain = StringURL.checkURL(url: tab.inputURL)
 //              }
@@ -139,6 +137,7 @@ struct SearchView: View {
                 if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                   return
                 }
+                
                 var newURL = tab.inputURL
                 if StringURL.checkURL(url: newURL) {
                   if !newURL.contains("://") {
@@ -148,10 +147,14 @@ struct SearchView: View {
                   newURL = "https://www.google.com/search?q=\(newURL)"
                 }
 
-                showProgress = true
-                tab.pageProgress = 0.0
-                DispatchQueue.main.async {
-                  tab.updateURLBySearch(url: URL(string: newURL)!)
+                if(newURL != tab.originURL.absoluteString) {
+                  DispatchQueue.main.async {
+                    tab.isPageProgress = true
+                    tab.pageProgress = 0.0
+                    tab.updateURLBySearch(url: URL(string: newURL)!)
+                    tab.isEditSearch = false
+                    isTextFieldFocused = false
+                  }
                 }
               }
             }
@@ -170,7 +173,7 @@ struct SearchView: View {
                 .frame(maxWidth: .infinity, maxHeight: inputHeight)
                 .foregroundColor(isSearchHover ? .gray.opacity(0.3) : .gray.opacity(0.15))
                 .overlay {
-                  if showProgress {
+                  if !tab.isInit && tab.isPageProgress {
                     HStack(spacing: 0) {
                       Rectangle()
                         .foregroundColor(Color("PointJade"))
@@ -213,14 +216,29 @@ struct SearchView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .onTapGesture {
-              isEditing = true
-              textFieldFocused = true
+              tab.isEditSearch = true
+              isTextFieldFocused = true
             }
             .onHover { hovering in
               withAnimation {
                 isSearchHover = hovering
               }
             }
+//            .onChange(of: tab.pageProgress) { _, newValue in
+//              print("aaaaaaaaaaaaaaaa")
+//              if(tab.isInit && !isTextFieldFocused) {
+//                print("bbbbbbbbbbbbbb")
+//                isTextFieldFocused = true
+//              }
+//            }
+//            .onChange(of: tab.pageProgress) {  _, newValue in
+//              print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+//              if(tab.isInit && newValue == 0.0 && !isEditing) {
+//                print("bbbbbbbbbbbbbbbbbbbbbbbbbbb")
+//                isEditing = true
+//                isTextFieldFocused = true
+//              }
+//            }
           }
         }
         .padding(.leading, 1)
@@ -229,7 +247,13 @@ struct SearchView: View {
       
       Spacer()
       
-      VStack(spacing: 0) { }.frame(width: 6)
+      VStack(spacing: 0) { }
+      .frame(width: 6)
+      .onChange(of: tab.isEditSearch) { _, newValue in
+        if(tab.isInit && !isTextFieldFocused) {
+          isTextFieldFocused = true
+        }
+      }
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {

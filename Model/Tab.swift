@@ -10,6 +10,9 @@ import WebKit
 
 final class Tab: ObservableObject, Identifiable, Equatable {
   var id = UUID()
+  
+  @Published var isInit: Bool = false
+  
   @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
@@ -26,7 +29,10 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
   
+  @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
+  
+  @Published var isEditSearch: Bool = true
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
@@ -35,7 +41,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     prefs.allowsContentJavaScript = true
     config.defaultWebpagePreferences = prefs
     
-    let schemeHandler = SchemeHandler()
+    let schemeHandler = SchemeNSHandler()
     config.setURLSchemeHandler(schemeHandler, forURLScheme: "opacity")
     
     //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
@@ -64,6 +70,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     let shortStringURL = StringURL.shortURL(url: stringURL)
     
     DispatchQueue.main.async {
+      self.isInit = false
       self.isUpdateBySearch = true
       self.originURL = url
       self.inputURL = stringURL
@@ -78,6 +85,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     let shortStringURL = StringURL.shortURL(url: stringURL)
     
     DispatchQueue.main.async {
+      self.isInit = false
       self.originURL = url
       self.inputURL = stringURL
       self.printURL = shortStringURL

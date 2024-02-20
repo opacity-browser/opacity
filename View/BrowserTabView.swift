@@ -21,7 +21,6 @@ struct BrowserTabView: View {
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var tabWidth: CGFloat
-  @Binding var showProgress: Bool
   var onClose: () -> Void
   
   @State var isTabHover: Bool = false
@@ -47,7 +46,7 @@ struct BrowserTabView: View {
             Button {
               
             } label: {
-              TabItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+              TabItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
             }
             .buttonStyle(StaticColorButtonStyle())
             .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -97,7 +96,7 @@ struct BrowserTabView: View {
         }
       }
       .frame(maxWidth: 220, maxHeight: 38)
-      .onChange(of: showProgress) { _, newValue in
+      .onChange(of: tab.isPageProgress) { _, newValue in
         if newValue == false {
           loadingAnimation = false
         }
@@ -107,12 +106,12 @@ struct BrowserTabView: View {
         if newValue == 1.0 {
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             withAnimation(.easeInOut(duration: 0.15)) {
-              showProgress = false
+              tab.isPageProgress = false
             }
             tab.pageProgress = 0.0
           }
         } else if newValue > 0.0 && newValue < 1.0 {
-          showProgress = true
+          tab.isPageProgress = true
         }
       }
     }
