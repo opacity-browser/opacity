@@ -47,7 +47,7 @@ struct TitlebarView: View {
                   if let keyWindow = NSApplication.shared.keyWindow {
                     let windowNumber = keyWindow.windowNumber
                     if let target = self.service.browsers[windowNumber] {
-                      target.newTab()
+                      target.initTab()
                     }
                   }
                 }) {

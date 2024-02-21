@@ -45,10 +45,8 @@
 		A1A1D8E62B638A9C008FD44F /* not-connect-host.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E32B638A9B008FD44F /* not-connect-host.html */; };
 		A1A1D8E72B638A9C008FD44F /* not-connect-internet.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */; };
 		A1A1D8E82B638A9C008FD44F /* unknown.html in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8E52B638A9C008FD44F /* unknown.html */; };
-		A1B1A6E52B84B194006B665E /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6E22B84B193006B665E /* index.html */; };
-		A1B1A6E62B84B194006B665E /* bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6E32B84B193006B665E /* bundle.js */; };
-		A1B1A6E72B84B194006B665E /* bundle.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6E42B84B193006B665E /* bundle.js.LICENSE.txt */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
+		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,10 +98,8 @@
 		A1A1D8E32B638A9B008FD44F /* not-connect-host.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "not-connect-host.html"; sourceTree = "<group>"; };
 		A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "not-connect-internet.html"; sourceTree = "<group>"; };
 		A1A1D8E52B638A9C008FD44F /* unknown.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = unknown.html; sourceTree = "<group>"; };
-		A1B1A6E22B84B193006B665E /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
-		A1B1A6E32B84B193006B665E /* bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bundle.js; sourceTree = "<group>"; };
-		A1B1A6E42B84B193006B665E /* bundle.js.LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bundle.js.LICENSE.txt; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
+		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +116,7 @@
 		A12D053C2B600C4C00CBC6B2 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
-				A1B1A6E12B84B193006B665E /* new-tab */,
+				A1B1A6F22B860023006B665E /* new-tab */,
 				A1A1D8E42B638A9B008FD44F /* not-connect-internet.html */,
 				A1A1D8E32B638A9B008FD44F /* not-connect-host.html */,
 				A1A1D8E52B638A9C008FD44F /* unknown.html */,
@@ -262,16 +258,6 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		A1B1A6E12B84B193006B665E /* new-tab */ = {
-			isa = PBXGroup;
-			children = (
-				A1B1A6E22B84B193006B665E /* index.html */,
-				A1B1A6E32B84B193006B665E /* bundle.js */,
-				A1B1A6E42B84B193006B665E /* bundle.js.LICENSE.txt */,
-			);
-			path = "new-tab";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -339,12 +325,10 @@
 			files = (
 				A1A1D8E62B638A9C008FD44F /* not-connect-host.html in Resources */,
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
-				A1B1A6E62B84B194006B665E /* bundle.js in Resources */,
-				A1B1A6E72B84B194006B665E /* bundle.js.LICENSE.txt in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A12D053E2B600C6100CBC6B2 /* not-find-host.html in Resources */,
 				A1A1D8E72B638A9C008FD44F /* not-connect-internet.html in Resources */,
-				A1B1A6E52B84B194006B665E /* index.html in Resources */,
+				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
 				A1A1D8E82B638A9C008FD44F /* unknown.html in Resources */,
 			);

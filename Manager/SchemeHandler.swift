@@ -17,6 +17,12 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
       return "text/html"
     case "js":
       return "application/javascript"
+    case "png":
+        return "image/png"
+    case "jpg", "jpeg":
+        return "image/jpeg"
+    case "avif":
+        return "image/avif"
     default:
       return "application/octet-stream"
     }
@@ -31,7 +37,7 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
       return
     }
     
-    let filePath = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    let filePath = url.host! + "/" + url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
     let fullPath = (resourcePath as NSString).appendingPathComponent(filePath)
     
     if FileManager.default.fileExists(atPath: fullPath) {
