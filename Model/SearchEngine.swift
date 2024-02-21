@@ -1,6 +1,6 @@
 //
 //  SearchEngine.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 1/21/24.
 //

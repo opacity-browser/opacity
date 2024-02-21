@@ -1,6 +1,6 @@
 //
 //  TabDialog.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 2/15/24.
 //

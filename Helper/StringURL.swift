@@ -35,6 +35,10 @@ class StringURL {
   }
   
   static func checkURL(url urlString: String) -> Bool {
+    if(urlString.contains("opacity://")) {
+      return true
+    }
+    
     if urlString.contains(" ") || !urlString.contains(".") {
       return false
     }

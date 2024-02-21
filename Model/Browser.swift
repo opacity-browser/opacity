@@ -18,4 +18,14 @@ final class Browser: ObservableObject, Identifiable {
     self.tabs.append(newTab)
     self.activeTabId = newTab.id
   }
+  
+  func initTab() {
+    let newTab = Tab(url: INIT_URL)
+    newTab.isInit = true
+    newTab.inputURL = ""
+    newTab.printURL = ""
+    newTab.title = "\(NSLocalizedString("New Tab", comment: ""))"
+    self.tabs.append(newTab)
+    self.activeTabId = newTab.id
+  }
 }

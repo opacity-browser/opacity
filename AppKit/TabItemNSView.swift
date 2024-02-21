@@ -1,6 +1,6 @@
 //
 //  TabItemView.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 2/6/24.
 //
@@ -14,7 +14,6 @@ struct TabItemNSView: NSViewRepresentable {
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var tabWidth: CGFloat
-  @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
   
@@ -41,7 +40,7 @@ struct TabItemNSView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -63,7 +62,7 @@ struct TabItemNSView: NSViewRepresentable {
     
     for subview in nsView.subviews {
       if let hostingView = subview as? NSHostingView<TabItem> {
-        hostingView.rootView = TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, showProgress: $showProgress, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+        hostingView.rootView = TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
         hostingView.layout()
       }
     }

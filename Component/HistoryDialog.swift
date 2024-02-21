@@ -1,6 +1,6 @@
 //
 //  HistoryDialog.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 2/17/24.
 //

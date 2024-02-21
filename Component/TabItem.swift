@@ -1,6 +1,6 @@
 //
 //  TabItem.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 2/6/24.
 //
@@ -11,7 +11,6 @@ struct TabItem: View {
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   @Binding var tabWidth: CGFloat
-  @Binding var showProgress: Bool
   @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
   
@@ -36,7 +35,7 @@ struct TabItem: View {
           }
           .frame(maxWidth: 20, maxHeight: 20, alignment: .center)
           .padding(.leading, tabWidth > 60 ? 8 : 0)
-        } else if showProgress {
+        } else if !tab.isInit && tab.isPageProgress {
           HStack(spacing: 0) {
             VStack(spacing: 0) {
               Circle()
@@ -60,7 +59,7 @@ struct TabItem: View {
             .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
             .foregroundColor(isActive || isTabHover ? .white.opacity(0.85) : .white.opacity(0.6))
             .font(.system(size: 12))
-            .padding(.leading, tab.favicon != nil || showProgress ? 5 : 10)
+            .padding(.leading, !tab.isInit && (tab.favicon != nil || tab.isPageProgress) ? 5 : 10)
             .padding(.trailing, 25)
             .lineLimit(1)
             .truncationMode(.tail)

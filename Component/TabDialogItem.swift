@@ -1,6 +1,6 @@
 //
 //  TabDialogItem.swift
-//  FriedEgg
+//  Opacity
 //
 //  Created by Falsy on 2/16/24.
 //
@@ -30,13 +30,13 @@ struct TabDialogItem: View {
                 }
               }
               .frame(maxWidth: 14, maxHeight: 20, alignment: .center)
-              .padding(.leading, 4)
+              .padding(.leading, 6)
             }
             Text(tab.title)
               .frame(height: 22, alignment: .leading)
               .foregroundColor(.white.opacity(0.85))
               .font(.system(size: 12))
-              .padding(.leading, 7)
+              .padding(.leading, tab.favicon == nil ? 7 : 4)
               .padding(.trailing, 7)
               .lineLimit(1)
               .truncationMode(.tail)
@@ -47,7 +47,7 @@ struct TabDialogItem: View {
           HStack(spacing: 0) {
             Text(tab.originURL.absoluteString)
               .font(.system(size: 11))
-              .padding(.leading, tab.favicon == nil ? 7 : 26)
+              .padding(.leading, 7)
               .padding(.trailing, 7)
               .lineLimit(1)
               .truncationMode(.tail)
