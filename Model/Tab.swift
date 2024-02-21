@@ -41,15 +41,14 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     prefs.allowsContentJavaScript = true
     config.defaultWebpagePreferences = prefs
     
-    let schemeHandler = SchemeNSHandler()
-    config.setURLSchemeHandler(schemeHandler, forURLScheme: "opacity")
+    config.setURLSchemeHandler(SchemeHandler(), forURLScheme: "opacity")
     
-    //    let scriptSource = "window.customProperty = { customMethod: function() { alert('This is a custom method!'); } };"
-    //    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-    //    config.userContentController.addUserScript(userScript)
+    let contentController = WKUserContentController()
+    contentController.add(ScriptHandler(), name: "opacityBrowser")
+    config.userContentController = contentController
     
     let preferences = WKPreferences()
-    preferences.setValue(true, forKey: "developerExtrasEnabled") // 개발자 도구 활성화
+    preferences.setValue(true, forKey: "developerExtrasEnabled")
     config.preferences = preferences
     
     return WKWebView(frame: .zero, configuration: config)

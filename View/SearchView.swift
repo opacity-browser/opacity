@@ -224,21 +224,6 @@ struct SearchView: View {
                 isSearchHover = hovering
               }
             }
-//            .onChange(of: tab.pageProgress) { _, newValue in
-//              print("aaaaaaaaaaaaaaaa")
-//              if(tab.isInit && !isTextFieldFocused) {
-//                print("bbbbbbbbbbbbbb")
-//                isTextFieldFocused = true
-//              }
-//            }
-//            .onChange(of: tab.pageProgress) {  _, newValue in
-//              print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-//              if(tab.isInit && newValue == 0.0 && !isEditing) {
-//                print("bbbbbbbbbbbbbbbbbbbbbbbbbbb")
-//                isEditing = true
-//                isTextFieldFocused = true
-//              }
-//            }
           }
         }
         .padding(.leading, 1)
