@@ -9,16 +9,19 @@ import SwiftUI
 
 struct TabItemNSView: NSViewRepresentable {
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var tabWidth: CGFloat
-  @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
   
   func moveTab(_ idx: Int) {
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
+      if targetIndex == idx {
+        return
+      }
       let removedItem = tabs.remove(at: targetIndex)
       tabs.insert(removedItem, at: idx)
       activeTabId = removedItem.id
@@ -40,7 +43,7 @@ struct TabItemNSView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -62,7 +65,7 @@ struct TabItemNSView: NSViewRepresentable {
     
     for subview in nsView.subviews {
       if let hostingView = subview as? NSHostingView<TabItem> {
-        hostingView.rootView = TabItem(tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+        hostingView.rootView = TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation)
         hostingView.layout()
       }
     }
@@ -93,12 +96,18 @@ struct TabItemNSView: NSViewRepresentable {
     }
 
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
-      parent.activeTabId = tabId!
-      parent.service.dragTabId = tabId!
+      if let nowTabId = tabId {
+        parent.service.dragTabId = nowTabId
+        parent.service.dragBrowserNumber = parent.browser.windowNumber
+        let beforeTab = parent.browser.tabs.first(where: { $0.id == parent.activeTabId })
+        if let beforeWebview = beforeTab?.webview  {
+          parent.browser.updateActiveTab(tabId: nowTabId, webView: beforeWebview)
+        }
+      }
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
-      guard let window = tabItemNSView?.window else { return }
+      guard let window = tabItemNSView?.window, let dragBrowserNo = parent.service.dragBrowserNumber else { return }
       
       let windowFrame = window.frame
       let windowPoint = window.convertPoint(fromScreen: screenPoint)
@@ -111,7 +120,8 @@ struct TabItemNSView: NSViewRepresentable {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
             if(parent.tabs.count == 1) {
               if parent.service.isMoveTab {
-                AppDelegate.shared.closeTab()
+                parent.service.browsers[dragBrowserNo] = nil
+                window.close()
               }
             } else {
               if parent.service.isMoveTab {
@@ -163,6 +173,9 @@ class TabDragSource: NSView {
   
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     print("dragenterd")
+    if let window = self.window {
+      window.makeKeyAndOrderFront(nil)
+    }
     return .move
   }
   

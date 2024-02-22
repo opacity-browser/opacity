@@ -34,7 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                              backing: .buffered, defer: false)
     
     let newWindowNo = newWindow.windowNumber
-    self.service.browsers[newWindowNo] = Browser()
+    let newBrowser = Browser()
+    newBrowser.windowNumber = newWindowNo
+    self.service.browsers[newWindowNo] = newBrowser
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = ContentView(tabId: tabId)

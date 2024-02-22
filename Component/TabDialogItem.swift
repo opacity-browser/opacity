@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TabDialogItem: View {
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   
