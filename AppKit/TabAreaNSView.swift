@@ -102,6 +102,9 @@ class TabAreaDragSource: NSView {
   }
   
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+    if let window = self.window {
+      window.makeKeyAndOrderFront(nil)
+    }
     return .move
   }
   

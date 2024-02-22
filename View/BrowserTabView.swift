@@ -16,6 +16,7 @@ struct StaticColorButtonStyle: ButtonStyle {
 
 struct BrowserTabView: View {
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
@@ -44,9 +45,9 @@ struct BrowserTabView: View {
           
           ZStack {
             Button {
-              
+            
             } label: {
-              TabItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, isTabHover: $isTabHover, loadingAnimation: $loadingAnimation)
+              TabItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation)
             }
             .buttonStyle(StaticColorButtonStyle())
             .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -88,9 +89,6 @@ struct BrowserTabView: View {
           .padding(.horizontal, 6)
         }
         .frame(maxWidth: 220, maxHeight: 38)
-        .onHover { hovering in
-          isTabHover = hovering
-        }
         .onChange(of: geometry.size) { _, newValue in
           tabWidth = newValue.width
         }

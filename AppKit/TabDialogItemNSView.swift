@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabDialogItemNSView: NSViewRepresentable {
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
   @Binding var tabs: [Tab]
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
@@ -16,6 +17,9 @@ struct TabDialogItemNSView: NSViewRepresentable {
   
   func moveTab(_ idx: Int) {
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
+      if targetIndex == idx {
+        return
+      }
       let removedItem = tabs.remove(at: targetIndex)
       tabs.insert(removedItem, at: idx)
       activeTabId = removedItem.id
@@ -37,7 +41,7 @@ struct TabDialogItemNSView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabDialogItem(tab: tab, activeTabId: $activeTabId))
+    let hostingView = NSHostingView(rootView: TabDialogItem(browser: browser, tab: tab, activeTabId: $activeTabId))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -59,7 +63,7 @@ struct TabDialogItemNSView: NSViewRepresentable {
     
     for subview in nsView.subviews {
       if let hostingView = subview as? NSHostingView<TabDialogItem> {
-        hostingView.rootView = TabDialogItem(tab: tab, activeTabId: $activeTabId)
+        hostingView.rootView = TabDialogItem(browser: browser, tab: tab, activeTabId: $activeTabId)
         hostingView.layout()
       }
     }
@@ -90,27 +94,35 @@ struct TabDialogItemNSView: NSViewRepresentable {
     }
 
     func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
-      parent.activeTabId = tabId!
-      parent.service.dragTabId = tabId!
+      if let nowTabId = tabId {
+        parent.service.dragTabId = nowTabId
+        parent.service.dragBrowserNumber = parent.browser.windowNumber
+        let beforeTab = parent.browser.tabs.first(where: { $0.id == parent.activeTabId })
+        if let beforeWebview = beforeTab?.webview  {
+          parent.browser.updateActiveTab(tabId: nowTabId, webView: beforeWebview)
+        }
+      }
     }
     
     func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
       
-      guard let window = NSApp.mainWindow else { return }
-      guard let dialog = tabDialogItemNSView?.window else { return }
+      guard let dragBrowserNo = parent.service.dragBrowserNumber, 
+              let window = NSApp.windows.first(where: { $0.windowNumber == dragBrowserNo }),
+              let dialog = tabDialogItemNSView?.window else { return }
       
       let windowFrame = window.frame
       let windowPoint = window.convertPoint(fromScreen: screenPoint)
       let titleBarHeight: CGFloat = 80
       let titleBarRect = NSRect(x: 0, y: windowFrame.height - titleBarHeight, width: windowFrame.width, height: titleBarHeight)
       
-      if !dialog.frame.contains(screenPoint) &&  !titleBarRect.contains(windowPoint) {
+      if !dialog.frame.contains(screenPoint) && !titleBarRect.contains(windowPoint) {
         print("Exit outside of window")
         if let dragId = parent.service.dragTabId {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
             if(parent.tabs.count == 1) {
               if parent.service.isMoveTab {
-                AppDelegate.shared.closeTab()
+                parent.service.browsers[dragBrowserNo] = nil
+                window.close()
               }
             } else {
               if parent.service.isMoveTab {
@@ -163,6 +175,9 @@ class TabDialogDragSource: NSView {
   
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     print("dragenterd")
+    if let window = self.window {
+      window.makeKeyAndOrderFront(nil)
+    }
     return .move
   }
   

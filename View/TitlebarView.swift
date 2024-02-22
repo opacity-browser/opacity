@@ -11,6 +11,8 @@ struct TitlebarView: View {
   @Environment(\.colorScheme) var colorScheme
 
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
+  
   @Binding var tabs: [Tab]
   @Binding var activeTabId: UUID?
   
@@ -32,8 +34,14 @@ struct TitlebarView: View {
                 HStack(spacing: 0) {
                   ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
                     if Int(geometry.size.width / 60) > index {
-                      BrowserTabView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth) {
-                        AppDelegate.shared.closeTab()
+                      BrowserTabView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth) {
+                        tabs.remove(at: index)
+                        if tabs.count == 0 {
+                          AppDelegate.shared.closeWindow()
+                        } else {
+                          let targetIndex = tabs.count > index ? index : tabs.count - 1
+                          activeTabId = tabs[targetIndex].id
+                        }
                       }
                       .contentShape(Rectangle())
                     }
@@ -72,6 +80,7 @@ struct TitlebarView: View {
                 .frame(width: 42)
             }
             .frame(maxWidth: .infinity, maxHeight: 38, alignment: .leading)
+            .background(Color("TabBackground"))
           }
           
           Rectangle()

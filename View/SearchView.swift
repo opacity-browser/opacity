@@ -159,8 +159,9 @@ struct SearchView: View {
               }
             }
           }
-          .padding(2)
-          .background(Color("PointJade"))
+          .padding(1)
+//          .background(Color("PointJade"))
+          .background(Color("Point"))
           .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .padding(.top, 1)
@@ -176,7 +177,8 @@ struct SearchView: View {
                   if !tab.isInit && tab.isPageProgress {
                     HStack(spacing: 0) {
                       Rectangle()
-                        .foregroundColor(Color("PointJade"))
+//                        .foregroundColor(Color("PointJade"))
+                        .foregroundColor(Color("Point"))
                         .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
                         .animation(.linear(duration: 0.5), value: tab.pageProgress)
                       if tab.pageProgress < 1.0 {

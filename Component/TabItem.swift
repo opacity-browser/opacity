@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct TabItem: View {
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   @Binding var tabWidth: CGFloat
-  @Binding var isTabHover: Bool
   @Binding var loadingAnimation: Bool
+  
+  @State var isTabHover: Bool = false
   
   var isActive: Bool {
     return tab.id == activeTabId
@@ -25,7 +27,7 @@ struct TabItem: View {
           HStack(spacing: 0) {
             VStack(spacing: 0) {
               favicon
-                .resizable() // 이미지 크기 조절 가능하게 함
+                .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(maxWidth: 14, maxHeight: 14)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
@@ -39,8 +41,8 @@ struct TabItem: View {
           HStack(spacing: 0) {
             VStack(spacing: 0) {
               Circle()
-                .trim(from: 0, to: 0.7) // 원을 부분적으로 그리기
-                .stroke(Color("PointJade").opacity(0.5), lineWidth: 2) // 선의 색상과 두께
+                .trim(from: 0, to: 0.7)
+                .stroke(Color("PointJade").opacity(0.5), lineWidth: 2)
                 .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
                 .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
                 .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
@@ -67,6 +69,9 @@ struct TabItem: View {
       }
       .frame(height: 30)
       .opacity(tabWidth < 60 && isActive ? 0 : 1)
+      .onHover { hovering in
+        isTabHover = hovering
+      }
     }
     .frame(maxWidth: .infinity)
     .background(Color("MainBlack").opacity(isTabHover ? 0.5 : 0))

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabDialog: View {
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
   @Binding var tabs: [Tab]
   @Binding var activeTabId: UUID?
   
@@ -52,7 +53,7 @@ struct TabDialog: View {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
             ForEach(Array(filteredItems.enumerated()), id: \.element.id) { index, tab in
-              TabDialogItemNSView(service: service, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index)
+              TabDialogItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index)
             }
             Spacer()
           }
