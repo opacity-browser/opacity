@@ -13,29 +13,16 @@ struct MainView: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      // webview area
-      ZStack {
-        if browser.tabs.count > 0 {
-          if let snapshot = browser.snapshot {
-            Image(nsImage: snapshot)
-              .zIndex(snapshotIndex)
-          }
-          ForEach(Array(browser.tabs.enumerated()), id: \.element.id) { index, tab in
-            if let activeId = browser.activeTabId, activeId == tab.id {
-              WebNSView(browser: browser, tab: browser.tabs[index])
-                .zIndex(1)
+      GeometryReader { geometry in
+        ZStack {
+          if browser.tabs.count > 0 {
+            ForEach(Array(browser.tabs.enumerated()), id: \.element.id) { index, tab in
+              if let activeId = browser.activeTabId {
+                WebNSView(browser: browser, tab: browser.tabs[index])
+                  .offset(y: tab.id == activeId ? 0 : geometry.size.height)
+              }
             }
           }
-        }
-      }
-      .background(.red)
-      .onChange(of: browser.snapshot) { oldValue, newValue in
-        if oldValue == nil && newValue != nil {
-          DispatchQueue.main.async {
-            snapshotIndex = 3
-          }
-        } else {
-          snapshotIndex = 0
         }
       }
     }
