@@ -263,6 +263,66 @@ struct WebNSView: NSViewRepresentable {
       handleWebViewError(webView: webView, error: error)
     }
     
+    // alert
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+      let alert = NSAlert()
+      alert.messageText = message
+      alert.addButton(withTitle: "OK")
+      alert.alertStyle = .warning
+      alert.beginSheetModal(for: webView.window!) { _ in
+        completionHandler()
+      }
+    }
+    
+    // confirm
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+      let alert = NSAlert()
+      alert.messageText = message
+      alert.addButton(withTitle: "OK")
+      alert.addButton(withTitle: "Cancel")
+      alert.alertStyle = .warning
+      alert.beginSheetModal(for: webView.window!) { response in
+        completionHandler(response == .alertFirstButtonReturn)
+      }
+    }
+    
+    // prompt
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+      let alert = NSAlert()
+      alert.messageText = prompt
+      alert.addButton(withTitle: "OK")
+      alert.addButton(withTitle: "Cancel")
+      alert.alertStyle = .informational
+      
+      let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+      textField.stringValue = defaultText ?? ""
+      alert.accessoryView = textField
+      
+      alert.beginSheetModal(for: webView.window!) { response in
+        if response == .alertFirstButtonReturn {
+          completionHandler(textField.stringValue)
+        } else {
+          completionHandler(nil)
+        }
+      }
+    }
+    
+    // file upload
+    func webView(_ webView: WKWebView, runOpenPanelWith parameters: WKOpenPanelParameters, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ([URL]?) -> Void) {
+      let openPanel = NSOpenPanel()
+      openPanel.canChooseFiles = true
+      openPanel.canChooseDirectories = false
+      openPanel.allowsMultipleSelection = parameters.allowsMultipleSelection
+      
+      openPanel.beginSheetModal(for: webView.window!) { response in
+        if response == .OK {
+          completionHandler(openPanel.urls)
+        } else {
+          completionHandler(nil)
+        }
+      }
+    }
+    
     private func handleWebViewError(webView: WKWebView, error: Error) {
       let nsError = error as NSError
       print("in webive error func")
