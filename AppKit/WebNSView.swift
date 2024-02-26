@@ -265,6 +265,7 @@ struct WebNSView: NSViewRepresentable {
     
     // alert
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+      print("alert")
       let alert = NSAlert()
       alert.messageText = message
       alert.addButton(withTitle: "OK")
@@ -288,6 +289,7 @@ struct WebNSView: NSViewRepresentable {
     
     // prompt
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+      print("prompt")
       let alert = NSAlert()
       alert.messageText = prompt
       alert.addButton(withTitle: "OK")

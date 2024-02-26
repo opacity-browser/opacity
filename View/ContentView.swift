@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct ContentView: View {
+  @EnvironmentObject var permission: Permission
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
+  
   
   var tabId: UUID?
 
@@ -12,7 +14,7 @@ struct ContentView: View {
   var body: some View {
     VStack(spacing: 0) {
       if browser.tabs.count > 0, let _ = browser.activeTabId {
-        TitlebarView(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
+        TitlebarView(permission: permission, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
         MainView(browser: browser)
       }
     }

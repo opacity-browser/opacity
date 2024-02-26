@@ -44,8 +44,16 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.setURLSchemeHandler(SchemeHandler(), forURLScheme: "opacity")
     
     let contentController = WKUserContentController()
-    contentController.add(ScriptHandler(), name: "opacityBrowser")
+    let scriptHandler = ScriptHandler()
+    AppDelegate.shared.locationManager.delegate = scriptHandler
+    contentController.add(scriptHandler, name: "opacityBrowser")
     config.userContentController = contentController
+    
+    let scriptSource = """
+    window.webkit.messageHandlers.opacityBrowser.postMessage('{"name": "initGeoPositions", "value": ""}');
+    """
+    let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+    config.userContentController.addUserScript(userScript)
     
     let preferences = WKPreferences()
     preferences.setValue(true, forKey: "developerExtrasEnabled")

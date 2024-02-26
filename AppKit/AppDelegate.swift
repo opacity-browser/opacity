@@ -5,15 +5,19 @@
 //  Created by Falsy on 1/16/24.
 //
 
-import Cocoa
 import SwiftUI
+import CoreLocation
+
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   static var shared: AppDelegate!
   
   private var isTerminating = false
+  var permission: Permission = Permission()
   var service: Service = Service()
+  let locationManager = CLLocationManager()
 
+  
   func createWindow(tabId: UUID? = nil, frame: NSRect? = nil) {
     // 윈도우 사이즈 및 스타일 정의
     var windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
@@ -40,10 +44,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = ContentView(tabId: tabId)
-        .environmentObject(self.service)
-        .environmentObject(self.service.browsers[newWindowNo]!)
-        .background(VisualEffectNSView())
-        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
+      .environmentObject(self.permission)
+      .environmentObject(self.service)
+      .environmentObject(self.service.browsers[newWindowNo]!)
+      .background(VisualEffectNSView())
+      .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
     if isWindowCenter {
@@ -209,6 +214,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         target.tabs.first(where: { $0.id == target.activeTabId })?.webview.reload()
       }
     }
+    
+    permission.isShowLocationDialog = false
   }
   
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
