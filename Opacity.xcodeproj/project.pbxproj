@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,7 @@
 		A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54262B5BA457007020CA /* ImageLoader.swift */; };
 		A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A169200F2B2FA82200F8B4C0 /* Assets.xcassets */; };
 		A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */; };
+		A17245DE2B8BC11B0049F58D /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245DD2B8BC11B0049F58D /* Permission.swift */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
 		A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9442B4A948C00B39BC8 /* Tab.swift */; };
 		A188C9492B4ACECD00B39BC8 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9482B4ACECD00B39BC8 /* SearchView.swift */; };
@@ -74,6 +75,7 @@
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Opacity/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A16920142B2FA82200F8B4C0 /* Opacity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Opacity.entitlements; path = Opacity/Opacity.entitlements; sourceTree = "<group>"; };
+		A17245DD2B8BC11B0049F58D /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A188C9442B4A948C00B39BC8 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		A188C9482B4ACECD00B39BC8 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
 				A14246192B735E5F0062C516 /* Service.swift */,
 				A14246312B810D100062C516 /* HistorySite.swift */,
+				A17245DD2B8BC11B0049F58D /* Permission.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -294,7 +297,7 @@
 				};
 			};
 			buildConfigurationList = A16920032B2FA82100F8B4C0 /* Build configuration list for PBXProject "Opacity" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -373,6 +376,7 @@
 				A15D54112B5574B9007020CA /* TitlebarView.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
+				A17245DE2B8BC11B0049F58D /* Permission.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +540,9 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Opacity Browser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -567,6 +574,9 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Opacity Browser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

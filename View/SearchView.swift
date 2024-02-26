@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
+  
+  @ObservedObject var permission: Permission
   @ObservedObject var tab: Tab
   
   @FocusState private var isTextFieldFocused: Bool
@@ -16,6 +18,7 @@ struct SearchView: View {
   @State private var isSearchHover: Bool = false
   @State private var isMoreHover: Bool = false
   @State private var isTopHover: Bool = false
+  @State private var isLocaionHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
   @State private var isMoreMenuDialog: Bool = false
@@ -57,8 +60,8 @@ struct SearchView: View {
         isBack: false,
         clickAction: {
           if tab.isForward {
-             tab.webview.goForward()
-           }
+            tab.webview.goForward()
+          }
         },
         longPressAction: {
           if tab.isForward {
@@ -89,7 +92,8 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-        tab.webview.reload()
+//        tab.webview.reload()
+        AppDelegate.shared.refreshTab()
       }
       
       VStack(spacing: 0) { }.frame(width: 6)
@@ -104,14 +108,14 @@ struct SearchView: View {
               .foregroundColor(Color("MainBlack"))
               .clipShape(RoundedRectangle(cornerRadius: 9))
               .padding(0)
-//              .offset(y: 1)
+            //              .offset(y: 1)
             
             HStack(spacing: 0) {
               HStack(spacing: 0) {
                 Image(systemName: "magnifyingglass")
                   .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
-//                  .background(Color("MainBlack"))
-//                  .clipShape(RoundedRectangle(cornerRadius: 11))
+                //                  .background(Color("MainBlack"))
+                //                  .clipShape(RoundedRectangle(cornerRadius: 11))
                   .font(.system(size: 12))
                   .foregroundColor(Color.white.opacity(0.9))
               }
@@ -130,9 +134,9 @@ struct SearchView: View {
               .font(.system(size: textSize))
               .fontWeight(.regular)
               .focused($isTextFieldFocused)
-//              .onChange(of: tab.inputURL) {
-//                self.isDomain = StringURL.checkURL(url: tab.inputURL)
-//              }
+              //              .onChange(of: tab.inputURL) {
+              //                self.isDomain = StringURL.checkURL(url: tab.inputURL)
+              //              }
               .onSubmit {
                 if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                   return
@@ -146,7 +150,7 @@ struct SearchView: View {
                 } else {
                   newURL = "https://www.google.com/search?q=\(newURL)"
                 }
-
+                
                 if(newURL != tab.originURL.absoluteString) {
                   DispatchQueue.main.async {
                     tab.isPageProgress = true
@@ -160,7 +164,7 @@ struct SearchView: View {
             }
           }
           .padding(1)
-//          .background(Color("PointJade"))
+          //          .background(Color("PointJade"))
           .background(Color("Point"))
           .clipShape(RoundedRectangle(cornerRadius: 10))
         }
@@ -177,7 +181,7 @@ struct SearchView: View {
                   if !tab.isInit && tab.isPageProgress {
                     HStack(spacing: 0) {
                       Rectangle()
-//                        .foregroundColor(Color("PointJade"))
+                      //                        .foregroundColor(Color("PointJade"))
                         .foregroundColor(Color("Point"))
                         .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
                         .animation(.linear(duration: 0.5), value: tab.pageProgress)
@@ -232,14 +236,55 @@ struct SearchView: View {
         .padding(.top, 1)
       }
       
-      Spacer()
-      
-      VStack(spacing: 0) { }
-      .frame(width: 6)
-      .onChange(of: tab.isEditSearch) { _, newValue in
-        if(tab.isInit && !isTextFieldFocused) {
-          isTextFieldFocused = true
+      if permission.isShowLocationDialog {
+        Spacer()
+        
+        VStack(spacing: 0) { }
+          .frame(width: 6)
+          .onChange(of: tab.isEditSearch) { _, newValue in
+            if(tab.isInit && !isTextFieldFocused) {
+              isTextFieldFocused = true
+            }
+          }
+        
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            Image(systemName: "location.slash")
+              .foregroundColor(Color("Icon"))
+              .font(.system(size: 14))
+              .fontWeight(.regular)
+              .offset(y: 1)
+              .onHover { inside in
+                if inside {
+                  NSCursor.arrow.set()
+                }
+              }
+          }
+          .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+          .background(isLocaionHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+          .onHover { inside in
+            withAnimation {
+              isLocaionHover = inside
+            }
+          }
+          .onTapGesture {
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
+              NSWorkspace.shared.open(url)
+            }
+          }
         }
+        .padding(.trailing, 8)
+      } else {
+        Spacer()
+        
+        VStack(spacing: 0) { }
+          .frame(width: 6)
+          .onChange(of: tab.isEditSearch) { _, newValue in
+            if(tab.isInit && !isTextFieldFocused) {
+              isTextFieldFocused = true
+            }
+          }
       }
       
       VStack(spacing: 0) {

@@ -10,6 +10,7 @@ import SwiftUI
 struct TitlebarView: View {
   @Environment(\.colorScheme) var colorScheme
 
+  @ObservedObject var permission: Permission
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   
@@ -89,7 +90,7 @@ struct TitlebarView: View {
           
           // search area
           if let activeTab = tabs.first(where: { $0.id == activeTabId }) {
-            SearchView(tab: activeTab)
+            SearchView(permission: permission, tab: activeTab)
               .frame(maxWidth: .infinity,  maxHeight: 41)
               .background(Color("MainBlack"))
           }
