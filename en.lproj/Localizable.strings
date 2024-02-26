@@ -34,3 +34,7 @@
 
 "Search.." = "Search..";
 //NSLocalizedString("", comment: "")
+
+
+"Location services are disabled in your Mac system settings" = "Location services are disabled in your Mac system settings";
+"Open Settings" = "Open Settings";

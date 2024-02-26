@@ -21,6 +21,7 @@ struct SearchView: View {
   @State private var isLocaionHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
+  @State private var isLocationDialog: Bool = false
   @State private var isMoreMenuDialog: Bool = false
   @State private var isBackDialog: Bool = false
   @State private var isForwardDialog: Bool = false
@@ -92,7 +93,6 @@ struct SearchView: View {
         }
       }
       .onTapGesture {
-//        tab.webview.reload()
         AppDelegate.shared.refreshTab()
       }
       
@@ -253,7 +253,6 @@ struct SearchView: View {
               .foregroundColor(Color("Icon"))
               .font(.system(size: 14))
               .fontWeight(.regular)
-              .offset(y: 1)
               .onHover { inside in
                 if inside {
                   NSCursor.arrow.set()
@@ -269,9 +268,10 @@ struct SearchView: View {
             }
           }
           .onTapGesture {
-            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
-              NSWorkspace.shared.open(url)
-            }
+            self.isLocationDialog.toggle()
+          }
+          .popover(isPresented: $isLocationDialog, arrowEdge: .bottom) {
+            GeoLocationDialog()
           }
         }
         .padding(.trailing, 8)
@@ -329,7 +329,7 @@ struct SearchView: View {
           self.isMoreMenuDialog.toggle()
         }
         .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
-          ListView()
+
         }
       }
       .padding(.trailing, 10)
@@ -339,14 +339,3 @@ struct SearchView: View {
   }
 }
 
-
-struct ListView: View {
-    var body: some View {
-        List {
-            Text("Item 1")
-            Text("Item 2")
-            Text("Item 3")
-        }
-        .frame(width: 200, height: 300)
-    }
-}
