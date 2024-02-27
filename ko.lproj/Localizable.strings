@@ -35,3 +35,6 @@
 
 "Location services are disabled in your Mac system settings" = "Mac 시스템 설정에서 위치 서비스가 사용 중지되었습니다.";
 "Open Settings" = "설정 열기";
+
+"Notification Permissions" = "알림 권한";
+"Notification permission granted." = "알림 권한이 허용되었습니다.";

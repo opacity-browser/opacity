@@ -9,4 +9,10 @@ import SwiftUI
 
 final class Permission: ObservableObject {
   @Published var isShowLocationDialog: Bool = false
+  @Published var isShowNotificationDialog: Bool = false
+  
+  func clearIsShowDialog() {
+    isShowLocationDialog = false
+    isShowNotificationDialog = false
+  }
 }

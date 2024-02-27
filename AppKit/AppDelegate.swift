@@ -215,7 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       }
     }
     
-    permission.isShowLocationDialog = false
+    permission.clearIsShowDialog()
   }
   
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

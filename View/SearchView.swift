@@ -19,8 +19,10 @@ struct SearchView: View {
   @State private var isMoreHover: Bool = false
   @State private var isTopHover: Bool = false
   @State private var isLocaionHover: Bool = false
+  @State private var isNotificationHover: Bool = false
   @State private var isRefreshHober: Bool = false
   
+  @State private var isNotificationDialog: Bool = false
   @State private var isLocationDialog: Bool = false
   @State private var isMoreMenuDialog: Bool = false
   @State private var isBackDialog: Bool = false
@@ -236,28 +238,42 @@ struct SearchView: View {
         .padding(.top, 1)
       }
       
-      if permission.isShowLocationDialog {
-        Spacer()
-        
-        VStack(spacing: 0) { }
-          .frame(width: 6)
-          .onChange(of: tab.isEditSearch) { _, newValue in
-            if(tab.isInit && !isTextFieldFocused) {
-              isTextFieldFocused = true
+      Spacer()
+      VStack(spacing: 0) { }.frame(width: 6)
+      
+      if permission.isShowNotificationDialog {
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            Image(systemName: "bell.slash")
+              .foregroundColor(Color("Icon"))
+              .font(.system(size: 14))
+              .fontWeight(.regular)
+          }
+          .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+          .background(isNotificationHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+          .onHover { inside in
+            withAnimation {
+              isNotificationHover = inside
             }
           }
-        
+          .onTapGesture {
+            self.isNotificationDialog.toggle()
+          }
+          .popover(isPresented: $isNotificationDialog, arrowEdge: .bottom) {
+//            GeoLocationDialog()
+          }
+        }
+        .padding(.trailing, 8)
+      }
+      
+      if permission.isShowLocationDialog {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             Image(systemName: "location.slash")
               .foregroundColor(Color("Icon"))
               .font(.system(size: 14))
               .fontWeight(.regular)
-              .onHover { inside in
-                if inside {
-                  NSCursor.arrow.set()
-                }
-              }
           }
           .frame(maxWidth: iconHeight, maxHeight: iconHeight)
           .background(isLocaionHover ? .gray.opacity(0.2) : .gray.opacity(0))
@@ -275,16 +291,6 @@ struct SearchView: View {
           }
         }
         .padding(.trailing, 8)
-      } else {
-        Spacer()
-        
-        VStack(spacing: 0) { }
-          .frame(width: 6)
-          .onChange(of: tab.isEditSearch) { _, newValue in
-            if(tab.isInit && !isTextFieldFocused) {
-              isTextFieldFocused = true
-            }
-          }
       }
       
       VStack(spacing: 0) {
@@ -333,6 +339,11 @@ struct SearchView: View {
         }
       }
       .padding(.trailing, 10)
+      .onChange(of: tab.isEditSearch) { _, newValue in
+        if(tab.isInit && !isTextFieldFocused) {
+          isTextFieldFocused = true
+        }
+      }
     }
     .frame(height: 32)
     .offset(y: -2.5)

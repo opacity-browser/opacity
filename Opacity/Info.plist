@@ -6,5 +6,7 @@
 	<array>
 		<string>Intent</string>
 	</array>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string></string>
 </dict>
 </plist>

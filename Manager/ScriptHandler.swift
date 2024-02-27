@@ -8,10 +8,15 @@
 import SwiftUI
 import WebKit
 import CoreLocation
+import UserNotifications
 
-struct OpacityScript: Codable {
-  var name: String
-  var value: String
+struct NotificationOptions: Codable {
+  var body: String
+}
+
+struct NotificationValue: Codable {
+  var title: String
+  var options: NotificationOptions?
 }
 
 class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate {
@@ -19,36 +24,49 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   var targetWebView: WKWebView?
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    if message.name == "opacityBrowser", let messageBody = message.body as? String, let webView = message.webView {
-      guard let currentURL = webView.url, let jsonData = messageBody.data(using: .utf8) else {
+    if message.name == "opacityBrowser", let messageBody = message.body as? [String: String], let webView = message.webView {
+      guard let currentURL = webView.url else {
         return
       }
       
       targetWebView = webView
       
-      do {
-        let data = try JSONDecoder().decode(OpacityScript.self, from: jsonData)
+      let scriptName = messageBody["name"] ?? ""
         
-        if currentURL.scheme == "opacity" {
-          
-        } else {
-          
+      if currentURL.scheme == "opacity" {
+        
+      } else {
+        
+      }
+      
+      if scriptName == "initGeoPositions" {
+        initGeoPositions()
+      }
+      
+      if scriptName == "showLocationSetIcon" {
+        showLocationSetIcon()
+      }
+      
+      if scriptName == "checkLocationAuthorization" {
+        checkLocationAuthorization()
+      }
+      
+      if scriptName == "notificationRequest" {
+        requestNotificationPermission()
+      }
+      
+      if scriptName == "showNotification" {
+        let scriptValue = messageBody["value"] ?? ""
+        guard let jsonData = scriptValue.data(using: .utf8) else { return }
+
+        do {
+          let data = try JSONDecoder().decode(NotificationValue.self, from: jsonData)
+          let title = data.title
+          let body = data.options?.body
+          self.showNotification(title: title, body: body)
+        } catch {
+          print("JSON parsing error : \(error)")
         }
-        
-        if data.name == "initGeoPositions" {
-          initGeoPositions()
-        }
-        
-        if data.name == "showLocationSetIcon" {
-          showLocationSetIcon()
-        }
-        
-        if data.name == "checkLocationAuthorization" {
-          checkLocationAuthorization()
-        }
-        
-      } catch {
-        print("JSON parsing error : \(error)")
       }
     }
   }
@@ -132,7 +150,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     if let webView = targetWebView {
       let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
-        window.webkit.messageHandlers.opacityBrowser.postMessage('{"name": "showLocationSetIcon", "value": ""}');
+        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
         error({
           code: 1,
           message: 'User denied Geolocation'
@@ -149,4 +167,51 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
+  
+  // notificcation
+  func requestNotificationPermission() {
+    self.checkNotificationAuthorization { enabled in
+      if !enabled {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+          if granted {
+            DispatchQueue.main.async {
+              self.showNotification(
+                title: NSLocalizedString("Notification Permissions", comment: ""),
+                body: NSLocalizedString("Notification permission granted.", comment: "")
+              )
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  func checkNotificationAuthorization(completion: @escaping (Bool) -> Void) {
+    UNUserNotificationCenter.current().getNotificationSettings { settings in
+      DispatchQueue.main.async {
+        switch settings.authorizationStatus {
+          case .authorized, .provisional:
+            completion(true)
+          case .denied:
+            completion(false)
+          case .notDetermined:
+            completion(false)
+          @unknown default:
+            completion(false)
+        }
+      }
+    }
+  }
+  
+  func showNotification(title: String, body: String? = nil) {
+    let content = UNMutableNotificationContent()
+    content.title = title
+    
+    if let paramBody = body {
+      content.body = paramBody
+    }
+    
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+    UNUserNotificationCenter.current().add(request)
+  }
 }

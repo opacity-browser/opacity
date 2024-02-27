@@ -50,7 +50,19 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.userContentController = contentController
     
     let scriptSource = """
-    window.webkit.messageHandlers.opacityBrowser.postMessage('{"name": "initGeoPositions", "value": ""}');
+    window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
+    const originalNotification = Notification;
+    class OpacityNotification {
+      static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
+      constructor(title, options) {
+        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showNotification", value: JSON.stringify({ title: title, options: options })});
+        return new originalNotification(title, options);
+      }
+    };
+    Object.defineProperty(OpacityNotification, 'permission', {
+      get: () => originalNotification.permission
+    });
+    window.Notification = OpacityNotification;
     """
     let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
     config.userContentController.addUserScript(userScript)
