@@ -31,13 +31,16 @@
 
 "Refresh" = "Refresh";
 
-
 "Search.." = "Search..";
-//NSLocalizedString("", comment: "")
-
 
 "Location services are disabled in your Mac system settings" = "Location services are disabled in your Mac system settings";
 "Open Settings" = "Open Settings";
 
 "Notification Permissions" = "Notification Permissions";
 "Notification permission granted." = "Notification permission granted.";
+
+"Do you want to allow notifications from '%@'?" = "Do you want to allow notifications from '%@'?";
+"Allow" = "Allow";
+"Deny" = "Deny";
+
+//NSLocalizedString("", comment: "")

@@ -1,20 +1,20 @@
 //
-//  ButtonStyle.swift
+//  DialogButtonCancelStyle.swift
 //  Opacity
 //
-//  Created by Falsy on 2/26/24.
+//  Created by Falsy on 2/29/24.
 //
 
 import SwiftUI
 
-struct DialogButtonStyle: ButtonStyle {
+struct DialogButtonCancelStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .foregroundColor(.white)
       .font(.system(size: 12))
       .padding(.horizontal, 15)
       .padding(.vertical, 5)
-      .background(configuration.isPressed ? Color("ButtonBGHover") : Color("ButtonBG"))
+      .background(configuration.isPressed ? Color("ButtonCancelBGHover") : Color("ButtonCancelBG"))
       .cornerRadius(5)
   }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+import SwiftData
 import CoreLocation
 import UserNotifications
 
@@ -20,16 +21,17 @@ struct NotificationValue: Codable {
 }
 
 class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate {
+  @ObservedObject var tab: Tab
   
-  var targetWebView: WKWebView?
+  init(tab: Tab) {
+    self.tab = tab
+  }
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String], let webView = message.webView {
       guard let currentURL = webView.url else {
         return
       }
-      
-      targetWebView = webView
       
       let scriptName = messageBody["name"] ?? ""
         
@@ -56,16 +58,39 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       }
       
       if scriptName == "showNotification" {
-        let scriptValue = messageBody["value"] ?? ""
-        guard let jsonData = scriptValue.data(using: .utf8) else { return }
-
-        do {
-          let data = try JSONDecoder().decode(NotificationValue.self, from: jsonData)
-          let title = data.title
-          let body = data.options?.body
-          self.showNotification(title: title, body: body)
-        } catch {
-          print("JSON parsing error : \(error)")
+        self.checkNotificationAuthorization { enabled in
+          if let host = self.tab.originURL.host, enabled == true {
+            let descriptor = FetchDescriptor<DomainNotificationPermission>(
+              predicate: #Predicate {$0.domain == host }
+            )
+            do {
+              if let domainNotification = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+                if !domainNotification.isDenied {
+                  let scriptValue = messageBody["value"] ?? ""
+                  guard let jsonData = scriptValue.data(using: .utf8) else { return }
+                  do {
+                    let data = try JSONDecoder().decode(NotificationValue.self, from: jsonData)
+                    let title = data.title
+                    let body = data.options?.body
+                    self.showNotification(title: title, body: body)
+                  } catch {
+                    print("JSON Parsing Error : \(error)")
+                  }
+                }
+                if self.tab.isNotificationDialog {
+                  withAnimation {
+                    self.tab.isNotificationDialog = false
+                  }
+                }
+              } else {
+                withAnimation {
+                  self.tab.isNotificationDialog = true
+                }
+              }
+            } catch {
+              print("Model Container Error")
+            }
+          }
         }
       }
     }
@@ -87,7 +112,9 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     switch status {
       case .authorizedWhenInUse, .authorizedAlways:
         AppDelegate.shared.locationManager.startUpdatingLocation()
-        AppDelegate.shared.permission.isShowLocationDialog = false
+        withAnimation {
+          tab.isLocationDialog = false
+        }
         break
       case .denied, .restricted:
         deniedGeolocation()
@@ -101,41 +128,39 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     guard let location = locations.first else { return }
 
     let script = """
-    navigator.geolocation.getCurrentPosition = function(success, error, options) {
-      success({
-        coords: {
-          latitude: \(location.coordinate.latitude),
-          longitude: \(location.coordinate.longitude)
-        }
-      })
-    }
+      navigator.geolocation.getCurrentPosition = function(success, error, options) {
+        success({
+          coords: {
+            latitude: \(location.coordinate.latitude),
+            longitude: \(location.coordinate.longitude)
+          }
+        })
+      }
     """
     
-    if let webView = targetWebView {
-      webView.evaluateJavaScript(script, completionHandler: nil)
-      AppDelegate.shared.locationManager.stopUpdatingLocation()
-    }
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    AppDelegate.shared.locationManager.stopUpdatingLocation()
   }
   
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-    if let webView = targetWebView {
-      let script = """
+    let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
         error({
           code: 1,
           message: 'Location retrieval failed'
         });
       };
-      """
-      webView.evaluateJavaScript(script, completionHandler: nil)
-    }
+    """
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
   }
   
   func checkLocationAuthorization() {
     switch AppDelegate.shared.locationManager.authorizationStatus {
       case .authorizedWhenInUse, .authorizedAlways:
         AppDelegate.shared.locationManager.startUpdatingLocation()
-        AppDelegate.shared.permission.isShowLocationDialog = false
+        withAnimation {
+          tab.isLocationDialog = false
+        }
         break
       case .denied, .restricted, .notDetermined:
         AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
@@ -147,8 +172,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   
 
   func deniedGeolocation() {
-    if let webView = targetWebView {
-      let script = """
+    let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
         window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
         error({
@@ -156,14 +180,13 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
           message: 'User denied Geolocation'
         });
       }
-      """
-      webView.evaluateJavaScript(script, completionHandler: nil)
-    }
+    """
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
   }
   
   func showLocationSetIcon() {
     withAnimation {
-      AppDelegate.shared.permission.isShowLocationDialog = true
+      tab.isLocationDialog = true
     }
   }
   

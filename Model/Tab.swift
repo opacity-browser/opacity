@@ -34,6 +34,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @Published var isEditSearch: Bool = true
   
+  @Published var isLocationDialog: Bool = false
+  @Published var isNotificationDialog: Bool = false
+  
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     
@@ -44,25 +47,25 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.setURLSchemeHandler(SchemeHandler(), forURLScheme: "opacity")
     
     let contentController = WKUserContentController()
-    let scriptHandler = ScriptHandler()
+    let scriptHandler = ScriptHandler(tab: self)
     AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
     config.userContentController = contentController
     
     let scriptSource = """
-    window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
-    const originalNotification = Notification;
-    class OpacityNotification {
-      static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
-      constructor(title, options) {
-        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showNotification", value: JSON.stringify({ title: title, options: options })});
-        return new originalNotification(title, options);
-      }
-    };
-    Object.defineProperty(OpacityNotification, 'permission', {
-      get: () => originalNotification.permission
-    });
-    window.Notification = OpacityNotification;
+      window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
+      const originalNotification = Notification;
+      class OpacityNotification {
+        static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
+        constructor(title, options) {
+          window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showNotification", value: JSON.stringify({ title: title, options: options })});
+          return new originalNotification(title, options);
+        }
+      };
+      Object.defineProperty(OpacityNotification, 'permission', {
+        get: () => originalNotification.permission
+      });
+      window.Notification = OpacityNotification;
     """
     let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
     config.userContentController.addUserScript(userScript)
@@ -84,6 +87,13 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     self.title = shortStringURL
   }
   
+  func clearPermission() {
+    DispatchQueue.main.async {
+      self.isLocationDialog = false
+      self.isNotificationDialog = false
+    }
+  }
+  
   func updateURLBySearch(url: URL) {
     let stringURL = String(describing: url)
     let shortStringURL = StringURL.shortURL(url: stringURL)
@@ -96,6 +106,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = shortStringURL
       self.title = shortStringURL
       self.favicon = nil
+      self.clearPermission()
     }
   }
   
@@ -110,6 +121,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = shortStringURL
       self.title = shortStringURL
       self.favicon = nil
+      self.clearPermission()
     }
   }
   

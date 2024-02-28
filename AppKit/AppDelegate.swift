@@ -7,16 +7,26 @@
 
 import SwiftUI
 import CoreLocation
+import SwiftData
 
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   static var shared: AppDelegate!
   
   private var isTerminating = false
-  var permission: Permission = Permission()
   var service: Service = Service()
   let locationManager = CLLocationManager()
 
+  var opacityModelContainer: ModelContainer = {
+    let schema = Schema([DomainNotificationPermission.self])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    do {
+      return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    } catch {
+      fatalError("Could not create ModelContainer: \(error)")
+    }
+  }()
+  
   
   func createWindow(tabId: UUID? = nil, frame: NSRect? = nil) {
     // 윈도우 사이즈 및 스타일 정의
@@ -44,13 +54,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = ContentView(tabId: tabId)
-      .environmentObject(self.permission)
       .environmentObject(self.service)
       .environmentObject(self.service.browsers[newWindowNo]!)
       .background(VisualEffectNSView())
       .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
+      .modelContainer(opacityModelContainer)
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
+    
     if isWindowCenter {
       newWindow.center()
     }
@@ -210,12 +221,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   @objc func refreshTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.service.browsers[windowNumber] {
-        target.tabs.first(where: { $0.id == target.activeTabId })?.webview.reload()
+      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }) {
+        tab.webview.reload()
+        tab.clearPermission()
       }
     }
-    
-    permission.clearIsShowDialog()
   }
   
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

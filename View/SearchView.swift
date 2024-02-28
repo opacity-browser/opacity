@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchView: View {
   @Environment(\.colorScheme) var colorScheme
   
-  @ObservedObject var permission: Permission
   @ObservedObject var tab: Tab
   
   @FocusState private var isTextFieldFocused: Bool
@@ -241,7 +240,7 @@ struct SearchView: View {
       Spacer()
       VStack(spacing: 0) { }.frame(width: 6)
       
-      if permission.isShowNotificationDialog {
+      if tab.isNotificationDialog {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             Image(systemName: "bell.slash")
@@ -261,13 +260,13 @@ struct SearchView: View {
             self.isNotificationDialog.toggle()
           }
           .popover(isPresented: $isNotificationDialog, arrowEdge: .bottom) {
-//            GeoLocationDialog()
+            NotificationDialog(tab: tab)
           }
         }
         .padding(.trailing, 8)
       }
       
-      if permission.isShowLocationDialog {
+      if tab.isLocationDialog {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             Image(systemName: "location.slash")
@@ -293,27 +292,27 @@ struct SearchView: View {
         .padding(.trailing, 8)
       }
       
-      VStack(spacing: 0) {
-        VStack(spacing: 0) {
-          Image(systemName: "arrow.up.to.line.compact")
-            .foregroundColor(Color("Icon"))
-            .font(.system(size: 14))
-            .fontWeight(.regular)
-            .offset(y: 1)
-        }
-        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-        .background(isTopHover ? .gray.opacity(0.2) : .gray.opacity(0))
-        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-        .onHover { hovering in
-          withAnimation {
-            isTopHover = hovering
-          }
-        }
-        .onTapGesture {
-          tab.webview.evaluateJavaScript("window.scrollTo(0, 0)")
-        }
-      }
-      .padding(.trailing, 8)
+//      VStack(spacing: 0) {
+//        VStack(spacing: 0) {
+//          Image(systemName: "arrow.up.to.line.compact")
+//            .foregroundColor(Color("Icon"))
+//            .font(.system(size: 14))
+//            .fontWeight(.regular)
+//            .offset(y: 1)
+//        }
+//        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+//        .background(isTopHover ? .gray.opacity(0.2) : .gray.opacity(0))
+//        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+//        .onHover { hovering in
+//          withAnimation {
+//            isTopHover = hovering
+//          }
+//        }
+//        .onTapGesture {
+//          tab.webview.evaluateJavaScript("window.scrollTo(0, 0)")
+//        }
+//      }
+//      .padding(.trailing, 8)
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {

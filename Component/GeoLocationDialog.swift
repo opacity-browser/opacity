@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct GeoLocationDialog: View {
-  
-  
-  
   var body: some View {
     VStack(spacing: 0) {
       Text(NSLocalizedString("Location services are disabled in your Mac system settings", comment: ""))

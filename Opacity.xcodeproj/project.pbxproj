@@ -29,7 +29,9 @@
 		A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54262B5BA457007020CA /* ImageLoader.swift */; };
 		A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A169200F2B2FA82200F8B4C0 /* Assets.xcassets */; };
 		A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */; };
-		A17245DE2B8BC11B0049F58D /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245DD2B8BC11B0049F58D /* Permission.swift */; };
+		A16BCAEE2B8EAC34004639F2 /* DomainNotificationPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCAED2B8EAC34004639F2 /* DomainNotificationPermission.swift */; };
+		A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCAEF2B8F7BF3004639F2 /* NotificationDialog.swift */; };
+		A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCAF12B8FC9DE004639F2 /* DialogButtonCancelStyle.swift */; };
 		A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */; };
 		A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
@@ -77,7 +79,9 @@
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Opacity/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A16920142B2FA82200F8B4C0 /* Opacity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Opacity.entitlements; path = Opacity/Opacity.entitlements; sourceTree = "<group>"; };
-		A17245DD2B8BC11B0049F58D /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
+		A16BCAED2B8EAC34004639F2 /* DomainNotificationPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainNotificationPermission.swift; sourceTree = "<group>"; };
+		A16BCAEF2B8F7BF3004639F2 /* NotificationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDialog.swift; sourceTree = "<group>"; };
+		A16BCAF12B8FC9DE004639F2 /* DialogButtonCancelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonCancelStyle.swift; sourceTree = "<group>"; };
 		A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDialog.swift; sourceTree = "<group>"; };
 		A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonStyle.swift; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -136,6 +140,7 @@
 			children = (
 				A15D54132B561BEC007020CA /* BrowserTabShape.swift */,
 				A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */,
+				A16BCAF12B8FC9DE004639F2 /* DialogButtonCancelStyle.swift */,
 			);
 			path = Shape;
 			sourceTree = "<group>";
@@ -220,7 +225,7 @@
 				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
 				A14246192B735E5F0062C516 /* Service.swift */,
 				A14246312B810D100062C516 /* HistorySite.swift */,
-				A17245DD2B8BC11B0049F58D /* Permission.swift */,
+				A16BCAED2B8EAC34004639F2 /* DomainNotificationPermission.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -237,6 +242,7 @@
 				A14246332B8132E50062C516 /* HistoryDialogItem.swift */,
 				A14246352B813A5B0062C516 /* HistoryKeyButton.swift */,
 				A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */,
+				A16BCAEF2B8F7BF3004639F2 /* NotificationDialog.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 			files = (
 				A14246302B80E3CD0062C516 /* HistoryDialog.swift in Sources */,
 				A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */,
+				A16BCAEE2B8EAC34004639F2 /* DomainNotificationPermission.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
@@ -366,6 +373,7 @@
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
+				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */,
@@ -373,6 +381,7 @@
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
+				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
@@ -384,7 +393,6 @@
 				A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
-				A17245DE2B8BC11B0049F58D /* Permission.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
