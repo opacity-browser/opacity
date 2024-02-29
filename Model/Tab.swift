@@ -36,8 +36,10 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @Published var isEditSearch: Bool = true
   
-  @Published var isLocationDialog: Bool = false
-  @Published var isNotificationDialog: Bool = false
+  @Published var isLocationDialogIcon: Bool = false
+  @Published var isLocationDetailDialog: Bool = true
+  @Published var isNotificationDialogIcon: Bool = false
+  @Published var isNotificationDetailDialog: Bool = true
   
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
@@ -58,7 +60,10 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.userContentController = contentController
     
     let scriptSource = """
+      // geolocation
       window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
+    
+      // notification
       const originalNotification = Notification;
       class OpacityNotification {
         static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
@@ -144,8 +149,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   func clearPermission() {
     DispatchQueue.main.async {
-      self.isLocationDialog = false
-      self.isNotificationDialog = false
+      self.isLocationDialogIcon = false
+      self.isNotificationDialogIcon = false
     }
   }
   

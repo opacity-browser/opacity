@@ -19,37 +19,30 @@ struct SiteOptionDialog: View {
     VStack(spacing: 0) {
       if let host = tab.originURL.host {
         if tab.isNotificationPermissionByApp {
-          HStack(spacing: 0) {
-            VStack(spacing: 0) {
-              Image(systemName: "bell")
-                .foregroundColor(Color("Icon"))
-                .font(.system(size: 14))
-                .fontWeight(.regular)
-            }
-            .padding(.trailing, 7)
-            Text(NSLocalizedString("Notification", comment: ""))
-            Spacer()
-            ToggleSwitch(isOn: $tab.isNotificationPermission)
-              .frame(width: 40, height: 20)
-              .onChange(of: tab.isNotificationPermission) { _, newValue in
-                guard let domainNotification = domainPermission.first(where: {
-                  $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
-                }) else {
-                  modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: !newValue))
-                  if newValue && tab.isNotificationDialog {
+          if let domainNotification = domainPermission.first(where: {
+            $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
+          }) {
+            HStack(spacing: 0) {
+              VStack(spacing: 0) {
+                Image(systemName: "bell")
+                  .foregroundColor(Color("Icon"))
+                  .font(.system(size: 14))
+                  .fontWeight(.regular)
+              }
+              .padding(.trailing, 7)
+              Text(NSLocalizedString("Notification", comment: ""))
+              Spacer()
+              ToggleSwitch(isOn: $tab.isNotificationPermission)
+                .frame(width: 40, height: 20)
+                .onChange(of: tab.isNotificationPermission) { _, newValue in
+                  domainNotification.isDenied = !newValue
+                  if newValue && tab.isNotificationDialogIcon {
                     withAnimation {
-                      tab.isNotificationDialog = false
+                      tab.isNotificationDialogIcon = false
                     }
                   }
-                  return
                 }
-                domainNotification.isDenied = !newValue
-                if newValue && tab.isNotificationDialog {
-                  withAnimation {
-                    tab.isNotificationDialog = false
-                  }
-                }
-              }
+            }
           }
         }
       }

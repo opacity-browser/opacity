@@ -28,12 +28,14 @@ struct NotificationDialog: View {
             $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
           }) else {
             modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: false))
-            tab.isNotificationDialog = false
+            withAnimation {
+              tab.isNotificationDialogIcon = false
+            }
             return
           }
           withAnimation {
             domainNotification.isDenied = false
-            tab.isNotificationDialog = false
+            tab.isNotificationDialogIcon = false
           }
         }
         .buttonStyle(DialogButtonStyle())
@@ -43,12 +45,14 @@ struct NotificationDialog: View {
             $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
           }) else {
             modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: true))
-            tab.isNotificationDialog = false
+            withAnimation {
+              tab.isNotificationDialogIcon = false
+            }
             return
           }
           withAnimation {
             domainNotification.isDenied = true
-            tab.isNotificationDialog = false
+            tab.isNotificationDialogIcon = false
           }
         }
         .buttonStyle(DialogButtonCancelStyle())

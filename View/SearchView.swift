@@ -20,8 +20,6 @@ struct SearchView: View {
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
   
-  @State private var isNotificationDialog: Bool = false
-  @State private var isLocationDialog: Bool = false
   @State private var isMoreMenuDialog: Bool = false
   @State private var isSiteDialog: Bool = false
   
@@ -189,7 +187,7 @@ struct SearchView: View {
       Spacer()
       VStack(spacing: 0) { }.frame(width: 6)
       
-      if tab.isNotificationDialog {
+      if tab.isNotificationDialogIcon {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             Image(systemName: "bell.slash")
@@ -206,16 +204,16 @@ struct SearchView: View {
             }
           }
           .onTapGesture {
-            self.isNotificationDialog.toggle()
+            tab.isNotificationDetailDialog.toggle()
           }
-          .popover(isPresented: $isNotificationDialog, arrowEdge: .bottom) {
+          .popover(isPresented: $tab.isNotificationDetailDialog, arrowEdge: .bottom) {
             NotificationDialog(tab: tab)
           }
         }
         .padding(.trailing, 8)
       }
       
-      if tab.isLocationDialog {
+      if tab.isLocationDialogIcon {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             Image(systemName: "location.slash")
@@ -232,9 +230,9 @@ struct SearchView: View {
             }
           }
           .onTapGesture {
-            self.isLocationDialog.toggle()
+            tab.isLocationDetailDialog.toggle()
           }
-          .popover(isPresented: $isLocationDialog, arrowEdge: .bottom) {
+          .popover(isPresented: $tab.isLocationDetailDialog, arrowEdge: .bottom) {
             GeoLocationDialog()
           }
         }

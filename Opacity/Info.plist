@@ -7,6 +7,6 @@
 		<string>Intent</string>
 	</array>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string></string>
+	<string>This permission is required to provide notifications in the web service.</string>
 </dict>
 </plist>

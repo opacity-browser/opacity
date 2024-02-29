@@ -10,6 +10,7 @@ import WebKit
 import SwiftData
 import CoreLocation
 import UserNotifications
+import AVFoundation
 
 struct NotificationOptions: Codable {
   var body: String
@@ -49,10 +50,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         showLocationSetIcon()
       }
       
-      if scriptName == "checkLocationAuthorization" {
-        checkLocationAuthorization()
-      }
-      
       if scriptName == "notificationRequest" {
         requestNotificationPermission()
       }
@@ -78,14 +75,15 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
                     print("JSON Parsing Error : \(error)")
                   }
                 }
-                if self.tab.isNotificationDialog {
+                if self.tab.isNotificationDialogIcon {
                   withAnimation {
-                    self.tab.isNotificationDialog = false
+                    self.tab.isNotificationDialogIcon = false
                   }
                 }
               } else {
                 withAnimation {
-                  self.tab.isNotificationDialog = true
+                  self.tab.isNotificationDetailDialog = true
+                  self.tab.isNotificationDialogIcon = true
                 }
               }
             } catch {
@@ -94,6 +92,19 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
           }
         }
       }
+    }
+  }
+  
+  func checkCameraAuthorization(completion: @escaping (Bool) -> Void) {
+    switch AVCaptureDevice.authorizationStatus(for: .video) {
+      case .authorized:
+        completion(true)
+      case .notDetermined:
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+          completion(granted)
+        }
+      default:
+        completion(false)
     }
   }
   
@@ -114,7 +125,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       case .authorizedWhenInUse, .authorizedAlways:
         AppDelegate.shared.locationManager.startUpdatingLocation()
         withAnimation {
-          tab.isLocationDialog = false
+          tab.isLocationDialogIcon = false
         }
         break
       case .denied, .restricted:
@@ -154,48 +165,49 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     """
     tab.webview.evaluateJavaScript(script, completionHandler: nil)
   }
-  
-  func checkLocationAuthorization() {
-    switch AppDelegate.shared.locationManager.authorizationStatus {
-      case .authorizedWhenInUse, .authorizedAlways:
-        AppDelegate.shared.locationManager.startUpdatingLocation()
-        withAnimation {
-          tab.isLocationDialog = false
-        }
-        break
-      case .denied, .restricted, .notDetermined:
-        AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
-        showLocationSetIcon()
-        break
-      @unknown default: break
-    }
-  }
-  
 
   func deniedGeolocation() {
     let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
-        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
         error({
           code: 1,
-          message: 'User denied Geolocation'
+          message: 'User Denied Geolocation'
         });
+        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
       }
     """
     tab.webview.evaluateJavaScript(script, completionHandler: nil)
   }
   
   func showLocationSetIcon() {
+    AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
     withAnimation {
-      tab.isLocationDialog = true
+      tab.isLocationDetailDialog = true
+      tab.isLocationDialogIcon = true
     }
   }
-  
   
   // notificcation
   func requestNotificationPermission() {
     self.checkNotificationAuthorization { enabled in
-      if !enabled {
+      if let host = self.tab.originURL.host, enabled == true {
+        let rawType = DomainPermissionType.notification.rawValue
+        let descriptor = FetchDescriptor<DomainPermission>(
+          predicate: #Predicate { $0.domain == host && $0.permission == rawType }
+        )
+
+        do {
+          guard let _ = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first else {
+            withAnimation {
+              self.tab.isNotificationDetailDialog = true
+              self.tab.isNotificationDialogIcon = true
+            }
+            return
+          }
+        } catch {
+          print("Model Container Error")
+        }
+      } else {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
           if granted {
             DispatchQueue.main.async {

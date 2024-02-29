@@ -575,6 +575,7 @@
 				INFOPLIST_FILE = Opacity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Opacity Browser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This permission is required to provide services using cameras such as web cams in web services.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
@@ -609,6 +610,7 @@
 				INFOPLIST_FILE = Opacity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Opacity Browser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This permission is required to provide services using cameras such as web cams in web services.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
