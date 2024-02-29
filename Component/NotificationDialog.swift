@@ -10,7 +10,7 @@ import SwiftData
 
 struct NotificationDialog: View {
   @Environment(\.modelContext) var modelContext
-  @Query var domainNotificationPermission: [DomainNotificationPermission]
+  @Query var domainPermission: [DomainPermission]
   
   @ObservedObject var tab: Tab
   
@@ -24,8 +24,10 @@ struct NotificationDialog: View {
       
       HStack(spacing: 0) {
         Button(NSLocalizedString("Allow", comment: "")) {
-          guard let domainNotification = self.domainNotificationPermission.first(where: {$0.domain == host }) else {
-            modelContext.insert(DomainNotificationPermission(domain: host, status: false))
+          guard let domainNotification = self.domainPermission.first(where: {
+            $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
+          }) else {
+            modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: false))
             tab.isNotificationDialog = false
             return
           }
@@ -37,8 +39,10 @@ struct NotificationDialog: View {
         .buttonStyle(DialogButtonStyle())
         VStack(spacing: 0) { }.frame(width: 10)
         Button(NSLocalizedString("Deny", comment: "")) {
-          guard let domainNotification = self.domainNotificationPermission.first(where: {$0.domain == host }) else {
-            modelContext.insert(DomainNotificationPermission(domain: host, status: true))
+          guard let domainNotification = self.domainPermission.first(where: {
+            $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
+          }) else {
+            modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: true))
             tab.isNotificationDialog = false
             return
           }

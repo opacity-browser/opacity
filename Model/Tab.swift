@@ -7,6 +7,8 @@
 
 import SwiftUI
 import WebKit
+import SwiftData
+import UserNotifications
 
 final class Tab: ObservableObject, Identifiable, Equatable {
   var id = UUID()
@@ -36,6 +38,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @Published var isLocationDialog: Bool = false
   @Published var isNotificationDialog: Bool = false
+  
+  @Published var isNotificationPermissionByApp: Bool = false
+  @Published var isNotificationPermission: Bool = false
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
@@ -85,6 +90,56 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     self.inputURL = stringURL
     self.printURL = shortStringURL
     self.title = shortStringURL
+    DispatchQueue.main.async {
+      self.setDomainPermission(url)
+      print(self.isNotificationPermission)
+    }
+  }
+  
+  @MainActor func setDomainPermission(_ url: URL) {
+    self.checkNotificationAuthorization { enabled in
+      print(enabled)
+      if enabled {
+        self.isNotificationPermissionByApp = true
+        let host: String = url.host!
+        let descriptor = FetchDescriptor<DomainPermission>(
+          predicate: #Predicate { $0.domain == host }
+        )
+        do {
+          if let domainNotification = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+            switch domainNotification.permission {
+              case DomainPermissionType.notification.rawValue:
+                self.isNotificationPermission = !domainNotification.isDenied
+              default:
+                return
+            }
+          } else {
+            self.isNotificationPermission = false
+          }
+        } catch {
+          print("Model Container Error")
+        }
+      } else {
+        self.isNotificationPermissionByApp = false
+      }
+    }
+  }
+  
+  func checkNotificationAuthorization(completion: @escaping (Bool) -> Void) {
+    UNUserNotificationCenter.current().getNotificationSettings { settings in
+      DispatchQueue.main.async {
+        switch settings.authorizationStatus {
+          case .authorized, .provisional:
+            completion(true)
+          case .denied:
+            completion(false)
+          case .notDetermined:
+            completion(false)
+          @unknown default:
+            completion(false)
+        }
+      }
+    }
   }
   
   func clearPermission() {
@@ -107,6 +162,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.title = shortStringURL
       self.favicon = nil
       self.clearPermission()
+      self.setDomainPermission(url)
     }
   }
   
@@ -122,6 +178,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.title = shortStringURL
       self.favicon = nil
       self.clearPermission()
+      self.setDomainPermission(url)
     }
   }
   

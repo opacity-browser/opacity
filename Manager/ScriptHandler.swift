@@ -60,8 +60,9 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       if scriptName == "showNotification" {
         self.checkNotificationAuthorization { enabled in
           if let host = self.tab.originURL.host, enabled == true {
-            let descriptor = FetchDescriptor<DomainNotificationPermission>(
-              predicate: #Predicate {$0.domain == host }
+            let rawType = DomainPermissionType.notification.rawValue
+            let descriptor = FetchDescriptor<DomainPermission>(
+              predicate: #Predicate { $0.domain == host && $0.permission == rawType }
             )
             do {
               if let domainNotification = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {

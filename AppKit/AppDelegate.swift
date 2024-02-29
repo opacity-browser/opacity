@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
   let locationManager = CLLocationManager()
 
   var opacityModelContainer: ModelContainer = {
-    let schema = Schema([DomainNotificationPermission.self])
+    let schema = Schema([DomainPermission.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       return try ModelContainer(for: schema, configurations: [modelConfiguration])

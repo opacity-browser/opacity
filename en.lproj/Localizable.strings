@@ -43,4 +43,5 @@
 "Allow" = "Allow";
 "Deny" = "Deny";
 
+"Notification" = "Notification";
 //NSLocalizedString("", comment: "")

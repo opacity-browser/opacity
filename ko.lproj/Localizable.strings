@@ -42,3 +42,5 @@
 "Do you want to allow notifications from '%@'?" = "'%@'의 알림을 허용하시겠습니까?";
 "Allow" = "허용";
 "Deny" = "거부";
+
+"Notification" = "알림";
