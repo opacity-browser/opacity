@@ -7,6 +7,8 @@
 
 import SwiftUI
 import WebKit
+import SwiftData
+import UserNotifications
 
 final class Tab: ObservableObject, Identifiable, Equatable {
   var id = UUID()
@@ -34,6 +36,12 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @Published var isEditSearch: Bool = true
   
+  @Published var isLocationDialog: Bool = false
+  @Published var isNotificationDialog: Bool = false
+  
+  @Published var isNotificationPermissionByApp: Bool = false
+  @Published var isNotificationPermission: Bool = false
+  
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     
@@ -44,13 +52,25 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     config.setURLSchemeHandler(SchemeHandler(), forURLScheme: "opacity")
     
     let contentController = WKUserContentController()
-    let scriptHandler = ScriptHandler()
+    let scriptHandler = ScriptHandler(tab: self)
     AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
     config.userContentController = contentController
     
     let scriptSource = """
-    window.webkit.messageHandlers.opacityBrowser.postMessage('{"name": "initGeoPositions", "value": ""}');
+      window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
+      const originalNotification = Notification;
+      class OpacityNotification {
+        static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
+        constructor(title, options) {
+          window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showNotification", value: JSON.stringify({ title: title, options: options })});
+          return new originalNotification(title, options);
+        }
+      };
+      Object.defineProperty(OpacityNotification, 'permission', {
+        get: () => originalNotification.permission
+      });
+      window.Notification = OpacityNotification;
     """
     let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
     config.userContentController.addUserScript(userScript)
@@ -70,6 +90,63 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     self.inputURL = stringURL
     self.printURL = shortStringURL
     self.title = shortStringURL
+    DispatchQueue.main.async {
+      self.setDomainPermission(url)
+      print(self.isNotificationPermission)
+    }
+  }
+  
+  @MainActor func setDomainPermission(_ url: URL) {
+    self.checkNotificationAuthorization { enabled in
+      print(enabled)
+      if enabled {
+        self.isNotificationPermissionByApp = true
+        let host: String = url.host!
+        let descriptor = FetchDescriptor<DomainPermission>(
+          predicate: #Predicate { $0.domain == host }
+        )
+        do {
+          if let domainNotification = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+            switch domainNotification.permission {
+              case DomainPermissionType.notification.rawValue:
+                self.isNotificationPermission = !domainNotification.isDenied
+              default:
+                return
+            }
+          } else {
+            self.isNotificationPermission = false
+          }
+        } catch {
+          print("Model Container Error")
+        }
+      } else {
+        self.isNotificationPermissionByApp = false
+      }
+    }
+  }
+  
+  func checkNotificationAuthorization(completion: @escaping (Bool) -> Void) {
+    UNUserNotificationCenter.current().getNotificationSettings { settings in
+      DispatchQueue.main.async {
+        switch settings.authorizationStatus {
+          case .authorized, .provisional:
+            completion(true)
+          case .denied:
+            completion(false)
+          case .notDetermined:
+            completion(false)
+          @unknown default:
+            completion(false)
+        }
+      }
+    }
+  }
+  
+  func clearPermission() {
+    DispatchQueue.main.async {
+      self.isLocationDialog = false
+      self.isNotificationDialog = false
+    }
   }
   
   func updateURLBySearch(url: URL) {
@@ -84,6 +161,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = shortStringURL
       self.title = shortStringURL
       self.favicon = nil
+      self.clearPermission()
+      self.setDomainPermission(url)
     }
   }
   
@@ -98,6 +177,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = shortStringURL
       self.title = shortStringURL
       self.favicon = nil
+      self.clearPermission()
+      self.setDomainPermission(url)
     }
   }
   

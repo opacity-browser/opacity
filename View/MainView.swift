@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainView: View {
   @ObservedObject var browser: Browser
-  @State private var snapshotIndex: Double = 0
 
   var body: some View {
     VStack(spacing: 0) {
