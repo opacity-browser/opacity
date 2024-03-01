@@ -36,7 +36,8 @@ struct TabAreaNSView: NSViewRepresentable {
     containerView.moveTabArea = moveTabArea
     
     let hostingView = NSHostingView(rootView: VStack(spacing: 0) { }
-      .frame(maxWidth: .infinity, maxHeight: .infinity))
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+    )
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)

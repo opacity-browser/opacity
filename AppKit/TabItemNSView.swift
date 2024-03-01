@@ -51,7 +51,7 @@ struct TabItemNSView: NSViewRepresentable {
     NSLayoutConstraint.activate([
       hostingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
       hostingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-      hostingView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: -20),
+      hostingView.topAnchor.constraint(equalTo: containerView.topAnchor),
       hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
     ])
     
