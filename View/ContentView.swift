@@ -5,33 +5,58 @@ struct ContentView: View {
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
   
-  
   var tabId: UUID?
-
+  var width: CGFloat
+  
+  @State private var windowWidth: CGFloat?
   @State private var isMoreTabDialog = false
   @State private var isAddHover: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
-      if browser.tabs.count > 0, let _ = browser.activeTabId {
-        TitlebarView(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
-        MainView(browser: browser)
-      }
-    }
-    .toolbar {
-      ToolbarItemGroup(placement: .primaryAction) {
-        Spacer()
-        Button(action: {
-          self.isMoreTabDialog.toggle()
-        }) {
-          Image(systemName: "rectangle.stack")
-            .popover(isPresented: $isMoreTabDialog, arrowEdge: .bottom) {
-              TabDialog(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
+      GeometryReader { geometry in
+        if browser.tabs.count > 0, let activeTabId = browser.activeTabId {
+          VStack(spacing: 0) {
+            // search area
+            Rectangle()
+              .frame(height: 4)
+              .foregroundColor(Color("MainBlack"))
+            if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
+              SearchView(tab: activeTab)
+                .frame(maxWidth: .infinity,  maxHeight: 41)
+                .background(Color("MainBlack"))
             }
+            MainView(browser: browser)
+              .onChange(of: geometry.size) { _, newValue in
+                windowWidth = geometry.size.width
+              }
+              .onAppear {
+                windowWidth = geometry.size.width
+              }
+          }
         }
       }
     }
-    .ignoresSafeArea(.container, edges: .top)
+    .toolbar {
+      if let width = windowWidth {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            TitlebarView(width: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
+            Spacer()
+            Button(action: {
+              self.isMoreTabDialog.toggle()
+            }) {
+              Image(systemName: "rectangle.stack")
+                .popover(isPresented: $isMoreTabDialog, arrowEdge: .bottom) {
+                  TabDialog(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
+                }
+            }
+          }
+          .frame(width: width - 90, height: 38)
+        }
+      }
+    }
+//    .ignoresSafeArea(.container, edges: .top)
     .onAppear {
       guard let baseTabId = tabId else {
         browser.initTab()

@@ -43,6 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       windowRect = paramFrame
     }
     
+    print(windowRect)
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)
@@ -53,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     self.service.browsers[newWindowNo] = newBrowser
     
     // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
-    let contentView = ContentView(tabId: tabId)
+    let contentView = ContentView(tabId: tabId, width: windowRect.size.width)
       .environmentObject(self.service)
       .environmentObject(self.service.browsers[newWindowNo]!)
       .background(VisualEffectNSView())
