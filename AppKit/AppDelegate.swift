@@ -43,7 +43,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       windowRect = paramFrame
     }
     
-    print(windowRect)
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)

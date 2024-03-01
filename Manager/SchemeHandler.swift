@@ -28,16 +28,33 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
     }
   }
   
+  func appendIndexHtmlNeeded(_ url: URL) -> URL {
+    let lastPathComponent = url.lastPathComponent
+    let fileExtension = lastPathComponent.components(separatedBy: ".").last
+    if fileExtension == nil || fileExtension!.isEmpty {
+      var newPath = url.absoluteString
+      if !newPath.hasSuffix("/") {
+        newPath += "/"
+      }
+      newPath += "index.html"
+      
+      return URL(string: newPath) ?? url
+    }
+    return url
+  }
+  
   func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-    guard let url = urlSchemeTask.request.url,
-        let scheme = url.scheme,
+    guard let requestUrl = urlSchemeTask.request.url,
+        let host = requestUrl.host,
+        let scheme = requestUrl.scheme,
         scheme == "opacity",
         let resourcePath = Bundle.main.resourcePath else {
       urlSchemeTask.didFailWithError(NSError(domain: "Invalid URL or Scheme", code: 404, userInfo: nil))
       return
     }
     
-    let filePath = url.host! + "/" + url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    let url = appendIndexHtmlNeeded(requestUrl)
+    let filePath = host + "/" + url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
     let fullPath = (resourcePath as NSString).appendingPathComponent(filePath)
     
     if FileManager.default.fileExists(atPath: fullPath) {

@@ -244,7 +244,7 @@ struct WebNSView: NSViewRepresentable {
       if (error as NSError).code == NSURLErrorCancelled {
           return // 오류 무시
       }
-      
+      print("didfailProvisional")
       if let urlError = error as? URLError {
         if let failingURL = urlError.userInfo[NSURLErrorFailingURLErrorKey] as? URL {
           // 실패 도메인 캐시

@@ -56,7 +56,6 @@ struct ContentView: View {
         }
       }
     }
-//    .ignoresSafeArea(.container, edges: .top)
     .onAppear {
       guard let baseTabId = tabId else {
         browser.initTab()
