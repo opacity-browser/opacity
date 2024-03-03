@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><title>Page not found</title><style>* {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        min-height: 100%;
+        vertical-align: middle;
+        align-items: center;
+        font-family: sans-serif;
+        background: transparent;
+      }
+
+      .wrap {
+        margin: 0 auto;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 40px 50px 40px 40px;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        color: #fff;
+      }
+
+      .message-box {
+        max-width: 400px;
+      }
+
+      .message-box h1 {
+        margin: 0 0 15px 0;
+        font-size: 28px;
+      }
+
+      .message-box p {
+        margin: 0 0 30px 0;
+        font-size: 15px;
+        line-height: 20px;
+        padding-left: 1px;
+      }
+
+      .message-box button {
+        border: 0;
+        background: rgb(45, 112, 204);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .message-box button:hover {
+        background: rgb(68, 155, 234);
+      }</style><script>window.opacityPage = {}
+      window.opacityPage.initPageData = (pageData) => {
+        const button = document.getElementById('refresh-btn')
+
+        document.documentElement.lang = pageData.lang
+        document.head.getElementsByTagName("title")[0].innerHTML = pageData.headTitle
+        document.getElementById('title').innerText = pageData.title
+        document.getElementById('message').innerText = pageData.message
+        button.innerText = pageData.refreshBtn
+        
+        button.addEventListener('click', () => {
+          window.location.replace(pageData.href)
+        })
+      }</script></head><body><div class="wrap"><div class="content"><div class="image"></div><div class="message-box"><h1 id="title">Page not found</h1><p id="message">The server IP address for '' could not be found.</p><button id="refresh-btn">Refresh</button></div></div></div></body></html>

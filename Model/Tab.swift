@@ -57,6 +57,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     let scriptHandler = ScriptHandler(tab: self)
     AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
+    
     config.userContentController = contentController
     
     let scriptSource = """
@@ -84,7 +85,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     preferences.setValue(true, forKey: "developerExtrasEnabled")
     config.preferences = preferences
     
-    return WKWebView(frame: .zero, configuration: config)
+    let webView = WKWebView(frame: .zero, configuration: config)
+    return webView
   }()
   
   init(url: URL = DEFAULT_URL) {
