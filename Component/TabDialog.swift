@@ -42,7 +42,7 @@ struct TabDialog: View {
         }
         .frame(height: 30)
         .padding(2)
-        .background(Color("MainBlack"))
+        .background(Color("SearchBarBG"))
         .clipShape(RoundedRectangle(cornerRadius: 10))
       }
       .padding(10)

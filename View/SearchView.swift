@@ -53,28 +53,28 @@ struct SearchView: View {
           ZStack {
             Rectangle()
               .frame(maxWidth: .infinity, maxHeight: inputHeight)
-              .foregroundColor(Color("MainBlack"))
-              .clipShape(RoundedRectangle(cornerRadius: 9))
+              .foregroundColor(Color("InputBG"))
+              .clipShape(RoundedRectangle(cornerRadius: 15))
               .padding(0)
             
             HStack(spacing: 0) {
               HStack(spacing: 0) {
                 Image(systemName: "magnifyingglass")
-                  .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
-                  .font(.system(size: 12))
-                  .foregroundColor(Color.white.opacity(0.9))
+                  .frame(maxWidth: 28, maxHeight: 28, alignment: .center)
+                  .font(.system(size: 15))
+                  .foregroundColor(Color("Icon"))
               }
-              .padding(.top, 1)
-              .padding(.leading, 4)
+//              .padding(.top, 1)
+              .padding(.leading, 5)
               
               TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                 if !isEdit {
                   tab.isEditSearch = false
                 }
               })
-              .foregroundColor(.white.opacity(0.85))
-              .padding(.leading, 5)
-              .frame(maxHeight: inputHeight)
+              .foregroundColor(Color("UIText").opacity(0.85))
+              .padding(.leading, 7)
+              .frame(height: 32)
               .textFieldStyle(PlainTextFieldStyle())
               .font(.system(size: textSize))
               .fontWeight(.regular)
@@ -106,8 +106,11 @@ struct SearchView: View {
             }
           }
           .padding(1)
-          .background(Color("Point"))
-          .clipShape(RoundedRectangle(cornerRadius: 10))
+//          .background(Color("UIBorder"))
+          .background(Color("InputBG"))
+//          .background(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+          .clipShape(RoundedRectangle(cornerRadius: 16))
+          .offset(y: -1)
         }
         .padding(.top, 1)
         .padding(.leading, 1)
@@ -115,66 +118,74 @@ struct SearchView: View {
         HStack(spacing: 0) {
           GeometryReader { geometry in
             ZStack {
-              Rectangle()
-                .frame(maxWidth: .infinity, maxHeight: inputHeight)
-                .foregroundColor(isSearchHover ? .gray.opacity(0.3) : .gray.opacity(0.15))
-                .overlay {
-                  if !tab.isInit && tab.isPageProgress {
-                    HStack(spacing: 0) {
-                      Rectangle()
-                        .foregroundColor(Color("Point"))
-                        .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
-                        .animation(.linear(duration: 0.5), value: tab.pageProgress)
-                      if tab.pageProgress < 1.0 {
-                        Spacer()
+              ZStack {
+                Rectangle()
+                  .frame(maxWidth: .infinity, maxHeight: inputHeight)
+                  .foregroundColor(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+                  .overlay {
+                    if !tab.isInit && tab.isPageProgress {
+                      HStack(spacing: 0) {
+                        Rectangle()
+                          .foregroundColor(Color("Point"))
+                          .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
+                          .animation(.linear(duration: 0.5), value: tab.pageProgress)
+                        if tab.pageProgress < 1.0 {
+                          Spacer()
+                        }
                       }
+                      .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .bottom)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .bottom)
                   }
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-              
-              HStack(spacing: 0) {
-                Button {
-                  self.isSiteDialog.toggle()
-                } label: {
-                  HStack(spacing: 0) {
-                    Image(systemName: "lock.shield")
-                      .frame(maxWidth: 22, maxHeight: 22, alignment: .center)
-                      .background(Color("MainBlack"))
-                      .clipShape(RoundedRectangle(cornerRadius: 11))
-                      .font(.system(size: 13))
-                      .foregroundColor(Color.white.opacity(0.9))
-                  }
-                  .padding(.leading, 5)
-                  .padding(.top, 1)
-                  .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-                    SiteOptionDialog(tab: tab)
-                  }
-                }
-                .buttonStyle(.plain)
+                  .clipShape(RoundedRectangle(cornerRadius: 15))
                 
-                Text(tab.printURL)
-                  .frame(minWidth: 200, maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-                  .foregroundColor(.white.opacity(0.85))
-                  .padding(.top, 5)
-                  .padding(.bottom, 5)
-                  .padding(.leading, 5)
-                  .padding(.trailing, 10)
-                  .font(.system(size: textSize))
-                  .fontWeight(.regular)
-                  .opacity(0.9)
-                  .lineLimit(1)
-                  .truncationMode(.tail)
+                HStack(spacing: 0) {
+                  Button {
+                    self.isSiteDialog.toggle()
+                  } label: {
+                    HStack(spacing: 0) {
+                      Image(systemName: "lock.shield")
+                        .frame(maxWidth: 28, maxHeight: 28, alignment: .center)
+                        .background(Color("SearchBarBG"))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .font(.system(size: 15))
+                        .foregroundColor(Color("Icon"))
+                    }
+                    .padding(.leading, 3)
+//                    .padding(.top, 1)
+                    .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
+                      SiteOptionDialog(tab: tab)
+                    }
+                  }
+                  .buttonStyle(.plain)
+                  
+                  Text(tab.printURL)
+                    .frame(minWidth: 200, maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                    .foregroundColor(Color("UIText").opacity(0.85))
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .padding(.leading, 7)
+                    .padding(.trailing, 10)
+                    .font(.system(size: textSize))
+                    .fontWeight(.regular)
+                    .opacity(0.9)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                }
               }
+              .frame(height: 32)
+              .padding(1)
+//              .background(isSearchHover ? Color("InputBGHover") : Color("UIBorder"))
+              .background(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+              .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+            .offset(y: 0.5)
             .onTapGesture {
               tab.isEditSearch = true
               isTextFieldFocused = true
             }
             .onHover { hovering in
-              withAnimation {
+              withAnimation(.easeIn(duration: 0.2)) {
                 isSearchHover = hovering
               }
             }
@@ -283,6 +294,7 @@ struct SearchView: View {
         .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
 
         }
+        .offset(y: -1)
       }
       .padding(.trailing, 10)
       .onChange(of: tab.isEditSearch) { _, newValue in
@@ -291,8 +303,8 @@ struct SearchView: View {
         }
       }
     }
-    .frame(height: 32)
-    .offset(y: -2.5)
+    .frame(height: 36)
+    .offset(y: -1)
   }
 }
 

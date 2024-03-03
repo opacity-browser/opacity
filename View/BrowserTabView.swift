@@ -37,10 +37,16 @@ struct BrowserTabView: View {
       GeometryReader { geometry in
         ZStack {
           Rectangle()
-            .frame(maxWidth: 220, maxHeight: 33, alignment: .leading)
-            .foregroundColor(Color("MainBlack").opacity(isActive ? 1 : 0))
+            .frame(maxWidth: 220, maxHeight: 34.5, alignment: .leading)
+            .foregroundColor(Color("UIBorder").opacity(isActive ? 1 : 0))
             .clipShape((BrowserTabShape(cornerRadius: 10)))
-            .offset(y: 3)
+            .offset(y: 1.5)
+            .animation(.linear(duration: 0.15), value: activeTabId)
+          Rectangle()
+            .frame(maxWidth: 218, maxHeight: 34.5, alignment: .leading)
+            .foregroundColor(Color("SearchBarBG").opacity(isActive ? 1 : 0))
+            .clipShape((BrowserTabShape(cornerRadius: 10)))
+            .offset(y: 2.5)
             .animation(.linear(duration: 0.15), value: activeTabId)
           
           ZStack {
@@ -48,6 +54,7 @@ struct BrowserTabView: View {
             
             } label: {
               TabItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation)
+                .frame(maxWidth: 218)
             }
             .buttonStyle(StaticColorButtonStyle())
             .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -66,7 +73,7 @@ struct BrowserTabView: View {
                     if isCloseHover {
                       Rectangle()
                         .frame(width: 16, height: 16)
-                        .foregroundColor(isActive ? .gray.opacity(0.2) : .black.opacity(0.2))
+                        .foregroundColor(.gray.opacity(0.2))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                     }
                     Image(systemName: "xmark")

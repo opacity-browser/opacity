@@ -46,7 +46,7 @@ struct HistoryDialogItem: View {
       .onHover { hovering in
         isHistoryHover = hovering
       }
-      .background(Color("MainBlack").opacity(isHistoryHover ? 0.5 : 0))
+      .background(Color("SearchBarBG").opacity(isHistoryHover ? 0.5 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 5))
       .onTapGesture {
         tab.webview.go(to: item)
