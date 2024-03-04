@@ -127,41 +127,42 @@ struct WebNSView: NSViewRepresentable {
       }
       
       if WebviewError.share.isError {
+        let headTitle = parent.tab.printURL
+        let href = parent.tab.originURL
+        let refreshBtn = NSLocalizedString("Refresh", comment: "")
+        var title = ""
+        var message = ""
+        
         switch WebviewError.share.errorType {
           case .notFindHost:
-            let title = NSLocalizedString("Page not found", comment: "")
-            let message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), parent.tab.printURL)
-            let href = parent.tab.originURL
-            let refreshBtn = NSLocalizedString("Refresh", comment: "")
-            
-            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
-            webView.evaluateJavaScript("setErrorPageString()")
+            title = NSLocalizedString("Page not found", comment: "")
+            message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), parent.tab.printURL)
+            break
           case .notConnectHost:
-            let title = NSLocalizedString("Unable to connect to site", comment: "")
-            let message = NSLocalizedString("Connection has been reset.", comment: "")
-            let href = parent.tab.originURL
-            let refreshBtn = NSLocalizedString("Refresh", comment: "")
-            
-            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
-            webView.evaluateJavaScript("setErrorPageString()")
+            title = NSLocalizedString("Unable to connect to site", comment: "")
+            message = NSLocalizedString("Connection has been reset.", comment: "")
+            break
           case .notConnectInternet:
-            let title = NSLocalizedString("No internet connection", comment: "")
-            let message = NSLocalizedString("There is no internet connection.", comment: "")
-            let href = parent.tab.originURL
-            let refreshBtn = NSLocalizedString("Refresh", comment: "")
-            
-            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
-            webView.evaluateJavaScript("setErrorPageString()")
+            title = NSLocalizedString("No internet connection", comment: "")
+            message = NSLocalizedString("There is no internet connection.", comment: "")
+            break
           case .unkown:
-            let title = NSLocalizedString("Unknown error", comment: "")
-            let message = NSLocalizedString("An unknown error occurred.", comment: "")
-            let href = parent.tab.originURL
-            let refreshBtn = NSLocalizedString("Refresh", comment: "")
-            
-            webView.evaluateJavaScript("ErrorController.setPageData({ href: '\(href)', title: '\(title)', refreshBtn: '\(refreshBtn)', message: '\(message)'})")
-            webView.evaluateJavaScript("setErrorPageString()")
+            title = NSLocalizedString("Unknown error", comment: "")
+            message = NSLocalizedString("An unknown error occurred.", comment: "")
+            break
           case .noError:
             break
+        }
+        
+        if WebviewError.share.errorType != .noError {
+          webView.evaluateJavaScript("""
+          window.opacityPage.initPageData({ 
+            href: '\(href)',
+            headTitle: '\(headTitle)',
+            title: '\(title)',
+            refreshBtn: '\(refreshBtn)',
+            message: '\(message)'})
+         """)
         }
       }
     
@@ -174,6 +175,8 @@ struct WebNSView: NSViewRepresentable {
             self.parent.tab.title = title
             group.leave()
           }
+        } else {
+          group.leave()
         }
       }
       
@@ -182,12 +185,18 @@ struct WebNSView: NSViewRepresentable {
       webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
         guard let href = response as? String, let currentURL = webView.url else {
           if let webviewURL = webView.url {
-            let faviconURL = webviewURL.scheme! + "://" + webviewURL.host! + "/favicon.ico"
-            DispatchQueue.main.async {
-              cacheFaviconURL = URL(string: faviconURL)!
-              self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
+            if webviewURL.scheme != "opacity" {
+              let faviconURL = webviewURL.scheme! + "://" + webviewURL.host! + "/favicon.ico"
+              DispatchQueue.main.async {
+                cacheFaviconURL = URL(string: faviconURL)!
+                self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
+                group.leave()
+              }
+            } else {
               group.leave()
             }
+          } else {
+            group.leave()
           }
           return
         }
@@ -327,45 +336,62 @@ struct WebNSView: NSViewRepresentable {
     
     private func handleWebViewError(webView: WKWebView, error: Error) {
       let nsError = error as NSError
-      print("in webive error func")
+      print("in webview error func")
+      WebviewError.share.checkError = true
+      WebviewError.share.isError = true
       
-      // 웹 콘텐츠 로딩 관련 오류
-      if nsError.domain == NSURLErrorDomain {
-        WebviewError.share.checkError = true
-        WebviewError.share.isError = true
-        
-        print(nsError.code)
-        
-        switch nsError.code {
-          case NSURLErrorCannotFindHost:
-            // 호스트를 찾을 수 없는 경우 처리
-            print("not-find-host")
-            WebviewError.share.errorType = .notFindHost
-            if let schemeURL = URL(string:"opacity://not-find-host?lang=\(NSLocalizedString("lang", comment: ""))") {
-              webView.load(URLRequest(url: schemeURL))
-            }
-          case NSURLErrorSecureConnectionFailed:
-            // 호스트에 연결할 수 없는 경우 처리
-            print("not-connect-host")
-            WebviewError.share.errorType = .notConnectHost
-            if let schemeURL = URL(string:"opacity://not-connect-host?lang=\(NSLocalizedString("lang", comment: ""))") {
-              webView.load(URLRequest(url: schemeURL))
-            }
-          case NSURLErrorNotConnectedToInternet:
-            // 네트워크 연결 끊김 처리
-            print("not-connect-internet")
-            WebviewError.share.errorType = .notConnectInternet
-            if let schemeURL = URL(string:"opacity://not-connect-internet?lang=\(NSLocalizedString("lang", comment: ""))") {
-              webView.load(URLRequest(url: schemeURL))
-            }
-          default:
-            // 기타 오류 처리
-            print("unknown")
-            WebviewError.share.errorType = .unkown
-            if let schemeURL = URL(string:"opacity://unknown?lang=\(NSLocalizedString("lang", comment: ""))") {
-              webView.load(URLRequest(url: schemeURL))
-            }
-        }
+      switch nsError.code {
+          //          case NSFileNoSuchFileError:
+          //            // 파일을 찾을 수 없음
+          //            print("요청한 파일을 찾을 수 없습니다. 파일 경로를 확인해주세요.")
+          //          case NSFileReadNoPermissionError:
+          //            // 파일 읽기 권한 없음
+          //            print("파일을 읽을 권한이 없습니다. 권한 설정을 확인해주세요.")
+          //          case NSFileReadCorruptFileError:
+          //            // 손상된 파일
+          //            print("파일이 손상되었습니다. 파일을 확인하거나 다시 다운로드해주세요.")
+        case NSURLErrorCannotFindHost:
+          // 호스트를 찾을 수 없는 경우 처리
+          print("NSURLErrorCannotFindHost")
+          WebviewError.share.errorType = .notFindHost
+          if let schemeURL = URL(string:"opacity://not-find-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+        case NSURLErrorCannotConnectToHost:
+          // 호스트에 연결할 수 없음
+          print("NSURLErrorCannotConnectToHost")
+          WebviewError.share.errorType = .notConnectHost
+          if let schemeURL = URL(string:"opacity://not-connect-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+        case NSURLErrorSecureConnectionFailed:
+          // 보안 연결 실패
+          print("NSURLErrorSecureConnectionFailed")
+          WebviewError.share.errorType = .notConnectHost
+          if let schemeURL = URL(string:"opacity://not-connect-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+        case NSURLErrorServerCertificateHasBadDate:
+          // 서버 인증서 유효하지 않음
+          print("not-connect-host")
+          WebviewError.share.errorType = .notConnectHost
+          if let schemeURL = URL(string:"opacity://not-connect-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+        case NSURLErrorNotConnectedToInternet:
+          // 인터넷 연결이 없음
+          print("not-connect-internet")
+          WebviewError.share.errorType = .notConnectInternet
+          if let schemeURL = URL(string:"opacity://not-connect-internet") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+        default:
+          // 기타 오류 처리
+          print("unknown")
+          WebviewError.share.errorType = .unkown
+          if let schemeURL = URL(string:"opacity://unknown") {
+            webView.load(URLRequest(url: schemeURL))
+          }
       }
     }
   }

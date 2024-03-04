@@ -19,12 +19,22 @@ struct ContentView: View {
           VStack(spacing: 0) {
             // search area
             Rectangle()
-              .frame(height: 4)
-              .foregroundColor(Color("MainBlack"))
+              .frame(height: 1)
+              .foregroundColor(Color("UIBorder"))
+            Rectangle()
+              .frame(height: 3.5)
+              .foregroundColor(Color("SearchBarBG"))
             if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
               SearchView(tab: activeTab)
                 .frame(maxWidth: .infinity,  maxHeight: 41)
-                .background(Color("MainBlack"))
+                .background(Color("SearchBarBG"))
+                .background(.blue)
+              Rectangle()
+                .frame(height: 0.5)
+                .foregroundColor(Color("SearchBarBG"))
+              Rectangle()
+                .frame(height: 0.5)
+                .foregroundColor(Color("UIBorder"))
             }
             MainView(browser: browser)
               .onChange(of: geometry.size) { _, newValue in
