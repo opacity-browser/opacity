@@ -68,21 +68,18 @@ struct TabItem: View {
               .truncationMode(.tail)
           }
         }
-//        .frame(height: 30)
-        .offset(y: 2)
         .opacity(tabWidth < 60 && isActive ? 0 : 1)
         .onHover { hovering in
           isTabHover = hovering
         }
       }
-      .frame(height: 28)
-      .offset(y: -3)
+      .frame(height: 29)
+      .offset(y: -0.5)
       .background(Color("SearchBarBG").opacity(isTabHover ? 0.7 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     .frame(maxWidth: .infinity)
-    .padding(1)
+    .padding(.horizontal, 1)
     .clipShape(RoundedRectangle(cornerRadius: 8))
-//    .offset(y: 1.5)
   }
 }
