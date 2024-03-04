@@ -31,6 +31,9 @@ struct ContentView: View {
                 .background(.blue)
               Rectangle()
                 .frame(height: 0.5)
+                .foregroundColor(Color("SearchBarBG"))
+              Rectangle()
+                .frame(height: 0.5)
                 .foregroundColor(Color("UIBorder"))
             }
             MainView(browser: browser)

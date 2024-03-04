@@ -8,10 +8,9 @@
         width: 100%;
         display: flex;
         min-height: 100%;
-        vertical-align: middle;
-        align-items: center;
         font-family: sans-serif;
-        background: transparent;
+        background: #fff;
+        font-family: 'Trebuchet MS', 'Apple SD Gothic Neo', sans-serif;
       }
 
       .wrap {
@@ -20,44 +19,83 @@
 
       .content {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
-        padding: 40px 50px 40px 40px;
-        border-radius: 15px;
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        color: #fff;
+        margin-top: 25%;
+        text-align: center;
+      }
+
+      .content svg {
+        margin-bottom: 12px;
+        stroke: #333;
       }
 
       .message-box {
-        max-width: 400px;
+        max-width: 450px;
       }
 
       .message-box h1 {
-        margin: 0 0 15px 0;
-        font-size: 28px;
+        margin: 0 0 17px 0;
+        font-size: 32px;
+        color: #222;
       }
 
       .message-box p {
-        margin: 0 0 30px 0;
-        font-size: 15px;
+        margin: 0 0 10px 0;
+        font-size: 16px;
         line-height: 20px;
         padding-left: 1px;
+        padding-bottom: 40px;
+        color: #727272;
       }
 
       .message-box button {
         border: 0;
-        background: rgb(45, 112, 204);
+        background: #222;
         color: #fff;
-        padding: 8px 15px;
-        border-radius: 6px;
+        padding: 8px 16px;
+        border-radius: 3px;
         cursor: pointer;
+        font-family: 'Trebuchet MS';
+        font-weight: 400;
+        font-size: 14px;
         transition: background 0.2s;
       }
 
       .message-box button:hover {
-        background: rgb(68, 155, 234);
-      }</style><script>window.opacityPage = {}
+        background: #727272;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html, body {
+          background: rgb(30, 30, 30);
+        }
+
+        .content svg {
+          stroke: #cecece;
+        }
+
+        .message-box h1 {
+          color: #cecece;
+        }
+
+        .message-box p {
+          color: #a0a0a0;
+        }
+
+        .message-box button {
+          background: #cecece;
+          color: #000;
+        }
+
+        .message-box button:hover {
+          background: #fff;
+        }
+      }</style><script>document.addEventListener("DOMContentLoaded", () => {
+        document.body.style.display = 'none'
+      })
+      
+      window.opacityPage = {}
       window.opacityPage.initPageData = (pageData) => {
         const button = document.getElementById('refresh-btn')
 
@@ -70,4 +108,5 @@
         button.addEventListener('click', () => {
           window.location.replace(pageData.href)
         })
-      }</script></head><body><div class="wrap"><div class="content"><div class="image"></div><div class="message-box"><h1 id="title">Unknown error</h1><p id="message">An unknown error occurred.</p><button id="refresh-btn">Refresh</button></div></div></div></body></html>
+        document.body.style.display = 'flex'
+      }</script></head><body><div class="wrap"><div class="content"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="message-box"><h1 id="title">Unknown error</h1><p id="message">An unknown error occurred.</p><button id="refresh-btn">Refresh</button></div></div></div></body></html>
