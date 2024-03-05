@@ -18,12 +18,6 @@ final class Browser: ObservableObject, Identifiable {
   
   func updateActiveTab(tabId: UUID, webView: WKWebView) {
     self.activeTabId = tabId
-//    currentWorkItem?.cancel()
-//    
-//    let workItem = DispatchWorkItem { [weak self] in
-//      self?.activeTabId = tabId
-//    }
-//    DispatchQueue.main.asyncAfter(deadline: .now() + 0.08, execute: workItem)
   }
   
   func newTab(_ url: URL = DEFAULT_URL) {
@@ -38,6 +32,7 @@ final class Browser: ObservableObject, Identifiable {
     newTab.inputURL = ""
     newTab.printURL = ""
     newTab.title = "\(NSLocalizedString("New Tab", comment: ""))"
+    newTab.isEditSearch = true
     self.tabs.append(newTab)
     self.activeTabId = newTab.id
   }

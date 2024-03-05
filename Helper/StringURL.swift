@@ -49,4 +49,33 @@ class StringURL {
 
     return true
   }
+  
+  static func setInputURL(_ url: URL) -> String  {
+    if let host = url.host, url.scheme == "opacity" {
+      if host == "new-tab" {
+        return ""
+      }
+    }
+    return String(describing: url)
+  }
+  
+  static func setPrintURL(_ url: URL) -> String  {
+    let stringURL = String(describing: url)
+    if let host = url.host, url.scheme == "opacity" {
+      if host == "new-tab" {
+        return ""
+      }
+    }
+    return StringURL.shortURL(url: stringURL)
+  }
+  
+  static func setTitleURL(_ url: URL) -> String  {
+    let stringURL = String(describing: url)
+    if let _ = url.host, url.scheme == "opacity" {
+//      if host == "new-tab" {
+//        return ""
+//      }
+    }
+    return StringURL.shortURL(url: stringURL)
+  }
 }

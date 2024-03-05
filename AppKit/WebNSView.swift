@@ -352,7 +352,7 @@ struct WebNSView: NSViewRepresentable {
   func makeNSView(context: Context) -> WKWebView {
     tab.webview.navigationDelegate = context.coordinator
     tab.webview.uiDelegate = context.coordinator
-    tab.webview.allowsBackForwardNavigationGestures = true
+    tab.webview.allowsBackForwardNavigationGestures = false
     tab.webview.isInspectable = true
     
     return tab.webview

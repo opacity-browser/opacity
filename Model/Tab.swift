@@ -46,7 +46,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
-  @Published var isEditSearch: Bool = true
+  @Published var isEditSearch: Bool = false
   
   @Published var isLocationDialogIcon: Bool = false
   @Published var isLocationDetailDialog: Bool = true
@@ -167,16 +167,13 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   }
   
   func updateURLBySearch(url: URL) {
-    let stringURL = String(describing: url)
-    let shortStringURL = StringURL.shortURL(url: stringURL)
-    
     DispatchQueue.main.async {
       self.isInit = false
       self.isUpdateBySearch = true
       self.originURL = url
-      self.inputURL = stringURL
-      self.printURL = shortStringURL
-      self.title = shortStringURL
+      self.inputURL = StringURL.setInputURL(url)
+      self.printURL = StringURL.setPrintURL(url)
+      self.title = StringURL.setTitleURL(url)
       self.favicon = nil
       self.clearPermission()
       self.setDomainPermission(url)
@@ -184,15 +181,12 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   }
   
   func updateURLByBrowser(url: URL) {
-    let stringURL = String(describing: url)
-    let shortStringURL = StringURL.shortURL(url: stringURL)
-    
     DispatchQueue.main.async {
       self.isInit = false
       self.originURL = url
-      self.inputURL = stringURL
-      self.printURL = shortStringURL
-      self.title = shortStringURL
+      self.inputURL = StringURL.setInputURL(url)
+      self.printURL = StringURL.setPrintURL(url)
+      self.title = StringURL.setTitleURL(url)
       self.favicon = nil
       self.clearPermission()
       self.setDomainPermission(url)
