@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct Navigation: View {
   @Environment(\.colorScheme) var colorScheme
   
   @ObservedObject var tab: Tab
@@ -64,7 +64,6 @@ struct SearchView: View {
                   .font(.system(size: 15))
                   .foregroundColor(Color("Icon"))
               }
-//              .padding(.top, 1)
               .padding(.leading, 5)
               
               TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
@@ -106,9 +105,7 @@ struct SearchView: View {
             }
           }
           .padding(1)
-//          .background(Color("UIBorder"))
           .background(Color("InputBG"))
-//          .background(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
           .clipShape(RoundedRectangle(cornerRadius: 16))
           .offset(y: -1)
         }
@@ -151,7 +148,6 @@ struct SearchView: View {
                         .foregroundColor(Color("Icon"))
                     }
                     .padding(.leading, 3)
-//                    .padding(.top, 1)
                     .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
                       SiteOptionDialog(tab: tab)
                     }
@@ -174,7 +170,6 @@ struct SearchView: View {
               }
               .frame(height: 32)
               .padding(1)
-//              .background(isSearchHover ? Color("InputBGHover") : Color("UIBorder"))
               .background(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
               .clipShape(RoundedRectangle(cornerRadius: 16))
             }
@@ -250,27 +245,28 @@ struct SearchView: View {
         .padding(.trailing, 8)
       }
       
-//      VStack(spacing: 0) {
-//        VStack(spacing: 0) {
-//          Image(systemName: "arrow.up.to.line.compact")
-//            .foregroundColor(Color("Icon"))
-//            .font(.system(size: 14))
-//            .fontWeight(.regular)
-//            .offset(y: 1)
-//        }
-//        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-//        .background(isTopHover ? .gray.opacity(0.2) : .gray.opacity(0))
-//        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-//        .onHover { hovering in
-//          withAnimation {
-//            isTopHover = hovering
-//          }
-//        }
-//        .onTapGesture {
-//          tab.webview.evaluateJavaScript("window.scrollTo(0, 0)")
-//        }
-//      }
-//      .padding(.trailing, 8)
+      VStack(spacing: 0) {
+        VStack(spacing: 0) {
+          Image(systemName: "arrow.up.to.line.compact")
+            .foregroundColor(Color("Icon"))
+            .font(.system(size: 14))
+            .fontWeight(.regular)
+            .opacity(0.9)
+        }
+        .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+        .background(isTopHover ? .gray.opacity(0.2) : .gray.opacity(0))
+        .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+        .onHover { hovering in
+          withAnimation {
+            isTopHover = hovering
+          }
+        }
+        .onTapGesture {
+          tab.webview.evaluateJavaScript("window.scrollTo(0, 0)")
+        }
+        .offset(y: -1)
+      }
+      .padding(.trailing, 8)
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {

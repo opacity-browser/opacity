@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TitlebarView: View {
+struct WindowTitlebar: View {
   @Environment(\.colorScheme) var colorScheme
 
   @Binding var width: CGFloat?

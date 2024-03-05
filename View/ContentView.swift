@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+  @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
   
@@ -15,27 +16,12 @@ struct ContentView: View {
   var body: some View {
     VStack(spacing: 0) {
       GeometryReader { geometry in
-        if browser.tabs.count > 0, let activeTabId = browser.activeTabId {
+        if let _ = browser.activeTabId, browser.tabs.count > 0 {
           VStack(spacing: 0) {
-            // search area
-            Rectangle()
-              .frame(height: 1)
-              .foregroundColor(Color("UIBorder"))
-            Rectangle()
-              .frame(height: 3.5)
-              .foregroundColor(Color("SearchBarBG"))
-            if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
-              SearchView(tab: activeTab)
-                .frame(maxWidth: .infinity,  maxHeight: 41)
-                .background(Color("SearchBarBG"))
-                .background(.blue)
-              Rectangle()
-                .frame(height: 0.5)
-                .foregroundColor(Color("SearchBarBG"))
-              Rectangle()
-                .frame(height: 0.5)
-                .foregroundColor(Color("UIBorder"))
+            if windowDelegate.isFullScreen {
+              WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
+            NavigationView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
             MainView(browser: browser)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
@@ -48,22 +34,8 @@ struct ContentView: View {
       }
     }
     .toolbar {
-      if let width = windowWidth {
-        VStack(spacing: 0) {
-          HStack(spacing: 0) {
-            TitlebarView(width: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
-            Spacer()
-            Button(action: {
-              self.isMoreTabDialog.toggle()
-            }) {
-              Image(systemName: "rectangle.stack")
-                .popover(isPresented: $isMoreTabDialog, arrowEdge: .bottom) {
-                  TabDialog(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
-                }
-            }
-          }
-          .frame(width: width - 90, height: 38)
-        }
+      if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
+        WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
       }
     }
     .onAppear {

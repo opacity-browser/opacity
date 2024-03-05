@@ -6,16 +6,45 @@
 //
 
 import SwiftUI
-import CoreLocation
 import SwiftData
+import CoreLocation
+
+class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
+  @Published var isFullScreen: Bool = false
+  
+  func windowWillEnterFullScreen(_ notification: Notification) {
+    DispatchQueue.main.async {
+      self.isFullScreen = true
+    }
+  }
+  
+  func windowDidEnterFullScreen(_ notification: Notification) {
+  }
+  
+  func windowWillExitFullScreen(_ notification: Notification) {
+    DispatchQueue.main.async {
+      self.isFullScreen = false
+    }
+  }
+
+  func windowDidExitFullScreen(_ notification: Notification) {
+  }
+  
+  func windowWillClose(_ notification: Notification) {
+    guard let window = notification.object as? NSWindow else { return }
+    let frameString = NSStringFromRect(window.frame)
+    UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
+  }
+}
 
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
   static var shared: AppDelegate!
   
   private var isTerminating = false
   var service: Service = Service()
   let locationManager = CLLocationManager()
+  let windowDelegate = OpacityWindowDelegate()
 
   var opacityModelContainer: ModelContainer = {
     let schema = Schema([DomainPermission.self])
@@ -27,9 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
   }()
   
-  
   func createWindow(tabId: UUID? = nil, frame: NSRect? = nil) {
-    // 윈도우 사이즈 및 스타일 정의
     var windowRect = NSRect(x: 0, y: 0, width: 1400, height: 800)
     var isWindowCenter = true
     
@@ -52,8 +79,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     newBrowser.windowNumber = newWindowNo
     self.service.browsers[newWindowNo] = newBrowser
     
-    // 윈도우 컨트롤러 및 뷰 컨트롤러 설정
     let contentView = ContentView(tabId: tabId, width: windowRect.size.width)
+      .environmentObject(self.windowDelegate)
       .environmentObject(self.service)
       .environmentObject(self.service.browsers[newWindowNo]!)
       .background(VisualEffectNSView())
@@ -66,21 +93,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       newWindow.center()
     }
     
-    newWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
-    newWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    newWindow.titlebarAppearsTransparent = true
+    newWindow.titleVisibility = .hidden
     newWindow.styleMask.insert(.fullSizeContentView)
 
     newWindow.makeKeyAndOrderFront(nil)
-    newWindow.delegate = self
+    newWindow.delegate = windowDelegate
     
     let windowController = NSWindowController(window: newWindow)
     windowController.showWindow(self)
-  }
-  
-  func windowWillClose(_ notification: Notification) {
-      guard let window = notification.object as? NSWindow else { return }
-      let frameString = NSStringFromRect(window.frame)
-      UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
@@ -98,17 +119,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     DispatchQueue.main.async {
       let mainMenu = NSMenu()
       
-      // Opacity 메뉴
+      // Opacity
       let opacityItem = NSMenuItem(title: NSLocalizedString("Fried Egg", comment: ""), action: nil, keyEquivalent: "")
       let opacityMenu = NSMenu(title: NSLocalizedString("Fried Egg", comment: ""))
       opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Fried Egg", comment: ""), action: nil, keyEquivalent: ""))
       opacityMenu.addItem(NSMenuItem.separator())
       opacityMenu.addItem(withTitle: NSLocalizedString("Quit Fried Egg", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
-      opacityItem.submenu = opacityMenu // 파일 메뉴를 파일 메뉴 아이템에 연결
+      opacityItem.submenu = opacityMenu
       
       mainMenu.addItem(opacityItem)
       
-      // File 메뉴
+      // File
       let fileItem = NSMenuItem(title: NSLocalizedString("File", comment: ""), action: nil, keyEquivalent: "")
       let fileMenu = NSMenu(title: NSLocalizedString("File", comment: ""))
       fileMenu.addItem(withTitle: NSLocalizedString("New Window", comment: ""), action: #selector(self.newWindow), keyEquivalent: "n")
@@ -120,7 +141,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       
       mainMenu.addItem(fileItem)
       
-      // Edit 메뉴
+      // Edit
       let editItem = NSMenuItem(title: NSLocalizedString("Edit", comment: ""), action: nil, keyEquivalent: "")
       let editMenu = NSMenu(title: NSLocalizedString("Edit", comment: ""))
       editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
@@ -135,7 +156,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
       
       mainMenu.addItem(editItem)
       
-      // View 메뉴
+      // View
       let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
       let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
       viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
@@ -152,7 +173,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 //      menuItem3.submenu = myMenu
 //      mainMenu.addItem(menuItem3)
       
-      // 메인 메뉴를 애플리케이션에 설정
       NSApplication.shared.mainMenu = mainMenu
     }
   }
@@ -250,8 +270,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     exitWindow.center()
     exitWindow.isOpaque = false
     exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
-    exitWindow.titlebarAppearsTransparent = true // 타이틀 바를 투명하게
-    exitWindow.titleVisibility = .hidden // 타이틀을 숨깁니다
+    exitWindow.titlebarAppearsTransparent = true
+    exitWindow.titleVisibility = .hidden
     exitWindow.styleMask.insert(.fullSizeContentView)
 
     exitWindow.makeKeyAndOrderFront(nil)
