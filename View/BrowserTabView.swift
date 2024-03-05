@@ -103,20 +103,21 @@ struct BrowserTabView: View {
       .frame(maxWidth: 220, maxHeight: 38)
       .onChange(of: tab.isPageProgress) { _, newValue in
         if newValue == false {
-          loadingAnimation = false
+          DispatchQueue.main.async {
+            loadingAnimation = false
+          }
         }
       }
       .onChange(of: tab.pageProgress) { _, newValue in
-        print("change page progress: \(newValue)")
         if newValue == 1.0 {
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation(.easeInOut(duration: 0.15)) {
-              tab.isPageProgress = false
-            }
+            tab.isPageProgress = false
             tab.pageProgress = 0.0
           }
         } else if newValue > 0.0 && newValue < 1.0 {
-          tab.isPageProgress = true
+          DispatchQueue.main.async {
+            tab.isPageProgress = true
+          }
         }
       }
     }

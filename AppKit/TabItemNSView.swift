@@ -115,7 +115,6 @@ struct TabItemNSView: NSViewRepresentable {
       let titleBarRect = NSRect(x: 0, y: windowFrame.height - titleBarHeight, width: windowFrame.width, height: titleBarHeight)
       
       if !titleBarRect.contains(windowPoint) {
-        print("Exit outside of window")
         if let dragId = parent.service.dragTabId {
           if let targetIndex = parent.tabs.firstIndex(where: { $0.id == dragId }) {
             if(parent.tabs.count == 1) {
@@ -172,7 +171,6 @@ class TabDragSource: NSView {
   }
   
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-    print("dragenterd")
     if let window = self.window {
       window.makeKeyAndOrderFront(nil)
     }
@@ -180,23 +178,16 @@ class TabDragSource: NSView {
   }
   
   override func draggingExited(_ sender: NSDraggingInfo?) {
-    print("drag exited")
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     if let thisIndex = self.index, let moveFunc = self.moveTab {
       moveFunc(thisIndex)
     }
-//    Dragged data processing logic
-//    guard let draggedData = sender.draggingPasteboard.string(forType: .string) else { return false }
-//    print("Dragged Data: \(draggedData)")
-//
-//    appDelegate!.someMethodToCall()
     return true
   }
   
   override func concludeDragOperation(_ sender: NSDraggingInfo?) {
-      print("conclude drag operation")
   }
   
   func snapshot() -> NSImage {

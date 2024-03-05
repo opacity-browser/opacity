@@ -25,6 +25,7 @@ struct TitlebarView: View {
       VStack(spacing: 0) {
         ZStack {
           TabAreaNSView(service: service, tabs: $tabs, activeTabId: $activeTabId)
+          
           HStack(spacing: 0) {
             HStack(spacing: 0) {
               ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
@@ -40,9 +41,6 @@ struct TitlebarView: View {
                   }
                   .contentShape(Rectangle())
                 }
-              }
-              .onAppear {
-                activeTabId = tabs[0].id
               }
               
               Button(action: {

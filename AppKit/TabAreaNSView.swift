@@ -13,7 +13,6 @@ struct TabAreaNSView: NSViewRepresentable {
   @Binding var activeTabId: UUID?
   
   func moveTabArea() {
-    print("Move Tab Area Drop")
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
       let removedItem = tabs.remove(at: targetIndex)
       tabs.append(removedItem)

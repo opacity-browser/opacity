@@ -157,14 +157,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
   }
   
-//  func menuWillOpen(_ menu: NSMenu) {
-//    // 메뉴 아이템의 상태 업데이트
-//    print("a")
-//    menu.items.forEach { item in
-//      item.isEnabled = true // 또는 특정 조건에 따라 설정
-//    }
-//  }
-  
   @objc func exitApplication() {
     if self.isTerminating {
       NSApplication.shared.terminate(self)

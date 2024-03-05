@@ -10,6 +10,14 @@ import WebKit
 import SwiftData
 import UserNotifications
 
+enum WebViewErrorType {
+  case notFindHost
+  case notConnectHost
+  case notConnectInternet
+  case unkown
+  case noError
+}
+
 final class Tab: ObservableObject, Identifiable, Equatable {
   var id = UUID()
   
@@ -20,6 +28,10 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var inputURL: String
   
   var isUpdateBySearch: Bool = false
+  
+  var webviewIsError: Bool = false
+  var webviewCheckError: Bool = false
+  var webviewErrorType: WebViewErrorType = .noError
   
   @Published var title: String = ""
   @Published var favicon: Image? = nil
@@ -99,13 +111,11 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     self.title = shortStringURL
     DispatchQueue.main.async {
       self.setDomainPermission(url)
-      print(self.isNotificationPermission)
     }
   }
   
   @MainActor func setDomainPermission(_ url: URL) {
     self.checkNotificationAuthorization { enabled in
-      print(enabled)
       if enabled {
         self.isNotificationPermissionByApp = true
         let host: String = url.host!
