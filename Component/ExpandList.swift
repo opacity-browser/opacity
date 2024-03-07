@@ -18,7 +18,7 @@ struct ExpandList<Title: View, Content: View>: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
+    VStack(spacing: 0) {
       Button(action: {
         isExpanded.toggle()
       }) {
@@ -28,12 +28,13 @@ struct ExpandList<Title: View, Content: View>: View {
             .bold()
             .frame(width: 10, height: 10, alignment: .center)
             .padding(.trailing, 2)
-            .opacity(0.4)
+            .opacity(0.7)
           title()
           Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
       }
+      .padding(0)
       .padding(.leading, 10)
       .padding(.bottom, 2)
       .buttonStyle(PlainButtonStyle())

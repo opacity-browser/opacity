@@ -13,6 +13,7 @@ final class Browser: ObservableObject, Identifiable {
   var windowNumber: Int?
   @Published var tabs: [Tab] = []
   @Published var activeTabId: UUID?
+  @Published var isSideBar: Bool = true
   
   private var currentWorkItem: DispatchWorkItem?
   

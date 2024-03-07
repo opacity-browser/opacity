@@ -24,8 +24,9 @@
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
 		A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54222B590B4D007020CA /* VisualEffectNSView.swift */; };
-		A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54242B590CA6007020CA /* SidebarButton.swift */; };
 		A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54262B5BA457007020CA /* ImageLoader.swift */; };
+		A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */; };
+		A15FCB122B999D7700D64C05 /* BookmarkGroupName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15FCB112B999D7700D64C05 /* BookmarkGroupName.swift */; };
 		A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A169200F2B2FA82200F8B4C0 /* Assets.xcassets */; };
 		A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */; };
 		A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCAED2B8EAC34004639F2 /* DomainPermission.swift */; };
@@ -42,6 +43,12 @@
 		A16BCB0A2B944ECD004639F2 /* unknown in Resources */ = {isa = PBXBuildFile; fileRef = A16BCB072B944ECD004639F2 /* unknown */; };
 		A16BCB0E2B96D147004639F2 /* WindowTitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */; };
 		A16BCB102B96D30F004639F2 /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB0F2B96D30F004639F2 /* NavigationView.swift */; };
+		A16BCB122B9849FF004639F2 /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB112B9849FF004639F2 /* SideBarView.swift */; };
+		A16BCB142B9852B7004639F2 /* SearchBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB132B9852B7004639F2 /* SearchBox.swift */; };
+		A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB172B985A57004639F2 /* BookmarkIcon.swift */; };
+		A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB192B985F9F004639F2 /* Bookmark.swift */; };
+		A16BCB1C2B9862B2004639F2 /* BookmarkGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB1B2B9862B2004639F2 /* BookmarkGroup.swift */; };
+		A16BCB1E2B994476004639F2 /* BookmarkGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */; };
 		A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */; };
 		A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
@@ -79,8 +86,9 @@
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A15D54222B590B4D007020CA /* VisualEffectNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectNSView.swift; sourceTree = "<group>"; };
-		A15D54242B590CA6007020CA /* SidebarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarButton.swift; sourceTree = "<group>"; };
 		A15D54262B5BA457007020CA /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkList.swift; sourceTree = "<group>"; };
+		A15FCB112B999D7700D64C05 /* BookmarkGroupName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupName.swift; sourceTree = "<group>"; };
 		A16920082B2FA82100F8B4C0 /* Opacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Opacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Opacity/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -99,6 +107,12 @@
 		A16BCB072B944ECD004639F2 /* unknown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = unknown; sourceTree = "<group>"; };
 		A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowTitleBarView.swift; sourceTree = "<group>"; };
 		A16BCB0F2B96D30F004639F2 /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
+		A16BCB112B9849FF004639F2 /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
+		A16BCB132B9852B7004639F2 /* SearchBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBox.swift; sourceTree = "<group>"; };
+		A16BCB172B985A57004639F2 /* BookmarkIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkIcon.swift; sourceTree = "<group>"; };
+		A16BCB192B985F9F004639F2 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		A16BCB1B2B9862B2004639F2 /* BookmarkGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroup.swift; sourceTree = "<group>"; };
+		A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupList.swift; sourceTree = "<group>"; };
 		A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDialog.swift; sourceTree = "<group>"; };
 		A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonStyle.swift; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -173,6 +187,22 @@
 			path = AppKit;
 			sourceTree = "<group>";
 		};
+		A15FCB0F2B999D2900D64C05 /* Item */ = {
+			isa = PBXGroup;
+			children = (
+				A15FCB102B999D5100D64C05 /* Bookmark */,
+			);
+			path = Item;
+			sourceTree = "<group>";
+		};
+		A15FCB102B999D5100D64C05 /* Bookmark */ = {
+			isa = PBXGroup;
+			children = (
+				A15FCB112B999D7700D64C05 /* BookmarkGroupName.swift */,
+			);
+			path = Bookmark;
+			sourceTree = "<group>";
+		};
 		A1691FFF2B2FA82100F8B4C0 = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +222,7 @@
 		A169200A2B2FA82100F8B4C0 /* Opacity */ = {
 			isa = PBXGroup;
 			children = (
+				A15FCB0F2B999D2900D64C05 /* Item */,
 				A12D053C2B600C4C00CBC6B2 /* HTML */,
 				A15D54192B56B3F4007020CA /* AppKit */,
 				A15D54122B561BCF007020CA /* Shape */,
@@ -227,6 +258,7 @@
 				A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */,
 				A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */,
 				A16BCB0F2B96D30F004639F2 /* NavigationView.swift */,
+				A16BCB112B9849FF004639F2 /* SideBarView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -240,6 +272,8 @@
 				A14246192B735E5F0062C516 /* Service.swift */,
 				A14246312B810D100062C516 /* HistorySite.swift */,
 				A16BCAED2B8EAC34004639F2 /* DomainPermission.swift */,
+				A16BCB192B985F9F004639F2 /* Bookmark.swift */,
+				A16BCB1B2B9862B2004639F2 /* BookmarkGroup.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -250,7 +284,6 @@
 				A16BCAFB2B907878004639F2 /* ToggleSwitch.swift */,
 				A14246152B71EF190062C516 /* TabItem.swift */,
 				A188C9502B4D3D6000B39BC8 /* ExpandList.swift */,
-				A15D54242B590CA6007020CA /* SidebarButton.swift */,
 				A14246232B7E51450062C516 /* TabDialog.swift */,
 				A14246272B7E7E010062C516 /* TabDialogItem.swift */,
 				A142462F2B80E3CD0062C516 /* HistoryDialog.swift */,
@@ -264,6 +297,10 @@
 				A16BCAF92B8FFFC0004639F2 /* SiteOptionDialog.swift */,
 				A188C9482B4ACECD00B39BC8 /* Navigation.swift */,
 				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
+				A16BCB132B9852B7004639F2 /* SearchBox.swift */,
+				A16BCB172B985A57004639F2 /* BookmarkIcon.swift */,
+				A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */,
+				A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -380,27 +417,34 @@
 				A14246302B80E3CD0062C516 /* HistoryDialog.swift in Sources */,
 				A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */,
 				A16BCB102B96D30F004639F2 /* NavigationView.swift in Sources */,
+				A16BCB122B9849FF004639F2 /* SideBarView.swift in Sources */,
 				A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
+				A16BCB142B9852B7004639F2 /* SearchBox.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
+				A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
 				A16BCAFC2B907878004639F2 /* ToggleSwitch.swift in Sources */,
 				A16BCAF62B8FFBFD004639F2 /* HistoryForwardBtn.swift in Sources */,
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
 				A14246222B7C64FE0062C516 /* TabAreaNSView.swift in Sources */,
+				A16BCB1E2B994476004639F2 /* BookmarkGroupList.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
+				A16BCB1C2B9862B2004639F2 /* BookmarkGroup.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
+				A15FCB122B999D7700D64C05 /* BookmarkGroupName.swift in Sources */,
+				A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */,
 				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
+				A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */,
 				A16BCB0E2B96D147004639F2 /* WindowTitleBarView.swift in Sources */,
-				A15D54252B590CA6007020CA /* SidebarButton.swift in Sources */,
 				A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A16BCAFA2B8FFFC0004639F2 /* SiteOptionDialog.swift in Sources */,
