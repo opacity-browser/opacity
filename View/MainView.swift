@@ -10,10 +10,7 @@ import SwiftData
 
 struct MainView: View {
   @ObservedObject var browser: Browser
-  @Query(filter: #Predicate<BookmarkGroup> {
-    $0.parentGroupId == nil
-  }) var bookmarkGroups: [BookmarkGroup]
-
+  
   var body: some View {
     HStack(spacing: 0) {
       GeometryReader { geometry in
@@ -30,7 +27,7 @@ struct MainView: View {
         }
       }
       if browser.isSideBar {
-        SideBarView(browser: browser, bookmarkGroups: bookmarkGroups)
+        SideBarView(browser: browser)
       }
     }
   }

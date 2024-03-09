@@ -6,28 +6,12 @@
 //
 
 import SwiftUI
-//import SwiftData
+import SwiftData
 
 struct SideBarView: View {
   @Environment(\.modelContext) var modelContext
-//  @Query var bookmarkGroups: [BookmarkGroup]
-//  
-//  @Query(filter: #Predicate<BookmarkGroup> {
-//    $0.parentGroupId == nil
-//  }) var basicBookmarkGroups: [BookmarkGroup]
-//  
-//  @Query(filter: #Predicate<Bookmark> {
-//    $0.groupId == nil
-//  }) var basicBookmarks: [Bookmark]
   
   @ObservedObject var browser: Browser
-  @State var bookmarkGroups: [BookmarkGroup] = []
-  
-  init(browser: Browser, bookmarkGroups: [BookmarkGroup]) {
-    self.browser = browser
-    _bookmarkGroups = State(initialValue: bookmarkGroups)
-  }
-  
   @State var isCloseHover: Bool = false
   
   var body: some View {
@@ -65,16 +49,17 @@ struct SideBarView: View {
             }
           }
           
-          BookmarkGroupList(bookmarkGroups: bookmarkGroups)
-//          BookmarkList(bookmarks: basicBookmarks)
+          
+          BookmarkList()
+//          BookmarkList()
           
           Spacer()
           
           Divider()
           
-          ForEach(bookmarkGroups) { test in
-            Text(test.name)
-          }
+//          ForEach(allBookmarks) { test in
+//            Text(test.title)
+//          }
           
           Divider()
         }
@@ -85,9 +70,13 @@ struct SideBarView: View {
     .background(Color("SearchBarBG"))
     .contextMenu {
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        let newBookmarkGroup = BookmarkGroup()
-        bookmarkGroups.append(newBookmarkGroup)
-        modelContext.insert(newBookmarkGroup)
+        let newBookmark = Bookmark()
+        modelContext.insert(newBookmark)
+        do {
+          try modelContext.save()
+        } catch {
+          print("basic bookmark insert error")
+        }
       }
         .frame(width: 200)
     }

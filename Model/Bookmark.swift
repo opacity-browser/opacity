@@ -11,17 +11,23 @@ import SwiftData
 @Model
 class Bookmark: Identifiable {
   @Attribute(.unique)
-  var id: UUID = UUID()
+  var id: UUID
   
   var title: String
-  var url: String
+  
+  @Relationship(inverse: \Bookmark.children)
+  var parent: Bookmark? = nil
+
+  var url: String? = nil
   var favicon: Data? = nil
   
-  @Relationship(inverse: \BookmarkGroup.id)
-  var groupId: UUID?
+  @Relationship(deleteRule: .cascade)
+  var children: [Bookmark]? = [Bookmark]()
  
-  init(title: String, url: String, favicon: Data) {
+  init(title: String = "New Folder", parent: Bookmark? = nil, url: String? = nil, favicon: Data? = nil) {
+    self.id = UUID()
     self.title = title
+    self.parent = parent
     self.url = url
     self.favicon = favicon
   }
