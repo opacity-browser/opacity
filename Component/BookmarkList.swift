@@ -8,6 +8,58 @@
 import SwiftUI
 import SwiftData
 
+struct BookmarkItem: View {
+  @Environment(\.modelContext) var modelContext
+  var bookmarks: [Bookmark]
+  
+  func deleteBookmark(_ target: Bookmark) {
+    if let childBookmark = target.children {
+      for childTarget in childBookmark {
+        deleteBookmark(childTarget)
+      }
+      modelContext.delete(target)
+    }
+  }
+  
+  var body: some View {
+    VStack {
+      ForEach(bookmarks) { bookmark in
+        DisclosureGroup(isExpanded: Bindable(bookmark).isOpen, content: {
+          Text("test")
+          if let childBookmark = bookmark.children, childBookmark.count > 0 {
+            BookmarkItem(bookmarks: childBookmark)
+          }
+        }, label: {
+          Text("label")
+            .onTapGesture {
+              withAnimation{
+                bookmark.isOpen.toggle()
+              }
+            }
+            .contextMenu {
+              Button(NSLocalizedString("Add Folder", comment: "")) {
+                let newBookmark = Bookmark(title: "test", parent: bookmark)
+                newBookmark.title = "\(newBookmark.id)"
+                if let _ = bookmark.children {
+                  bookmark.children?.append(newBookmark)
+                }
+              }
+              Divider()
+              Button(NSLocalizedString("Delete", comment: "")) {
+                deleteBookmark(bookmark)
+                do {
+                  try modelContext.save()
+                } catch {
+                  print("delete error")
+                }
+              }
+            }
+        })
+      }
+    }
+  }
+}
+
 struct BookmarkList: View {
   @Environment(\.modelContext) var modelContext
   @Query var allBookmarks: [Bookmark]
@@ -26,26 +78,27 @@ struct BookmarkList: View {
   
   var body: some View {
     VStack {
-      OutlineGroup(bookmarks, children: \.children) { bookmark in
-        Text(bookmark.title)
-          .contextMenu {
-            Button(NSLocalizedString("Add Folder", comment: "")) {
-              let newBookmark = Bookmark(title: "test", parent: bookmark)
-              newBookmark.title = "\(newBookmark.id)"
-              if let _ = bookmark.children {
-                bookmark.children?.append(newBookmark)
-              }
-            }
-            Divider()
-            Button(NSLocalizedString("Delete", comment: "")) {
-              deleteBookmark(bookmark)
-              do {
-                try modelContext.save()
-              } catch {
-                print("delete error")
-              }
-            }
-          }
+      BookmarkItem(bookmarks: bookmarks)
+//      OutlineGroup(bookmarks, children: \.children) { bookmark in
+//        Text(bookmark.title)
+//          .contextMenu {
+//            Button(NSLocalizedString("Add Folder", comment: "")) {
+//              let newBookmark = Bookmark(title: "test", parent: bookmark)
+//              newBookmark.title = "\(newBookmark.id)"
+//              if let _ = bookmark.children {
+//                bookmark.children?.append(newBookmark)
+//              }
+//            }
+//            Divider()
+//            Button(NSLocalizedString("Delete", comment: "")) {
+//              deleteBookmark(bookmark)
+//              do {
+//                try modelContext.save()
+//              } catch {
+//                print("delete error")
+//              }
+//            }
+//          }
       }
       
       Divider()
@@ -54,12 +107,11 @@ struct BookmarkList: View {
       ForEach(allBookmarks) { test in
         VStack {
           HStack {
-            Text(test.title)
-            if let children = test.children {
-              Text("is child - \(children.count)")
-            } else {
-              Text("no child")
-            }
+            Text("test")
+//            if let children = test.children {
+//              Text("is child - \(children.count)")
+//            }
+            Text("isOpen - \(String(test.isOpen))")
             if let _ = test.parent {
               Text("is parent true")
             } else {
@@ -84,7 +136,7 @@ struct BookmarkList: View {
         }
         .background(.red.opacity(0.2))
         .padding(5)
-      }
+      
     }
   }
 }

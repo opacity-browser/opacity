@@ -23,6 +23,9 @@ class Bookmark: Identifiable {
   
   @Relationship(deleteRule: .cascade)
   var children: [Bookmark]? = [Bookmark]()
+  
+  @Attribute(.ephemeral)
+  var isOpen: Bool = false
  
   init(title: String = "New Folder", parent: Bookmark? = nil, url: String? = nil, favicon: Data? = nil) {
     self.id = UUID()
