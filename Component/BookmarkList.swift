@@ -51,6 +51,15 @@ struct BookmarkList: View {
   var body: some View {
     VStack {
       BookmarkItem(bookmarks: bookmarks, directUpdate: $directUpdate)
+//      Divider()
+//      
+//      ForEach(allBookmarks) { target in
+//        Text(target.title)
+//        if let url = target.url {
+//          Text(url)
+//        }
+//        Divider()
+//      }
     }
     .onAppear {
       if bookmarks.count == 0 {

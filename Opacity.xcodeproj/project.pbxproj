@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
 		A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemNSView.swift */; };
@@ -47,7 +48,6 @@
 		A16BCB142B9852B7004639F2 /* SearchBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB132B9852B7004639F2 /* SearchBox.swift */; };
 		A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB172B985A57004639F2 /* BookmarkIcon.swift */; };
 		A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB192B985F9F004639F2 /* Bookmark.swift */; };
-		A16BCB1E2B994476004639F2 /* BookmarkGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */; };
 		A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */; };
 		A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
@@ -68,6 +68,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		A14246172B71F1A80062C516 /* TabItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemNSView.swift; sourceTree = "<group>"; };
@@ -110,7 +111,6 @@
 		A16BCB132B9852B7004639F2 /* SearchBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBox.swift; sourceTree = "<group>"; };
 		A16BCB172B985A57004639F2 /* BookmarkIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkIcon.swift; sourceTree = "<group>"; };
 		A16BCB192B985F9F004639F2 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
-		A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupList.swift; sourceTree = "<group>"; };
 		A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDialog.swift; sourceTree = "<group>"; };
 		A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonStyle.swift; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -196,6 +196,7 @@
 		A15FCB102B999D5100D64C05 /* Bookmark */ = {
 			isa = PBXGroup;
 			children = (
+				A16BCB172B985A57004639F2 /* BookmarkIcon.swift */,
 				A15FCB112B999D7700D64C05 /* BookmarkTitle.swift */,
 			);
 			path = Bookmark;
@@ -295,9 +296,8 @@
 				A188C9482B4ACECD00B39BC8 /* Navigation.swift */,
 				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
 				A16BCB132B9852B7004639F2 /* SearchBox.swift */,
-				A16BCB172B985A57004639F2 /* BookmarkIcon.swift */,
-				A16BCB1D2B994476004639F2 /* BookmarkGroupList.swift */,
 				A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */,
+				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -427,7 +427,6 @@
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
 				A14246222B7C64FE0062C516 /* TabAreaNSView.swift in Sources */,
-				A16BCB1E2B994476004639F2 /* BookmarkGroupList.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
@@ -455,6 +454,7 @@
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
+				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
 				A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */,

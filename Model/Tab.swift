@@ -35,6 +35,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @Published var title: String = ""
   @Published var favicon: Image? = nil
+  var faviconData: Data? = nil
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
@@ -49,9 +50,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isEditSearch: Bool = false
   
   @Published var isLocationDialogIcon: Bool = false
-  @Published var isLocationDetailDialog: Bool = true
+//  @Published var isLocationDetailDialog: Bool = true
   @Published var isNotificationDialogIcon: Bool = false
-  @Published var isNotificationDetailDialog: Bool = true
+//  @Published var isNotificationDetailDialog: Bool = true
   
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
@@ -199,6 +200,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         return
       }
       DispatchQueue.main.async {
+        self.faviconData = data
         withAnimation {
           self.favicon = Image(nsImage: uiImage)
         }

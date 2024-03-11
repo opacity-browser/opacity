@@ -13,6 +13,7 @@ struct SearchBox: View {
   @FocusState private var isTextFieldFocused: Bool
   @State private var isSearchHover: Bool = false
   @State private var isSiteDialog: Bool = false
+  @State var isBookmarkHover: Bool = false
   
   let inputHeight: CGFloat = 32
   let textSize: CGFloat = 13.5
@@ -39,7 +40,9 @@ struct SearchBox: View {
               
               TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                 if !isEdit {
-                  tab.isEditSearch = false
+                  withAnimation {
+                    tab.isEditSearch = false
+                  }
                 }
               })
               .foregroundColor(Color("UIText").opacity(0.85))
@@ -68,15 +71,13 @@ struct SearchBox: View {
                     tab.isPageProgress = true
                     tab.pageProgress = 0.0
                     tab.updateURLBySearch(url: URL(string: newURL)!)
-                    tab.isEditSearch = false
                     isTextFieldFocused = false
+                    withAnimation {
+                      tab.isEditSearch = false
+                    }
                   }
                 }
               }
-              
-              BookmarkIcon()
-                .padding(.trailing, 10)
-              
             }
           }
           .padding(1)
@@ -93,7 +94,7 @@ struct SearchBox: View {
               ZStack {
                 Rectangle()
                   .frame(maxWidth: .infinity, maxHeight: inputHeight)
-                  .foregroundColor(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+                  .foregroundColor(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
                   .overlay {
                     if !tab.isInit && tab.isPageProgress {
                       HStack(spacing: 0) {
@@ -116,7 +117,7 @@ struct SearchBox: View {
                   } label: {
                     HStack(spacing: 0) {
                       Image(systemName: "lock.shield")
-                        .frame(maxWidth: 28, maxHeight: 28, alignment: .center)
+                        .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
                         .background(Color("SearchBarBG"))
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                         .font(.system(size: 15))
@@ -142,19 +143,21 @@ struct SearchBox: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                   
-                  BookmarkIcon()
+                  BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
                     .padding(.trailing, 10)
                 }
               }
               .frame(height: 32)
               .padding(1)
-              .background(isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+              .background(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
               .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
             .offset(y: 0.5)
             .onTapGesture {
-              tab.isEditSearch = true
+              withAnimation {
+                tab.isEditSearch = true
+              }
               isTextFieldFocused = true
             }
             .onHover { hovering in

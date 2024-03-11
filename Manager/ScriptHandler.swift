@@ -77,7 +77,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
                 }
               } else {
                 withAnimation {
-                  self.tab.isNotificationDetailDialog = true
                   self.tab.isNotificationDialogIcon = true
                 }
               }
@@ -177,7 +176,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   func showLocationSetIcon() {
     AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
     withAnimation {
-      tab.isLocationDetailDialog = true
       tab.isLocationDialogIcon = true
     }
   }
@@ -194,7 +192,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         do {
           guard let _ = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first else {
             withAnimation {
-              self.tab.isNotificationDetailDialog = true
               self.tab.isNotificationDialogIcon = true
             }
             return

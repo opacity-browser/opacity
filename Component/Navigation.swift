@@ -18,6 +18,9 @@ struct Navigation: View {
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
   @State private var isMoreMenuDialog: Bool = false
+  
+  @State private var isNotificationDetailDialog: Bool = true
+  @State private var isLocationDetailDialog: Bool = true
 
   let inputHeight: CGFloat = 32
   let iconHeight: CGFloat = 24
@@ -66,9 +69,9 @@ struct Navigation: View {
             }
           }
           .onTapGesture {
-            tab.isNotificationDetailDialog.toggle()
+            isNotificationDetailDialog.toggle()
           }
-          .popover(isPresented: $tab.isNotificationDetailDialog, arrowEdge: .bottom) {
+          .popover(isPresented: $isNotificationDetailDialog, arrowEdge: .bottom) {
             NotificationDialog(tab: tab)
           }
         }
@@ -92,9 +95,9 @@ struct Navigation: View {
             }
           }
           .onTapGesture {
-            tab.isLocationDetailDialog.toggle()
+            isLocationDetailDialog.toggle()
           }
-          .popover(isPresented: $tab.isLocationDetailDialog, arrowEdge: .bottom) {
+          .popover(isPresented: $isLocationDetailDialog, arrowEdge: .bottom) {
             GeoLocationDialog()
           }
         }
