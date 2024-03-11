@@ -14,15 +14,17 @@ struct BookmarkDialog: View {
   @ObservedObject var tab: Tab
   var bookmarks: [Bookmark]
   var bookmarkGroups: [Bookmark]
+  @ObservedObject var manualUpdate: ManualUpdate
   var onClose: () -> Void
   @State private var bookmarkTitle: String = ""
   @State private var selectId: UUID?
   
-  init(tab: Tab, bookmarks: [Bookmark], bookmarkGroups: [Bookmark], onClose: @escaping () -> Void) {
+  init(tab: Tab, bookmarks: [Bookmark], bookmarkGroups: [Bookmark], manualUpdate: ManualUpdate,onClose: @escaping () -> Void) {
     self.tab = tab
     self.onClose = onClose
     self.bookmarks = bookmarks
     self.bookmarkGroups = bookmarkGroups
+    self.manualUpdate = manualUpdate
     if let bookmark = bookmarks.first(where: { $0.url == tab.originURL.absoluteString }) {
       self._bookmarkTitle = State(initialValue: bookmark.title)
       if let parentId = bookmark.parent?.id {
@@ -79,6 +81,7 @@ struct BookmarkDialog: View {
                   do {
                     modelContext.delete(bookmark)
                     target.children?.append(newBookmark)
+                    manualUpdate.bookmarks = !manualUpdate.bookmarks
                     try modelContext.save()
                   } catch {
                     print("dialog bookmark change error")
@@ -88,6 +91,7 @@ struct BookmarkDialog: View {
                 do {
                   modelContext.delete(bookmark)
                   modelContext.insert(newBookmark)
+                  manualUpdate.bookmarks = !manualUpdate.bookmarks
                   try modelContext.save()
                 } catch {
                   print("dialog bookmark change error")
@@ -124,7 +128,7 @@ struct BookmarkDialog: View {
             Text(NSLocalizedString("Folder", comment: ""))
             Spacer()
             Picker("", selection: $selectId) {
-              Text("None").tag(UUID?.none)
+              Text("----").tag(UUID?.none)
               ForEach(bookmarkGroups, id: \.id) { target in
                 Text(target.title).tag(target.id as UUID?)
               }

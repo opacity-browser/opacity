@@ -5,6 +5,7 @@ struct ContentView: View {
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
+  @ObservedObject var manualUpdate: ManualUpdate = ManualUpdate()
   
   var tabId: UUID?
   var width: CGFloat
@@ -21,8 +22,8 @@ struct ContentView: View {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
-            NavigationView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
-            MainView(browser: browser)
+            NavigationView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen, manualUpdate: manualUpdate)
+            MainView(browser: browser, manualUpdate: manualUpdate)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
               }

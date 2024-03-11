@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchBox: View {
   @ObservedObject var tab: Tab
+  @ObservedObject var manualUpdate: ManualUpdate
   
   @FocusState private var isTextFieldFocused: Bool
   @State private var isSearchHover: Bool = false
@@ -143,7 +144,7 @@ struct SearchBox: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                   
-                  BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
+                  BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
                     .padding(.trailing, 10)
                 }
               }

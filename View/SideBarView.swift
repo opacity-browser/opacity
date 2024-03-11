@@ -12,6 +12,7 @@ struct SideBarView: View {
   @Environment(\.modelContext) var modelContext
   
   @ObservedObject var browser: Browser
+  @ObservedObject var manualUpdate: ManualUpdate
   @State var isCloseHover: Bool = false
   
   var body: some View {
@@ -51,7 +52,7 @@ struct SideBarView: View {
             .frame(height: 25)
             .padding(.vertical, 5)
             
-            BookmarkList()
+            BookmarkList(browser: browser, manualUpdate: manualUpdate)
             
             Spacer()
             

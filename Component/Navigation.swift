@@ -12,6 +12,7 @@ struct Navigation: View {
   
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
+  @ObservedObject var manualUpdate: ManualUpdate
   
   @State private var isSidebarHover: Bool = false
   @State private var isMoreHover: Bool = false
@@ -46,7 +47,7 @@ struct Navigation: View {
       
       Spacer()
       
-      SearchBox(tab: tab)
+      SearchBox(tab: tab, manualUpdate: manualUpdate)
       
       Spacer()
       

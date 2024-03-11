@@ -20,6 +20,7 @@ struct BookmarkIcon: View {
   
   @ObservedObject var tab: Tab
   @Binding var isBookmarkHover: Bool
+  @ObservedObject var manualUpdate: ManualUpdate
   
   @State private var isBookmarkDialog: Bool = false
   
@@ -49,7 +50,7 @@ struct BookmarkIcon: View {
         }
       }
       .popover(isPresented: $isBookmarkDialog, arrowEdge: .bottom) {
-        BookmarkDialog(tab: tab, bookmarks: bookmarks, bookmarkGroups: bookmarkGroups, onClose: {
+        BookmarkDialog(tab: tab, bookmarks: bookmarks, bookmarkGroups: bookmarkGroups, manualUpdate: manualUpdate, onClose: {
           self.isBookmarkDialog = false
         })
       }

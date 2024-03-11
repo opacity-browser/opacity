@@ -11,55 +11,45 @@ import SwiftData
 struct BookmarkItem: View {
   @Environment(\.modelContext) var modelContext
   var bookmarks: [Bookmark]
-  @Binding var directUpdate: Bool
+  @ObservedObject var browser: Browser
+  @ObservedObject var manualUpdate: ManualUpdate
   
   var body: some View {
     VStack(spacing: 0) {
       ForEach(Array(bookmarks.enumerated()), id: \.element.id) { index, bookmark in
-        ExpandList(bookmark: bookmark, title: {
-          BookmarkTitle(bookmark: bookmark, directUpdate: $directUpdate)
-        }, content: {
-          HStack(spacing: 0) {
-            if let childBookmark = bookmark.children, childBookmark.count > 0 {
-              BookmarkItem(bookmarks: childBookmark, directUpdate: $directUpdate)
-             }
+        VStack(spacing: 0) {
+          if let _ = bookmark.url {
+            BookmarkTitle(bookmark: bookmark, browser: browser, manualUpdate: manualUpdate)
+              .padding(.leading, 14)
+          } else {
+            ExpandList(bookmark: bookmark, title: {
+              BookmarkGroupTitle(bookmark: bookmark, manualUpdate: manualUpdate)
+            }, content: {
+              HStack(spacing: 0) {
+                if let childBookmark = bookmark.children, childBookmark.count > 0 {
+                  BookmarkItem(bookmarks: childBookmark, browser: browser, manualUpdate: manualUpdate)
+                }
+              }
+            })
           }
-        })
+        }
       }
     }
     .padding(.leading, 10)
   }
 }
 
-struct BookmarkBox: View {
-  var bookmarks: [Bookmark]
-  @State var directUpdate: Bool = false
-  
-  var body: some View {
-    BookmarkItem(bookmarks: bookmarks, directUpdate: $directUpdate)
-  }
-}
-
 struct BookmarkList: View {
   @Environment(\.modelContext) var modelContext
-  @Query var allBookmarks: [Bookmark]
   @Query(filter: #Predicate<Bookmark> {
     $0.parent == nil
   }) var bookmarks: [Bookmark]
-  @State var directUpdate: Bool = false
+  @ObservedObject var browser: Browser
+  @ObservedObject var manualUpdate: ManualUpdate
   
   var body: some View {
     VStack {
-      BookmarkItem(bookmarks: bookmarks, directUpdate: $directUpdate)
-//      Divider()
-//      
-//      ForEach(allBookmarks) { target in
-//        Text(target.title)
-//        if let url = target.url {
-//          Text(url)
-//        }
-//        Divider()
-//      }
+      BookmarkItem(bookmarks: bookmarks, browser: browser, manualUpdate: manualUpdate)
     }
     .onAppear {
       if bookmarks.count == 0 {
