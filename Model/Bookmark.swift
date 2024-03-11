@@ -27,7 +27,7 @@ class Bookmark: Identifiable {
   @Attribute(.ephemeral)
   var isOpen: Bool = false
  
-  init(title: String = "New Folder", parent: Bookmark? = nil, url: String? = nil, favicon: Data? = nil) {
+  init(title: String = NSLocalizedString("New Folder", comment: ""), parent: Bookmark? = nil, url: String? = nil, favicon: Data? = nil) {
     self.id = UUID()
     self.title = title
     self.parent = parent

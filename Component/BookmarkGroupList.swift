@@ -16,7 +16,8 @@
 //        VStack(spacing: 0) {
 //          ExpandList(title: {
 //            HStack(spacing: 0) {
-//              BookmarkGroupName(name: Bindable(targetGroup).name, group: targetGroup)
+//              Text("test")
+////              BookmarkGroupName(name: Bindable(targetGroup).name, group: targetGroup)
 //            }
 //          }, content: {
 //            HStack(spacing: 0) {

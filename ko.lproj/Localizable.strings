@@ -18,6 +18,8 @@
 "Select All" = "모두 선택";
 "View" = "보기";
 "Reload Page" = "페이지 새로고침";
+"Show Sidebar" = "사이드바 보기";
+"Hide Sidebar" = "사이드바 가리기";
 
 // Error Page
 "Page not found" = "페이지를 찾을 수 없음";

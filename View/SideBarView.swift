@@ -25,12 +25,12 @@ struct SideBarView: View {
             Text(NSLocalizedString("Bookmark", comment: ""))
               .font(.system(size: 14))
               .foregroundColor(Color("UIText"))
+              .padding(.leading, 10)
             
             Spacer()
             
             VStack(spacing: 0) {
               Image(systemName: "xmark")
-                .rotationEffect(.degrees(90))
                 .foregroundColor(Color("Icon"))
                 .font(.system(size: 13))
                 .fontWeight(.regular)
@@ -38,7 +38,6 @@ struct SideBarView: View {
             .frame(maxWidth: 25, maxHeight: 25)
             .background(isCloseHover ? .gray.opacity(0.2) : .gray.opacity(0))
             .clipShape(RoundedRectangle(cornerRadius: 6))
-            .offset(x: 5)
             .onHover { hovering in
               withAnimation {
                 isCloseHover = hovering
@@ -48,31 +47,26 @@ struct SideBarView: View {
               browser.isSideBar = false
             }
           }
-          
+          .frame(height: 25)
+          .padding(.vertical, 5)
           
           BookmarkList()
-//          BookmarkList()
           
           Spacer()
           
-          Divider()
-          
-//          ForEach(allBookmarks) { test in
-//            Text(test.title)
-//          }
-          
-          Divider()
         }
-        .padding(20)
+        .padding(.trailing, 10)
+        .padding(.vertical, 10)
+        .padding(.leading, 5)
       }
     }
-    .frame(width: 300, alignment: .leading)
+    .frame(width: 320, alignment: .leading)
     .background(Color("SearchBarBG"))
     .contextMenu {
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        let newBookmark = Bookmark()
-        modelContext.insert(newBookmark)
         do {
+          let newBookmark = Bookmark()
+          modelContext.insert(newBookmark)
           try modelContext.save()
         } catch {
           print("basic bookmark insert error")

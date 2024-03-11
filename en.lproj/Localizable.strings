@@ -18,6 +18,8 @@
 "Select All" = "Select All";
 "View" = "View";
 "Reload Page" = "Reload Page";
+"Show Sidebar" = "Show Sidebar";
+"Hide Sidebar" = "Hide SIdebar";
 
 // Error Page
 "Page not found" = "Page not found";
