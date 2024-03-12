@@ -10,7 +10,7 @@ import WebKit
 import SwiftData
 import CoreLocation
 import UserNotifications
-import AVFoundation
+//import AVFoundation
 
 struct NotificationOptions: Codable {
   var body: String
@@ -89,18 +89,18 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func checkCameraAuthorization(completion: @escaping (Bool) -> Void) {
-    switch AVCaptureDevice.authorizationStatus(for: .video) {
-      case .authorized:
-        completion(true)
-      case .notDetermined:
-        AVCaptureDevice.requestAccess(for: .video) { granted in
-          completion(granted)
-        }
-      default:
-        completion(false)
-    }
-  }
+//  func checkCameraAuthorization(completion: @escaping (Bool) -> Void) {
+//    switch AVCaptureDevice.authorizationStatus(for: .video) {
+//      case .authorized:
+//        completion(true)
+//      case .notDetermined:
+//        AVCaptureDevice.requestAccess(for: .video) { granted in
+//          completion(granted)
+//        }
+//      default:
+//        completion(false)
+//    }
+//  }
   
   func initGeoPositions() {
     switch AppDelegate.shared.locationManager.authorizationStatus {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BookmarkTitle: View {
   @Environment(\.modelContext) var modelContext
-  
+  var bookmarks: [Bookmark]
   var bookmark: Bookmark
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
@@ -21,7 +21,42 @@ struct BookmarkTitle: View {
       for childTarget in childBookmark {
         deleteBookmark(childTarget)
       }
-      modelContext.delete(target)
+    }
+    modelContext.delete(target)
+  }
+  
+  func indexReSetting(_ parentTarget: Bookmark? = nil) {
+    if let target = parentTarget, let parentTargetChildren = target.children {
+      let cache = parentTargetChildren.sorted {
+        return $0.index < $1.index
+      }
+      
+      for (index, _) in cache.enumerated() {
+        cache[index].index = index
+      }
+      
+      for child in target.children! {
+        let index = cache.first(where: { $0.url == child.url })!.index
+        child.index = index
+      }
+    } else {
+      let cache = bookmarks.filter({ target in
+        target.url != nil && target.url != bookmark.url
+      }).sorted {
+        return $0.index < $1.index
+      }
+      
+      for (index, test) in cache.enumerated() {
+        cache[index].index = index
+        print(test.title)
+        print(test.index)
+      }
+      
+      for child in bookmarks {
+        if let cacheData = cache.first(where: { $0.url == child.url }) {
+          child.index = cacheData.index
+        }
+      }
     }
   }
   
@@ -70,13 +105,18 @@ struct BookmarkTitle: View {
               Text(bookmark.title)
                 .font(.system(size: 13))
                 .frame(height: 26)
+              Text(" \(bookmark.index)")
+              Text(" \(bookmark.parent?.title ?? "none")")
               Spacer()
             }
           }
           .frame(maxWidth: .infinity)
           .background(Color("SearchBarBG"))
           .onTapGesture {
-            if let url = bookmark.url {
+            guard let url = bookmark.url else { return }
+            if let activeTabId = browser.activeTabId, let thisTab = browser.tabs.first(where: { $0.id == activeTabId }), thisTab.isInit {
+              thisTab.updateURLBySearch(url: URL(string: url)!)
+            } else {
               browser.newTab(URL(string: url)!)
             }
           }
@@ -93,8 +133,15 @@ struct BookmarkTitle: View {
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
         do {
-          deleteBookmark(bookmark)
-          try modelContext.save()
+          if let parentTarget = bookmark.parent {
+            deleteBookmark(bookmark)
+            try modelContext.save()
+            indexReSetting(parentTarget)
+          } else {
+            deleteBookmark(bookmark)
+            try modelContext.save()
+            indexReSetting()
+          }
           manualUpdate.bookmarks = !manualUpdate.bookmarks
         } catch {
           print("delete error")
@@ -102,20 +149,17 @@ struct BookmarkTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        if let parent = bookmark.parent {
-          let newBookmark = Bookmark(parent: parent)
-          if let _ = parent.children {
-            parent.children?.append(newBookmark)
-          }
-        } else {
-          do {
-            let newBookmark = Bookmark()
-            modelContext.insert(newBookmark)
-            try modelContext.save()
-          } catch {
-            print("basic bookmark insert error")
-          }
-        }
+//        let newBookmark = Bookmark(index: bookmark.parent ? bookmark.parent?.children.count : bookmark.count)
+//        if let parent = bookmark.parent {
+//          newBookmark.parent = parent
+//        }
+//        do {
+//          modelContext.insert(newBookmark)
+//          try modelContext.save()
+//          manualUpdate.bookmarks = !manualUpdate.bookmarks
+//        } catch {
+//          print("basic bookmark insert error")
+//        }
       }
     }
   }

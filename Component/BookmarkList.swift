@@ -14,12 +14,23 @@ struct BookmarkItem: View {
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
   
+  init(bookmarks: [Bookmark], browser: Browser, manualUpdate: ManualUpdate) {
+    self.bookmarks = bookmarks.sorted {
+      if $0.url == nil && $1.url != nil {
+        return true
+      }
+      return false
+    }
+    self.browser = browser
+    self.manualUpdate = manualUpdate
+  }
+  
   var body: some View {
     VStack(spacing: 0) {
       ForEach(Array(bookmarks.enumerated()), id: \.element.id) { index, bookmark in
         VStack(spacing: 0) {
           if let _ = bookmark.url {
-            BookmarkTitle(bookmark: bookmark, browser: browser, manualUpdate: manualUpdate)
+            BookmarkTitle(bookmarks: bookmarks, bookmark: bookmark, browser: browser, manualUpdate: manualUpdate)
               .padding(.leading, 14)
           } else {
             ExpandList(bookmark: bookmark, title: {
@@ -41,26 +52,14 @@ struct BookmarkItem: View {
 
 struct BookmarkList: View {
   @Environment(\.modelContext) var modelContext
-  @Query(filter: #Predicate<Bookmark> {
-    $0.parent == nil
-  }) var bookmarks: [Bookmark]
+
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
+  var bookmarks: [Bookmark]
   
   var body: some View {
     VStack {
       BookmarkItem(bookmarks: bookmarks, browser: browser, manualUpdate: manualUpdate)
-    }
-    .onAppear {
-      if bookmarks.count == 0 {
-        do {
-          let newBookmark = Bookmark()
-          modelContext.insert(newBookmark)
-          try modelContext.save()
-        } catch {
-          print("init bookmark insert error")
-        }
-      }
     }
   }
 }

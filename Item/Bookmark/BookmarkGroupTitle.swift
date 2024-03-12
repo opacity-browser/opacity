@@ -15,6 +15,16 @@ struct BookmarkGroupTitle: View {
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
   
+  func indexReSetting(_ target: Bookmark) {
+    guard let targetParentChildren = target.parent?.children else { return }
+    target.parent?.children = targetParentChildren.sorted {
+      return $0.index > $1.index
+    }
+    for (index, _) in targetParentChildren.enumerated() {
+      target.parent?.children![index].index = index
+    }
+  }
+  
   func deleteBookmark(_ target: Bookmark) {
     if let childBookmark = target.children {
       for childTarget in childBookmark {
@@ -76,6 +86,7 @@ struct BookmarkGroupTitle: View {
         do {
           deleteBookmark(bookmark)
           try modelContext.save()
+          indexReSetting(bookmark)
           manualUpdate.bookmarks = !manualUpdate.bookmarks
         } catch {
           print("delete error")
@@ -83,10 +94,15 @@ struct BookmarkGroupTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        let newBookmark = Bookmark(parent: bookmark)
-        if let _ = bookmark.children {
-          bookmark.children?.append(newBookmark)
+        guard let parentChildren = bookmark.children else { return }
+        let newBookmark = Bookmark(index: parentChildren.count, parent: bookmark)
+        do {
+          modelContext.insert(newBookmark)
+          try modelContext.save()
           bookmark.isOpen = true
+          manualUpdate.bookmarks = !manualUpdate.bookmarks
+        } catch {
+          print("basic bookmark insert error")
         }
       }
     }

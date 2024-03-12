@@ -10,6 +10,9 @@ import SwiftData
 
 struct SideBarView: View {
   @Environment(\.modelContext) var modelContext
+  @Query(filter: #Predicate<Bookmark> {
+    $0.parent == nil
+  }) var bookmarks: [Bookmark]
   
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
@@ -52,9 +55,17 @@ struct SideBarView: View {
             .frame(height: 25)
             .padding(.vertical, 5)
             
-            BookmarkList(browser: browser, manualUpdate: manualUpdate)
+            BookmarkList(browser: browser, manualUpdate: manualUpdate, bookmarks: bookmarks)
             
             Spacer()
+            
+            ForEach(bookmarks) { book in
+              VStack {
+                Text(book.title)
+                Text(book.parent?.title ?? "none")
+                Text("\(book.index)")
+              }
+            }
             
           }
           .padding(.trailing, 10)
@@ -66,11 +77,22 @@ struct SideBarView: View {
       .contextMenu {
         Button(NSLocalizedString("Add Folder", comment: "")) {
           do {
-            let newBookmark = Bookmark()
+            let newBookmark = Bookmark(index: bookmarks.count)
             modelContext.insert(newBookmark)
             try modelContext.save()
           } catch {
             print("basic bookmark insert error")
+          }
+        }
+      }
+      .onAppear {
+        if bookmarks.count == 0 {
+          do {
+            let newBookmark = Bookmark(index: 0)
+            modelContext.insert(newBookmark)
+            try modelContext.save()
+          } catch {
+            print("init bookmark insert error")
           }
         }
       }

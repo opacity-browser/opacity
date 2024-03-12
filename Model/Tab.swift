@@ -176,6 +176,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
+      self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
     }
