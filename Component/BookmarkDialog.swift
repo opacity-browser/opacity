@@ -70,23 +70,27 @@ struct BookmarkDialog: View {
           .padding(.bottom, 10)
           HStack(spacing: 0) {
             Button(NSLocalizedString("Save", comment: "")) {
-//              if bookmarkTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-//                return
-//              }
-//                            
-//              let newBookmark = Bookmark(title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
-//              if let bookmarkId = selectId, let target = bookmarkGroups.first(where: { $0.id == bookmarkId }) {
-//                newBookmark.parent = target
-//              }
-//              do {
-//                modelContext.delete(bookmark)
-//                modelContext.insert(newBookmark)
-//                manualUpdate.bookmarks = !manualUpdate.bookmarks
-//                try modelContext.save()
-//              } catch {
-//                print("dialog bookmark change error")
-//              }
-//              self.onClose()
+              if bookmarkTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return
+              }
+              
+              BookmarkAPI.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
+              
+              if let bookmarkId = selectId, let target = bookmarkGroups.first(where: { $0.id == bookmarkId }), let children = target.children {
+                let index = children.filter({ childBookmark in
+                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                }).count
+                BookmarkAPI.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                target.isOpen = true
+              } else {
+                let index = bookmarks.filter({ childBookmark in
+                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                }).count
+                BookmarkAPI.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+              }
+              
+              manualUpdate.bookmarks = !manualUpdate.bookmarks
+              self.onClose()
             }
             .buttonStyle(DialogButtonStyle())
           }
@@ -130,23 +134,21 @@ struct BookmarkDialog: View {
               if bookmarkTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 return
               }
-              var newBookmark: Bookmark
+              
               if let bookmarkId = selectId, let target = bookmarkGroups.first(where: { $0.id == bookmarkId }), let children = target.children {
-                newBookmark = Bookmark(index: children.count, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
-                newBookmark.parent = target
+                let index = children.filter({ childBookmark in
+                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                }).count
+                BookmarkAPI.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                target.isOpen = true
               } else {
-                let basicBookmark = bookmarks.filter { book in
-                  book.parent == nil
-                }
-                newBookmark = Bookmark(index: basicBookmark.count, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                let index = bookmarks.filter({ childBookmark in
+                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                }).count
+                BookmarkAPI.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
               }
-              do {
-                modelContext.insert(newBookmark)
-                try modelContext.save()
-                manualUpdate.bookmarks = !manualUpdate.bookmarks
-              } catch {
-                print("dialog bookmark insert error")
-              }
+              
+              manualUpdate.bookmarks = !manualUpdate.bookmarks
               self.onClose()
             }
             .buttonStyle(DialogButtonStyle())

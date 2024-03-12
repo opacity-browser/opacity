@@ -60,7 +60,7 @@ struct TabItem: View {
           if tabWidth > 60 || tab.favicon == nil {
             Text(tab.title)
               .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
-              .foregroundColor(Color("UIText").opacity(isActive || isTabHover ? 0.85 : 0.6))
+              .foregroundColor(Color("UIText").opacity(isActive || isTabHover ? 1 : 0.8))
               .font(.system(size: 12))
               .padding(.leading, !tab.isInit && (tab.favicon != nil || tab.isPageProgress) ? 5 : 10)
               .padding(.trailing, 25)

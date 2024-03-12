@@ -20,7 +20,9 @@ class Bookmark: Identifiable {
   @Relationship(inverse: \Bookmark.children)
   var parent: Bookmark? = nil
 
+  @Attribute(.unique)
   var url: String? = nil
+  
   var favicon: Data? = nil
   
   @Relationship(deleteRule: .cascade)

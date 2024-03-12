@@ -16,6 +16,8 @@ struct BookmarkItem: View {
   
   init(bookmarks: [Bookmark], browser: Browser, manualUpdate: ManualUpdate) {
     self.bookmarks = bookmarks.sorted {
+      $0.index < $1.index
+    }.sorted {
       if $0.url == nil && $1.url != nil {
         return true
       }
@@ -34,7 +36,7 @@ struct BookmarkItem: View {
               .padding(.leading, 14)
           } else {
             ExpandList(bookmark: bookmark, title: {
-              BookmarkGroupTitle(bookmark: bookmark, manualUpdate: manualUpdate)
+              BookmarkGroupTitle(bookmarks: bookmarks, bookmark: bookmark, manualUpdate: manualUpdate)
             }, content: {
               HStack(spacing: 0) {
                 if let childBookmark = bookmark.children, childBookmark.count > 0 {

@@ -10,29 +10,30 @@ import SwiftUI
 struct BookmarkGroupTitle: View {
   @Environment(\.modelContext) var modelContext
   
+  var bookmarks: [Bookmark]
   var bookmark: Bookmark
   @ObservedObject var manualUpdate: ManualUpdate
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
   
-  func indexReSetting(_ target: Bookmark) {
-    guard let targetParentChildren = target.parent?.children else { return }
-    target.parent?.children = targetParentChildren.sorted {
-      return $0.index > $1.index
-    }
-    for (index, _) in targetParentChildren.enumerated() {
-      target.parent?.children![index].index = index
-    }
-  }
-  
-  func deleteBookmark(_ target: Bookmark) {
-    if let childBookmark = target.children {
-      for childTarget in childBookmark {
-        deleteBookmark(childTarget)
-      }
-      modelContext.delete(target)
-    }
-  }
+//  func indexReSetting(_ target: Bookmark) {
+//    guard let targetParentChildren = target.parent?.children else { return }
+//    target.parent?.children = targetParentChildren.sorted {
+//      return $0.index > $1.index
+//    }
+//    for (index, _) in targetParentChildren.enumerated() {
+//      target.parent?.children![index].index = index
+//    }
+//  }
+//  
+//  func deleteBookmark(_ target: Bookmark) {
+//    if let childBookmark = target.children {
+//      for childTarget in childBookmark {
+//        deleteBookmark(childTarget)
+//      }
+//      modelContext.delete(target)
+//    }
+//  }
   
   var body: some View {
     VStack(spacing: 0) {
@@ -66,6 +67,8 @@ struct BookmarkGroupTitle: View {
               Text(bookmark.title)
                 .font(.system(size: 13))
                 .frame(height: 26)
+              Text(" \(bookmark.index)")
+              Text(" \(bookmark.parent?.title ?? "none")")
               Spacer()
             }
           }
@@ -83,26 +86,18 @@ struct BookmarkGroupTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
-        do {
-          deleteBookmark(bookmark)
-          try modelContext.save()
-          indexReSetting(bookmark)
-          manualUpdate.bookmarks = !manualUpdate.bookmarks
-        } catch {
-          print("delete error")
-        }
+        BookmarkAPI.deleteBookmarkGroup(bookmarks: bookmarks, bookmark: bookmark)
+        manualUpdate.bookmarks = !manualUpdate.bookmarks
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        guard let parentChildren = bookmark.children else { return }
-        let newBookmark = Bookmark(index: parentChildren.count, parent: bookmark)
-        do {
-          modelContext.insert(newBookmark)
-          try modelContext.save()
+        if let children = bookmark.children {
+          let index = children.filter({ target in
+            BookmarkAPI.isBookmarkGroup(target)
+          }).count
+          BookmarkAPI.addBookmark(index: index, parent: bookmark)
           bookmark.isOpen = true
           manualUpdate.bookmarks = !manualUpdate.bookmarks
-        } catch {
-          print("basic bookmark insert error")
         }
       }
     }

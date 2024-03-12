@@ -46,10 +46,8 @@ struct BookmarkTitle: View {
         return $0.index < $1.index
       }
       
-      for (index, test) in cache.enumerated() {
+      for (index, _) in cache.enumerated() {
         cache[index].index = index
-        print(test.title)
-        print(test.index)
       }
       
       for child in bookmarks {
@@ -132,34 +130,23 @@ struct BookmarkTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
-        do {
-          if let parentTarget = bookmark.parent {
-            deleteBookmark(bookmark)
-            try modelContext.save()
-            indexReSetting(parentTarget)
-          } else {
-            deleteBookmark(bookmark)
-            try modelContext.save()
-            indexReSetting()
-          }
-          manualUpdate.bookmarks = !manualUpdate.bookmarks
-        } catch {
-          print("delete error")
-        }
+        BookmarkAPI.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
+        manualUpdate.bookmarks = !manualUpdate.bookmarks
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-//        let newBookmark = Bookmark(index: bookmark.parent ? bookmark.parent?.children.count : bookmark.count)
-//        if let parent = bookmark.parent {
-//          newBookmark.parent = parent
-//        }
-//        do {
-//          modelContext.insert(newBookmark)
-//          try modelContext.save()
-//          manualUpdate.bookmarks = !manualUpdate.bookmarks
-//        } catch {
-//          print("basic bookmark insert error")
-//        }
+        if let parent = bookmark.parent, let children = parent.children {
+          let index = children.filter({ target in
+            target.url == nil
+          }).count
+          BookmarkAPI.addBookmark(index: index, parent: parent)
+        } else {
+          let index = bookmarks.filter({ target in
+            target.url == nil
+          }).count
+          BookmarkAPI.addBookmark(index: index)
+        }
+        manualUpdate.bookmarks = !manualUpdate.bookmarks
       }
     }
   }
