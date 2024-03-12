@@ -18,10 +18,7 @@ struct BookmarkItem: View {
     self.bookmarks = bookmarks.sorted {
       $0.index < $1.index
     }.sorted {
-      if $0.url == nil && $1.url != nil {
-        return true
-      }
-      return false
+      $0.url == nil && $1.url != nil
     }
     self.browser = browser
     self.manualUpdate = manualUpdate
