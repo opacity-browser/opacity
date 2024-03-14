@@ -47,7 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let windowDelegate = OpacityWindowDelegate()
 
   var opacityModelContainer: ModelContainer = {
-    let schema = Schema([DomainPermission.self])
+    let schema = Schema([DomainPermission.self, Bookmark.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       return try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -160,6 +160,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
       let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
       viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
+      if let keyWindow = NSApplication.shared.keyWindow, let target = self.service.browsers[keyWindow.windowNumber] {
+        let sidebarPrintText = target.isSideBar ? "Hide Sidebar" : "Show Sidebar"
+        viewMenu.addItem(withTitle: NSLocalizedString(sidebarPrintText, comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
+      }
       viewMenu.addItem(NSMenuItem.separator())
       viewItem.submenu = viewMenu
       
@@ -236,6 +240,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }) {
         tab.webview.reload()
         tab.clearPermission()
+      }
+    }
+  }
+  
+  @objc func isSidebar() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber] {
+        target.isSideBar = !target.isSideBar
       }
     }
   }

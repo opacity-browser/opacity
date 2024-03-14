@@ -18,6 +18,8 @@
 "Select All" = "Select All";
 "View" = "View";
 "Reload Page" = "Reload Page";
+"Show Sidebar" = "Show Sidebar";
+"Hide Sidebar" = "Hide SIdebar";
 
 // Error Page
 "Page not found" = "Page not found";
@@ -45,3 +47,13 @@
 
 "Notification" = "Notification";
 //NSLocalizedString("", comment: "")
+
+"New Folder" = "New Folder";
+"Bookmark" = "Bookmark";
+
+"Change Name" = "Change Name";
+"Delete" = "Delete";
+"Add Folder" = "Add Folder";
+"Folder" = "Folder";
+"Name" = "Name";
+"Save" = "Save";

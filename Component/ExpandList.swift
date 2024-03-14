@@ -7,38 +7,39 @@
 
 import SwiftUI
 
-struct ExpandList<Title: View, Content: View>: View {
-  @State private var isExpanded: Bool = true
+struct ExpandList<bookmark: Bookmark, Title: View, Content: View>: View {
+  var bookmark: Bookmark
   let title: () -> Title
   let content: () -> Content
 
-  init(@ViewBuilder title: @escaping () -> Title, @ViewBuilder content: @escaping () -> Content) {
-      self.title = title
-      self.content = content
+  init(bookmark: Bookmark, @ViewBuilder title: @escaping () -> Title, @ViewBuilder content: @escaping () -> Content) {
+    self.bookmark = bookmark
+    self.title = title
+    self.content = content
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
-      Button(action: {
-        isExpanded.toggle()
-      }) {
+    VStack(spacing: 0) {
+      VStack(spacing: 0) {
         HStack(spacing: 0) {
-          Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+          Image(systemName: self.bookmark.isOpen ? "chevron.down" : "chevron.right")
             .font(.system(size: 9))
             .bold()
             .frame(width: 10, height: 10, alignment: .center)
             .padding(.trailing, 2)
-            .opacity(0.4)
+            .opacity(0.7)
           title()
           Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
       }
-      .padding(.leading, 10)
       .padding(.bottom, 2)
       .buttonStyle(PlainButtonStyle())
+      .onTapGesture {
+        self.bookmark.isOpen.toggle()
+      }
 
-      if isExpanded {
+      if self.bookmark.isOpen {
         content()
       }
     }

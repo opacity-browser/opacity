@@ -9,7 +9,6 @@ import SwiftData
 
 enum DomainPermissionType: Int, Codable {
   case notification = 1
-  case camera = 2
 }
 
 @Model

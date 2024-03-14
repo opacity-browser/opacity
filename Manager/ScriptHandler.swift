@@ -10,7 +10,7 @@ import WebKit
 import SwiftData
 import CoreLocation
 import UserNotifications
-import AVFoundation
+//import AVFoundation
 
 struct NotificationOptions: Codable {
   var body: String
@@ -30,10 +30,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String] {
-//    if message.name == "opacityBrowser", let messageBody = message.body as? [String: String], let webView = message.webView {
-//      guard let currentURL = webView.url else {
-//        return
-//      }
       
       let scriptName = messageBody["name"] ?? ""
       
@@ -77,7 +73,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
                 }
               } else {
                 withAnimation {
-                  self.tab.isNotificationDetailDialog = true
                   self.tab.isNotificationDialogIcon = true
                 }
               }
@@ -90,18 +85,18 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func checkCameraAuthorization(completion: @escaping (Bool) -> Void) {
-    switch AVCaptureDevice.authorizationStatus(for: .video) {
-      case .authorized:
-        completion(true)
-      case .notDetermined:
-        AVCaptureDevice.requestAccess(for: .video) { granted in
-          completion(granted)
-        }
-      default:
-        completion(false)
-    }
-  }
+//  func checkCameraAuthorization(completion: @escaping (Bool) -> Void) {
+//    switch AVCaptureDevice.authorizationStatus(for: .video) {
+//      case .authorized:
+//        completion(true)
+//      case .notDetermined:
+//        AVCaptureDevice.requestAccess(for: .video) { granted in
+//          completion(granted)
+//        }
+//      default:
+//        completion(false)
+//    }
+//  }
   
   func initGeoPositions() {
     switch AppDelegate.shared.locationManager.authorizationStatus {
@@ -177,7 +172,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   func showLocationSetIcon() {
     AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
     withAnimation {
-      tab.isLocationDetailDialog = true
       tab.isLocationDialogIcon = true
     }
   }
@@ -194,7 +188,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         do {
           guard let _ = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first else {
             withAnimation {
-              self.tab.isNotificationDetailDialog = true
               self.tab.isNotificationDialogIcon = true
             }
             return

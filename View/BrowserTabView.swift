@@ -37,16 +37,18 @@ struct BrowserTabView: View {
       GeometryReader { geometry in
         ZStack {
           Rectangle()
-            .frame(maxWidth: 220, maxHeight: 34.5, alignment: .leading)
+            .frame(maxWidth: 220, maxHeight: 34, alignment: .leading)
             .foregroundColor(Color("UIBorder").opacity(isActive ? 1 : 0))
+//            .foregroundColor(.red)
             .clipShape((BrowserTabShape(cornerRadius: 10)))
-            .offset(y: 1.5)
+            .offset(y: 2)
             .animation(.linear(duration: 0.15), value: activeTabId)
           Rectangle()
-            .frame(maxWidth: 218, maxHeight: 34.5, alignment: .leading)
+            .frame(maxWidth: 218.4, maxHeight: 34, alignment: .leading)
             .foregroundColor(Color("SearchBarBG").opacity(isActive ? 1 : 0))
-            .clipShape((BrowserTabShape(cornerRadius: 10)))
-            .offset(y: 2.5)
+//            .foregroundColor(.blue)
+            .clipShape((BrowserTabShape(cornerRadius: 9.8)))
+            .offset(y: 2.8)
             .animation(.linear(duration: 0.15), value: activeTabId)
           
           ZStack {
@@ -80,7 +82,7 @@ struct BrowserTabView: View {
                       .frame(width: 18, height: 18)
                       .font(.system(size: 9))
                       .fontWeight(.medium)
-                      .opacity(isCloseHover ? 1 : 0.6)
+                      .opacity(isCloseHover ? 1 : 0.8)
                   }
                 }
                 .buttonStyle(.plain)

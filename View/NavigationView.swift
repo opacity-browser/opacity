@@ -11,6 +11,7 @@ struct NavigationView: View {
   @ObservedObject var browser: Browser
   @Binding var activeTabId: UUID?
   @Binding var isFullScreen: Bool
+  @ObservedObject var manualUpdate: ManualUpdate
 
   var body: some View {
     VStack(spacing: 0) {
@@ -23,7 +24,7 @@ struct NavigationView: View {
         .frame(height: 3.5)
         .foregroundColor(Color("SearchBarBG"))
       if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
-        Navigation(tab: activeTab)
+        Navigation(browser: browser, tab: activeTab, manualUpdate: manualUpdate)
           .frame(maxWidth: .infinity,  maxHeight: 41)
           .background(Color("SearchBarBG"))
           .background(.blue)

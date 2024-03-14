@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
   @ObservedObject var browser: Browser
-
+  @ObservedObject var manualUpdate: ManualUpdate
+  
   var body: some View {
-    VStack(spacing: 0) {
+    HStack(spacing: 0) {
       GeometryReader { geometry in
         ZStack {
           if browser.tabs.count > 0 {
@@ -24,6 +26,9 @@ struct MainView: View {
             }
           }
         }
+      }
+      if browser.isSideBar {
+        SideBarView(browser: browser, manualUpdate: manualUpdate)
       }
     }
   }

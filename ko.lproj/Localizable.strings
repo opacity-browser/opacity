@@ -18,6 +18,8 @@
 "Select All" = "모두 선택";
 "View" = "보기";
 "Reload Page" = "페이지 새로고침";
+"Show Sidebar" = "사이드바 보기";
+"Hide Sidebar" = "사이드바 가리기";
 
 // Error Page
 "Page not found" = "페이지를 찾을 수 없음";
@@ -44,3 +46,13 @@
 "Deny" = "거부";
 
 "Notification" = "알림";
+
+"New Folder" = "새 폴더";
+"Bookmark" = "북마크";
+
+"Change Name" = "이름 변경";
+"Delete" = "삭제";
+"Add Folder" = "폴더 추가";
+"Folder" = "폴더";
+"Name" = "이름";
+"Save" = "저장";

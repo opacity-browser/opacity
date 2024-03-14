@@ -24,7 +24,7 @@ struct WindowTitleBarView: View {
       ZStack {
         Rectangle()
           .frame(width: width - (isFullScreen ? 0 : 90), height: 38)
-          .foregroundColor(Color("InputBG"))
+          .foregroundColor(Color.clear)
         if isFullScreen {
           Rectangle()
             .frame(height: 1)
