@@ -9,12 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct BookmarkItem: View {
-  @Environment(\.modelContext) var modelContext
-  var bookmarks: [Bookmark]
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
+  var bookmarks: [Bookmark]
   
-  init(bookmarks: [Bookmark], browser: Browser, manualUpdate: ManualUpdate) {
+  init(browser: Browser, manualUpdate: ManualUpdate, bookmarks: [Bookmark]) {
     self.bookmarks = bookmarks.sorted {
       $0.index < $1.index
     }.sorted {
@@ -37,7 +36,7 @@ struct BookmarkItem: View {
             }, content: {
               HStack(spacing: 0) {
                 if let childBookmark = bookmark.children, childBookmark.count > 0 {
-                  BookmarkItem(bookmarks: childBookmark, browser: browser, manualUpdate: manualUpdate)
+                  BookmarkItem(browser: browser, manualUpdate: manualUpdate, bookmarks: childBookmark)
                 }
               }
             })
@@ -45,20 +44,18 @@ struct BookmarkItem: View {
         }
       }
     }
-    .padding(.leading, 10)
+    .padding(.leading, 15)
   }
 }
 
 struct BookmarkList: View {
-  @Environment(\.modelContext) var modelContext
-
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
   var bookmarks: [Bookmark]
   
   var body: some View {
     VStack {
-      BookmarkItem(bookmarks: bookmarks, browser: browser, manualUpdate: manualUpdate)
+      BookmarkItem(browser: browser, manualUpdate: manualUpdate, bookmarks: bookmarks)
     }
   }
 }

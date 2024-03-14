@@ -8,55 +8,12 @@
 import SwiftUI
 
 struct BookmarkTitle: View {
-  @Environment(\.modelContext) var modelContext
   var bookmarks: [Bookmark]
   var bookmark: Bookmark
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
-  
-  func deleteBookmark(_ target: Bookmark) {
-    if let childBookmark = target.children {
-      for childTarget in childBookmark {
-        deleteBookmark(childTarget)
-      }
-    }
-    modelContext.delete(target)
-  }
-  
-  func indexReSetting(_ parentTarget: Bookmark? = nil) {
-    if let target = parentTarget, let parentTargetChildren = target.children {
-      let cache = parentTargetChildren.sorted {
-        return $0.index < $1.index
-      }
-      
-      for (index, _) in cache.enumerated() {
-        cache[index].index = index
-      }
-      
-      for child in target.children! {
-        let index = cache.first(where: { $0.url == child.url })!.index
-        child.index = index
-      }
-    } else {
-      let cache = bookmarks.filter({ target in
-        target.url != nil && target.url != bookmark.url
-      }).sorted {
-        return $0.index < $1.index
-      }
-      
-      for (index, _) in cache.enumerated() {
-        cache[index].index = index
-      }
-      
-      for child in bookmarks {
-        if let cacheData = cache.first(where: { $0.url == child.url }) {
-          child.index = cacheData.index
-        }
-      }
-    }
-  }
   
   var body: some View {
     VStack(spacing: 0) {
@@ -103,8 +60,6 @@ struct BookmarkTitle: View {
               Text(bookmark.title)
                 .font(.system(size: 13))
                 .frame(height: 26)
-              Text(" \(bookmark.index)")
-              Text(" \(bookmark.parent?.title ?? "none")")
               Spacer()
             }
           }
@@ -130,7 +85,7 @@ struct BookmarkTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
-        BookmarkAPI.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
+        BookmarkManager.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
         manualUpdate.bookmarks = !manualUpdate.bookmarks
       }
       Divider()
@@ -139,12 +94,12 @@ struct BookmarkTitle: View {
           let index = children.filter({ target in
             target.url == nil
           }).count
-          BookmarkAPI.addBookmark(index: index, parent: parent)
+          BookmarkManager.addBookmark(index: index, parent: parent)
         } else {
           let index = bookmarks.filter({ target in
             target.url == nil
           }).count
-          BookmarkAPI.addBookmark(index: index)
+          BookmarkManager.addBookmark(index: index)
         }
         manualUpdate.bookmarks = !manualUpdate.bookmarks
       }

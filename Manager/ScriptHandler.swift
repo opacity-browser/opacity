@@ -30,10 +30,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String] {
-//    if message.name == "opacityBrowser", let messageBody = message.body as? [String: String], let webView = message.webView {
-//      guard let currentURL = webView.url else {
-//        return
-//      }
       
       let scriptName = messageBody["name"] ?? ""
       

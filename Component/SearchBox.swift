@@ -34,10 +34,10 @@ struct SearchBox: View {
               HStack(spacing: 0) {
                 Image(systemName: "magnifyingglass")
                   .frame(maxWidth: 28, maxHeight: 28, alignment: .center)
-                  .font(.system(size: 15))
+                  .font(.system(size: 14))
                   .foregroundColor(Color("Icon"))
               }
-              .padding(.leading, 5)
+              .padding(.leading, 4)
               
               TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                 if !isEdit {
@@ -47,7 +47,7 @@ struct SearchBox: View {
                 }
               })
               .foregroundColor(Color("UIText").opacity(0.85))
-              .padding(.leading, 7)
+              .padding(.leading, 4)
               .frame(height: 32)
               .textFieldStyle(PlainTextFieldStyle())
               .font(.system(size: textSize))
@@ -117,11 +117,12 @@ struct SearchBox: View {
                     self.isSiteDialog.toggle()
                   } label: {
                     HStack(spacing: 0) {
-                      Image(systemName: "lock.shield")
+                      Image(systemName: "lock")
                         .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
                         .background(Color("SearchBarBG"))
                         .clipShape(RoundedRectangle(cornerRadius: 14))
-                        .font(.system(size: 15))
+                        .font(.system(size: 13))
+                        .fontWeight(.medium)
                         .foregroundColor(Color("Icon"))
                     }
                     .padding(.leading, 3)

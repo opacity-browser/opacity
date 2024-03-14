@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-class BookmarkAPI {
+class BookmarkManager {
   @MainActor static func addBookmark(index: Int, parent: Bookmark? = nil, title: String? = nil, url: String? = nil, favicon: Data? = nil) {
     do {
       var newBookmark: Bookmark
@@ -27,7 +27,7 @@ class BookmarkAPI {
   @MainActor static func deleteIncludingChildren(_ bookmark: Bookmark) {
     if let childBookmark = bookmark.children {
       for childTarget in childBookmark {
-        BookmarkAPI.deleteIncludingChildren(childTarget)
+        self.deleteIncludingChildren(childTarget)
       }
     }
     AppDelegate.shared.opacityModelContainer.mainContext.delete(bookmark)
@@ -43,7 +43,7 @@ class BookmarkAPI {
   static func resetIndexByBookmark(bookmarks: [Bookmark], cacheParent: Bookmark? = nil, bookmark: Bookmark, isGroup: Bool? = false) {
     if let target = cacheParent, let parentTargetChildren = target.children {
       let cache = parentTargetChildren.filter({ target in
-        BookmarkAPI.isBookmarkGroup(target) == isGroup && target.id != bookmark.id
+        self.isBookmarkGroup(target) == isGroup && target.id != bookmark.id
       }).sorted {
         return $0.index < $1.index
       }
@@ -59,7 +59,7 @@ class BookmarkAPI {
       }
     } else {
       let cache = bookmarks.filter({ target in
-        BookmarkAPI.isBookmarkGroup(target) == isGroup && target.id != bookmark.id
+        self.isBookmarkGroup(target) == isGroup && target.id != bookmark.id
       }).sorted {
         return $0.index < $1.index
       }
@@ -79,9 +79,9 @@ class BookmarkAPI {
   @MainActor static func deleteBookmarkGroup(bookmarks: [Bookmark], bookmark: Bookmark) {
     do {
       let cacheParent = bookmark.parent
-      BookmarkAPI.deleteIncludingChildren(bookmark)
+      self.deleteIncludingChildren(bookmark)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
-      BookmarkAPI.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark, isGroup: true)
+      self.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark, isGroup: true)
     } catch {
       print("bookmark group delete error")
     }
@@ -90,15 +90,11 @@ class BookmarkAPI {
   @MainActor static func deleteBookmark(bookmarks: [Bookmark], bookmark: Bookmark) {
     do {
       let cacheParent = bookmark.parent
-      BookmarkAPI.deleteIncludingChildren(bookmark)
+      self.deleteIncludingChildren(bookmark)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
-      BookmarkAPI.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark)
+      self.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark)
     } catch {
       print("bookmark delete error")
     }
-  }
-  
-  @MainActor static func changeGroupBookmark() {
-    
   }
 }

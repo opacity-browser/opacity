@@ -74,19 +74,19 @@ struct BookmarkDialog: View {
                 return
               }
               
-              BookmarkAPI.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
+              BookmarkManager.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
               
               if let bookmarkId = selectId, let target = bookmarkGroups.first(where: { $0.id == bookmarkId }), let children = target.children {
                 let index = children.filter({ childBookmark in
-                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                  BookmarkManager.isBookmarkGroup(childBookmark) == false
                 }).count
-                BookmarkAPI.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                BookmarkManager.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
                 target.isOpen = true
               } else {
                 let index = bookmarks.filter({ childBookmark in
-                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                  BookmarkManager.isBookmarkGroup(childBookmark) == false
                 }).count
-                BookmarkAPI.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                BookmarkManager.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
               }
               
               manualUpdate.bookmarks = !manualUpdate.bookmarks
@@ -137,15 +137,15 @@ struct BookmarkDialog: View {
               
               if let bookmarkId = selectId, let target = bookmarkGroups.first(where: { $0.id == bookmarkId }), let children = target.children {
                 let index = children.filter({ childBookmark in
-                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                  BookmarkManager.isBookmarkGroup(childBookmark) == false
                 }).count
-                BookmarkAPI.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                BookmarkManager.addBookmark(index: index, parent: target, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
                 target.isOpen = true
               } else {
                 let index = bookmarks.filter({ childBookmark in
-                  BookmarkAPI.isBookmarkGroup(childBookmark) == false
+                  BookmarkManager.isBookmarkGroup(childBookmark) == false
                 }).count
-                BookmarkAPI.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
+                BookmarkManager.addBookmark(index: index, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
               }
               
               manualUpdate.bookmarks = !manualUpdate.bookmarks
