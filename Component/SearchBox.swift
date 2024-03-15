@@ -67,7 +67,8 @@ struct SearchBox: View {
                   newURL = "https://www.google.com/search?q=\(newURL)"
                 }
                 
-                if(newURL != tab.originURL.absoluteString) {
+                if(newURL != tab.originURL.absoluteString.removingPercentEncoding) {
+                  SearchManager.addSearchHistory(tab.inputURL)
                   DispatchQueue.main.async {
                     tab.isPageProgress = true
                     tab.pageProgress = 0.0
