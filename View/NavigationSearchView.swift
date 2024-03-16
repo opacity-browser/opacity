@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NavigationView: View {
+struct NavigationSearchView: View {
   @ObservedObject var browser: Browser
   @Binding var activeTabId: UUID?
   @Binding var isFullScreen: Bool

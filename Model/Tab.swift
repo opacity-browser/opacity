@@ -50,9 +50,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isEditSearch: Bool = false
   
   @Published var isLocationDialogIcon: Bool = false
-//  @Published var isLocationDetailDialog: Bool = true
   @Published var isNotificationDialogIcon: Bool = false
-//  @Published var isNotificationDetailDialog: Bool = true
   
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false

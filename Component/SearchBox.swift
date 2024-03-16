@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SearchBox: View {
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @ObservedObject var manualUpdate: ManualUpdate
   
-  @FocusState private var isTextFieldFocused: Bool
   @State private var isSearchHover: Bool = false
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
@@ -21,162 +21,95 @@ struct SearchBox: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      if tab.isEditSearch {
-        HStack(spacing: 0) {
-          ZStack {
-            Rectangle()
-              .frame(maxWidth: .infinity, maxHeight: inputHeight)
-              .foregroundColor(Color("InputBG"))
-              .clipShape(RoundedRectangle(cornerRadius: 15))
-              .padding(0)
-            
+      GeometryReader { geometry in
+        VStack(spacing: 0) {
+          if !tab.isEditSearch {
             HStack(spacing: 0) {
-              HStack(spacing: 0) {
-                Image(systemName: "magnifyingglass")
-                  .frame(maxWidth: 28, maxHeight: 28, alignment: .center)
-                  .font(.system(size: 14))
-                  .foregroundColor(Color("Icon"))
-              }
-              .padding(.leading, 4)
-              
-              TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
-                if !isEdit {
-                  withAnimation {
-                    tab.isEditSearch = false
-                  }
-                }
-              })
-              .foregroundColor(Color("UIText").opacity(0.85))
-              .padding(.leading, 4)
-              .frame(height: 32)
-              .textFieldStyle(PlainTextFieldStyle())
-              .font(.system(size: textSize))
-              .fontWeight(.regular)
-              .focused($isTextFieldFocused)
-              .onSubmit {
-                if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                  return
-                }
-                
-                var newURL = tab.inputURL
-                if StringURL.checkURL(url: newURL) {
-                  if !newURL.contains("://") {
-                    newURL = "https://\(newURL)"
-                  }
-                } else {
-                  newURL = "https://www.google.com/search?q=\(newURL)"
-                }
-                
-                if(newURL != tab.originURL.absoluteString.removingPercentEncoding) {
-                  SearchManager.addSearchHistory(tab.inputURL)
-                  DispatchQueue.main.async {
-                    tab.isPageProgress = true
-                    tab.pageProgress = 0.0
-                    tab.updateURLBySearch(url: URL(string: newURL)!)
-                    isTextFieldFocused = false
-                    withAnimation {
-                      tab.isEditSearch = false
-                    }
-                  }
-                }
-              }
-            }
-          }
-          .padding(1)
-          .background(Color("InputBG"))
-          .clipShape(RoundedRectangle(cornerRadius: 16))
-          .offset(y: -1)
-        }
-        .padding(.top, 1)
-        .padding(.leading, 1)
-      } else {
-        HStack(spacing: 0) {
-          GeometryReader { geometry in
-            ZStack {
               ZStack {
-                Rectangle()
-                  .frame(maxWidth: .infinity, maxHeight: inputHeight)
-                  .foregroundColor(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
-                  .overlay {
-                    if !tab.isInit && tab.isPageProgress {
-                      HStack(spacing: 0) {
-                        Rectangle()
-                          .foregroundColor(Color("Point"))
-                          .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
-                          .animation(.linear(duration: 0.5), value: tab.pageProgress)
-                        if tab.pageProgress < 1.0 {
-                          Spacer()
+                ZStack {
+                  Rectangle()
+                    .frame(maxWidth: .infinity, maxHeight: inputHeight)
+                    .foregroundColor(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+                    .overlay {
+                      if !tab.isInit && tab.isPageProgress {
+                        HStack(spacing: 0) {
+                          Rectangle()
+                            .foregroundColor(Color("Point"))
+                            .frame(maxWidth: geometry.size.width * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
+                            .animation(.linear(duration: 0.5), value: tab.pageProgress)
+                          if tab.pageProgress < 1.0 {
+                            Spacer()
+                          }
                         }
+                        .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .bottom)
                       }
-                      .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .bottom)
                     }
-                  }
-                  .clipShape(RoundedRectangle(cornerRadius: 15))
-                
-                HStack(spacing: 0) {
-                  Button {
-                    self.isSiteDialog.toggle()
-                  } label: {
-                    HStack(spacing: 0) {
-                      Image(systemName: "lock")
-                        .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-                        .background(Color("SearchBarBG"))
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
-                        .font(.system(size: 13))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("Icon"))
-                    }
-                    .padding(.leading, 3)
-                    .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-                      SiteOptionDialog(tab: tab)
-                    }
-                  }
-                  .buttonStyle(.plain)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
                   
-                  Text(tab.printURL)
-                    .frame(minWidth: 175, maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-                    .foregroundColor(Color("UIText").opacity(0.85))
-                    .padding(.top, 5)
-                    .padding(.bottom, 5)
-                    .padding(.leading, 7)
-                    .padding(.trailing, 10)
-                    .font(.system(size: textSize))
-                    .fontWeight(.regular)
-                    .opacity(0.9)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                  
-                  BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
-                    .padding(.trailing, 10)
+                  HStack(spacing: 0) {
+                    Button {
+                      self.isSiteDialog.toggle()
+                    } label: {
+                      HStack(spacing: 0) {
+                        Image(systemName: "lock")
+                          .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                          .background(Color("SearchBarBG"))
+                          .clipShape(RoundedRectangle(cornerRadius: 14))
+                          .font(.system(size: 13))
+                          .fontWeight(.medium)
+                          .foregroundColor(Color("Icon"))
+                      }
+                      .padding(.leading, 3)
+                      .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
+                        SiteOptionDialog(tab: tab)
+                      }
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Text(tab.printURL)
+                      .frame(minWidth: 175, maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+                      .foregroundColor(Color("UIText").opacity(0.85))
+                      .padding(.top, 5)
+                      .padding(.bottom, 5)
+                      .padding(.leading, 7)
+                      .padding(.trailing, 10)
+                      .font(.system(size: textSize))
+                      .fontWeight(.regular)
+                      .opacity(0.9)
+                      .lineLimit(1)
+                      .truncationMode(.tail)
+                    
+                    BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
+                      .padding(.trailing, 10)
+                  }
                 }
+                .frame(height: 32)
+                .padding(1)
+                .background(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
               }
-              .frame(height: 32)
-              .padding(1)
-              .background(!isBookmarkHover && isSearchHover ? Color("InputBGHover") : Color("InputBG"))
-              .clipShape(RoundedRectangle(cornerRadius: 16))
-            }
-            .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
-            .offset(y: 0.5)
-            .onTapGesture {
-              withAnimation {
+              .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
+              .offset(y: 0.5)
+              .onTapGesture {
                 tab.isEditSearch = true
               }
-              isTextFieldFocused = true
-            }
-            .onHover { hovering in
-              withAnimation(.easeIn(duration: 0.2)) {
-                isSearchHover = hovering
+              .onHover { hovering in
+                withAnimation(.easeIn(duration: 0.2)) {
+                  isSearchHover = hovering
+                }
               }
             }
+            .padding(.leading, 1)
+            .padding(.top, 1)
           }
         }
-        .padding(.leading, 1)
-        .padding(.top, 1)
-      }
-    }
-    .onChange(of: tab.isEditSearch) { _, newValue in
-      if(tab.isInit && !isTextFieldFocused) {
-        isTextFieldFocused = true
+        .onAppear {
+          print(geometry.frame(in: .global))
+          browser.searchBoxRect = geometry.frame(in: .global)
+        }
+        .onChange(of: geometry.size) { _, newValue in
+          browser.searchBoxRect = geometry.frame(in: .global)
+        }
       }
     }
   }

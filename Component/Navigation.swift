@@ -47,7 +47,7 @@ struct Navigation: View {
       
       Spacer()
       
-      SearchBox(tab: tab, manualUpdate: manualUpdate)
+      SearchBox(browser: browser, tab: tab, manualUpdate: manualUpdate)
       
       Spacer()
       
