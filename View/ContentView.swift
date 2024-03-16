@@ -2,6 +2,10 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) var modelContext
+    @Query var searchHistoryGroup: [SearchHistoryGroup]
+    @Query var searchHistory: [SearchHistory]
+  
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser

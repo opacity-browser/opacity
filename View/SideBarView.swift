@@ -66,6 +66,10 @@ struct SideBarView: View {
           .background(.blue.opacity(0.2))
         }
         
+        Button("Update") {
+          manualUpdate.bookmarks = !manualUpdate.bookmarks
+        }
+        
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             VStack(spacing: 0) {

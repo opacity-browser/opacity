@@ -26,6 +26,7 @@ class SearchManager {
   @MainActor static func addSearchHistory(_ keyword: String) {
     if let searchGroup = self.getSearchHistoryGroup(keyword) {
       do {
+        print("A")
         let newSearchHistory = SearchHistory(searchTextGroup: searchGroup, searchText: keyword)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
@@ -34,9 +35,10 @@ class SearchManager {
       }
     } else {
       do {
+        print("B")
         let newSearchHistoryGroup = SearchHistoryGroup(searchText: keyword)
-        let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: keyword)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistoryGroup)
+        let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: keyword)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
       } catch {

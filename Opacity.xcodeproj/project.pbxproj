@@ -19,6 +19,8 @@
 		A11EDADD2BA431A7000D07CB /* VisitHistoryCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */; };
 		A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADE2BA45BAE000D07CB /* SearchManager.swift */; };
 		A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */; };
+		A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */; };
+		A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
 		A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemNSView.swift */; };
@@ -91,6 +93,8 @@
 		A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistoryCount.swift; sourceTree = "<group>"; };
 		A11EDADE2BA45BAE000D07CB /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 		A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxDialog.swift; sourceTree = "<group>"; };
+		A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoComplete.swift; sourceTree = "<group>"; };
+		A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteList.swift; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		A14246172B71F1A80062C516 /* TabItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemNSView.swift; sourceTree = "<group>"; };
@@ -171,6 +175,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A11EDAE42BA62C9E000D07CB /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		A12D053C2B600C4C00CBC6B2 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +222,7 @@
 		A15FCB0F2B999D2900D64C05 /* Item */ = {
 			isa = PBXGroup;
 			children = (
+				A11EDAE42BA62C9E000D07CB /* Search */,
 				A15FCB102B999D5100D64C05 /* Bookmark */,
 			);
 			path = Item;
@@ -329,6 +342,7 @@
 				A16BCB132B9852B7004639F2 /* SearchBox.swift */,
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
+				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -499,11 +513,13 @@
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
+				A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
 				A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */,
 				A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
+				A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteList.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

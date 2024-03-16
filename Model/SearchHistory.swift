@@ -25,5 +25,6 @@ class SearchHistory: Identifiable  {
     self.searchTextGroup = searchTextGroup
     self.searchText = searchText
     self.createDate = Date.now
+    searchTextGroup.updateDate = Date.now
   }
 }

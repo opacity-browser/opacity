@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SearchBoxDialog: View {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
+  
+//  @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
+//  @Query
+//  var searchHistories: [SearchHistoryGroup]
   
   @FocusState private var isTextFieldFocused: Bool
   
@@ -28,17 +33,17 @@ struct SearchBoxDialog: View {
                     .foregroundColor(Color("Icon"))
                 }
                 .padding(.leading, 9)
-                .offset(y: -1)
+//                .offset(y: -1)
                 
                 TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
                   if !isEdit {
                     tab.isEditSearch = false
                   }
                 })
-                .offset(y: -1.5)
+                .offset(y: -0.5)
                 .foregroundColor(Color("UIText").opacity(0.85))
                 .padding(.leading, 7)
-                .frame(height: 44)
+                .frame(height: 37)
                 .textFieldStyle(PlainTextFieldStyle())
                 .font(.system(size: 13.5))
                 .fontWeight(.regular)
@@ -70,15 +75,15 @@ struct SearchBoxDialog: View {
                 }
               }
               
-              Rectangle()
-                .frame(maxWidth: .infinity, maxHeight: 0.5)
-                .foregroundColor(Color("UIBorder"))
-                .offset(y: -1)
-              
-              VStack(spacing: 0) {
-                Text("search-list-1")
-                Text("search-list-2")
-                Text("search-list-3")
+              if tab.inputURL != "" {
+                VStack(spacing: 0) {
+                  Rectangle()
+                    .frame(maxWidth: .infinity, maxHeight: 0.5)
+                    .foregroundColor(Color("UIBorder"))
+                  
+                  SearchAutoComplete(tab: tab, keyword: tab.inputURL)
+                }
+                .padding(.horizontal, 15)
               }
             }
             .frame(width: searchBoxRect.width + 8)
@@ -95,7 +100,7 @@ struct SearchBoxDialog: View {
         }
         Spacer()
       }
-      .padding(.top, 3)
+      .padding(.top, 5)
       .padding(.leading, searchBoxRect.minX - 4)
       .onAppear {
         isTextFieldFocused = true

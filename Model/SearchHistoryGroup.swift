@@ -19,8 +19,11 @@ class SearchHistoryGroup: Identifiable {
   @Relationship(deleteRule: .cascade)
   var searchHistories: [SearchHistory]? = [SearchHistory]()
   
+  var updateDate: Date
+  
   init(searchText: String) {
     self.id = UUID()
     self.searchText = searchText
+    self.updateDate = Date.now
   }
 }
