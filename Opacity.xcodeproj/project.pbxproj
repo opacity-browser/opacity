@@ -20,7 +20,10 @@
 		A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADE2BA45BAE000D07CB /* SearchManager.swift */; };
 		A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */; };
 		A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */; };
-		A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */; };
+		A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */; };
+		A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */; };
+		A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */; };
+		A11EDAEE2BA6FEE3000D07CB /* AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
 		A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemNSView.swift */; };
@@ -94,7 +97,10 @@
 		A11EDADE2BA45BAE000D07CB /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 		A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxDialog.swift; sourceTree = "<group>"; };
 		A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoComplete.swift; sourceTree = "<group>"; };
-		A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteList.swift; sourceTree = "<group>"; };
+		A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteBox.swift; sourceTree = "<group>"; };
+		A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItem.swift; sourceTree = "<group>"; };
+		A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEditBox.swift; sourceTree = "<group>"; };
+		A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoComplete.swift; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		A14246172B71F1A80062C516 /* TabItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemNSView.swift; sourceTree = "<group>"; };
@@ -178,7 +184,9 @@
 		A11EDAE42BA62C9E000D07CB /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteList.swift */,
+				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */,
+				A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */,
+				A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -316,6 +324,7 @@
 				A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */,
 				A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */,
 				A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */,
+				A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -472,6 +481,7 @@
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
 				A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
+				A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */,
 				A16BCAFC2B907878004639F2 /* ToggleSwitch.swift in Sources */,
 				A16BCAF62B8FFBFD004639F2 /* HistoryForwardBtn.swift in Sources */,
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
@@ -504,6 +514,7 @@
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A16BCAF42B8FFBEB004639F2 /* HistoryBackBtn.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
+				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
@@ -511,6 +522,7 @@
 				A11EDADD2BA431A7000D07CB /* VisitHistoryCount.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
+				A11EDAEE2BA6FEE3000D07CB /* AutoComplete.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
 				A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */,
@@ -519,7 +531,7 @@
 				A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */,
 				A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
-				A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteList.swift in Sources */,
+				A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteBox.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

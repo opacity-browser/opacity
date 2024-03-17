@@ -29,6 +29,7 @@ struct MainView: View {
       }
       if browser.isSideBar {
         SideBarView(browser: browser, manualUpdate: manualUpdate)
+          .id(manualUpdate.bookmarks)
       }
     }
   }

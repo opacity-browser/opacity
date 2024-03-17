@@ -24,10 +24,12 @@ class SearchManager {
   }
   
   @MainActor static func addSearchHistory(_ keyword: String) {
-    if let searchGroup = self.getSearchHistoryGroup(keyword) {
+    let uppLowLetters = StringURL.checkURL(url: keyword) ? keyword.lowercased() : keyword
+    
+    if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
       do {
         print("A")
-        let newSearchHistory = SearchHistory(searchTextGroup: searchGroup, searchText: keyword)
+        let newSearchHistory = SearchHistory(searchTextGroup: searchGroup, searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
       } catch {
@@ -36,9 +38,9 @@ class SearchManager {
     } else {
       do {
         print("B")
-        let newSearchHistoryGroup = SearchHistoryGroup(searchText: keyword)
+        let newSearchHistoryGroup = SearchHistoryGroup(searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistoryGroup)
-        let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: keyword)
+        let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
       } catch {

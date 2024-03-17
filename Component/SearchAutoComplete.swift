@@ -9,37 +9,32 @@ import SwiftUI
 import SwiftData
 
 struct SearchAutoComplete: View {
-  @Environment(\.modelContext) var modelContext
-  @Query var searchHistoryGroup: [SearchHistoryGroup]
-//  @Query var searchHistory: [SearchHistory]
-  
   @ObservedObject var tab: Tab
-//  var searchHistoryGroup: [SearchHistoryGroup]
+  var autoCompleteList: [SearchHistoryGroup]
   
-  init(tab: Tab, keyword: String) {
-    self.tab = tab
-    self._searchHistoryGroup = Query(filter: #Predicate<SearchHistoryGroup> {
-      $0.searchText.contains(keyword)
-    }, sort: \SearchHistoryGroup.updateDate, order: .reverse)
-    
-//    let filterSearchHistories = searchHistoryGroup.filter {
-//      $0.searchText.contains(tab.inputURL)
-//    }
-//    let sortSearchHistories = filterSearchHistories.sorted {
-//      $0.searchHistories!.count < $1.searchHistories!.count
-//    }
-//    self.searchHistoryGroup = sortSearchHistories
-  }
+//  @Environment(\.modelContext) var modelContext
+//  @Query var searchHistoryGroups: [SearchHistoryGroup]
+  
+//  init(tab: Tab, searchHistoryGroups: [SearchHistoryGroup]) {
+//    self.tab = tab
+//    let lowercaseKeyword = tab.inputURL.lowercased()
+//    self._searchHistoryGroups = Query(filter: #Predicate<SearchHistoryGroup> {
+//      $0.searchText.localizedStandardContains(lowercaseKeyword)
+//    }, sort: \SearchHistoryGroup.updateDate, order: .reverse)
+//  }
   
   var body: some View {
     VStack(spacing: 0) {
-      if searchHistoryGroup.count > 0 {
-        SearchAutoCompleteList(searchHistoryGroup: searchHistoryGroup)
+      if autoCompleteList.count > 0 {
+        ForEach(autoCompleteList) { autoCompleteList in
+          SearchAutoCompleteItem(searchHistoryGroup: autoCompleteList)
+        }
       } else {
         Text("검색 기록이 없습니다.")
           .padding(.vertical, 10)
       }
     }
-    .padding(.vertical, 5)
+    .padding(.top, 4)
+    .padding(.bottom, 5)
   }
 }

@@ -2,10 +2,6 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) var modelContext
-    @Query var searchHistoryGroup: [SearchHistoryGroup]
-    @Query var searchHistory: [SearchHistory]
-  
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
@@ -21,8 +17,8 @@ struct ContentView: View {
   
   var body: some View {
     ZStack {
-      GeometryReader { geometry in
-        if let _ = browser.activeTabId, browser.tabs.count > 0 {
+      if let _ = browser.activeTabId, browser.tabs.count > 0 {
+        GeometryReader { geometry in
           VStack(spacing: 0) {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
@@ -36,10 +32,8 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
+          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, manualUpdate: manualUpdate)
         }
-      }
-      if let tab = browser.tabs.first(where: { $0.id == browser.activeTabId }) {
-        SearchBoxDialog(browser: browser, tab: tab)
       }
     }
     .toolbar {
