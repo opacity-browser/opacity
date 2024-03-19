@@ -18,7 +18,7 @@ struct SideBarView: View {
     $0.url != nil
   }) var onlyBookmarks: [Bookmark]
   
-//  @Query var searchHistoryGroup: [SearchHistoryGroup]
+  @Query var searchHistoryGroup: [SearchHistoryGroup]
 //  @Query var searchHistory: [SearchHistory]
   
   @ObservedObject var browser: Browser
@@ -33,20 +33,20 @@ struct SideBarView: View {
         .foregroundColor(Color("UIBorder"))
       
       ScrollView {
-//        ForEach(searchHistoryGroup) { shg in
-//          VStack {
-//            Text(shg.searchText)
-//            Text("\(shg.updateDate)")
-//            if let hitories = shg.searchHistories, hitories.count > 0 {
-//              Divider()
-//              ForEach(hitories) { sh in
-//                Text("\(sh.id)")
-//              }
-//            }
-//          }
-//          .padding(5)
-//          .background(.red.opacity(0.2))
-//        }
+        ForEach(searchHistoryGroup) { shg in
+          VStack {
+            Text(shg.searchText)
+            Text("\(shg.updateDate)")
+            if let hitories = shg.searchHistories, hitories.count > 0 {
+              Divider()
+              ForEach(hitories) { sh in
+                Text("\(sh.id)")
+              }
+            }
+          }
+          .padding(5)
+          .background(.red.opacity(0.2))
+        }
 //        
 //        ForEach(searchHistory) { sh in
 //          VStack {
