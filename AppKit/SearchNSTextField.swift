@@ -16,38 +16,39 @@ struct SearchNSTextField: NSViewRepresentable {
   var searchHistoryGroups: [SearchHistoryGroup]
   @Binding var autoCompleteList: [SearchHistoryGroup]
   
-  @Binding var autoCompleteIndex: Int
+  @Binding var autoCompleteIndex: Int?
   @Binding var autoCompleteText: String
   
   class Coordinator: NSObject, NSTextFieldDelegate {
     var parent: SearchNSTextField
-    var isAddString: Bool = true
     
     init(_ parent: SearchNSTextField) {
       self.parent = parent
     }
     
+    func allowedCharacters(string: String) -> Bool {
+      let allowedCharacterSet = CharacterSet.urlQueryAllowed
+      return string.unicodeScalars.allSatisfy { allowedCharacterSet.contains($0) }
+    }
+    
     func controlTextDidChange(_ obj: Notification) {
       if let textField = obj.object as? NSTextField {
-        
-        
         let lowercaseKeyword = textField.stringValue.lowercased()
+        
         self.parent.autoCompleteList = self.parent.searchHistoryGroups.filter {
-          $0.searchText.localizedStandardContains(lowercaseKeyword)
+          $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
         }.sorted {
           $0.searchHistories!.count > $1.searchHistories!.count
-        }.sorted {
-          $0.searchText.lowercased().hasPrefix(lowercaseKeyword) && !$1.searchText.lowercased().hasPrefix(lowercaseKeyword)
         }.sorted {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
         
-        if self.isAddString && self.parent.autoCompleteList.count > 0 && self.parent.autoCompleteIndex == -1 {
+        self.parent.autoCompleteIndex = nil
+        if allowedCharacters(string: lowercaseKeyword) && self.parent.autoCompleteList.count > 0 &&  lowercaseKeyword.count != self.parent.tab.inputURL.count - 1 {
           self.parent.autoCompleteIndex = 0
         }
         
         self.parent.tab.inputURL = textField.stringValue
-        self.isAddString = true
       }
     }
     
@@ -65,6 +66,11 @@ struct SearchNSTextField: NSViewRepresentable {
           return true
         }
         var newURL = self.parent.tab.inputURL
+        
+        if let choiceIndex = self.parent.autoCompleteIndex {
+          newURL = self.parent.autoCompleteList[choiceIndex].searchText
+        }
+        
         if StringURL.checkURL(url: newURL) {
           if !newURL.contains("://") {
             newURL = "https://\(newURL)"
@@ -72,8 +78,15 @@ struct SearchNSTextField: NSViewRepresentable {
         } else {
           newURL = "https://www.google.com/search?q=\(newURL)"
         }
-        if(newURL != self.parent.tab.originURL.absoluteString.removingPercentEncoding) {
-          SearchManager.addSearchHistory(self.parent.tab.inputURL)
+        
+        if(newURL == self.parent.tab.originURL.absoluteString.removingPercentEncoding) {
+          self.parent.tab.isEditSearch = false
+        } else {
+          if let choiceIndex = self.parent.autoCompleteIndex {
+            SearchManager.addSearchHistory(self.parent.autoCompleteList[choiceIndex].searchText)
+          } else {
+            SearchManager.addSearchHistory(self.parent.tab.inputURL)
+          }
           DispatchQueue.main.async {
             self.parent.manualUpdate.search = !self.parent.manualUpdate.search
             self.parent.tab.isPageProgress = true
@@ -84,9 +97,9 @@ struct SearchNSTextField: NSViewRepresentable {
         }
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
-        self.isAddString = false
-        if self.parent.autoCompleteList.count > 0 && self.parent.autoCompleteIndex > -1 {
-          self.parent.autoCompleteIndex = -1
+        if let index = self.parent.autoCompleteIndex, self.parent.autoCompleteList.count > 0, self.parent.autoCompleteList[index].searchText != self.parent.tab.inputURL {
+          self.parent.autoCompleteIndex = nil
+          print("no delete")
           return true
         }
         return false

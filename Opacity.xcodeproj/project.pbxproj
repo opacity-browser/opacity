@@ -188,6 +188,7 @@
 			children = (
 				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */,
 				A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */,
+				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,
 				A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */,
 			);
 			path = Search;
@@ -354,7 +355,6 @@
 				A16BCB132B9852B7004639F2 /* SearchBox.swift */,
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
-				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";

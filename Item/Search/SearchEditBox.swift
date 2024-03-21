@@ -34,7 +34,7 @@ struct SearchEditBox: View {
                 .background(Color("SearchBarBG"))
               }
               .background(Color("SearchBarBG"))
-              .clipShape(RoundedRectangle(cornerRadius: 15))
+              .clipShape(RoundedRectangle(cornerRadius: 18))
               .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 3)
               Spacer()
             }

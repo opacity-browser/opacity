@@ -23,7 +23,7 @@ struct SearchAutoCompleteBox: View {
   @Binding var autoCompleteList: [SearchHistoryGroup]
   
   @State var searchInputFocus: Bool = false
-  @State var autoCompleteIndex: Int = -1
+  @State var autoCompleteIndex: Int?
   @State var autoCompleteText: String = ""
   
   var body: some View {
@@ -42,8 +42,8 @@ struct SearchAutoCompleteBox: View {
           .padding(.leading, 3)
           .frame(height: 37)
           .overlay {
-            if autoCompleteList.count > 0 && autoCompleteIndex > -1 {
-              let autoCompleteText = autoCompleteList[autoCompleteIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
+            if let choiceIndex = autoCompleteIndex, autoCompleteList.count > 0 {
+              let autoCompleteText = autoCompleteList[choiceIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
               HStack(spacing: 0) {
                 VStack(spacing: 0) {
                   Text("\(autoCompleteText)")
@@ -58,149 +58,59 @@ struct SearchAutoCompleteBox: View {
             }
           }
           .onKeyPress(.upArrow) {
-            print("up key down")
-            if autoCompleteIndex > 0 {
-              autoCompleteIndex = autoCompleteIndex - 1
-            } else {
-              autoCompleteIndex = autoCompleteList.count - 1
+            if autoCompleteList.count > 0 {
+              if let choiceIndex = autoCompleteIndex {
+                if choiceIndex > 0 {
+                  autoCompleteIndex = choiceIndex - 1
+                } else {
+                  autoCompleteIndex = autoCompleteList.count - 1
+                }
+              } else {
+                autoCompleteIndex = autoCompleteList.count - 1
+              }
+              DispatchQueue.main.async {
+                tab.inputURL = autoCompleteList[autoCompleteIndex!].searchText
+              }
+              return .handled
             }
-            return .handled
+            return .ignored
           }
           .onKeyPress(.downArrow) {
-            print("down key down")
-            if autoCompleteList.count > autoCompleteIndex + 1 {
-              autoCompleteIndex = autoCompleteIndex + 1
-            } else {
-              autoCompleteIndex = 0
+            if autoCompleteList.count > 0 {
+              if let choiceIndex = autoCompleteIndex {
+                if autoCompleteList.count > choiceIndex + 1 {
+                  autoCompleteIndex = choiceIndex + 1
+                } else {
+                  autoCompleteIndex = 0
+                }
+              } else {
+                autoCompleteIndex = 0
+              }
+              DispatchQueue.main.async {
+                tab.inputURL = autoCompleteList[autoCompleteIndex!].searchText
+              }
+              return .handled
             }
-            return .handled
+            return .ignored
+          }
+          .onKeyPress(.rightArrow) {
+            if let choiceIndex = autoCompleteIndex, autoCompleteList.count > 0, autoCompleteList[choiceIndex].searchText != tab.inputURL {
+              DispatchQueue.main.async {
+                tab.inputURL = autoCompleteList[choiceIndex].searchText
+              }
+              return .handled
+            }
+            return .ignored
           }
           .onAppear {
             DispatchQueue.main.async {
               searchInputFocus = true
             }
           }
-        
-//        TextField("", text: $tab.inputURL, onEditingChanged: { isEdit in
-//          if !isEdit {
-//            tab.isEditSearch = false
-//          }
-//        })
-//        .onAppear {
-//          DispatchQueue.main.async {
-//            isTextFieldFocused = true
-//          }
-//        }
-//        .offset(y: -0.5)
-//        .foregroundColor(Color("UIText").opacity(0.85))
-//        .overlay {
-//          if autoCompleteList.count > 0 && autoCompleteIndex != -1 {
-//            let autoCompleteText = autoCompleteList[autoCompleteIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
-//            HStack(spacing: 0) {
-//              VStack(spacing: 0) {
-//                Text("\(autoCompleteText)")
-//                  .font(.system(size: 13.5))
-//              }
-//              .frame(height: 16)
-//              .background(Color("AccentColor").opacity(0.3))
-//              .padding(.leading, inputTextWidth(tab.inputURL))
-//              .offset(y: -0.5)
-//              Spacer()
-//            }
-//          }
-//        }
-//        .padding(.leading, 7)
-//        .frame(height: 37)
-//        .textFieldStyle(PlainTextFieldStyle())
-//        .font(.system(size: 13.5))
-//        .fontWeight(.regular)
-//        .focused($isTextFieldFocused)
-//        .onKeyPress(.downArrow) {
-//          print("down key down")
-//          if autoCompleteList.count > autoCompleteIndex + 1 {
-//            autoCompleteIndex = autoCompleteIndex + 1
-//          } else {
-//            autoCompleteIndex = 0
-//          }
-//          return .handled
-//        }
-//        .onKeyPress(.upArrow) {
-//          print("up key down")
-//          if autoCompleteIndex > 0 {
-//            autoCompleteIndex = autoCompleteIndex - 1
-//          } else {
-//            autoCompleteIndex = autoCompleteList.count - 1
-//          }
-//          return .handled
-//        }
-//        .onChange(of: tab.inputURL) { oldValue, newValue in
-////            if autoCompleteIndex > -1 && oldValue.count > newValue.count {
-////              tab.inputURL = oldValue
-////              autoCompleteIndex = -1
-////              isUpdate = true
-////              return
-////            }
-////
-////            if newValue.count > oldValue.count {
-////              isUpdate = false
-////            }
-////
-////            if isUpdate {
-////              return
-////            }
-//
-//          let lowercaseKeyword = newValue.lowercased()
-//          autoCompleteList = searchHistoryGroups.filter {
-//            $0.searchText.localizedStandardContains(lowercaseKeyword)
-//          }.sorted {
-//            $0.searchHistories!.count > $1.searchHistories!.count
-//          }.sorted {
-//            $0.searchText.lowercased().hasPrefix(lowercaseKeyword) == true && $1.searchText.lowercased().hasPrefix(lowercaseKeyword) == false
-//          }.sorted {
-//            $0.searchText.hasPrefix(newValue) == true && $1.searchText.hasPrefix(newValue) == false
-//          }
-//
-//          if autoCompleteList.count > 0 && autoCompleteIndex == -1 {
-//            autoCompleteIndex = 0
-//          }
-//        }
-//        .onSubmit {
-//          if tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-//            return
-//          }
-//
-//          var newURL = tab.inputURL
-//          if StringURL.checkURL(url: newURL) {
-//            if !newURL.contains("://") {
-//              newURL = "https://\(newURL)"
-//            }
-//          } else {
-//            newURL = "https://www.google.com/search?q=\(newURL)"
-//          }
-//
-//          if(newURL != tab.originURL.absoluteString.removingPercentEncoding) {
-//            SearchManager.addSearchHistory(tab.inputURL)
-//            manualUpdate.search = !manualUpdate.search
-//            DispatchQueue.main.async {
-//              tab.isPageProgress = true
-//              tab.pageProgress = 0.0
-//              tab.updateURLBySearch(url: URL(string: newURL)!)
-//              isTextFieldFocused = false
-//              tab.isEditSearch = false
-//            }
-//          }
-//        }
       }
       
-      if tab.inputURL != "" {
-        VStack(spacing: 0) {
-          Rectangle()
-            .frame(maxWidth: .infinity, maxHeight: 0.5)
-            .foregroundColor(Color("UIBorder"))
-        }
-        .padding(.horizontal, 15)
-        
-        SearchAutoComplete(tab: tab, autoCompleteList: autoCompleteList)
+      if tab.inputURL != "" && autoCompleteList.count > 0 {
+        SearchAutoComplete(browser: browser, tab: tab, autoCompleteList: $autoCompleteList, autoCompleteIndex: $autoCompleteIndex)
       }
     }
   }

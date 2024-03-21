@@ -8,27 +8,38 @@
 import SwiftUI
 
 struct SearchAutoCompleteItem: View {
+  @ObservedObject var browser: Browser
+  @ObservedObject var tab: Tab
   var searchHistoryGroup: SearchHistoryGroup
+  var isActive: Bool
+  
   @State var isHover: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
+        Rectangle()
+          .frame(maxWidth: 3, maxHeight: .infinity)
+          .foregroundColor(Color.clear)
+          .clipShape(RoundedRectangle(cornerRadius: 2))
+        Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
+          .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+          .font(.system(size: 12))
+          .foregroundColor(Color("Icon").opacity(0.8))
+          .padding(.leading, 5)
+          .offset(y: -1)
         Text(searchHistoryGroup.searchText)
-        Text("-")
-        Text("\(searchHistoryGroup.searchHistories!.count)")
+          .padding(.leading, 5)
+          .opacity(0.8)
         Spacer()
       }
-      .padding(.horizontal, 15)
-      .frame(height: 32)
+      .frame(height: 30)
     }
-//    .padding(.vertical, 7)
     .onHover { hovering in
       withAnimation {
         isHover = hovering
       }
     }
-    .background(Color("InputBG").opacity(isHover ? 0.5 : 0))
-//    .clipShape(RoundedRectangle(cornerRadius: 10))
+    .background(Color("InputBG").opacity(isActive ? 0.6 : isHover ? 0.4 : 0))
   }
 }
