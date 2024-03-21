@@ -32,24 +32,28 @@ struct SearchNSTextField: NSViewRepresentable {
     }
     
     func controlTextDidChange(_ obj: Notification) {
-      if let textField = obj.object as? NSTextField {
-        let lowercaseKeyword = textField.stringValue.lowercased()
-        
-        self.parent.autoCompleteList = self.parent.searchHistoryGroups.filter {
-          $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
-        }.sorted {
-          $0.searchHistories!.count > $1.searchHistories!.count
-        }.sorted {
-          $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
-        }
-        
-        self.parent.autoCompleteIndex = nil
-        if allowedCharacters(string: lowercaseKeyword) && self.parent.autoCompleteList.count > 0 &&  lowercaseKeyword.count != self.parent.tab.inputURL.count - 1 {
-          self.parent.autoCompleteIndex = 0
-        }
-        
-        self.parent.tab.inputURL = textField.stringValue
+      guard let textField = obj.object as? NSTextField else { return }
+      
+      print(textField.stringValue)
+      let lowercaseKeyword = textField.stringValue.lowercased()
+      
+      self.parent.autoCompleteList = self.parent.searchHistoryGroups.filter {
+        $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
+      }.sorted {
+        $0.searchHistories!.count > $1.searchHistories!.count
+      }.sorted {
+        $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
       }
+      
+      self.parent.autoCompleteIndex = nil
+      if allowedCharacters(string: lowercaseKeyword) 
+          && self.parent.autoCompleteList.count > 0
+          && lowercaseKeyword.count != self.parent.tab.inputURL.count - 1
+          && textField.stringValue.count != 0 {
+        self.parent.autoCompleteIndex = 0
+      }
+      
+      self.parent.tab.inputURL = textField.stringValue
     }
     
     func controlTextDidEndEditing(_ notification: Notification) {
@@ -97,7 +101,11 @@ struct SearchNSTextField: NSViewRepresentable {
         }
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
-        if let index = self.parent.autoCompleteIndex, self.parent.autoCompleteList.count > 0, self.parent.autoCompleteList[index].searchText != self.parent.tab.inputURL {
+        let selectedRange = textView.selectedRange()
+        if let index = self.parent.autoCompleteIndex,
+            self.parent.autoCompleteList.count > 0,
+            self.parent.autoCompleteList[index].searchText != self.parent.tab.inputURL,
+           selectedRange.length == 0 {
           self.parent.autoCompleteIndex = nil
           print("no delete")
           return true
