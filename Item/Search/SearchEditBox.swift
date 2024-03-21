@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SearchEditBox: View {
+  @Environment(\.colorScheme) var colorScheme
   @Environment(\.modelContext) var modelContext
   @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
   var searchHistoryGroups: [SearchHistoryGroup]
@@ -31,11 +32,10 @@ struct SearchEditBox: View {
                   SearchAutoCompleteBox(browser: browser, tab: tab, manualUpdate: manualUpdate, searchHistoryGroups: searchHistoryGroups, autoCompleteList: $autoCompleteList)
                 }
                 .frame(width: searchBoxRect.width + 4)
-                .background(Color("SearchBarBG"))
               }
-              .background(Color("SearchBarBG"))
+              .background(Color("ActiveInputBG"))
               .clipShape(RoundedRectangle(cornerRadius: 18))
-              .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 3)
+              .shadow(color: .black.opacity(colorScheme == .dark ? 0.3 : 0.15), radius: 4, x: 0, y: 3)
               Spacer()
             }
             Spacer()

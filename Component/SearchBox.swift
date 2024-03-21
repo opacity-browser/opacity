@@ -91,7 +91,9 @@ struct SearchBox: View {
               .frame(maxWidth: .infinity, maxHeight: inputHeight, alignment: .leading)
               .offset(y: 0.5)
               .onTapGesture {
-                tab.isEditSearch = true
+                DispatchQueue.main.async {
+                  tab.isEditSearch = true
+                }
               }
               .onHover { hovering in
                 withAnimation(.easeIn(duration: 0.2)) {

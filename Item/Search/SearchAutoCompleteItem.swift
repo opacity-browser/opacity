@@ -40,6 +40,6 @@ struct SearchAutoCompleteItem: View {
         isHover = hovering
       }
     }
-    .background(Color("InputBG").opacity(isActive ? 0.6 : isHover ? 0.4 : 0))
+    .background(Color("AutoCompleteHover").opacity(isActive ? 0.6 : isHover ? 0.4 : 0))
   }
 }

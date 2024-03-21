@@ -47,7 +47,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
-  @Published var isEditSearch: Bool = false
+  @Published var isEditSearch: Bool = true
   
   @Published var isLocationDialogIcon: Bool = false
   @Published var isNotificationDialogIcon: Bool = false

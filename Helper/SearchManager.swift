@@ -28,7 +28,6 @@ class SearchManager {
     
     if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
       do {
-        print("A")
         let newSearchHistory = SearchHistory(searchTextGroup: searchGroup, searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
@@ -37,7 +36,6 @@ class SearchManager {
       }
     } else {
       do {
-        print("B")
         let newSearchHistoryGroup = SearchHistoryGroup(searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistoryGroup)
         let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: uppLowLetters)

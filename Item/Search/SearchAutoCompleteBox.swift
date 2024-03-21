@@ -22,9 +22,11 @@ struct SearchAutoCompleteBox: View {
   var searchHistoryGroups: [SearchHistoryGroup]
   @Binding var autoCompleteList: [SearchHistoryGroup]
   
-  @State var searchInputFocus: Bool = false
+  @State var searchInputFocus: Bool = true
   @State var autoCompleteIndex: Int?
   @State var autoCompleteText: String = ""
+  
+  @State var updateNsViewWindow: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
@@ -38,9 +40,10 @@ struct SearchAutoCompleteBox: View {
         }
         .padding(.leading, 9)
         
-        SearchNSTextField(browser: browser, tab: tab, manualUpdate: manualUpdate, isFocused: $searchInputFocus, searchHistoryGroups: searchHistoryGroups, autoCompleteList: $autoCompleteList, autoCompleteIndex: $autoCompleteIndex, autoCompleteText: $autoCompleteText)
-          .padding(.leading, 3)
+        SearchNSTextField(browser: browser, tab: tab, manualUpdate: manualUpdate, isFocused: $searchInputFocus, searchHistoryGroups: searchHistoryGroups, autoCompleteList: $autoCompleteList, autoCompleteIndex: $autoCompleteIndex, autoCompleteText: $autoCompleteText, updateNsViewWindow: $updateNsViewWindow)
+          .padding(.leading, 5)
           .frame(height: 37)
+          .id(updateNsViewWindow)
           .overlay {
             if let choiceIndex = autoCompleteIndex, autoCompleteList.count > 0 {
               let autoCompleteText = autoCompleteList[choiceIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
@@ -101,11 +104,6 @@ struct SearchAutoCompleteBox: View {
               return .handled
             }
             return .ignored
-          }
-          .onAppear {
-            DispatchQueue.main.async {
-              searchInputFocus = true
-            }
           }
       }
       
