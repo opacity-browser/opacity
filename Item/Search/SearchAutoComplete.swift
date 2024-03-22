@@ -11,14 +11,12 @@ import SwiftData
 struct SearchAutoComplete: View {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @Binding var autoCompleteList: [SearchHistoryGroup]
-  @Binding var autoCompleteIndex: Int?
   
   var body: some View {
     VStack(spacing: 0) {
-      if autoCompleteList.count > 0 {
-        ForEach(Array(autoCompleteList.enumerated()), id: \.element.id) { index, autoComplete in
-          SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: autoComplete, isActive: autoCompleteIndex == index)
+      if tab.autoCompleteList.count > 0 {
+        ForEach(Array(tab.autoCompleteList.enumerated()), id: \.element.id) { index, autoComplete in
+          SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: autoComplete, isActive: tab.autoCompleteIndex == index)
         }
       }
     }

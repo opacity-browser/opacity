@@ -20,95 +20,121 @@ struct SearchAutoCompleteBox: View {
   @ObservedObject var manualUpdate: ManualUpdate
   
   var searchHistoryGroups: [SearchHistoryGroup]
-  @Binding var autoCompleteList: [SearchHistoryGroup]
   
-  @State var searchInputFocus: Bool = true
-  @State var autoCompleteIndex: Int?
-  @State var autoCompleteText: String = ""
-  
-  @State var updateNsViewWindow: Bool = false
+  @State private var isSiteDialog: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        HStack(spacing: 0) {
-          Image(systemName: "magnifyingglass")
-            .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-            .font(.system(size: 13))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .foregroundColor(Color("Icon"))
+        if tab.isEditSearch {
+          HStack(spacing: 0) {
+            Image(systemName: "magnifyingglass")
+              .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+              .font(.system(size: 13))
+              .clipShape(RoundedRectangle(cornerRadius: 14))
+              .foregroundColor(Color("Icon"))
+          }
+          .padding(.leading, 7)
+        } else {
+          Button {
+            self.isSiteDialog.toggle()
+          } label: {
+            HStack(spacing: 0) {
+              Image(systemName: "lock")
+                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                .background(Color("SearchBarBG"))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .font(.system(size: 13))
+                .fontWeight(.medium)
+                .foregroundColor(Color("Icon"))
+            }
+            .padding(.leading, 3)
+            .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
+              SiteOptionDialog(tab: tab)
+            }
+          }
+          .buttonStyle(.plain)
         }
-        .padding(.leading, 9)
         
-        SearchNSTextField(browser: browser, tab: tab, manualUpdate: manualUpdate, isFocused: $searchInputFocus, searchHistoryGroups: searchHistoryGroups, autoCompleteList: $autoCompleteList, autoCompleteIndex: $autoCompleteIndex, autoCompleteText: $autoCompleteText, updateNsViewWindow: $updateNsViewWindow)
-          .padding(.leading, 5)
-          .frame(height: 37)
-          .id(updateNsViewWindow)
-          .overlay {
-            if let choiceIndex = autoCompleteIndex, autoCompleteList.count > 0 {
-              let autoCompleteText = autoCompleteList[choiceIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
-              HStack(spacing: 0) {
-                VStack(spacing: 0) {
-                  Text("\(autoCompleteText)")
-                    .font(.system(size: 13.5))
+        ZStack {
+          if !tab.isEditSearch {
+            HStack(spacing: 0) {
+              Text(tab.printURL)
+                .font(.system(size: 13.5))
+                .padding(.leading, 9)
+                .frame(height: 32)
+              Spacer()
+            }
+          }
+          SearchNSTextField(browser: browser, tab: tab, manualUpdate: manualUpdate, searchHistoryGroups: searchHistoryGroups)
+            .padding(.leading, tab.isEditSearch ? 5 : 9)
+            .frame(height: tab.isEditSearch ? 37 : 32)
+            .overlay {
+              if let choiceIndex = tab.autoCompleteIndex, tab.autoCompleteList.count > 0 {
+                let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
+                HStack(spacing: 0) {
+                  VStack(spacing: 0) {
+                    Text("\(autoCompleteText)")
+                      .font(.system(size: 13.5))
+                  }
+                  .frame(height: 16)
+                  .background(Color("AccentColor").opacity(0.3))
+                  .padding(.leading, 5)
+                  .padding(.leading, inputTextWidth(tab.inputURL))
+                  Spacer()
                 }
-                .frame(height: 16)
-                .background(Color("AccentColor").opacity(0.3))
-                .padding(.leading, 5)
-                .padding(.leading, inputTextWidth(tab.inputURL))
-                Spacer()
               }
             }
-          }
-          .onKeyPress(.upArrow) {
-            if autoCompleteList.count > 0 {
-              if let choiceIndex = autoCompleteIndex {
-                if choiceIndex > 0 {
-                  autoCompleteIndex = choiceIndex - 1
-                } else {
-                  autoCompleteIndex = autoCompleteList.count - 1
+            .onKeyPress(.upArrow) {
+              if tab.autoCompleteList.count > 0 {
+                DispatchQueue.main.async {
+                  if let choiceIndex = tab.autoCompleteIndex {
+                    if choiceIndex > 0 {
+                      tab.autoCompleteIndex = choiceIndex - 1
+                    } else {
+                      tab.autoCompleteIndex = tab.autoCompleteList.count - 1
+                    }
+                  } else {
+                    tab.autoCompleteIndex = tab.autoCompleteList.count - 1
+                  }
+                  tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText
                 }
-              } else {
-                autoCompleteIndex = autoCompleteList.count - 1
+                return .handled
               }
-              DispatchQueue.main.async {
-                tab.inputURL = autoCompleteList[autoCompleteIndex!].searchText
-              }
-              return .handled
+              return .ignored
             }
-            return .ignored
-          }
-          .onKeyPress(.downArrow) {
-            if autoCompleteList.count > 0 {
-              if let choiceIndex = autoCompleteIndex {
-                if autoCompleteList.count > choiceIndex + 1 {
-                  autoCompleteIndex = choiceIndex + 1
-                } else {
-                  autoCompleteIndex = 0
+            .onKeyPress(.downArrow) {
+              if tab.autoCompleteList.count > 0 {
+                DispatchQueue.main.async {
+                  if let choiceIndex = tab.autoCompleteIndex {
+                    if tab.autoCompleteList.count > choiceIndex + 1 {
+                      tab.autoCompleteIndex = choiceIndex + 1
+                    } else {
+                      tab.autoCompleteIndex = 0
+                    }
+                  } else {
+                    tab.autoCompleteIndex = 0
+                  }
+                  tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText
                 }
-              } else {
-                autoCompleteIndex = 0
+                return .handled
               }
-              DispatchQueue.main.async {
-                tab.inputURL = autoCompleteList[autoCompleteIndex!].searchText
-              }
-              return .handled
+              return .ignored
             }
-            return .ignored
-          }
-          .onKeyPress(.rightArrow) {
-            if let choiceIndex = autoCompleteIndex, autoCompleteList.count > 0, autoCompleteList[choiceIndex].searchText != tab.inputURL {
-              DispatchQueue.main.async {
-                tab.inputURL = autoCompleteList[choiceIndex].searchText
+            .onKeyPress(.rightArrow) {
+              if let choiceIndex = tab.autoCompleteIndex, tab.autoCompleteList.count > 0, tab.autoCompleteList[choiceIndex].searchText != tab.inputURL {
+                DispatchQueue.main.async {
+                  tab.inputURL = tab.autoCompleteList[choiceIndex].searchText
+                }
+                return .handled
               }
-              return .handled
+              return .ignored
             }
-            return .ignored
-          }
+        }
       }
       
-      if tab.inputURL != "" && autoCompleteList.count > 0 {
-        SearchAutoComplete(browser: browser, tab: tab, autoCompleteList: $autoCompleteList, autoCompleteIndex: $autoCompleteIndex)
+      if tab.inputURL != "" && tab.autoCompleteList.count > 0 {
+        SearchAutoComplete(browser: browser, tab: tab)
       }
     }
   }

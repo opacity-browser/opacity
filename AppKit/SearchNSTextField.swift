@@ -11,14 +11,7 @@ struct SearchNSTextField: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @ObservedObject var manualUpdate: ManualUpdate
-  @Binding var isFocused: Bool
-  
   var searchHistoryGroups: [SearchHistoryGroup]
-  @Binding var autoCompleteList: [SearchHistoryGroup]
-  
-  @Binding var autoCompleteIndex: Int?
-  @Binding var autoCompleteText: String
-  @Binding var updateNsViewWindow: Bool
   
   class Coordinator: NSObject, NSTextFieldDelegate {
     var parent: SearchNSTextField
@@ -27,9 +20,17 @@ struct SearchNSTextField: NSViewRepresentable {
       self.parent = parent
     }
     
+    func updateTab(_ tab: Tab) {
+      self.parent.tab = tab
+    }
+    
     func allowedCharacters(string: String) -> Bool {
       let allowedCharacterSet = CharacterSet.urlQueryAllowed
       return string.unicodeScalars.allSatisfy { allowedCharacterSet.contains($0) }
+    }
+    
+    func controlTextDidBeginEditing(_ obj: Notification) {
+      
     }
     
     func controlTextDidChange(_ obj: Notification) {
@@ -37,7 +38,7 @@ struct SearchNSTextField: NSViewRepresentable {
       let lowercaseKeyword = textField.stringValue.lowercased()
       
       DispatchQueue.main.async {
-        self.parent.autoCompleteList = self.parent.searchHistoryGroups.filter {
+        self.parent.tab.autoCompleteList = self.parent.searchHistoryGroups.filter {
           $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
         }.sorted {
           $0.searchHistories!.count > $1.searchHistories!.count
@@ -45,12 +46,12 @@ struct SearchNSTextField: NSViewRepresentable {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
         
-        self.parent.autoCompleteIndex = nil
+        self.parent.tab.autoCompleteIndex = nil
         if self.allowedCharacters(string: lowercaseKeyword)
-            && self.parent.autoCompleteList.count > 0
+            && self.parent.tab.autoCompleteList.count > 0
             && lowercaseKeyword.count != self.parent.tab.inputURL.count - 1
             && textField.stringValue.count != 0 {
-          self.parent.autoCompleteIndex = 0
+          self.parent.tab.autoCompleteIndex = 0
         }
         
         self.parent.tab.inputURL = textField.stringValue
@@ -59,8 +60,8 @@ struct SearchNSTextField: NSViewRepresentable {
     
     func controlTextDidEndEditing(_ notification: Notification) {
       if let _ = notification.object as? NSTextField {
+        print("focus out")
         DispatchQueue.main.async {
-          self.parent.isFocused = false
           self.parent.tab.isEditSearch = false
         }
       }
@@ -71,10 +72,13 @@ struct SearchNSTextField: NSViewRepresentable {
         if self.parent.tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
           return true
         }
+        
+        print("control")
+        print(self.parent.tab.id)
         var newURL = self.parent.tab.inputURL
         
-        if let choiceIndex = self.parent.autoCompleteIndex {
-          newURL = self.parent.autoCompleteList[choiceIndex].searchText
+        if let choiceIndex = self.parent.tab.autoCompleteIndex {
+          newURL = self.parent.tab.autoCompleteList[choiceIndex].searchText
         }
         
         if StringURL.checkURL(url: newURL) {
@@ -87,11 +91,10 @@ struct SearchNSTextField: NSViewRepresentable {
         
         DispatchQueue.main.async {
           if(newURL == self.parent.tab.originURL.absoluteString.removingPercentEncoding) {
-            self.parent.isFocused = false
             self.parent.tab.isEditSearch = false
           } else {
-            if let choiceIndex = self.parent.autoCompleteIndex {
-              SearchManager.addSearchHistory(self.parent.autoCompleteList[choiceIndex].searchText)
+            if let choiceIndex = self.parent.tab.autoCompleteIndex {
+              SearchManager.addSearchHistory(self.parent.tab.autoCompleteList[choiceIndex].searchText)
             } else {
               SearchManager.addSearchHistory(self.parent.tab.inputURL)
             }
@@ -99,20 +102,20 @@ struct SearchNSTextField: NSViewRepresentable {
             self.parent.tab.isPageProgress = true
             self.parent.tab.pageProgress = 0.0
             self.parent.tab.updateURLBySearch(url: URL(string: newURL)!)
-            self.parent.isFocused = false
             self.parent.tab.isEditSearch = false
-            
+            self.parent.tab.autoCompleteIndex = nil
+            self.parent.tab.autoCompleteList = []
           }
         }
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
         let selectedRange = textView.selectedRange()
-        if let index = self.parent.autoCompleteIndex,
-            self.parent.autoCompleteList.count > 0,
-            self.parent.autoCompleteList[index].searchText != self.parent.tab.inputURL,
+        if let index = self.parent.tab.autoCompleteIndex,
+           self.parent.tab.autoCompleteList.count > 0,
+           self.parent.tab.autoCompleteList[index].searchText != self.parent.tab.inputURL,
            selectedRange.length == 0 {
           DispatchQueue.main.async {
-            self.parent.autoCompleteIndex = nil
+            self.parent.tab.autoCompleteIndex = nil
           }
           return true
         }
@@ -127,8 +130,9 @@ struct SearchNSTextField: NSViewRepresentable {
     Coordinator(self)
   }
   
-  func makeNSView(context: Context) -> NSTextField {
-    let textField = NSTextField()
+  func makeNSView(context: Context) -> FocusableTextField {
+    let textField = FocusableTextField()
+    textField.tab = tab
     textField.delegate = context.coordinator
     textField.isBordered = false
     textField.focusRingType = .none
@@ -140,25 +144,31 @@ struct SearchNSTextField: NSViewRepresentable {
     return textField
   }
   
-  func updateNSView(_ nsView: NSTextField, context: Context) {
+  func updateNSView(_ nsView: FocusableTextField, context: Context) {
     nsView.stringValue = tab.inputURL
-    print("updateNSView")
-    DispatchQueue.main.async {
-      if let window = nsView.window {
-        print("isFocused: \(isFocused)")
-        print("window.firstResponder != nsView.currentEditor(): \(window.firstResponder != nsView.currentEditor())")
-        if isFocused && window.firstResponder != nsView.currentEditor() {
-          print("pocus")
-          nsView.window?.makeFirstResponder(nsView)
-        }
-        if !isFocused && window.firstResponder == nsView.currentEditor() {
-          print("blur")
-          nsView.window?.makeFirstResponder(nil)
-        }
-      } else {
-        print("update - not find nsView.window")
-        updateNsViewWindow = !updateNsViewWindow
+    nsView.tab = tab
+    context.coordinator.updateTab(tab)
+    if let window = nsView.window, !tab.isEditSearch {
+      window.makeFirstResponder(nil)
+    }
+    if let textColor = NSColor(named: "UIText") {
+      nsView.textColor = textColor.withAlphaComponent(tab.isEditSearch ? 0.85 : 0)
+    }
+  }
+}
+
+
+class FocusableTextField: NSTextField {
+  var tab: Tab?
+  
+  override func becomeFirstResponder() -> Bool {
+    let success = super.becomeFirstResponder()
+    if success {
+      tab?.isEditSearch = true
+      if let editor = self.currentEditor() {
+        editor.perform(#selector(selectAll(_:)), with: self, afterDelay: 0)
       }
     }
+    return success
   }
 }

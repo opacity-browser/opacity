@@ -47,13 +47,17 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
-  @Published var isEditSearch: Bool = true
-  
   @Published var isLocationDialogIcon: Bool = false
   @Published var isNotificationDialogIcon: Bool = false
   
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
+  
+  // Search
+  @Published var isEditSearch: Bool = false
+  @Published var autoCompleteList: [SearchHistoryGroup] = []
+  @Published var autoCompleteIndex: Int?
+  @Published var autoCompleteText: String = ""
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()

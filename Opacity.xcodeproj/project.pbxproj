@@ -62,7 +62,7 @@
 		A16BCB0E2B96D147004639F2 /* WindowTitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */; };
 		A16BCB102B96D30F004639F2 /* NavigationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB0F2B96D30F004639F2 /* NavigationSearchView.swift */; };
 		A16BCB122B9849FF004639F2 /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB112B9849FF004639F2 /* SideBarView.swift */; };
-		A16BCB142B9852B7004639F2 /* SearchBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB132B9852B7004639F2 /* SearchBox.swift */; };
+		A16BCB142B9852B7004639F2 /* SearchBoxArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */; };
 		A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB172B985A57004639F2 /* BookmarkIcon.swift */; };
 		A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB192B985F9F004639F2 /* Bookmark.swift */; };
 		A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */; };
@@ -142,7 +142,7 @@
 		A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowTitleBarView.swift; sourceTree = "<group>"; };
 		A16BCB0F2B96D30F004639F2 /* NavigationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSearchView.swift; sourceTree = "<group>"; };
 		A16BCB112B9849FF004639F2 /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
-		A16BCB132B9852B7004639F2 /* SearchBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBox.swift; sourceTree = "<group>"; };
+		A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxArea.swift; sourceTree = "<group>"; };
 		A16BCB172B985A57004639F2 /* BookmarkIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkIcon.swift; sourceTree = "<group>"; };
 		A16BCB192B985F9F004639F2 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDialog.swift; sourceTree = "<group>"; };
@@ -352,7 +352,7 @@
 				A16BCAF92B8FFFC0004639F2 /* SiteOptionDialog.swift */,
 				A188C9482B4ACECD00B39BC8 /* Navigation.swift */,
 				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
-				A16BCB132B9852B7004639F2 /* SearchBox.swift */,
+				A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */,
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
 			);
@@ -415,7 +415,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1510;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					A16920072B2FA82100F8B4C0 = {
 						CreatedOnToolsVersion = 15.1;
@@ -436,6 +436,7 @@
 				"zh-Hans",
 				"zh-Hant",
 				hi,
+				Base,
 			);
 			mainGroup = A1691FFF2B2FA82100F8B4C0;
 			productRefGroup = A16920092B2FA82100F8B4C0 /* Products */;
@@ -477,7 +478,7 @@
 				A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A11EDAD92BA42E2F000D07CB /* VisitHistory.swift in Sources */,
-				A16BCB142B9852B7004639F2 /* SearchBox.swift in Sources */,
+				A16BCB142B9852B7004639F2 /* SearchBoxArea.swift in Sources */,
 				A11EDADB2BA430FA000D07CB /* SearchHistoryGroup.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */,
@@ -567,6 +568,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -631,6 +633,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
