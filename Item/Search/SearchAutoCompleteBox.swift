@@ -62,7 +62,10 @@ struct SearchAutoCompleteBox: View {
               Text(tab.printURL)
                 .font(.system(size: 13.5))
                 .padding(.leading, 9)
+                .padding(.trailing, 5)
                 .frame(height: 32)
+                .lineLimit(1)
+                .truncationMode(.tail)
               Spacer()
             }
           }
@@ -70,8 +73,8 @@ struct SearchAutoCompleteBox: View {
             .padding(.leading, tab.isEditSearch ? 5 : 9)
             .frame(height: tab.isEditSearch ? 37 : 32)
             .overlay {
-              if let choiceIndex = tab.autoCompleteIndex, tab.autoCompleteList.count > 0 {
-                let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingOccurrences(of: tab.inputURL, with: "")
+              if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0 {
+                let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
                 HStack(spacing: 0) {
                   VStack(spacing: 0) {
                     Text("\(autoCompleteText)")
@@ -88,6 +91,7 @@ struct SearchAutoCompleteBox: View {
             .onKeyPress(.upArrow) {
               if tab.autoCompleteList.count > 0 {
                 DispatchQueue.main.async {
+                  tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
                     if choiceIndex > 0 {
                       tab.autoCompleteIndex = choiceIndex - 1
@@ -106,13 +110,18 @@ struct SearchAutoCompleteBox: View {
             .onKeyPress(.downArrow) {
               if tab.autoCompleteList.count > 0 {
                 DispatchQueue.main.async {
+                  tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
+                    print("a")
                     if tab.autoCompleteList.count > choiceIndex + 1 {
+                      print("b")
                       tab.autoCompleteIndex = choiceIndex + 1
                     } else {
+                      print("c")
                       tab.autoCompleteIndex = 0
                     }
                   } else {
+                    print("d")
                     tab.autoCompleteIndex = 0
                   }
                   tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText
@@ -133,9 +142,19 @@ struct SearchAutoCompleteBox: View {
         }
       }
       
-      if tab.inputURL != "" && tab.autoCompleteList.count > 0 {
+      if tab.isEditSearch && tab.inputURL != "" && tab.autoCompleteList.count > 0 {
         SearchAutoComplete(browser: browser, tab: tab)
       }
     }
   }
+}
+
+
+extension String {
+    func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
+        guard let range = self.range(of: string) else {
+            return self
+        }
+        return self.replacingCharacters(in: range, with: replacement)
+    }
 }

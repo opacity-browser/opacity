@@ -58,6 +58,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var autoCompleteList: [SearchHistoryGroup] = []
   @Published var autoCompleteIndex: Int?
   @Published var autoCompleteText: String = ""
+  @Published var isChangeByKeyDown: Bool = false
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
@@ -179,6 +180,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
       self.isEditSearch = false
+      self.autoCompleteIndex = nil
+      self.autoCompleteList = []
       self.clearPermission()
       self.setDomainPermission(url)
     }

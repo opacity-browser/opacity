@@ -16,10 +16,10 @@ struct SearchAutoComplete: View {
     VStack(spacing: 0) {
       if tab.autoCompleteList.count > 0 {
         ForEach(Array(tab.autoCompleteList.enumerated()), id: \.element.id) { index, autoComplete in
-          SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: autoComplete, isActive: tab.autoCompleteIndex == index)
+          SearchAutoCompleteItemNSView(browser: browser, tab: tab, searchHistoryGroup: autoComplete, isActive: tab.autoCompleteIndex == index)
+            .allowsHitTesting(true)
         }
       }
-    }
-    .padding(.bottom, 5)
+    }.padding(.bottom, 5)
   }
 }

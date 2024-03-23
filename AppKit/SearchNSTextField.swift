@@ -20,8 +20,9 @@ struct SearchNSTextField: NSViewRepresentable {
       self.parent = parent
     }
     
-    func updateTab(_ tab: Tab) {
+    func updateTab(tab: Tab, searchHistoryGroups: [SearchHistoryGroup]) {
       self.parent.tab = tab
+      self.parent.searchHistoryGroups = searchHistoryGroups
     }
     
     func allowedCharacters(string: String) -> Bool {
@@ -46,7 +47,12 @@ struct SearchNSTextField: NSViewRepresentable {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
         
-        self.parent.tab.autoCompleteIndex = nil
+        if !self.parent.tab.isChangeByKeyDown {
+          self.parent.tab.autoCompleteIndex = nil
+        } else {
+          self.parent.tab.isChangeByKeyDown = false
+        }
+        
         if self.allowedCharacters(string: lowercaseKeyword)
             && self.parent.tab.autoCompleteList.count > 0
             && lowercaseKeyword.count != self.parent.tab.inputURL.count - 1
@@ -137,6 +143,11 @@ struct SearchNSTextField: NSViewRepresentable {
     textField.isBordered = false
     textField.focusRingType = .none
     textField.drawsBackground = false
+    
+    textField.cell?.wraps = false
+    textField.cell?.isScrollable = true
+    textField.cell?.usesSingleLineMode = true
+    
     textField.font = NSFont.systemFont(ofSize: 13.5)
     if let textColor = NSColor(named: "UIText") {      
       textField.textColor = textColor.withAlphaComponent(0.85)
@@ -147,7 +158,7 @@ struct SearchNSTextField: NSViewRepresentable {
   func updateNSView(_ nsView: FocusableTextField, context: Context) {
     nsView.stringValue = tab.inputURL
     nsView.tab = tab
-    context.coordinator.updateTab(tab)
+    context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups)
     if let window = nsView.window, !tab.isEditSearch {
       window.makeFirstResponder(nil)
     }

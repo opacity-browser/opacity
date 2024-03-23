@@ -18,15 +18,11 @@ struct SearchAutoCompleteItem: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        Rectangle()
-          .frame(maxWidth: 3, maxHeight: .infinity)
-          .foregroundColor(Color.clear)
-          .clipShape(RoundedRectangle(cornerRadius: 2))
         Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
           .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
           .font(.system(size: 12))
           .foregroundColor(Color("Icon").opacity(0.8))
-          .padding(.leading, 5)
+          .padding(.leading, 8)
           .offset(y: -1)
         Text(searchHistoryGroup.searchText)
           .padding(.leading, 5)
@@ -41,5 +37,8 @@ struct SearchAutoCompleteItem: View {
       }
     }
     .background(Color("AutoCompleteHover").opacity(isActive ? 0.6 : isHover ? 0.4 : 0))
+    .onTapGesture {
+      
+    }
   }
 }

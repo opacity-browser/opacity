@@ -15,11 +15,6 @@ struct NavigationSearchView: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      if !isFullScreen {
-        Rectangle()
-          .frame(height: 1)
-          .foregroundColor(Color("UIBorder"))
-      }
       Rectangle()
         .frame(height: 3.5)
         .foregroundColor(Color("SearchBarBG"))
