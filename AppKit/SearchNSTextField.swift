@@ -130,6 +130,13 @@ struct SearchNSTextField: NSViewRepresentable {
     if let textColor = NSColor(named: "UIText") {
       nsView.textColor = textColor.withAlphaComponent(tab.isEditSearch ? 0.85 : 0)
     }
+    if let window = nsView.window, tab.isInit, !tab.isEditSearch {
+      DispatchQueue.main.async {
+        tab.isEditSearch = true
+        tab.isInit = false
+        window.makeFirstResponder(nsView)
+      }
+    }
   }
 }
 
