@@ -170,6 +170,34 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     }
   }
   
+  func changeKeywordToURL(_ keyword: String) -> String {
+    var newURL = keyword
+    if StringURL.checkURL(url: newURL) {
+      if !newURL.contains("://") {
+        newURL = "https://\(newURL)"
+      }
+    } else {
+      newURL = "https://www.google.com/search?q=\(newURL)"
+    }
+    return newURL
+  }
+  
+  @MainActor func searchInSearchBar(_ searchKeyword: String? = nil) {
+    var keyword = ""
+    if let searchKeyword = searchKeyword {
+      keyword = searchKeyword
+    } else {
+      keyword = self.inputURL
+      if let choiceIndex = self.autoCompleteIndex {
+        keyword = self.autoCompleteList[choiceIndex].searchText
+      }
+    }
+    SearchManager.addSearchHistory(keyword)
+    
+    let newURL = self.changeKeywordToURL(keyword)
+    self.updateURLBySearch(url: URL(string: newURL)!)
+  }
+  
   func updateURLBySearch(url: URL) {
     DispatchQueue.main.async {
       self.isInit = false
@@ -179,6 +207,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
+      self.isPageProgress = true
+      self.pageProgress = 0.0
       self.isEditSearch = false
       self.autoCompleteIndex = nil
       self.autoCompleteList = []

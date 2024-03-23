@@ -168,7 +168,6 @@
 		A1A1D8DE2B62B88B008FD44F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1A1D8DF2B62B8A5008FD44F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1A1D8E02B62BB4F008FD44F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		A1A1D8E12B62BB53008FD44F /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
@@ -437,7 +436,6 @@
 				ja,
 				es,
 				"zh-Hans",
-				"zh-Hant",
 				hi,
 				Base,
 			);
@@ -558,7 +556,6 @@
 				A1A1D8DE2B62B88B008FD44F /* ja */,
 				A1A1D8DF2B62B8A5008FD44F /* es */,
 				A1A1D8E02B62BB4F008FD44F /* zh-Hans */,
-				A1A1D8E12B62BB53008FD44F /* zh-Hant */,
 				A1A1D8E22B62BC70008FD44F /* hi */,
 			);
 			name = Localizable.strings;

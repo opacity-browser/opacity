@@ -368,7 +368,7 @@ struct WebNSView: NSViewRepresentable {
       return
     }
     
-    if String(describing: webviewURL) == String(describing: tab.originURL) {
+    if !tab.isUpdateBySearch && String(describing: webviewURL) == String(describing: tab.originURL) {
       return
     }
     

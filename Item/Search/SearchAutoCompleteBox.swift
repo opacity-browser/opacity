@@ -112,16 +112,12 @@ struct SearchAutoCompleteBox: View {
                 DispatchQueue.main.async {
                   tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
-                    print("a")
                     if tab.autoCompleteList.count > choiceIndex + 1 {
-                      print("b")
                       tab.autoCompleteIndex = choiceIndex + 1
                     } else {
-                      print("c")
                       tab.autoCompleteIndex = 0
                     }
                   } else {
-                    print("d")
                     tab.autoCompleteIndex = 0
                   }
                   tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText

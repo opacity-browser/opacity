@@ -38,7 +38,7 @@ struct SearchAutoCompleteItem: View {
     }
     .background(Color("AutoCompleteHover").opacity(isActive ? 0.6 : isHover ? 0.4 : 0))
     .onTapGesture {
-      
+      tab.searchInSearchBar(searchHistoryGroup.searchText)
     }
   }
 }

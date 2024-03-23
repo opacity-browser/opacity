@@ -66,7 +66,6 @@ struct SearchNSTextField: NSViewRepresentable {
     
     func controlTextDidEndEditing(_ notification: Notification) {
       if let _ = notification.object as? NSTextField {
-        print("focus out")
         DispatchQueue.main.async {
           self.parent.tab.isEditSearch = false
         }
@@ -78,41 +77,7 @@ struct SearchNSTextField: NSViewRepresentable {
         if self.parent.tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
           return true
         }
-        
-        print("control")
-        print(self.parent.tab.id)
-        var newURL = self.parent.tab.inputURL
-        
-        if let choiceIndex = self.parent.tab.autoCompleteIndex {
-          newURL = self.parent.tab.autoCompleteList[choiceIndex].searchText
-        }
-        
-        if StringURL.checkURL(url: newURL) {
-          if !newURL.contains("://") {
-            newURL = "https://\(newURL)"
-          }
-        } else {
-          newURL = "https://www.google.com/search?q=\(newURL)"
-        }
-        
-        DispatchQueue.main.async {
-          if(newURL == self.parent.tab.originURL.absoluteString.removingPercentEncoding) {
-            self.parent.tab.isEditSearch = false
-          } else {
-            if let choiceIndex = self.parent.tab.autoCompleteIndex {
-              SearchManager.addSearchHistory(self.parent.tab.autoCompleteList[choiceIndex].searchText)
-            } else {
-              SearchManager.addSearchHistory(self.parent.tab.inputURL)
-            }
-            self.parent.manualUpdate.search = !self.parent.manualUpdate.search
-            self.parent.tab.isPageProgress = true
-            self.parent.tab.pageProgress = 0.0
-            self.parent.tab.updateURLBySearch(url: URL(string: newURL)!)
-            self.parent.tab.isEditSearch = false
-            self.parent.tab.autoCompleteIndex = nil
-            self.parent.tab.autoCompleteList = []
-          }
-        }
+        self.parent.tab.searchInSearchBar()
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
         let selectedRange = textView.selectedRange()

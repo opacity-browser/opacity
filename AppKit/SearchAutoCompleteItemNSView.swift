@@ -41,7 +41,6 @@ struct SearchAutoCompleteItemNSView: NSViewRepresentable {
     
   func updateNSView(_ nsView: NSView, context: Context) {
     for subview in nsView.subviews {
-      print(isActive)
       if let hostingView = subview as? NSHostingView<SearchAutoCompleteItem> {
         hostingView.rootView = SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: searchHistoryGroup, isActive: isActive)
         hostingView.layout()
