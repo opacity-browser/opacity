@@ -160,10 +160,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
       let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
       viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
-      if let keyWindow = NSApplication.shared.keyWindow, let target = self.service.browsers[keyWindow.windowNumber] {
-        let sidebarPrintText = target.isSideBar ? "Hide Sidebar" : "Show Sidebar"
-        viewMenu.addItem(withTitle: NSLocalizedString(sidebarPrintText, comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
-      }
+      
+      viewMenu.addItem(withTitle: NSLocalizedString("Show/Hide Sidebar", comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
       viewMenu.addItem(NSMenuItem.separator())
       viewItem.submenu = viewMenu
       

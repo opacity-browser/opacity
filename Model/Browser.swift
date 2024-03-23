@@ -46,6 +46,7 @@ final class Browser: ObservableObject, Identifiable {
     newTab.isInit = true
     newTab.inputURL = ""
     newTab.printURL = ""
+    newTab.title = NSLocalizedString("New Tab", comment: "")
     DispatchQueue.main.async {
       self.tabs.append(newTab)
       self.activeTabId = newTab.id

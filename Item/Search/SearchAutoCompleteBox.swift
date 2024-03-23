@@ -22,6 +22,7 @@ struct SearchAutoCompleteBox: View {
   var searchHistoryGroups: [SearchHistoryGroup]
   
   @State private var isSiteDialog: Bool = false
+  @State var isBookmarkHover: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
@@ -62,7 +63,6 @@ struct SearchAutoCompleteBox: View {
               Text(tab.printURL)
                 .font(.system(size: 13.5))
                 .padding(.leading, 9)
-                .padding(.trailing, 5)
                 .frame(height: 32)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -136,6 +136,9 @@ struct SearchAutoCompleteBox: View {
               return .ignored
             }
         }
+          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
+            .padding(.leading, 5)
+            .padding(.trailing, 10)
       }
       
       if tab.isEditSearch && tab.inputURL != "" && tab.autoCompleteList.count > 0 {
