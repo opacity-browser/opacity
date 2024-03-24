@@ -13,7 +13,8 @@ struct SearchEditBox: View {
   @Environment(\.modelContext) var modelContext
   @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
   var searchHistoryGroups: [SearchHistoryGroup]
-  @Query var searchHistories: [SearchHistory]
+  @Query 
+  var searchHistories: [SearchHistory]
 
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
@@ -40,6 +41,26 @@ struct SearchEditBox: View {
         .padding(.top, tab.isEditSearch ? 4 : 6.5)
         .padding(.leading, searchBoxRect.minX - 2)
       }
+      ForEach(searchHistoryGroups) { shg in
+        VStack {
+          Text(shg.searchText)
+            .onTapGesture {
+              SearchManager.deleteSearchHistoryGroup(shg)
+            }
+          if let hitories = shg.searchHistories, hitories.count > 0 {
+            Divider()
+            ForEach(hitories) { sh in
+              Text("\(sh.id)")
+                .onTapGesture {
+                  SearchManager.deleteSearchHistory(sh)
+                }
+            }
+          }
+        }
+        .padding(5)
+        .background(.red.opacity(0.5))
+      }
+      Text("\(manualUpdate.search)")
     }
   }
 }

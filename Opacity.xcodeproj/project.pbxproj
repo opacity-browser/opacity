@@ -24,7 +24,6 @@
 		A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */; };
 		A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */; };
 		A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */; };
-		A11EDAEE2BA6FEE3000D07CB /* AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */; };
 		A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
@@ -103,7 +102,6 @@
 		A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteBox.swift; sourceTree = "<group>"; };
 		A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItem.swift; sourceTree = "<group>"; };
 		A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEditBox.swift; sourceTree = "<group>"; };
-		A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoComplete.swift; sourceTree = "<group>"; };
 		A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNSTextField.swift; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
@@ -326,11 +324,10 @@
 				A16BCAED2B8EAC34004639F2 /* DomainPermission.swift */,
 				A16BCB192B985F9F004639F2 /* Bookmark.swift */,
 				A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */,
+				A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */,
 				A11EDAD62BA422E7000D07CB /* SearchHistory.swift */,
 				A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */,
-				A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */,
 				A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */,
-				A11EDAED2BA6FEE3000D07CB /* AutoComplete.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -366,8 +363,6 @@
 			children = (
 				A188C95A2B4EBB8D00B39BC8 /* StringURL.swift */,
 				A15D54262B5BA457007020CA /* ImageLoader.swift */,
-				A11EDACF2BA09329000D07CB /* BookmarkManager.swift */,
-				A11EDADE2BA45BAE000D07CB /* SearchManager.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -385,6 +380,8 @@
 			children = (
 				A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */,
 				A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */,
+				A11EDACF2BA09329000D07CB /* BookmarkManager.swift */,
+				A11EDADE2BA45BAE000D07CB /* SearchManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -528,7 +525,6 @@
 				A11EDADD2BA431A7000D07CB /* VisitHistoryCount.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
-				A11EDAEE2BA6FEE3000D07CB /* AutoComplete.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
 				A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */,

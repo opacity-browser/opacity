@@ -13,18 +13,16 @@ class SearchHistory: Identifiable  {
   @Attribute(.unique)
   var id: UUID
   
-  @Relationship(inverse: \SearchHistoryGroup.searchHistories)
-  var searchTextGroup: SearchHistoryGroup
+  var searchHistoryGroup: SearchHistoryGroup?
   
   var searchText: String
   var createDate: Date
-  var count: UInt?
   
-  init(searchTextGroup: SearchHistoryGroup, searchText: String) {
+  init(searchHistoryGroup: SearchHistoryGroup, searchText: String) {
     self.id = UUID()
-    self.searchTextGroup = searchTextGroup
+    self.searchHistoryGroup = searchHistoryGroup
     self.searchText = searchText
     self.createDate = Date.now
-    searchTextGroup.updateDate = Date.now
+    searchHistoryGroup.updateDate = Date.now
   }
 }

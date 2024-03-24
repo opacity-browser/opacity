@@ -25,27 +25,31 @@ class SearchManager {
   
   @MainActor static func addSearchHistory(_ keyword: String) {
     let uppLowLetters = StringURL.checkURL(url: keyword) ? keyword.lowercased() : keyword
-    
     if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
-      do {
-        let newSearchHistory = SearchHistory(searchTextGroup: searchGroup, searchText: uppLowLetters)
-        AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
-        try AppDelegate.shared.opacityModelContainer.mainContext.save()
-      } catch {
-        print("add search history error")
-      }
+      let newSearchHistory = SearchHistory(searchHistoryGroup: searchGroup, searchText: uppLowLetters)
+      searchGroup.searchHistories?.append(newSearchHistory)
     } else {
       do {
         let newSearchHistoryGroup = SearchHistoryGroup(searchText: uppLowLetters)
         AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistoryGroup)
-        let newSearchHistory = SearchHistory(searchTextGroup: newSearchHistoryGroup, searchText: uppLowLetters)
-        AppDelegate.shared.opacityModelContainer.mainContext.insert(newSearchHistory)
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        self.addSearchHistory(uppLowLetters)
       } catch {
         print("add search history, search history group error")
       }
     }
   }
   
+  @MainActor static func deleteSearchHistory(_ target: SearchHistory) {
+    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+  }
   
+  @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
+    if let searchHistories = target.searchHistories {
+      for searchHistory in searchHistories {
+        self.deleteSearchHistory(searchHistory)
+      }
+    }
+    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+  }
 }
