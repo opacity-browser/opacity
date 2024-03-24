@@ -14,6 +14,7 @@ struct SearchAutoCompleteItem: View {
   var isActive: Bool
   
   @State var isHover: Bool = false
+  @State var isDeleteHover: Bool = false
   
   var body: some View {
     VStack(spacing: 0) {
@@ -28,6 +29,32 @@ struct SearchAutoCompleteItem: View {
           .padding(.leading, 5)
           .opacity(0.8)
         Spacer()
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            Image(systemName: "xmark")
+              .foregroundColor(Color("Icon"))
+              .font(.system(size: 12))
+              .fontWeight(.regular)
+          }
+          .frame(maxWidth: 22, maxHeight: 22)
+          .background(isDeleteHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .clipShape(RoundedRectangle(cornerRadius: 6))
+          .onHover { inside in
+            withAnimation {
+              isDeleteHover = inside
+            }
+          }
+          .onTapGesture {
+            SearchManager.deleteSearchHistoryGroup(searchHistoryGroup)
+            tab.autoCompleteList = tab.autoCompleteList.filter {
+              $0.id != searchHistoryGroup.id
+            }
+            if isActive && tab.autoCompleteList.count > 0 {
+              tab.autoCompleteIndex = 0
+            }
+          }
+        }
+        .padding(.trailing, 11)
       }
       .frame(height: 30)
     }

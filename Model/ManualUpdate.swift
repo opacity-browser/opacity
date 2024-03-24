@@ -9,5 +9,4 @@ import SwiftUI
 
 final class ManualUpdate: ObservableObject {
   @Published var bookmarks: Bool = false
-  @Published var search: Bool = false
 }

@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchNSTextField: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @ObservedObject var manualUpdate: ManualUpdate
   var searchHistoryGroups: [SearchHistoryGroup]
   
   class Coordinator: NSObject, NSTextFieldDelegate {

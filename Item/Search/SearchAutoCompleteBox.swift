@@ -69,7 +69,7 @@ struct SearchAutoCompleteBox: View {
               Spacer()
             }
           }
-          SearchNSTextField(browser: browser, tab: tab, manualUpdate: manualUpdate, searchHistoryGroups: searchHistoryGroups)
+          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups)
             .padding(.leading, tab.isEditSearch ? 5 : 9)
             .frame(height: tab.isEditSearch ? 37 : 32)
             .overlay {
