@@ -14,17 +14,31 @@ final class Browser: ObservableObject, Identifiable {
   @Published var tabs: [Tab] = []
   @Published var activeTabId: UUID?
   @Published var isSideBar: Bool = false
+  @Published var searchBoxRect: CGRect?
   
-  private var currentWorkItem: DispatchWorkItem?
+  func clearSearchEditMode() {
+    for index in tabs.indices {
+      tabs[index].isEditSearch = false
+      tabs[index].autoCompleteList = []
+      tabs[index].autoCompleteIndex = nil
+      tabs[index].autoCompleteText = ""
+    }
+  }
   
   func updateActiveTab(tabId: UUID, webView: WKWebView) {
-    self.activeTabId = tabId
+    DispatchQueue.main.async {
+      self.clearSearchEditMode()
+      self.activeTabId = tabId
+    }
   }
   
   func newTab(_ url: URL = DEFAULT_URL) {
     let newTab = Tab(url: url)
-    self.tabs.append(newTab)
-    self.activeTabId = newTab.id
+    DispatchQueue.main.async {
+      self.clearSearchEditMode()
+      self.tabs.append(newTab)
+      self.activeTabId = newTab.id
+    }
   }
   
   func initTab() {
@@ -32,9 +46,10 @@ final class Browser: ObservableObject, Identifiable {
     newTab.isInit = true
     newTab.inputURL = ""
     newTab.printURL = ""
-    newTab.title = "\(NSLocalizedString("New Tab", comment: ""))"
-    newTab.isEditSearch = true
-    self.tabs.append(newTab)
-    self.activeTabId = newTab.id
+    newTab.title = NSLocalizedString("New Tab", comment: "")
+    DispatchQueue.main.async {
+      self.tabs.append(newTab)
+      self.activeTabId = newTab.id
+    }
   }
 }

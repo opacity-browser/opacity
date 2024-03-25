@@ -13,16 +13,17 @@ struct ContentView: View {
   @State private var windowWidth: CGFloat?
   @State private var isMoreTabDialog = false
   @State private var isAddHover: Bool = false
+  @FocusState private var isTextFieldFocused: Bool
   
   var body: some View {
-    VStack(spacing: 0) {
-      GeometryReader { geometry in
-        if let _ = browser.activeTabId, browser.tabs.count > 0 {
+    ZStack {
+      if let _ = browser.activeTabId, browser.tabs.count > 0 {
+        GeometryReader { geometry in
           VStack(spacing: 0) {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
-            NavigationView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen, manualUpdate: manualUpdate)
+            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen, manualUpdate: manualUpdate)
             MainView(browser: browser, manualUpdate: manualUpdate)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
@@ -31,6 +32,7 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
+          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, manualUpdate: manualUpdate)
         }
       }
     }

@@ -47,15 +47,19 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
-  @Published var isEditSearch: Bool = false
-  
   @Published var isLocationDialogIcon: Bool = false
-//  @Published var isLocationDetailDialog: Bool = true
   @Published var isNotificationDialogIcon: Bool = false
-//  @Published var isNotificationDetailDialog: Bool = true
   
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
+  
+  // Search
+  @Published var isEditSearch: Bool = false
+  @Published var autoCompleteList: [SearchHistoryGroup] = []
+  @Published var autoCompleteVisitList: [VisitHistoryGroup] = []
+  @Published var autoCompleteIndex: Int?
+  @Published var autoCompleteText: String = ""
+  @Published var isChangeByKeyDown: Bool = false
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
@@ -167,6 +171,43 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     }
   }
   
+  func clearAutoComplete() {
+    DispatchQueue.main.async {
+      self.autoCompleteList = []
+      self.autoCompleteVisitList = []
+      self.autoCompleteIndex = nil
+      self.isChangeByKeyDown = false
+    }
+  }
+  
+  func changeKeywordToURL(_ keyword: String) -> String {
+    var newURL = keyword
+    if StringURL.checkURL(url: newURL) {
+      if !newURL.contains("://") {
+        newURL = "https://\(newURL)"
+      }
+    } else {
+      newURL = "https://www.google.com/search?q=\(newURL)"
+    }
+    return newURL
+  }
+  
+  @MainActor func searchInSearchBar(_ searchKeyword: String? = nil) {
+    var keyword = ""
+    if let searchKeyword = searchKeyword {
+      keyword = searchKeyword
+    } else {
+      keyword = self.inputURL
+      if let choiceIndex = self.autoCompleteIndex, choiceIndex == 0 {
+        keyword = self.autoCompleteList[0].searchText
+      }
+    }
+    SearchManager.addSearchHistory(keyword)
+    
+    let newURL = self.changeKeywordToURL(keyword)
+    self.updateURLBySearch(url: URL(string: newURL)!)
+  }
+  
   func updateURLBySearch(url: URL) {
     DispatchQueue.main.async {
       self.isInit = false
@@ -176,7 +217,10 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
+      self.isPageProgress = true
+      self.pageProgress = 0.0
       self.isEditSearch = false
+      self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
     }
