@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A10DA66A2BAE62860053913D /* SearchAutoCompleteItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */; };
+		A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66B2BB0785C0053913D /* VisitManager.swift */; };
+		A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */; };
+		A10DA6702BB12EF20053913D /* SearchAutoCompleteVisitItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */; };
 		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */; };
 		A11EDACE2B9F087F000D07CB /* ManualUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */; };
@@ -17,7 +20,7 @@
 		A11EDAD72BA422E7000D07CB /* SearchHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAD62BA422E7000D07CB /* SearchHistory.swift */; };
 		A11EDAD92BA42E2F000D07CB /* VisitHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */; };
 		A11EDADB2BA430FA000D07CB /* SearchHistoryGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */; };
-		A11EDADD2BA431A7000D07CB /* VisitHistoryCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */; };
+		A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADC2BA431A7000D07CB /* VisitHistoryGroup.swift */; };
 		A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDADE2BA45BAE000D07CB /* SearchManager.swift */; };
 		A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */; };
 		A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */; };
@@ -86,6 +89,9 @@
 
 /* Begin PBXFileReference section */
 		A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItemNSView.swift; sourceTree = "<group>"; };
+		A10DA66B2BB0785C0053913D /* VisitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitManager.swift; sourceTree = "<group>"; };
+		A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItemNSView.swift; sourceTree = "<group>"; };
+		A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItem.swift; sourceTree = "<group>"; };
 		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitle.swift; sourceTree = "<group>"; };
 		A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualUpdate.swift; sourceTree = "<group>"; };
@@ -95,7 +101,7 @@
 		A11EDAD62BA422E7000D07CB /* SearchHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistory.swift; sourceTree = "<group>"; };
 		A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistory.swift; sourceTree = "<group>"; };
 		A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryGroup.swift; sourceTree = "<group>"; };
-		A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistoryCount.swift; sourceTree = "<group>"; };
+		A11EDADC2BA431A7000D07CB /* VisitHistoryGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistoryGroup.swift; sourceTree = "<group>"; };
 		A11EDADE2BA45BAE000D07CB /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 		A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxDialog.swift; sourceTree = "<group>"; };
 		A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoComplete.swift; sourceTree = "<group>"; };
@@ -185,10 +191,11 @@
 		A11EDAE42BA62C9E000D07CB /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */,
-				A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */,
-				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,
 				A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */,
+				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */,
+				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,
+				A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */,
+				A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -227,6 +234,7 @@
 				A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */,
 				A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */,
 				A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */,
+				A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -326,8 +334,8 @@
 				A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */,
 				A11EDADA2BA430FA000D07CB /* SearchHistoryGroup.swift */,
 				A11EDAD62BA422E7000D07CB /* SearchHistory.swift */,
+				A11EDADC2BA431A7000D07CB /* VisitHistoryGroup.swift */,
 				A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */,
-				A11EDADC2BA431A7000D07CB /* VisitHistoryCount.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -382,6 +390,7 @@
 				A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */,
 				A11EDACF2BA09329000D07CB /* BookmarkManager.swift */,
 				A11EDADE2BA45BAE000D07CB /* SearchManager.swift */,
+				A10DA66B2BB0785C0053913D /* VisitManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -498,12 +507,14 @@
 				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
+				A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */,
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,
 				A11EDAD52BA2D5F1000D07CB /* BookmarkSearchList.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A11EDACE2B9F087F000D07CB /* ManualUpdate.swift in Sources */,
 				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
 				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
+				A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */,
 				A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */,
 				A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */,
 				A11EDAD32BA2B41E000D07CB /* BookmarkSearch.swift in Sources */,
@@ -511,6 +522,7 @@
 				A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A16BCAFA2B8FFFC0004639F2 /* SiteOptionDialog.swift in Sources */,
+				A10DA6702BB12EF20053913D /* SearchAutoCompleteVisitItem.swift in Sources */,
 				A16BCAF82B8FFC11004639F2 /* HistoryRefreshBtn.swift in Sources */,
 				A11EDAD72BA422E7000D07CB /* SearchHistory.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
@@ -522,7 +534,7 @@
 				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
-				A11EDADD2BA431A7000D07CB /* VisitHistoryCount.swift in Sources */,
+				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,

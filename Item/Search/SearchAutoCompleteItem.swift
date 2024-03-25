@@ -19,15 +19,17 @@ struct SearchAutoCompleteItem: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
+//        Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
+        Image(systemName: "magnifyingglass")
           .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
           .font(.system(size: 12))
           .foregroundColor(Color("Icon").opacity(0.8))
           .padding(.leading, 8)
-          .offset(y: -1)
         Text(searchHistoryGroup.searchText)
+          .font(.system(size: 12.5))
           .padding(.leading, 5)
-          .opacity(0.8)
+          .lineLimit(1)
+          .truncationMode(.tail)
         Spacer()
         VStack(spacing: 0) {
           VStack(spacing: 0) {
@@ -49,8 +51,8 @@ struct SearchAutoCompleteItem: View {
             tab.autoCompleteList = tab.autoCompleteList.filter {
               $0.id != searchHistoryGroup.id
             }
-            if isActive && tab.autoCompleteList.count > 0 {
-              tab.autoCompleteIndex = 0
+            if isActive {
+              tab.autoCompleteIndex = nil
             }
           }
         }

@@ -13,8 +13,9 @@ struct SearchEditBox: View {
   @Environment(\.modelContext) var modelContext
   @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
   var searchHistoryGroups: [SearchHistoryGroup]
-  @Query 
-  var searchHistories: [SearchHistory]
+  @Query(sort: \VisitHistoryGroup.updateDate, order: .reverse)
+  var visitHistoryGroups: [VisitHistoryGroup]
+  
 
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
@@ -27,7 +28,7 @@ struct SearchEditBox: View {
           HStack(spacing: 0) {
             HStack(spacing: 0) {
               VStack(spacing: 0) {
-                SearchAutoCompleteBox(browser: browser, tab: tab, manualUpdate: manualUpdate, searchHistoryGroups: searchHistoryGroups)
+                SearchAutoCompleteBox(browser: browser, tab: tab, manualUpdate: manualUpdate, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
               }
               .frame(width: searchBoxRect.width + 4)
             }
@@ -50,6 +51,7 @@ struct SearchEditBox: View {
 //          if let hitories = shg.searchHistories, hitories.count > 0 {
 //            Divider()
 //            ForEach(hitories) { sh in
+//              Text("\(sh.searchHistoryGroup?.searchText)")
 //              Text("\(sh.id)")
 //                .onTapGesture {
 //                  SearchManager.deleteSearchHistory(sh)

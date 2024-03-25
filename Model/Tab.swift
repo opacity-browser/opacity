@@ -56,6 +56,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   // Search
   @Published var isEditSearch: Bool = false
   @Published var autoCompleteList: [SearchHistoryGroup] = []
+  @Published var autoCompleteVisitList: [VisitHistoryGroup] = []
   @Published var autoCompleteIndex: Int?
   @Published var autoCompleteText: String = ""
   @Published var isChangeByKeyDown: Bool = false
@@ -170,6 +171,15 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     }
   }
   
+  func clearAutoComplete() {
+    DispatchQueue.main.async {
+      self.autoCompleteList = []
+      self.autoCompleteVisitList = []
+      self.autoCompleteIndex = nil
+      self.isChangeByKeyDown = false
+    }
+  }
+  
   func changeKeywordToURL(_ keyword: String) -> String {
     var newURL = keyword
     if StringURL.checkURL(url: newURL) {
@@ -188,8 +198,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       keyword = searchKeyword
     } else {
       keyword = self.inputURL
-      if let choiceIndex = self.autoCompleteIndex {
-        keyword = self.autoCompleteList[choiceIndex].searchText
+      if let choiceIndex = self.autoCompleteIndex, choiceIndex == 0 {
+        keyword = self.autoCompleteList[0].searchText
       }
     }
     SearchManager.addSearchHistory(keyword)
@@ -210,8 +220,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.isPageProgress = true
       self.pageProgress = 0.0
       self.isEditSearch = false
-      self.autoCompleteIndex = nil
-      self.autoCompleteList = []
+      self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
     }

@@ -20,6 +20,7 @@ struct SearchAutoCompleteBox: View {
   @ObservedObject var manualUpdate: ManualUpdate
   
   var searchHistoryGroups: [SearchHistoryGroup]
+  var visitHistoryGroups: [VisitHistoryGroup]
   
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
@@ -69,11 +70,11 @@ struct SearchAutoCompleteBox: View {
               Spacer()
             }
           }
-          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups)
+          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
             .padding(.leading, tab.isEditSearch ? 5 : 9)
             .frame(height: tab.isEditSearch ? 37 : 32)
             .overlay {
-              if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0 {
+              if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
                 let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
                 HStack(spacing: 0) {
                   VStack(spacing: 0) {
@@ -89,30 +90,36 @@ struct SearchAutoCompleteBox: View {
               }
             }
             .onKeyPress(.upArrow) {
-              if tab.autoCompleteList.count > 0 {
+              if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
                 DispatchQueue.main.async {
                   tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
                     if choiceIndex > 0 {
                       tab.autoCompleteIndex = choiceIndex - 1
                     } else {
-                      tab.autoCompleteIndex = tab.autoCompleteList.count - 1
+                      tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
                     }
                   } else {
-                    tab.autoCompleteIndex = tab.autoCompleteList.count - 1
+                    tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
                   }
-                  tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText
+                  
+                  if let choiceIndex = tab.autoCompleteIndex {
+                    let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                    ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                    : tab.autoCompleteList[choiceIndex].searchText
+                    tab.inputURL = targetString
+                  }
                 }
                 return .handled
               }
               return .ignored
             }
             .onKeyPress(.downArrow) {
-              if tab.autoCompleteList.count > 0 {
+              if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
                 DispatchQueue.main.async {
                   tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
-                    if tab.autoCompleteList.count > choiceIndex + 1 {
+                    if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > choiceIndex + 1 {
                       tab.autoCompleteIndex = choiceIndex + 1
                     } else {
                       tab.autoCompleteIndex = 0
@@ -120,16 +127,28 @@ struct SearchAutoCompleteBox: View {
                   } else {
                     tab.autoCompleteIndex = 0
                   }
-                  tab.inputURL = tab.autoCompleteList[tab.autoCompleteIndex!].searchText
+                  
+                  if let choiceIndex = tab.autoCompleteIndex {
+                    let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                    ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                    : tab.autoCompleteList[choiceIndex].searchText
+                    tab.inputURL = targetString
+                  }
                 }
                 return .handled
               }
               return .ignored
             }
             .onKeyPress(.rightArrow) {
-              if let choiceIndex = tab.autoCompleteIndex, tab.autoCompleteList.count > 0, tab.autoCompleteList[choiceIndex].searchText != tab.inputURL {
-                DispatchQueue.main.async {
-                  tab.inputURL = tab.autoCompleteList[choiceIndex].searchText
+              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                : tab.autoCompleteList[choiceIndex].searchText
+                
+                if targetString != tab.inputURL {
+                  DispatchQueue.main.async {
+                    tab.inputURL = targetString
+                  }
                 }
                 return .handled
               }
@@ -141,7 +160,7 @@ struct SearchAutoCompleteBox: View {
             .padding(.trailing, 10)
       }
       
-      if tab.isEditSearch && tab.inputURL != "" && tab.autoCompleteList.count > 0 {
+      if tab.isEditSearch && tab.inputURL != "" && (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
         SearchAutoComplete(browser: browser, tab: tab)
       }
     }
@@ -151,7 +170,7 @@ struct SearchAutoCompleteBox: View {
 
 extension String {
     func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
-        guard let range = self.range(of: string) else {
+        guard let range = self.range(of: string, options: .caseInsensitive) else {
             return self
         }
         return self.replacingCharacters(in: range, with: replacement)

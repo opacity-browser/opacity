@@ -20,6 +20,8 @@ struct SideBarView: View {
   
 //  @Query var searchHistoryGroup: [SearchHistoryGroup]
 //  @Query var searchHistory: [SearchHistory]
+
+//  @Query var visitHistoryGroup: [VisitHistoryGroup]
   
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
@@ -33,6 +35,21 @@ struct SideBarView: View {
         .foregroundColor(Color("UIBorder"))
       
       ScrollView {
+//        ForEach(visitHistoryGroup) { vhg in
+//          VStack {
+//            Text("\(vhg.url)-\(vhg.title)-\(vhg.updateDate)")
+//            Image(nsImage: NSImage(data: vhg.faviconData!)!)
+//            if let hitories = vhg.visitHistories, hitories.count > 0 {
+//              Divider()
+//              ForEach(hitories) { sh in
+//                Text("\(sh.id)")
+//              }
+//            }
+//          }
+//          .padding(5)
+//          .background(.red.opacity(0.2))
+//        }
+        
 //        ForEach(searchHistoryGroup) { shg in
 //          VStack {
 //            Text(shg.searchText)
@@ -47,7 +64,7 @@ struct SideBarView: View {
 //          .padding(5)
 //          .background(.red.opacity(0.2))
 //        }
-//        
+
 //        ForEach(searchHistory) { sh in
 //          VStack {
 //            HStack {

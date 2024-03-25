@@ -13,17 +13,15 @@ class VisitHistory {
   @Attribute(.unique)
   var id: UUID
   
-  var url: String
-  var title: String
-  var favicon: Data?
+  var visitHistoryGroup: VisitHistoryGroup?
+  
   var createDate: Date
   
-  init(url: String, title: String, favicon: Data? = nil) {
+  init(visitHistoryGroup: VisitHistoryGroup) {
     self.id = UUID()
-    self.url = url
-    self.title = title
-    self.favicon = favicon
+    self.visitHistoryGroup = visitHistoryGroup
     self.createDate = Date.now
+    visitHistoryGroup.updateDate = Date.now
   }
 }
 

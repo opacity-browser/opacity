@@ -11,6 +11,7 @@ struct SearchNSTextField: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   var searchHistoryGroups: [SearchHistoryGroup]
+  var visitHistoryGroups: [VisitHistoryGroup]
   
   class Coordinator: NSObject, NSTextFieldDelegate {
     var parent: SearchNSTextField
@@ -19,9 +20,10 @@ struct SearchNSTextField: NSViewRepresentable {
       self.parent = parent
     }
     
-    func updateTab(tab: Tab, searchHistoryGroups: [SearchHistoryGroup]) {
+    func updateTab(tab: Tab, searchHistoryGroups: [SearchHistoryGroup], visitHistoryGroups: [VisitHistoryGroup]) {
       self.parent.tab = tab
       self.parent.searchHistoryGroups = searchHistoryGroups
+      self.parent.visitHistoryGroups = visitHistoryGroups
     }
     
     func allowedCharacters(string: String) -> Bool {
@@ -46,6 +48,12 @@ struct SearchNSTextField: NSViewRepresentable {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
         
+        self.parent.tab.autoCompleteVisitList = self.parent.visitHistoryGroups.filter {
+          $0.url.contains(lowercaseKeyword)
+        }.sorted {
+          $0.visitHistories!.count > $1.visitHistories!.count
+        }
+        
         if !self.parent.tab.isChangeByKeyDown {
           self.parent.tab.autoCompleteIndex = nil
         } else {
@@ -53,7 +61,7 @@ struct SearchNSTextField: NSViewRepresentable {
         }
         
         if self.allowedCharacters(string: lowercaseKeyword)
-            && self.parent.tab.autoCompleteList.count > 0
+            && (self.parent.tab.autoCompleteList.count + self.parent.tab.autoCompleteVisitList.count) > 0
             && lowercaseKeyword.count != self.parent.tab.inputURL.count - 1
             && textField.stringValue.count != 0 {
           self.parent.tab.autoCompleteIndex = 0
@@ -122,7 +130,7 @@ struct SearchNSTextField: NSViewRepresentable {
   func updateNSView(_ nsView: FocusableTextField, context: Context) {
     nsView.stringValue = tab.inputURL
     nsView.tab = tab
-    context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups)
+    context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
     if let window = nsView.window, !tab.isEditSearch {
       window.makeFirstResponder(nil)
     }

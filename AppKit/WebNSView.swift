@@ -54,7 +54,6 @@ struct WebNSView: NSViewRepresentable {
       }
     }
 
-    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
       guard let url = navigationAction.request.url else {
         decisionHandler(.cancel)
@@ -210,6 +209,12 @@ struct WebNSView: NSViewRepresentable {
           let historySite = HistorySite(title: title, url: self.parent.tab.originURL)
           if let faviconURL = cacheFaviconURL {
             historySite.loadFavicon(url: faviconURL)
+            if let currentURL = webView.url {
+              Task {
+                var faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+                await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
+              }
+            }
           }
           self.parent.tab.historySiteDataList.append(historySite)
         }

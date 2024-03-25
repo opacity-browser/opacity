@@ -1,28 +1,21 @@
 //
-//  StopPropagationWrapNSView.swift
+//  SwiftUIView.swift
 //  Opacity
 //
-//  Created by Falsy on 3/23/24.
+//  Created by Falsy on 3/25/24.
 //
 
 import SwiftUI
 
-class StopPropagationNSView: NSView {
-  override func resetCursorRects() {
-    super.resetCursorRects()
-    self.addCursorRect(self.bounds, cursor: .arrow)
-  }
-}
-
-struct SearchAutoCompleteItemNSView: NSViewRepresentable {
+struct SearchAutoCompleteVisitItemNSView: NSViewRepresentable {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  var searchHistoryGroup: SearchHistoryGroup
+  var visitHistoryGroup: VisitHistoryGroup
   var isActive: Bool
   
   func makeNSView(context: Context) -> NSView {
     let containerView = StopPropagationNSView()
-    let hostingView = NSHostingView(rootView: SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: searchHistoryGroup, isActive: isActive))
+    let hostingView = NSHostingView(rootView: SearchAutoCompleteVisitItem(browser: browser, tab: tab, visitHistoryGroup: visitHistoryGroup, isActive: isActive))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -39,8 +32,8 @@ struct SearchAutoCompleteItemNSView: NSViewRepresentable {
     
   func updateNSView(_ nsView: NSView, context: Context) {
     for subview in nsView.subviews {
-      if let hostingView = subview as? NSHostingView<SearchAutoCompleteItem> {
-        hostingView.rootView = SearchAutoCompleteItem(browser: browser, tab: tab, searchHistoryGroup: searchHistoryGroup, isActive: isActive)
+      if let hostingView = subview as? NSHostingView<SearchAutoCompleteVisitItem> {
+        hostingView.rootView = SearchAutoCompleteVisitItem(browser: browser, tab: tab, visitHistoryGroup: visitHistoryGroup, isActive: isActive)
         hostingView.layout()
       }
     }

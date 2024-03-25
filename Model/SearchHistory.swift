@@ -15,13 +15,11 @@ class SearchHistory: Identifiable  {
   
   var searchHistoryGroup: SearchHistoryGroup?
   
-  var searchText: String
   var createDate: Date
   
-  init(searchHistoryGroup: SearchHistoryGroup, searchText: String) {
+  init(searchHistoryGroup: SearchHistoryGroup) {
     self.id = UUID()
     self.searchHistoryGroup = searchHistoryGroup
-    self.searchText = searchText
     self.createDate = Date.now
     searchHistoryGroup.updateDate = Date.now
   }

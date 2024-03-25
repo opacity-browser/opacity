@@ -26,7 +26,7 @@ class SearchManager {
   @MainActor static func addSearchHistory(_ keyword: String) {
     let uppLowLetters = StringURL.checkURL(url: keyword) ? keyword.lowercased() : keyword
     if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
-      let newSearchHistory = SearchHistory(searchHistoryGroup: searchGroup, searchText: uppLowLetters)
+      let newSearchHistory = SearchHistory(searchHistoryGroup: searchGroup)
       searchGroup.searchHistories?.append(newSearchHistory)
     } else {
       do {
