@@ -39,6 +39,17 @@ struct ContentView: View {
         }
       }
     }
+    .onChange(of: opacityBrowserSettings.first?.theme) { _, newValue in
+      if newValue == "Dark" {
+        NSApp.appearance = NSAppearance(named: .darkAqua)
+      }
+      if newValue == "Light" {
+        NSApp.appearance = NSAppearance(named: .aqua)
+      }
+      if newValue == "System" {
+        NSApp.appearance = nil
+      }
+    }
     .toolbar {
       if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
         WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
