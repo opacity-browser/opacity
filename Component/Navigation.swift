@@ -18,7 +18,7 @@ struct Navigation: View {
   @State private var isMoreHover: Bool = false
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
-  @State private var isMoreMenuDialog: Bool = false
+//  @State private var isMoreMenuDialog: Bool = false
   
   @State private var isNotificationDetailDialog: Bool = true
   @State private var isLocationDetailDialog: Bool = true
@@ -35,23 +35,23 @@ struct Navigation: View {
       
       HistoryBackBtn(tab: tab)
       
-      VStack(spacing: 0) { }.frame(width: 8)
+      VStack(spacing: 0) { }.frame(width: 13)
       
       HistoryForwardBtn(tab: tab)
       
-      VStack(spacing: 0) { }.frame(width: 8)
+      VStack(spacing: 0) { }.frame(width: 13)
       
       HistoryRefreshBtn(iconHeight: iconHeight, iconRadius: iconRadius)
       
-      VStack(spacing: 0) { }.frame(width: 6)
+      VStack(spacing: 0) { }.frame(width: 11)
       
       Spacer()
       
-      SearchBoxArea(browser: browser, tab: tab, manualUpdate: manualUpdate)
+      SearchBoxArea(browser: browser)
       
       Spacer()
       
-      VStack(spacing: 0) { }.frame(width: 6)
+      VStack(spacing: 0) { }.frame(width: 11)
       
       if tab.isNotificationDialogIcon {
         VStack(spacing: 0) {
@@ -76,7 +76,7 @@ struct Navigation: View {
             NotificationDialog(tab: tab)
           }
         }
-        .padding(.trailing, 8)
+        .padding(.trailing, 13)
       }
       
       if tab.isLocationDialogIcon {
@@ -102,7 +102,7 @@ struct Navigation: View {
             GeoLocationDialog()
           }
         }
-        .padding(.trailing, 8)
+        .padding(.trailing, 13)
       }
       
       VStack(spacing: 0) {
@@ -126,7 +126,7 @@ struct Navigation: View {
         }
         .offset(y: -1)
       }
-      .padding(.trailing, 8)
+      .padding(.trailing, 13)
       
       VStack(spacing: 0) {
         VStack(spacing: 0) {
@@ -145,11 +145,17 @@ struct Navigation: View {
           }
         }
         .onTapGesture {
-          self.isMoreMenuDialog.toggle()
+//          self.isMoreMenuDialog.toggle()
+          if let schemeURL = URL(string:"opacity://settings") {
+            DispatchQueue.main.async {
+              browser.newTab(schemeURL)
+//              isMoreMenuDialog = false
+            }
+          }
         }
-        .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
-
-        }
+//        .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
+//          MoreMenuDialog(browser: browser, isMoreMenuDialog: $isMoreMenuDialog)
+//        }
         .offset(y: -1)
       }
       .padding(.trailing, 10)

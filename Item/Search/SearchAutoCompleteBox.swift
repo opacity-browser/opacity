@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 func inputTextWidth(_ text: String) -> CGFloat {
   let attributes = [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 13.5)]
@@ -15,6 +16,8 @@ func inputTextWidth(_ text: String) -> CGFloat {
 }
 
 struct SearchAutoCompleteBox: View {
+  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @ObservedObject var manualUpdate: ManualUpdate
@@ -25,16 +28,46 @@ struct SearchAutoCompleteBox: View {
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
   
+  func decodeBase64ToNSImage(base64: String) -> NSImage? {
+    guard let imageData = Data(base64Encoded: base64, options: .ignoreUnknownCharacters) else {
+      return nil
+    }
+    
+    return NSImage(data: imageData)
+  }
+
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
         if tab.isEditSearch {
           HStack(spacing: 0) {
-            Image(systemName: "magnifyingglass")
-              .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-              .font(.system(size: 13))
-              .clipShape(RoundedRectangle(cornerRadius: 14))
-              .foregroundColor(Color("Icon"))
+            if let settings = opacityBrowserSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
+              let searchEngine = settings.searchEngine
+              let searchEngineData = searchEngineList.first(where: { $0.name == searchEngine })
+              if let searchEngineFavicon = searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
+                VStack(spacing: 0) {
+                  Image(nsImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: 16, maxHeight: 16)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .clipped()
+                }
+                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+              } else {
+                Image(systemName: "magnifyingglass")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .font(.system(size: 13))
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .foregroundColor(Color("Icon"))
+              }
+            } else {
+              Image(systemName: "magnifyingglass")
+                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                .font(.system(size: 13))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .foregroundColor(Color("Icon"))
+            }
           }
           .padding(.leading, 7)
         } else {

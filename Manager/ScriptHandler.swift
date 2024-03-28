@@ -33,6 +33,31 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       
       let scriptName = messageBody["name"] ?? ""
       
+      if let webView = message.webView, let currentURL = webView.url {
+        if currentURL.scheme == "opacity" {
+          if scriptName == "getBrowerSettings" {
+            getBrowerSettings()
+          }
+          if scriptName == "getSearchEngineList" {
+            getSearchEngineList()
+          }
+          
+          if let scriptValue = messageBody["value"] {
+            if scriptName == "setSearchEngine" {
+              setSearchEngine(scriptValue)
+            }
+            
+            if scriptName == "setBrowserTheme" {
+              setBrowserTheme(scriptValue)
+            }
+            
+            if scriptName == "setRetentionPeriod" {
+              setRetentionPeriod(scriptValue)
+            }
+          }
+        }
+      }
+      
       if scriptName == "initGeoPositions" {
         initGeoPositions()
       }
@@ -82,6 +107,152 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
           }
         }
       }
+    }
+  }
+  
+  func setSearchEngine(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let searchEngine = SearchEngineList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.searchEngine = searchEngine.rawValue
+          let script = """
+          window.opacityResponse.setSearchEngine({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser search engine setting error")
+        let script = """
+        window.opacityResponse.getBrowerSettings({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.getBrowerSettings({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func setBrowserTheme(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let theme = BrowserThemeList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.theme = theme.rawValue
+          let script = """
+          window.opacityResponse.setBrowserTheme({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser theme setting error")
+        let script = """
+        window.opacityResponse.setBrowserTheme({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.setBrowserTheme({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func setRetentionPeriod(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let period = DataRententionPeriodList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.retentionPeriod = period.rawValue
+          let script = """
+          window.opacityResponse.setRetentionPeriod({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser retention period setting error")
+        let script = """
+        window.opacityResponse.setRetentionPeriod({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.setRetentionPeriod({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getBrowerSettings() {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    do {
+      if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        let script = """
+        window.opacityResponse.getBrowerSettings({
+          data: {
+            searchEngine: "\(browserSettings.searchEngine)",
+            theme: "\(browserSettings.theme)",
+            retentionPeriod: "\(browserSettings.retentionPeriod)"
+          }
+        })
+      """
+        
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("Error get browser settings")
+      let script = """
+      window.opacityResponse.getBrowerSettings({
+        data: "error"
+      })
+    """
+      
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getSearchEngineList() {
+    var searchEngineNameList: [String] = []
+    for engine in searchEngineList {
+      searchEngineNameList.append(engine.name)
+    }
+    
+    do {
+      let jsonData = try JSONEncoder().encode(searchEngineNameList)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+        window.opacityResponse.getSearchEngineList({
+          data: \(jsonString)
+        })
+      """
+        
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("error parsing message to schema page")
     }
   }
   

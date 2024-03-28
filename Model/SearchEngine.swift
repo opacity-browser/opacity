@@ -7,15 +7,14 @@
 
 import SwiftUI
 
-final class SearchEngine: Identifiable {
-  var id = UUID()
+final class SearchEngine: Codable {
   var name: String
-  var url: URL
-  var logo: NSImage?
+  var searchUrlString: String
+  var favicon: String
   
-  init(name: String, url: URL, logo: NSImage?) {
+  init(name: String, searchUrlString: String, favicon: String) {
     self.name = name
-    self.url = url
-    self.logo = logo
+    self.searchUrlString = searchUrlString
+    self.favicon = favicon
   }
 }

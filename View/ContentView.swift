@@ -2,6 +2,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+  @Environment(\.modelContext) var modelContext
+  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
@@ -42,6 +45,15 @@ struct ContentView: View {
       }
     }
     .onAppear {
+      if opacityBrowserSettings.count == 0 {
+        do {
+          modelContext.insert(OpacityBrowserSettings())
+          try modelContext.save()
+        } catch {
+          print("initial browser setup error")
+        }
+      }
+      
       guard let baseTabId = tabId else {
         browser.initTab()
         return

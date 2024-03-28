@@ -180,13 +180,25 @@ final class Tab: ObservableObject, Identifiable, Equatable {
     }
   }
   
-  func changeKeywordToURL(_ keyword: String) -> String {
+  @MainActor func changeKeywordToURL(_ keyword: String) -> String {
     var newURL = keyword
     if StringURL.checkURL(url: newURL) {
       if !newURL.contains("://") {
         newURL = "https://\(newURL)"
       }
     } else {
+      let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          let searchEngine = browserSettings.searchEngine
+          let searchEngineData = searchEngineList.first(where: { $0.name == searchEngine })
+          if let searchEngineUrlString = searchEngineData?.searchUrlString {
+            return searchEngineUrlString + newURL
+          }
+        }
+      } catch {
+        print("Error get browser settings")
+      }
       newURL = "https://www.google.com/search?q=\(newURL)"
     }
     return newURL

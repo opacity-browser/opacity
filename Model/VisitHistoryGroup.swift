@@ -30,6 +30,9 @@ class VisitHistoryGroup {
     self.url = url
     self.title = title
     self.faviconData = faviconData
+    if let faviconData = faviconData {
+      print(faviconData)
+    }
     self.updateDate = Date.now
   }
   
