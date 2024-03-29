@@ -21,6 +21,13 @@ struct NotificationValue: Codable {
   var options: NotificationOptions?
 }
 
+func dateFromString(_ dateString: String) -> Date? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM"
+    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    return dateFormatter.date(from: dateString)
+}
+
 class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate {
   @ObservedObject var tab: Tab
   
@@ -53,6 +60,18 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             
             if scriptName == "setRetentionPeriod" {
               setRetentionPeriod(scriptValue)
+            }
+            
+            if scriptName == "getSearchHistoryList" {
+              getSearchHistoryList(scriptValue)
+            }
+            
+            if scriptName == "getVisitHistoryList" {
+              getVisitHistoryList(scriptValue)
+            }
+            
+            if scriptName == "deleteSearchHistory" {
+              deleteSearchHistory(scriptValue)
             }
           }
         }
@@ -108,6 +127,104 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         }
       }
     }
+  }
+  
+  func deleteSearchHistory(_ historyIds: String) {
+    if let jsonData = historyIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deleteHistoryIds = try decoder.decode([String].self, from: jsonData)
+        for id in deleteHistoryIds {
+          if let uuid = UUID(uuidString: id) {
+            SearchManager.deleteSearchHistoryById(uuid)
+          }
+        }
+        let script = """
+        window.opacityResponse.deleteSearchHistory({
+          data: "success"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+      }
+    }
+  }
+  
+  func getSearchHistoryList(_ yearMonth: String) {
+    guard let targetDate = dateFromString(yearMonth) else {
+      print("Invalid date format")
+      let script = """
+      window.opacityResponse.getSearchHistoryList({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      return
+    }
+    
+    let descriptor = FetchDescriptor<SearchHistory>()
+    
+    do {
+      let calendar = Calendar.current
+      let searchHistoryList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      
+      var firstDateString = ""
+      if let firstData = searchHistoryList.first {
+        let firstDateYearMonth = calendar.dateComponents([.year, .month], from: firstData.createDate)
+        if let fYear = firstDateYearMonth.year, let fMonth = firstDateYearMonth.month {
+          let padStartMonth = String(describing: fMonth).count == 2 ? String(describing: fMonth) : "0\(String(describing: fMonth))"
+          firstDateString = "\(String(describing: fYear))-\(padStartMonth)"
+        }
+      }
+      let filterHistoryList = searchHistoryList.filter {
+        let components = calendar.dateComponents([.year, .month], from: $0.createDate)
+        let targetComponents = calendar.dateComponents([.year, .month], from: targetDate)
+        return components.year == targetComponents.year && components.month == targetComponents.month
+      }
+      
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+      var searchHistories: [SearchHistorySettings] = []
+      for sh in filterHistoryList {
+        searchHistories.append(SearchHistorySettings(id: sh.id, searchText: sh.searchHistoryGroup!.searchText, createDate: dateFormatter.string(from: sh.createDate)))
+      }
+      let jsonData = try JSONEncoder().encode(searchHistories)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+          window.opacityResponse.getSearchHistoryList({
+            data: {
+              firstDate: "\(firstDateString)",
+              list: \(jsonString)
+            }
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } else {
+        print("getSearchHistoryList JSON pares error")
+        let script = """
+        window.opacityResponse.getSearchHistoryList({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get search history error")
+      let script = """
+      window.opacityResponse.getSearchHistoryList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
+    
+    
+  }
+  
+  func getVisitHistoryList(_ scriptValue: String) {
+    
   }
   
   func setSearchEngine(_ scriptValue: String) {

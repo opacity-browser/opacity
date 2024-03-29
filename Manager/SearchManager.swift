@@ -41,7 +41,12 @@ class SearchManager {
   }
   
   @MainActor static func deleteSearchHistory(_ target: SearchHistory) {
-    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+    do {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+      print("delete search history error")
+    }
   }
   
   @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
@@ -50,6 +55,44 @@ class SearchManager {
         self.deleteSearchHistory(searchHistory)
       }
     }
-    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+    do {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+       print("delete search history group error")
+     }
+  }
+  
+  @MainActor static func deleteSearchHistoryById(_ id: UUID) {
+    let descriptor = FetchDescriptor<SearchHistory>(
+      predicate: #Predicate { $0.id == id }
+    )
+    do {
+      if let target = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        let cacheGroupId = target.searchHistoryGroup?.id
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+        try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        if let groupId = cacheGroupId {
+          self.deleteSearchHistoryGroupById(groupId)
+        }
+      }
+    } catch {
+      print("delete search history error")
+    }
+  }
+  
+  @MainActor static func deleteSearchHistoryGroupById(_ id: UUID) {
+    let descriptor = FetchDescriptor<SearchHistoryGroup>(
+      predicate: #Predicate { $0.id == id }
+    )
+    do {
+      if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        if emptySearchHistoryGroup.searchHistories!.count == 0 {
+          self.deleteSearchHistoryGroup(emptySearchHistoryGroup)
+        }
+      }
+    } catch {
+      print("get empty search history group error")
+    }
   }
 }
