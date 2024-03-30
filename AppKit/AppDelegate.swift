@@ -50,7 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
-      return try ModelContainer(for: schema, configurations: [modelConfiguration])
+      let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+      return container
     } catch {
       fatalError("Could not create ModelContainer: \(error)")
     }

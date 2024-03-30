@@ -43,7 +43,7 @@ struct SearchAutoCompleteBox: View {
           HStack(spacing: 0) {
             if let settings = opacityBrowserSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
               let searchEngine = settings.searchEngine
-              let searchEngineData = searchEngineList.first(where: { $0.name == searchEngine })
+              let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
               if let searchEngineFavicon = searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
                 VStack(spacing: 0) {
                   Image(nsImage: uiImage)

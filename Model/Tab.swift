@@ -191,7 +191,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       do {
         if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
           let searchEngine = browserSettings.searchEngine
-          let searchEngineData = searchEngineList.first(where: { $0.name == searchEngine })
+          let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
           if let searchEngineUrlString = searchEngineData?.searchUrlString {
             return searchEngineUrlString + newURL
           }
@@ -210,7 +210,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       keyword = searchKeyword
     } else {
       keyword = self.inputURL
-      if let choiceIndex = self.autoCompleteIndex, choiceIndex == 0 {
+      if let choiceIndex = self.autoCompleteIndex, self.autoCompleteList.count > 0,  choiceIndex == 0 {
         keyword = self.autoCompleteList[0].searchText
       }
     }

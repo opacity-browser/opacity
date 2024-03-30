@@ -56,3 +56,11 @@
 "Folder" = "Folder";
 "Name" = "Name";
 "Save" = "Save";
+
+"System" = "System";
+"Light" = "Light";
+"Dark" = "Dark";
+
+"1 Week" = "1 Week";
+"1 Month" = "1 Month";
+"Indefinite" = "Indefinite";

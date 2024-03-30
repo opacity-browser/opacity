@@ -55,3 +55,11 @@
 "Folder" = "폴더";
 "Name" = "이름";
 "Save" = "저장";
+
+"System" = "시스템 모드";
+"Light" = "밝은 모드";
+"Dark" = "어두은 모드";
+
+"1 Week" = "일주일";
+"1 Month" = "한달";
+"Indefinite" = "무기한";

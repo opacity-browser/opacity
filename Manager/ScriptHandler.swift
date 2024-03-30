@@ -42,11 +42,12 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       
       if let webView = message.webView, let currentURL = webView.url {
         if currentURL.scheme == "opacity" {
-          if scriptName == "getBrowerSettings" {
-            getBrowerSettings()
+          if scriptName == "getGeneralSettings" {
+            getGeneralSettings()
           }
-          if scriptName == "getSearchEngineList" {
-            getSearchEngineList()
+          
+          if scriptName == "getGeneralSettingList" {
+            getGeneralSettingList()
           }
           
           if let scriptValue = messageBody["value"] {
@@ -323,16 +324,25 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func getBrowerSettings() {
+  func getGeneralSettings() {
     let descriptor = FetchDescriptor<OpacityBrowserSettings>()
     do {
       if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
         let script = """
-        window.opacityResponse.getBrowerSettings({
+        window.opacityResponse.getGeneralSettings({
           data: {
-            searchEngine: "\(browserSettings.searchEngine)",
-            theme: "\(browserSettings.theme)",
-            retentionPeriod: "\(browserSettings.retentionPeriod)"
+            searchEngine: {
+              id: "\(browserSettings.searchEngine)",
+              name: "\(NSLocalizedString(browserSettings.searchEngine, comment: ""))"
+            },
+            theme: {
+              id: "\(browserSettings.theme)",
+              name: "\(NSLocalizedString(browserSettings.theme, comment: ""))"
+            },
+            retentionPeriod: {
+              id: "\(browserSettings.retentionPeriod)",
+              name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
+            }
           }
         })
       """
@@ -342,7 +352,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     } catch {
       print("Error get browser settings")
       let script = """
-      window.opacityResponse.getBrowerSettings({
+      window.opacityResponse.getGeneralSettings({
         data: "error"
       })
     """
@@ -351,25 +361,41 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func getSearchEngineList() {
-    var searchEngineNameList: [String] = []
-    for engine in searchEngineList {
-      searchEngineNameList.append(engine.name)
+  func getGeneralSettingList() {
+    var searchEngineList: [SettingListItem] = []
+    var themeList: [SettingListItem] = []
+    var periodList: [SettingListItem] = []
+    
+    for engine in SEARCH_ENGINE_LIST {
+      searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
+    }
+    for themeItem in THEME_LIST {
+      themeList.append(SettingListItem(id: themeItem, name: NSLocalizedString(themeItem, comment: "")))
+    }
+    for periodItem in RETENTION_PERIOD_LIST {
+      periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
     }
     
     do {
-      let jsonData = try JSONEncoder().encode(searchEngineNameList)
-      if let jsonString = String(data: jsonData, encoding: .utf8) {
-        let script = """
-        window.opacityResponse.getSearchEngineList({
-          data: \(jsonString)
-        })
-      """
-        
-        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      let searchEngin = try JSONEncoder().encode(searchEngineList)
+      let theme = try JSONEncoder().encode(themeList)
+      let retentionPeriod = try JSONEncoder().encode(periodList)
+      if let searchString = String(data: searchEngin, encoding: .utf8),
+         let themeString = String(data: theme, encoding: .utf8),
+         let periodString = String(data: retentionPeriod, encoding: .utf8) {
+          let script = """
+            window.opacityResponse.getGeneralSettingList({
+              data: {
+                searchEngine: \(searchString),
+                theme: \(themeString),
+                retentionPeriod: \(periodString)
+              }
+            })
+         """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
       }
     } catch {
-      print("error parsing message to schema page")
+      
     }
   }
   
