@@ -50,6 +50,10 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             getGeneralSettingList()
           }
           
+          if scriptName == "getNotificationPermisions" {
+            getNotificationPermisions()
+          }
+          
           if let scriptValue = messageBody["value"] {
             if scriptName == "setSearchEngine" {
               setSearchEngine(scriptValue)
@@ -77,6 +81,14 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             
             if scriptName == "deleteVisitHistory" {
               deleteVisitHistory(scriptValue)
+            }
+            
+            if scriptName == "deleteNotificationPermissions" {
+              deleteNotificationPermissions(scriptValue)
+            }
+            
+            if scriptName == "updateNotificationPermissions" {
+              updateNotificationPermissions(scriptValue)
             }
           }
         }
@@ -140,6 +152,118 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
+  func updateNotificationPermissions(_ updateParmas: String) {
+    if let jsonData = updateParmas.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let params = try decoder.decode(UpdatePermissionParams.self, from: jsonData)
+        if let uuid = UUID(uuidString: params.id) {
+          PermissionManager.updateNotificationPermisionById(id: uuid, isDenied: params.isDenied)
+          let script = """
+            window.opacityResponse.updateNotificationPermissions({
+              data: "success"
+            })
+          """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        } else {
+          let script = """
+            window.opacityResponse.updateNotificationPermissions({
+              data: "error"
+            })
+          """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Decoding failed: \(error)")
+        let script = """
+        window.opacityResponse.updateNotificationPermissions({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      print("Parameter error")
+      let script = """
+        window.opacityResponse.updateNotificationPermissions({
+          data: "error"
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func deleteNotificationPermissions(_ permissionIds: String) {
+    if let jsonData = permissionIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deletePermissionIds = try decoder.decode([String].self, from: jsonData)
+        for id in deletePermissionIds {
+          if let uuid = UUID(uuidString: id) {
+            PermissionManager.deleteNotificationPermisionById(uuid)
+          }
+        }
+        let script = """
+          window.opacityResponse.deleteNotificationPermissions({
+            data: "success"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+        let script = """
+          window.opacityResponse.deleteNotificationPermissions({
+            data: "error"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      print("Parameter error")
+      let script = """
+        window.opacityResponse.deleteNotificationPermissions({
+          data: "error"
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getNotificationPermisions() {
+    if let notificationPermitions = PermissionManager.getNotificationPermisions() {
+      var jsonDataList: [PermissionItem] = []
+      for noti in notificationPermitions {
+        jsonDataList.append(PermissionItem(id: noti.id, domain: noti.domain, permission: noti.permission, isDenied: noti.isDenied))
+      }
+      do {
+        let jsonData = try JSONEncoder().encode(jsonDataList)
+        if let jsonString = String(data: jsonData, encoding: .utf8) {
+          let script = """
+          window.opacityResponse.getNotificationPermisions({
+            data: \(jsonString)
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Encoding failed: \(error)")
+        let script = """
+        window.opacityResponse.getNotificationPermisions({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.getNotificationPermisions({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
   func hashChange(_ urlString: String) {
     if let url = URL(string: urlString) {
       DispatchQueue.main.async {
@@ -168,6 +292,12 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         tab.webview.evaluateJavaScript(script, completionHandler: nil)
       } catch {
         print("Decoding failed: \(error)")
+        let script = """
+        window.opacityResponse.deleteSearchHistory({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
       }
     }
   }

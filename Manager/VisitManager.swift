@@ -98,7 +98,7 @@ class VisitManager {
         }
       }
     } catch {
-      print("get empty visit history group error")
+      print("delete visit history by id error")
     }
   }
 }
