@@ -74,6 +74,10 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             if scriptName == "deleteSearchHistory" {
               deleteSearchHistory(scriptValue)
             }
+            
+            if scriptName == "deleteVisitHistory" {
+              deleteVisitHistory(scriptValue)
+            }
           }
         }
       }
@@ -219,13 +223,97 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     """
       tab.webview.evaluateJavaScript(script, completionHandler: nil)
     }
-    
-    
-    
   }
   
-  func getVisitHistoryList(_ scriptValue: String) {
+  func deleteVisitHistory(_ historyIds: String) {
+    if let jsonData = historyIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deleteHistoryIds = try decoder.decode([String].self, from: jsonData)
+        for id in deleteHistoryIds {
+          if let uuid = UUID(uuidString: id) {
+            VisitManager.deleteVisitHistoryById(uuid)
+          }
+        }
+        let script = """
+        window.opacityResponse.deleteVisitHistory({
+          data: "success"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+      }
+    }
+  }
+  
+  func getVisitHistoryList(_ yearMonth: String) {
+    guard let targetDate = dateFromString(yearMonth) else {
+      print("Invalid date format")
+      let script = """
+      window.opacityResponse.getVisitHistoryList({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      return
+    }
     
+    let descriptor = FetchDescriptor<VisitHistory>()
+    
+    do {
+      let calendar = Calendar.current
+      let visitHistoryList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+
+      var firstDateString = ""
+      if let firstData = visitHistoryList.first {
+        let firstDateYearMonth = calendar.dateComponents([.year, .month], from: firstData.createDate)
+        if let fYear = firstDateYearMonth.year, let fMonth = firstDateYearMonth.month {
+          let padStartMonth = String(describing: fMonth).count == 2 ? String(describing: fMonth) : "0\(String(describing: fMonth))"
+          firstDateString = "\(String(describing: fYear))-\(padStartMonth)"
+        }
+      }
+      let filterHistoryList = visitHistoryList.filter {
+        let components = calendar.dateComponents([.year, .month], from: $0.createDate)
+        let targetComponents = calendar.dateComponents([.year, .month], from: targetDate)
+        return components.year == targetComponents.year && components.month == targetComponents.month
+      }
+      
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+      var visitHistories: [VisitHistorySettings] = []
+      for sh in filterHistoryList {
+        visitHistories.append(VisitHistorySettings(id: sh.id, title: sh.visitHistoryGroup!.title, url: sh.visitHistoryGroup!.url, createDate: dateFormatter.string(from: sh.createDate)))
+      }
+      let jsonData = try JSONEncoder().encode(visitHistories)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+          window.opacityResponse.getVisitHistoryList({
+            data: {
+              firstDate: "\(firstDateString)",
+              list: \(jsonString)
+            }
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } else {
+        print("getVisitHistoryList JSON pares error")
+        let script = """
+        window.opacityResponse.getVisitHistoryList({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get search history error")
+      let script = """
+      window.opacityResponse.getVisitHistoryList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
   }
   
   func setSearchEngine(_ scriptValue: String) {

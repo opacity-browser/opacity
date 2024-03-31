@@ -21,7 +21,8 @@ struct SideBarView: View {
 //  @Query var searchHistoryGroup: [SearchHistoryGroup]
 //  @Query var searchHistory: [SearchHistory]
 
-//  @Query var visitHistoryGroup: [VisitHistoryGroup]
+  @Query var visitHistoryGroup: [VisitHistoryGroup]
+  @Query var visitHistory: [VisitHistory]
   
   @ObservedObject var browser: Browser
   @ObservedObject var manualUpdate: ManualUpdate
@@ -35,6 +36,25 @@ struct SideBarView: View {
         .foregroundColor(Color("UIBorder"))
       
       ScrollView {
+//        ForEach(visitHistory) { sh in
+//          VStack {
+//            HStack {
+//              Text(sh.title)
+//                .onTapGesture {
+//                  do {
+//                    modelContext.delete(sh)
+//                    try modelContext.save()
+//                  } catch {
+//
+//                  }
+//                }
+//              Text("\(sh.createDate)")
+//            }
+//          }
+//          .padding(5)
+//          .background(.blue.opacity(0.2))
+//        }
+        
 //        ForEach(visitHistoryGroup) { vhg in
 //          VStack {
 //            Text("\(vhg.url)-\(vhg.title)-\(vhg.updateDate)")
