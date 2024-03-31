@@ -82,6 +82,12 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         }
       }
       
+      if let scriptValue = messageBody["value"] {
+        if scriptName == "hashChange" {
+          hashChange(scriptValue)
+        }
+      }
+      
       if scriptName == "initGeoPositions" {
         initGeoPositions()
       }
@@ -130,6 +136,16 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             }
           }
         }
+      }
+    }
+  }
+  
+  func hashChange(_ urlString: String) {
+    if let url = URL(string: urlString) {
+      DispatchQueue.main.async {
+        self.tab.originURL = url
+        self.tab.inputURL = StringURL.setInputURL(url)
+        self.tab.printURL = StringURL.setPrintURL(url)
       }
     }
   }

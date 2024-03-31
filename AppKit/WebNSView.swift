@@ -141,6 +141,15 @@ struct WebNSView: NSViewRepresentable {
          """)
         }
       }
+      
+      webView.evaluateJavaScript("""
+      window.addEventListener('hashchange', function() {
+        window.webkit.messageHandlers.opacityBrowser.postMessage({
+          name: "hashChange",
+          value: window.location.href
+        });
+      });
+     """)
     
       var cacheTitle: String?
       group.enter()
