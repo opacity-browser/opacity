@@ -229,6 +229,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             target.activeTabId = target.tabs[targetIndex].id
           }
         }
+      } else {
+        keyWindow.close()
       }
     }
   }
