@@ -10,6 +10,7 @@ import SwiftData
 import CoreLocation
 
 class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
+  var windowMap: [UUID:NSWindow] = [:]
   @Published var isFullScreen: Bool = false
   
   func windowWillEnterFullScreen(_ notification: Notification) {
@@ -35,16 +36,52 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
     let frameString = NSStringFromRect(window.frame)
     UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
   }
+  
+  func windowShouldClose(_ sender: NSWindow) -> Bool {
+    let windowNo = sender.windowNumber
+    if let childTabs = AppDelegate.shared.service.browsers[windowNo]?.tabs {
+      for childTab in childTabs {
+        AppDelegate.shared.closeInspector(childTab.id)
+      }
+    }
+    return true
+  }
 }
 
 
 class AppDelegate: NSObject, NSApplicationDelegate {
   static var shared: AppDelegate!
-  
   private var isTerminating = false
+  
+  var prevWindow: NSWindow?
+  var windowMap: [UUID:NSWindow] = [:]
+  
   var service: Service = Service()
   let locationManager = CLLocationManager()
   let windowDelegate = OpacityWindowDelegate()
+  
+  override init() {
+    super.init()
+    NotificationCenter.default.addObserver(self, selector: #selector(windowDidResignKey(notification:)), name: NSWindow.didResignKeyNotification, object: nil)
+  }
+  
+  @objc func windowDidResignKey(notification: Notification) {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNo = keyWindow.windowNumber
+      if let pWindow = self.prevWindow {
+        if pWindow.windowNumber != windowNo {
+          if pWindow.title == "" && keyWindow.title != "" {
+            if !windowMap.values.contains(pWindow) {
+              if let activeBrowser = service.browsers[pWindow.windowNumber], let tabId = activeBrowser.activeTabId {
+                windowMap[tabId] = keyWindow
+              }
+            }
+          }
+        }
+      }
+      self.prevWindow = keyWindow
+    }
+  }
 
   var opacityModelContainer: ModelContainer = {
     let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self])
@@ -209,27 +246,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func closeWindow() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if self.service.browsers[windowNumber] != nil {
-        self.service.browsers[windowNumber] = nil
+      if let childTabs = self.service.browsers[windowNumber]?.tabs {
+        for childTab in childTabs {
+          self.closeInspector(childTab.id)
+        }
       }
+      self.service.browsers[windowNumber] = nil
       keyWindow.close()
+    }
+  }
+  
+  func closeInspector(_ tabId: UUID) {
+    if windowMap.keys.contains(tabId) {
+      windowMap[tabId]!.close()
+      windowMap.removeValue(forKey: tabId)
     }
   }
   
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
+      print(keyWindow)
       let windowNumber = keyWindow.windowNumber
-      if let target = self.service.browsers[windowNumber] {
-        if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == target.activeTabId }) {
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == activeId }) {
           target.tabs.remove(at: targetRemoveIndex)
           if target.tabs.count == 0 {
-            keyWindow.close()
+            self.closeWindow()
           } else {
             let targetIndex = target.tabs.count > targetRemoveIndex ? targetRemoveIndex : target.tabs.count - 1
             target.activeTabId = target.tabs[targetIndex].id
           }
         }
+        self.closeInspector(activeId)
       } else {
+        for (key, value) in windowMap {
+          if value == keyWindow {
+            windowMap.removeValue(forKey: key)
+          }
+        }
         keyWindow.close()
       }
     }
