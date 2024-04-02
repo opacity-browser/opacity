@@ -29,18 +29,23 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
   }
   
   func appendIndexHtmlNeeded(_ url: URL) -> URL {
+    var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+    let hash = components?.fragment
+    components?.fragment = nil
+    
     let lastPathComponent = url.lastPathComponent
     let fileExtension = lastPathComponent.components(separatedBy: ".").last
     if fileExtension == nil || fileExtension!.isEmpty {
-      var newPath = url.absoluteString
-      if !newPath.hasSuffix("/") {
-        newPath += "/"
+      var path = components?.path ?? ""
+      if !path.hasSuffix("/") {
+          path += "/"
       }
-      newPath += "index.html"
-      
-      return URL(string: newPath) ?? url
+      path += "index.html"
+      components?.path = path
     }
-    return url
+    
+    components?.fragment = hash
+    return components?.url ?? url
   }
   
   func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {

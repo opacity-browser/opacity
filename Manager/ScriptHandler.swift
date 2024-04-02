@@ -21,6 +21,13 @@ struct NotificationValue: Codable {
   var options: NotificationOptions?
 }
 
+func dateFromString(_ dateString: String) -> Date? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM"
+    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    return dateFormatter.date(from: dateString)
+}
+
 class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate {
   @ObservedObject var tab: Tab
   
@@ -32,6 +39,70 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String] {
       
       let scriptName = messageBody["name"] ?? ""
+      
+      if let webView = message.webView, let currentURL = webView.url {
+        if currentURL.scheme == "opacity" {
+          if scriptName == "getGeneralSettings" {
+            getGeneralSettings()
+          }
+          
+          if scriptName == "getGeneralSettingList" {
+            getGeneralSettingList()
+          }
+          
+          if scriptName == "getNotificationPermisions" {
+            getNotificationPermisions()
+          }
+          
+          if let scriptValue = messageBody["value"] {
+            if scriptName == "getPageStrings" {
+              getPageStrings(scriptValue)
+            }
+            
+            if scriptName == "setSearchEngine" {
+              setSearchEngine(scriptValue)
+            }
+            
+            if scriptName == "setScreenMode" {
+              setScreenMode(scriptValue)
+            }
+            
+            if scriptName == "setRetentionPeriod" {
+              setRetentionPeriod(scriptValue)
+            }
+            
+            if scriptName == "getSearchHistoryList" {
+              getSearchHistoryList(scriptValue)
+            }
+            
+            if scriptName == "getVisitHistoryList" {
+              getVisitHistoryList(scriptValue)
+            }
+            
+            if scriptName == "deleteSearchHistory" {
+              deleteSearchHistory(scriptValue)
+            }
+            
+            if scriptName == "deleteVisitHistory" {
+              deleteVisitHistory(scriptValue)
+            }
+            
+            if scriptName == "deleteNotificationPermissions" {
+              deleteNotificationPermissions(scriptValue)
+            }
+            
+            if scriptName == "updateNotificationPermissions" {
+              updateNotificationPermissions(scriptValue)
+            }
+          }
+        }
+      }
+      
+      if let scriptValue = messageBody["value"] {
+        if scriptName == "hashChange" {
+          hashChange(scriptValue)
+        }
+      }
       
       if scriptName == "initGeoPositions" {
         initGeoPositions()
@@ -82,6 +153,528 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
           }
         }
       }
+    }
+  }
+  
+  func getPageStrings(_ pageName: String) {
+    var script: String
+    switch pageName {
+      case "settings":
+        script = """
+        window.opacityResponse.getPageStrings({
+          data: {
+            lang: '\(Locale.current.language.languageCode?.identifier ?? "en")',
+            "Settings": '\(NSLocalizedString("Settings", comment: ""))',
+            "General": '\(NSLocalizedString("General", comment: ""))',
+            "Search History": '\(NSLocalizedString("Search History", comment: ""))',
+            "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
+            "Permission": '\(NSLocalizedString("Permission", comment: ""))',
+            "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
+            "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
+            "History Data Retention Period": '\(NSLocalizedString("History Data Retention Period", comment: ""))',
+            "View More": '\(NSLocalizedString("View More", comment: ""))',
+            "$n were selected.": '\(NSLocalizedString("$n were selected.", comment: ""))',
+            "Delete": '\(NSLocalizedString("Delete", comment: ""))',
+            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
+            "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
+            "Notification": '\(NSLocalizedString("Notification", comment: ""))',
+            "allowed": '\(NSLocalizedString("allowed", comment: ""))',
+            "denied": '\(NSLocalizedString("denied", comment: ""))',
+            "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
+            "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
+            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))'
+          }
+        })
+      """
+      default:
+        script = """
+        window.opacityResponse.getPageStrings({
+          data: "error"
+        })
+      """
+    }
+    
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+  }
+  
+  func updateNotificationPermissions(_ updateParmas: String) {
+    if let jsonData = updateParmas.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let params = try decoder.decode(UpdatePermissionParams.self, from: jsonData)
+        if let uuid = UUID(uuidString: params.id) {
+          PermissionManager.updateNotificationPermisionById(id: uuid, isDenied: params.isDenied)
+          let script = """
+            window.opacityResponse.updateNotificationPermissions({
+              data: "success"
+            })
+          """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        } else {
+          let script = """
+            window.opacityResponse.updateNotificationPermissions({
+              data: "error"
+            })
+          """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Decoding failed: \(error)")
+        let script = """
+        window.opacityResponse.updateNotificationPermissions({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      print("Parameter error")
+      let script = """
+        window.opacityResponse.updateNotificationPermissions({
+          data: "error"
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func deleteNotificationPermissions(_ permissionIds: String) {
+    if let jsonData = permissionIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deletePermissionIds = try decoder.decode([String].self, from: jsonData)
+        for id in deletePermissionIds {
+          if let uuid = UUID(uuidString: id) {
+            PermissionManager.deleteNotificationPermisionById(uuid)
+          }
+        }
+        let script = """
+          window.opacityResponse.deleteNotificationPermissions({
+            data: "success"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+        let script = """
+          window.opacityResponse.deleteNotificationPermissions({
+            data: "error"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      print("Parameter error")
+      let script = """
+        window.opacityResponse.deleteNotificationPermissions({
+          data: "error"
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getNotificationPermisions() {
+    if let notificationPermitions = PermissionManager.getNotificationPermisions() {
+      var jsonDataList: [PermissionItem] = []
+      for noti in notificationPermitions {
+        jsonDataList.append(PermissionItem(id: noti.id, domain: noti.domain, permission: noti.permission, isDenied: noti.isDenied))
+      }
+      do {
+        let jsonData = try JSONEncoder().encode(jsonDataList)
+        if let jsonString = String(data: jsonData, encoding: .utf8) {
+          let script = """
+          window.opacityResponse.getNotificationPermisions({
+            data: \(jsonString)
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Encoding failed: \(error)")
+        let script = """
+        window.opacityResponse.getNotificationPermisions({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.getNotificationPermisions({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func hashChange(_ urlString: String) {
+    if let url = URL(string: urlString) {
+      DispatchQueue.main.async {
+        self.tab.originURL = url
+        self.tab.inputURL = StringURL.setInputURL(url)
+        self.tab.printURL = StringURL.setPrintURL(url)
+      }
+    }
+  }
+  
+  func deleteSearchHistory(_ historyIds: String) {
+    if let jsonData = historyIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deleteHistoryIds = try decoder.decode([String].self, from: jsonData)
+        for id in deleteHistoryIds {
+          if let uuid = UUID(uuidString: id) {
+            SearchManager.deleteSearchHistoryById(uuid)
+          }
+        }
+        let script = """
+        window.opacityResponse.deleteSearchHistory({
+          data: "success"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+        let script = """
+        window.opacityResponse.deleteSearchHistory({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    }
+  }
+  
+  func getSearchHistoryList(_ yearMonth: String) {
+    guard let targetDate = dateFromString(yearMonth) else {
+      print("Invalid date format")
+      let script = """
+      window.opacityResponse.getSearchHistoryList({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      return
+    }
+    
+    let descriptor = FetchDescriptor<SearchHistory>()
+    
+    do {
+      let calendar = Calendar.current
+      let searchHistoryList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      
+      var firstDateString = ""
+      if let firstData = searchHistoryList.first {
+        let firstDateYearMonth = calendar.dateComponents([.year, .month], from: firstData.createDate)
+        if let fYear = firstDateYearMonth.year, let fMonth = firstDateYearMonth.month {
+          let padStartMonth = String(describing: fMonth).count == 2 ? String(describing: fMonth) : "0\(String(describing: fMonth))"
+          firstDateString = "\(String(describing: fYear))-\(padStartMonth)"
+        }
+      }
+      let filterHistoryList = searchHistoryList.filter {
+        let components = calendar.dateComponents([.year, .month], from: $0.createDate)
+        let targetComponents = calendar.dateComponents([.year, .month], from: targetDate)
+        return components.year == targetComponents.year && components.month == targetComponents.month
+      }
+      
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+      var searchHistories: [SearchHistorySettings] = []
+      for sh in filterHistoryList {
+        searchHistories.append(SearchHistorySettings(id: sh.id, searchText: sh.searchHistoryGroup!.searchText, createDate: dateFormatter.string(from: sh.createDate)))
+      }
+      let jsonData = try JSONEncoder().encode(searchHistories)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+          window.opacityResponse.getSearchHistoryList({
+            data: {
+              firstDate: "\(firstDateString)",
+              list: \(jsonString)
+            }
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } else {
+        print("getSearchHistoryList JSON pares error")
+        let script = """
+        window.opacityResponse.getSearchHistoryList({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get search history error")
+      let script = """
+      window.opacityResponse.getSearchHistoryList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func deleteVisitHistory(_ historyIds: String) {
+    if let jsonData = historyIds.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let deleteHistoryIds = try decoder.decode([String].self, from: jsonData)
+        for id in deleteHistoryIds {
+          if let uuid = UUID(uuidString: id) {
+            VisitManager.deleteVisitHistoryById(uuid)
+          }
+        }
+        let script = """
+        window.opacityResponse.deleteVisitHistory({
+          data: "success"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Decoding failed: \(error)")
+      }
+    }
+  }
+  
+  func getVisitHistoryList(_ yearMonth: String) {
+    guard let targetDate = dateFromString(yearMonth) else {
+      print("Invalid date format")
+      let script = """
+      window.opacityResponse.getVisitHistoryList({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      return
+    }
+    
+    let descriptor = FetchDescriptor<VisitHistory>()
+    
+    do {
+      let calendar = Calendar.current
+      let visitHistoryList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+
+      var firstDateString = ""
+      if let firstData = visitHistoryList.first {
+        let firstDateYearMonth = calendar.dateComponents([.year, .month], from: firstData.createDate)
+        if let fYear = firstDateYearMonth.year, let fMonth = firstDateYearMonth.month {
+          let padStartMonth = String(describing: fMonth).count == 2 ? String(describing: fMonth) : "0\(String(describing: fMonth))"
+          firstDateString = "\(String(describing: fYear))-\(padStartMonth)"
+        }
+      }
+      let filterHistoryList = visitHistoryList.filter {
+        let components = calendar.dateComponents([.year, .month], from: $0.createDate)
+        let targetComponents = calendar.dateComponents([.year, .month], from: targetDate)
+        return components.year == targetComponents.year && components.month == targetComponents.month
+      }
+      
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+      var visitHistories: [VisitHistorySettings] = []
+      for sh in filterHistoryList {
+        visitHistories.append(VisitHistorySettings(id: sh.id, title: sh.visitHistoryGroup!.title, url: sh.visitHistoryGroup!.url, createDate: dateFormatter.string(from: sh.createDate)))
+      }
+      let jsonData = try JSONEncoder().encode(visitHistories)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+          window.opacityResponse.getVisitHistoryList({
+            data: {
+              firstDate: "\(firstDateString)",
+              list: \(jsonString)
+            }
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } else {
+        print("getVisitHistoryList JSON pares error")
+        let script = """
+        window.opacityResponse.getVisitHistoryList({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get search history error")
+      let script = """
+      window.opacityResponse.getVisitHistoryList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func setSearchEngine(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let searchEngine = SearchEngineList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.searchEngine = searchEngine.rawValue
+          let script = """
+          window.opacityResponse.setSearchEngine({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser search engine setting error")
+        let script = """
+        window.opacityResponse.getBrowerSettings({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.getBrowerSettings({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func setScreenMode(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let screenMode = ScreenModeList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.screenMode = screenMode.rawValue
+          let script = """
+          window.opacityResponse.setScreenMode({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser theme setting error")
+        let script = """
+        window.opacityResponse.setScreenMode({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.setScreenMode({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func setRetentionPeriod(_ scriptValue: String) {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    if let period = DataRententionPeriodList(rawValue: scriptValue) {
+      do {
+        if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          browserSettings.retentionPeriod = period.rawValue
+          let script = """
+          window.opacityResponse.setRetentionPeriod({
+            data: "success"
+          })
+        """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+        }
+      } catch {
+        print("Browser retention period setting error")
+        let script = """
+        window.opacityResponse.setRetentionPeriod({
+          data: "error"
+        })
+      """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } else {
+      let script = """
+      window.opacityResponse.setRetentionPeriod({
+        data: "parameter error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getGeneralSettings() {
+    let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    do {
+      if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        let script = """
+        window.opacityResponse.getGeneralSettings({
+          data: {
+            searchEngine: {
+              id: "\(browserSettings.searchEngine)",
+              name: "\(NSLocalizedString(browserSettings.searchEngine, comment: ""))"
+            },
+            screenMode: {
+              id: "\(browserSettings.screenMode)",
+              name: "\(NSLocalizedString(browserSettings.screenMode, comment: ""))"
+            },
+            retentionPeriod: {
+              id: "\(browserSettings.retentionPeriod)",
+              name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
+            }
+          }
+        })
+      """
+        
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("Error get browser settings")
+      let script = """
+      window.opacityResponse.getGeneralSettings({
+        data: "error"
+      })
+    """
+      
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getGeneralSettingList() {
+    var searchEngineList: [SettingListItem] = []
+    var screenModeList: [SettingListItem] = []
+    var periodList: [SettingListItem] = []
+    
+    for engine in SEARCH_ENGINE_LIST {
+      searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
+    }
+    for screenModeItem in SCREEN_MODE_LIST {
+      screenModeList.append(SettingListItem(id: screenModeItem, name: NSLocalizedString(screenModeItem, comment: "")))
+    }
+    for periodItem in RETENTION_PERIOD_LIST {
+      periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
+    }
+    
+    do {
+      let searchEngin = try JSONEncoder().encode(searchEngineList)
+      let screenMode = try JSONEncoder().encode(screenModeList)
+      let retentionPeriod = try JSONEncoder().encode(periodList)
+      if let searchString = String(data: searchEngin, encoding: .utf8),
+         let screenModeString = String(data: screenMode, encoding: .utf8),
+         let periodString = String(data: retentionPeriod, encoding: .utf8) {
+          let script = """
+            window.opacityResponse.getGeneralSettingList({
+              data: {
+                searchEngine: \(searchString),
+                screenMode: \(screenModeString),
+                retentionPeriod: \(periodString)
+              }
+            })
+         """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      
     }
   }
   

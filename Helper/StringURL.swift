@@ -56,11 +56,11 @@ class StringURL {
         return ""
       }
     }
-    return String(describing: url)
+    return url.absoluteString
   }
   
   static func setPrintURL(_ url: URL) -> String  {
-    let stringURL = String(describing: url)
+    let stringURL = url.absoluteString
     if let host = url.host, url.scheme == "opacity" {
       if host == "new-tab" {
         return ""
@@ -70,12 +70,7 @@ class StringURL {
   }
   
   static func setTitleURL(_ url: URL) -> String  {
-    let stringURL = String(describing: url)
-    if let _ = url.host, url.scheme == "opacity" {
-//      if host == "new-tab" {
-//        return ""
-//      }
-    }
+    let stringURL = url.absoluteString
     return StringURL.shortURL(url: stringURL)
   }
 }

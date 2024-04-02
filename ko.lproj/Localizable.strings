@@ -55,3 +55,31 @@
 "Folder" = "폴더";
 "Name" = "이름";
 "Save" = "저장";
+
+"System" = "시스템 모드";
+"Light" = "라이트 모드";
+"Dark" = "다크 모드";
+
+"1 Week" = "일주일";
+"1 Month" = "한달";
+"Indefinite" = "무기한";
+
+"Settings" = "설정";
+"General" = "일반";
+"Search History" = "검색기록";
+"Visit History" = "방문기록";
+"Permission" = "권한";
+"Search Engine" = "검색 엔진";
+"Screen Mode" = "화면 모드";
+"History Data Retention Period" = "검색, 방문기록 보관 기간";
+"View More" = "더보기";
+"$n were selected." = "$n개 선택되었습니다.";
+"Delete" = "삭제";
+"Cancel" = "취소";
+"An error occurred" = "오류가 발생하였습니다";
+"Notification" = "알림";
+"allowed" = "허용됨";
+"denied" = "거부됨";
+"There are no domains with notification permissions set." = "알림 권한이 설정된 도메인이 없습니다.";
+"There is no search history." = "검색기록이 없습니다.";
+"There is no visit history." = "방문기록이 없습니다.";

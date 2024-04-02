@@ -2,6 +2,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+  @Environment(\.modelContext) var modelContext
+  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
@@ -36,12 +39,32 @@ struct ContentView: View {
         }
       }
     }
+    .onChange(of: opacityBrowserSettings.first?.screenMode) { _, newValue in
+      if newValue == "Dark" {
+        NSApp.appearance = NSAppearance(named: .darkAqua)
+      }
+      if newValue == "Light" {
+        NSApp.appearance = NSAppearance(named: .aqua)
+      }
+      if newValue == "System" {
+        NSApp.appearance = nil
+      }
+    }
     .toolbar {
       if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
         WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
       }
     }
     .onAppear {
+      if opacityBrowserSettings.count == 0 {
+        do {
+          modelContext.insert(OpacityBrowserSettings())
+          try modelContext.save()
+        } catch {
+          print("initial browser setup error")
+        }
+      }
+      
       guard let baseTabId = tabId else {
         browser.initTab()
         return

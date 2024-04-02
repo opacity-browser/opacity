@@ -11,6 +11,16 @@
 		A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66B2BB0785C0053913D /* VisitManager.swift */; };
 		A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */; };
 		A10DA6702BB12EF20053913D /* SearchAutoCompleteVisitItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */; };
+		A10DA6722BB3952D0053913D /* settings in Resources */ = {isa = PBXBuildFile; fileRef = A10DA6712BB3952D0053913D /* settings */; };
+		A10DA6742BB395B60053913D /* MoreMenuDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6732BB395B60053913D /* MoreMenuDialog.swift */; };
+		A10DA6782BB3ABD70053913D /* BrowserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6772BB3ABD70053913D /* BrowserSettings.swift */; };
+		A10DA67A2BB3B64A0053913D /* OpacityBrowserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6792BB3B64A0053913D /* OpacityBrowserSettings.swift */; };
+		A10DA67C2BB522880053913D /* SearchHistorySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA67B2BB522880053913D /* SearchHistorySettings.swift */; };
+		A10DA67E2BB81B9D0053913D /* SettingListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA67D2BB81B9D0053913D /* SettingListItem.swift */; };
+		A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6832BB8A1850053913D /* VisitHistorySettings.swift */; };
+		A10DA6862BB922A90053913D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6852BB922A90053913D /* PermissionManager.swift */; };
+		A10DA6882BB928460053913D /* PermissionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6872BB928460053913D /* PermissionItem.swift */; };
+		A10DA68A2BB92FA90053913D /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6892BB92FA90053913D /* Parameters.swift */; };
 		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */; };
 		A11EDACE2B9F087F000D07CB /* ManualUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */; };
@@ -80,7 +90,6 @@
 		A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9652B4ECBB800B39BC8 /* MainView.swift */; };
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
 		A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */; };
-		A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */; };
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
@@ -92,6 +101,16 @@
 		A10DA66B2BB0785C0053913D /* VisitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitManager.swift; sourceTree = "<group>"; };
 		A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItemNSView.swift; sourceTree = "<group>"; };
 		A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItem.swift; sourceTree = "<group>"; };
+		A10DA6712BB3952D0053913D /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		A10DA6732BB395B60053913D /* MoreMenuDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreMenuDialog.swift; sourceTree = "<group>"; };
+		A10DA6772BB3ABD70053913D /* BrowserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSettings.swift; sourceTree = "<group>"; };
+		A10DA6792BB3B64A0053913D /* OpacityBrowserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityBrowserSettings.swift; sourceTree = "<group>"; };
+		A10DA67B2BB522880053913D /* SearchHistorySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistorySettings.swift; sourceTree = "<group>"; };
+		A10DA67D2BB81B9D0053913D /* SettingListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingListItem.swift; sourceTree = "<group>"; };
+		A10DA6832BB8A1850053913D /* VisitHistorySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistorySettings.swift; sourceTree = "<group>"; };
+		A10DA6852BB922A90053913D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		A10DA6872BB928460053913D /* PermissionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionItem.swift; sourceTree = "<group>"; };
+		A10DA6892BB92FA90053913D /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitle.swift; sourceTree = "<group>"; };
 		A11EDACD2B9F087F000D07CB /* ManualUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualUpdate.swift; sourceTree = "<group>"; };
@@ -163,7 +182,6 @@
 		A188C9652B4ECBB800B39BC8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A188C9672B4ED3F600B39BC8 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabView.swift; sourceTree = "<group>"; };
-		A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemeHandler.swift; sourceTree = "<group>"; };
 		A1A1D8D92B62B6BB008FD44F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1A1D8DB2B62B6BD008FD44F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -203,6 +221,7 @@
 		A12D053C2B600C4C00CBC6B2 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
+				A10DA6712BB3952D0053913D /* settings */,
 				A16BCB062B944ECD004639F2 /* not-connect-internet */,
 				A16BCB052B944ECD004639F2 /* not-find-host */,
 				A16BCB072B944ECD004639F2 /* unknown */,
@@ -280,13 +299,13 @@
 		A169200A2B2FA82100F8B4C0 /* Opacity */ = {
 			isa = PBXGroup;
 			children = (
-				A15FCB0F2B999D2900D64C05 /* Item */,
 				A12D053C2B600C4C00CBC6B2 /* HTML */,
 				A15D54192B56B3F4007020CA /* AppKit */,
 				A15D54122B561BCF007020CA /* Shape */,
 				A188C9692B4F8E5800B39BC8 /* Manager */,
 				A188C9622B4EBE8B00B39BC8 /* Constant */,
 				A188C9592B4EBB7200B39BC8 /* Helper */,
+				A15FCB0F2B999D2900D64C05 /* Item */,
 				A188C94F2B4D3D3900B39BC8 /* Component */,
 				A188C93F2B4A910B00B39BC8 /* Model */,
 				A188C93C2B4A550E00B39BC8 /* View */,
@@ -326,7 +345,6 @@
 			children = (
 				A188C9442B4A948C00B39BC8 /* Tab.swift */,
 				A188C9672B4ED3F600B39BC8 /* Browser.swift */,
-				A18D0B7B2B5D1C02003F8DF0 /* SearchEngine.swift */,
 				A14246192B735E5F0062C516 /* Service.swift */,
 				A14246312B810D100062C516 /* HistorySite.swift */,
 				A16BCAED2B8EAC34004639F2 /* DomainPermission.swift */,
@@ -336,6 +354,12 @@
 				A11EDAD62BA422E7000D07CB /* SearchHistory.swift */,
 				A11EDADC2BA431A7000D07CB /* VisitHistoryGroup.swift */,
 				A11EDAD82BA42E2F000D07CB /* VisitHistory.swift */,
+				A10DA6792BB3B64A0053913D /* OpacityBrowserSettings.swift */,
+				A10DA67B2BB522880053913D /* SearchHistorySettings.swift */,
+				A10DA67D2BB81B9D0053913D /* SettingListItem.swift */,
+				A10DA6832BB8A1850053913D /* VisitHistorySettings.swift */,
+				A10DA6872BB928460053913D /* PermissionItem.swift */,
+				A10DA6892BB92FA90053913D /* Parameters.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -362,6 +386,7 @@
 				A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */,
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
+				A10DA6732BB395B60053913D /* MoreMenuDialog.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -379,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				A188C9632B4EBE9800B39BC8 /* URL.swift */,
+				A10DA6772BB3ABD70053913D /* BrowserSettings.swift */,
 			);
 			path = Constant;
 			sourceTree = "<group>";
@@ -391,6 +417,7 @@
 				A11EDACF2BA09329000D07CB /* BookmarkManager.swift */,
 				A11EDADE2BA45BAE000D07CB /* SearchManager.swift */,
 				A10DA66B2BB0785C0053913D /* VisitManager.swift */,
+				A10DA6852BB922A90053913D /* PermissionManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -468,6 +495,7 @@
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
 				A16BCB0A2B944ECD004639F2 /* unknown in Resources */,
+				A10DA6722BB3952D0053913D /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,10 +511,12 @@
 				A16BCB102B96D30F004639F2 /* NavigationSearchView.swift in Sources */,
 				A16BCB122B9849FF004639F2 /* SideBarView.swift in Sources */,
 				A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */,
+				A10DA67C2BB522880053913D /* SearchHistorySettings.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A11EDAD92BA42E2F000D07CB /* VisitHistory.swift in Sources */,
 				A16BCB142B9852B7004639F2 /* SearchBoxArea.swift in Sources */,
 				A11EDADB2BA430FA000D07CB /* SearchHistoryGroup.swift in Sources */,
+				A10DA6782BB3ABD70053913D /* BrowserSettings.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
@@ -501,6 +531,7 @@
 				A14246222B7C64FE0062C516 /* TabAreaNSView.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
+				A10DA67A2BB3B64A0053913D /* OpacityBrowserSettings.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A15FCB122B999D7700D64C05 /* BookmarkGroupTitle.swift in Sources */,
 				A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */,
@@ -513,10 +544,10 @@
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A11EDACE2B9F087F000D07CB /* ManualUpdate.swift in Sources */,
 				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
-				A18D0B7C2B5D1C02003F8DF0 /* SearchEngine.swift in Sources */,
 				A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */,
 				A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */,
 				A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */,
+				A10DA68A2BB92FA90053913D /* Parameters.swift in Sources */,
 				A11EDAD32BA2B41E000D07CB /* BookmarkSearch.swift in Sources */,
 				A16BCB0E2B96D147004639F2 /* WindowTitleBarView.swift in Sources */,
 				A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */,
@@ -531,22 +562,27 @@
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
+				A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */,
 				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
+				A10DA6882BB928460053913D /* PermissionItem.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
+				A10DA67E2BB81B9D0053913D /* SettingListItem.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
 				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
 				A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
 				A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */,
+				A10DA6742BB395B60053913D /* MoreMenuDialog.swift in Sources */,
 				A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */,
 				A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
 				A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteBox.swift in Sources */,
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
+				A10DA6862BB922A90053913D /* PermissionManager.swift in Sources */,
 				A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

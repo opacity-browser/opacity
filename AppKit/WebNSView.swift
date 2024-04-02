@@ -141,14 +141,34 @@ struct WebNSView: NSViewRepresentable {
          """)
         }
       }
+      
+      webView.evaluateJavaScript("""
+      window.addEventListener('hashchange', function() {
+        window.webkit.messageHandlers.opacityBrowser.postMessage({
+          name: "hashChange",
+          value: window.location.href
+        });
+      });
+     """)
     
       var cacheTitle: String?
       group.enter()
       webView.evaluateJavaScript("document.title") { (response, error) in
         if let title = response as? String {
+          
           DispatchQueue.main.async {
             cacheTitle = title
             self.parent.tab.title = title
+            if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host() {
+              if scheme == "opacity" {
+                if host == "settings" {
+                  self.parent.tab.title = NSLocalizedString("Settings", comment: "")
+                }
+                if host == "new-tab" {
+                  self.parent.tab.title = NSLocalizedString("New Tab", comment: "")
+                }
+              }
+            }
             group.leave()
           }
         } else {

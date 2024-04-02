@@ -26,7 +26,7 @@ class VisitManager {
   @MainActor static func addVisitHistory(url: String, title: String? = nil, faviconData: Data? = nil) {
     if let visitGroup = self.getVisitHistoryGroup(url) {
       let currentDate = Date()
-      if currentDate.timeIntervalSince(visitGroup.updateDate) > 60 {
+      if visitGroup.visitHistories?.count == 0 || currentDate.timeIntervalSince(visitGroup.updateDate) > 60 {
         let newVisitHistory = VisitHistory(visitHistoryGroup: visitGroup)
         visitGroup.visitHistories?.append(newVisitHistory)
       } else {
@@ -47,7 +47,12 @@ class VisitManager {
   }
   
   @MainActor static func deleteVisitHistory(_ target: VisitHistory) {
-    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+    do {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+      print("delete visit history error")
+    }
   }
   
   @MainActor static func deleteVisitHistoryGroup(_ target: VisitHistoryGroup) {
@@ -56,6 +61,44 @@ class VisitManager {
         self.deleteVisitHistory(visitHistory)
       }
     }
-    AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+    do {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+       print("delete visit history group error")
+     }
+  }
+  
+  @MainActor static func deleteVisitHistoryById(_ id: UUID) {
+    let descriptor = FetchDescriptor<VisitHistory>(
+      predicate: #Predicate { $0.id == id }
+    )
+    do {
+      if let target = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        let cacheGroupId = target.visitHistoryGroup?.id
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+        try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        if let groupId = cacheGroupId {
+          self.deleteVisitHistoryGroupById(groupId)
+        }
+      }
+    } catch {
+      print("delete visit history error")
+    }
+  }
+  
+  @MainActor static func deleteVisitHistoryGroupById(_ id: UUID) {
+    let descriptor = FetchDescriptor<VisitHistoryGroup>(
+      predicate: #Predicate { $0.id == id }
+    )
+    do {
+      if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        if emptySearchHistoryGroup.visitHistories!.count == 0 {
+          self.deleteVisitHistoryGroup(emptySearchHistoryGroup)
+        }
+      }
+    } catch {
+      print("delete visit history by id error")
+    }
   }
 }
