@@ -19,10 +19,10 @@ class SearchEngine: Codable {
   }
 }
 
-let THEME_LIST: [String] = [
-  BrowserThemeList.system.rawValue,
-  BrowserThemeList.light.rawValue,
-  BrowserThemeList.dark.rawValue
+let SCREEN_MODE_LIST: [String] = [
+  ScreenModeList.light.rawValue,
+  ScreenModeList.dark.rawValue,
+  ScreenModeList.system.rawValue
 ]
 
 let RETENTION_PERIOD_LIST: [String] = [

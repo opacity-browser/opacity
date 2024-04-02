@@ -39,7 +39,7 @@ struct ContentView: View {
         }
       }
     }
-    .onChange(of: opacityBrowserSettings.first?.theme) { _, newValue in
+    .onChange(of: opacityBrowserSettings.first?.screenMode) { _, newValue in
       if newValue == "Dark" {
         NSApp.appearance = NSAppearance(named: .darkAqua)
       }

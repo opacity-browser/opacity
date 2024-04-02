@@ -16,7 +16,7 @@ enum SearchEngineList: String {
   case duckduckgo = "DuckDuckGo"
 }
 
-enum BrowserThemeList: String {
+enum ScreenModeList: String {
   case system = "System"
   case light = "Light"
   case dark = "Dark"
@@ -31,12 +31,12 @@ enum DataRententionPeriodList: String {
 @Model
 class OpacityBrowserSettings {
   var searchEngine: String
-  var theme: String
+  var screenMode: String
   var retentionPeriod = "1 Week"
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, theme: String = BrowserThemeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue) {
     self.searchEngine = searchEngine
-    self.theme = theme
+    self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod
   }
 }

@@ -64,3 +64,23 @@
 "1 Week" = "1 Week";
 "1 Month" = "1 Month";
 "Indefinite" = "Indefinite";
+
+"Settings" = "Settings";
+"General" = "General";
+"Search History" = "Search History";
+"Visit History" = "Visit History";
+"Permission" = "Permission";
+"Search Engine" = "Search Engine";
+"Screen Mode" = "Screen Mode";
+"History Data Retention Period" = "History Data Retention Period";
+"View More" = "View More";
+"$n were selected." = "$n were selected.";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"An error occurred" = "An error occurred";
+"Notification" = "Notification";
+"allowed" = "allowed";
+"denied" = "denied";
+"There are no domains with notification permissions set." = "There are no domains with notification permissions set.";
+"There is no search history." = "There is no search history.";
+"There is no visit history." = "There is no visit history.";

@@ -55,12 +55,16 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
           }
           
           if let scriptValue = messageBody["value"] {
+            if scriptName == "getPageStrings" {
+              getPageStrings(scriptValue)
+            }
+            
             if scriptName == "setSearchEngine" {
               setSearchEngine(scriptValue)
             }
             
-            if scriptName == "setBrowserTheme" {
-              setBrowserTheme(scriptValue)
+            if scriptName == "setScreenMode" {
+              setScreenMode(scriptValue)
             }
             
             if scriptName == "setRetentionPeriod" {
@@ -150,6 +154,47 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         }
       }
     }
+  }
+  
+  func getPageStrings(_ pageName: String) {
+    var script: String
+    switch pageName {
+      case "settings":
+        script = """
+        window.opacityResponse.getPageStrings({
+          data: {
+            lang: '\(Locale.current.language.languageCode?.identifier ?? "en")',
+            "Settings": '\(NSLocalizedString("Settings", comment: ""))',
+            "General": '\(NSLocalizedString("General", comment: ""))',
+            "Search History": '\(NSLocalizedString("Search History", comment: ""))',
+            "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
+            "Permission": '\(NSLocalizedString("Permission", comment: ""))',
+            "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
+            "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
+            "History Data Retention Period": '\(NSLocalizedString("History Data Retention Period", comment: ""))',
+            "View More": '\(NSLocalizedString("View More", comment: ""))',
+            "$n were selected.": '\(NSLocalizedString("$n were selected.", comment: ""))',
+            "Delete": '\(NSLocalizedString("Delete", comment: ""))',
+            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
+            "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
+            "Notification": '\(NSLocalizedString("Notification", comment: ""))',
+            "allowed": '\(NSLocalizedString("allowed", comment: ""))',
+            "denied": '\(NSLocalizedString("denied", comment: ""))',
+            "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
+            "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
+            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))'
+          }
+        })
+      """
+      default:
+        script = """
+        window.opacityResponse.getPageStrings({
+          data: "error"
+        })
+      """
+    }
+    
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
   }
   
   func updateNotificationPermissions(_ updateParmas: String) {
@@ -494,14 +539,14 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func setBrowserTheme(_ scriptValue: String) {
+  func setScreenMode(_ scriptValue: String) {
     let descriptor = FetchDescriptor<OpacityBrowserSettings>()
-    if let theme = BrowserThemeList(rawValue: scriptValue) {
+    if let screenMode = ScreenModeList(rawValue: scriptValue) {
       do {
         if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-          browserSettings.theme = theme.rawValue
+          browserSettings.screenMode = screenMode.rawValue
           let script = """
-          window.opacityResponse.setBrowserTheme({
+          window.opacityResponse.setScreenMode({
             data: "success"
           })
         """
@@ -510,7 +555,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       } catch {
         print("Browser theme setting error")
         let script = """
-        window.opacityResponse.setBrowserTheme({
+        window.opacityResponse.setScreenMode({
           data: "error"
         })
       """
@@ -518,7 +563,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       }
     } else {
       let script = """
-      window.opacityResponse.setBrowserTheme({
+      window.opacityResponse.setScreenMode({
         data: "parameter error"
       })
     """
@@ -569,9 +614,9 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
               id: "\(browserSettings.searchEngine)",
               name: "\(NSLocalizedString(browserSettings.searchEngine, comment: ""))"
             },
-            theme: {
-              id: "\(browserSettings.theme)",
-              name: "\(NSLocalizedString(browserSettings.theme, comment: ""))"
+            screenMode: {
+              id: "\(browserSettings.screenMode)",
+              name: "\(NSLocalizedString(browserSettings.screenMode, comment: ""))"
             },
             retentionPeriod: {
               id: "\(browserSettings.retentionPeriod)",
@@ -597,14 +642,14 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   
   func getGeneralSettingList() {
     var searchEngineList: [SettingListItem] = []
-    var themeList: [SettingListItem] = []
+    var screenModeList: [SettingListItem] = []
     var periodList: [SettingListItem] = []
     
     for engine in SEARCH_ENGINE_LIST {
       searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
     }
-    for themeItem in THEME_LIST {
-      themeList.append(SettingListItem(id: themeItem, name: NSLocalizedString(themeItem, comment: "")))
+    for screenModeItem in SCREEN_MODE_LIST {
+      screenModeList.append(SettingListItem(id: screenModeItem, name: NSLocalizedString(screenModeItem, comment: "")))
     }
     for periodItem in RETENTION_PERIOD_LIST {
       periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
@@ -612,16 +657,16 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     
     do {
       let searchEngin = try JSONEncoder().encode(searchEngineList)
-      let theme = try JSONEncoder().encode(themeList)
+      let screenMode = try JSONEncoder().encode(screenModeList)
       let retentionPeriod = try JSONEncoder().encode(periodList)
       if let searchString = String(data: searchEngin, encoding: .utf8),
-         let themeString = String(data: theme, encoding: .utf8),
+         let screenModeString = String(data: screenMode, encoding: .utf8),
          let periodString = String(data: retentionPeriod, encoding: .utf8) {
           let script = """
             window.opacityResponse.getGeneralSettingList({
               data: {
                 searchEngine: \(searchString),
-                theme: \(themeString),
+                screenMode: \(screenModeString),
                 retentionPeriod: \(periodString)
               }
             })
