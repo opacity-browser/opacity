@@ -54,7 +54,28 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
             getNotificationPermisions()
           }
           
+          if scriptName == "getFavoriteList" {
+            getFavoriteList()
+          }
+          
+          if scriptName == "getFrequentList" {
+            getFrequentList()
+          }
+          
           if let scriptValue = messageBody["value"] {
+            
+            if scriptName == "goPage" {
+              goPage(scriptValue)
+            }
+            
+            if scriptName == "addFavorite" {
+              addFavorite(scriptValue)
+            }
+            
+            if scriptName == "deleteFavorite" {
+              deleteFavorite(scriptValue)
+            }
+            
             if scriptName == "getPageStrings" {
               getPageStrings(scriptValue)
             }
@@ -156,14 +177,156 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
+  func deleteFavorite(_ favoriteId: String) {
+    if let uuid = UUID(uuidString: favoriteId) {
+      let descriptor = FetchDescriptor<Favorite>(
+        predicate: #Predicate { $0.id == uuid }
+      )
+      do {
+        if let target = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
+          try AppDelegate.shared.opacityModelContainer.mainContext.save()
+          
+          let script = """
+            window.opacityResponse.deleteFavorite({
+              data: "success"
+            })
+          """
+          tab.webview.evaluateJavaScript(script, completionHandler: nil)
+          return
+        }
+      } catch {
+        print("delete favorite by id error")
+      }
+    }
+    let script = """
+      window.opacityResponse.deleteFavorite({
+        data: "error"
+      })
+    """
+    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+  }
+  
+  func addFavorite(_ favoriteData: String) {
+    if let jsonData = favoriteData.data(using: .utf8) {
+      do {
+        let decoder = JSONDecoder()
+        let favoriteItem = try decoder.decode(FavoriteItemParams.self, from: jsonData)
+        let favorite = Favorite(title: favoriteItem.title, address: favoriteItem.address)
+        
+        AppDelegate.shared.opacityModelContainer.mainContext.insert(favorite)
+        try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        
+        let script = """
+          window.opacityResponse.addFavorite({
+            data: "success"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      } catch {
+        print("Parameter error")
+        let script = """
+          window.opacityResponse.addFavorite({
+            data: "error"
+          })
+        """
+        tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    }
+  }
+  
+  func getFrequentList() {
+    let descriptor = FetchDescriptor<VisitHistoryGroup>(
+      predicate: #Predicate { $0.title != "" }
+    )
+    do {
+      let visitHistoryGroupList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+        .sorted {
+          $0.visitHistories!.count > $1.visitHistories!.count
+        }
+        .prefix(5)
+      var jsonDataList: [FavoriteItem] = []
+      for visitHistoryGroup in visitHistoryGroupList {
+        jsonDataList.append(FavoriteItem(id: visitHistoryGroup.id, title: visitHistoryGroup.title ?? "", address: visitHistoryGroup.url))
+      }
+
+      let jsonData = try JSONEncoder().encode(jsonDataList)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+        window.opacityResponse.getFrequentList({
+          data: \(jsonString)
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get Frequent error")
+      let script = """
+      window.opacityResponse.getFrequentList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func getFavoriteList() {
+    let descriptor = FetchDescriptor<Favorite>()
+    do {
+      let favoriteList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      var jsonDataList: [FavoriteItem] = []
+      for favorite in favoriteList {
+        jsonDataList.append(FavoriteItem(id: favorite.id, title: favorite.title, address: favorite.address))
+      }
+
+      let jsonData = try JSONEncoder().encode(jsonDataList)
+      if let jsonString = String(data: jsonData, encoding: .utf8) {
+        let script = """
+        window.opacityResponse.getFavoriteList({
+          data: \(jsonString)
+        })
+      """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+      }
+    } catch {
+      print("get favorite error")
+      let script = """
+      window.opacityResponse.getFavoriteList({
+        data: "error"
+      })
+    """
+      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+  }
+  
+  func goPage(_ address: String) {
+    let newAddress = self.tab.changeKeywordToURL(address)
+    self.tab.updateURLBySearch(url: URL(string: newAddress)!)
+  }
+  
   func getPageStrings(_ pageName: String) {
     var script: String
     switch pageName {
+      case "new-tab":
+        script = """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "Favorite": '\(NSLocalizedString("Favorite", comment: ""))',
+            "Frequent": '\(NSLocalizedString("Frequent", comment: ""))',
+            "Add Favorite": '\(NSLocalizedString("Add Favorite", comment: ""))',
+            "Title": '\(NSLocalizedString("Title", comment: ""))',
+            "Address": '\(NSLocalizedString("Address", comment: ""))',
+            "Add": '\(NSLocalizedString("Add", comment: ""))',
+            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
+            "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
+            "Please enter title or address": '\(NSLocalizedString("Please enter title or address", comment: ""))',
+          }
+        })
+      """
       case "settings":
         script = """
         window.opacityResponse.getPageStrings({
           data: {
-            lang: '\(Locale.current.language.languageCode?.identifier ?? "en")',
             "Settings": '\(NSLocalizedString("Settings", comment: ""))',
             "General": '\(NSLocalizedString("General", comment: ""))',
             "Search History": '\(NSLocalizedString("Search History", comment: ""))',

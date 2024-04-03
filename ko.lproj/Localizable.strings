@@ -83,3 +83,11 @@
 "There are no domains with notification permissions set." = "알림 권한이 설정된 도메인이 없습니다.";
 "There is no search history." = "검색기록이 없습니다.";
 "There is no visit history." = "방문기록이 없습니다.";
+
+"Favorite" = "즐겨찾기";
+"Frequent" = "자주 방문한 웹 사이트";
+"Add Favorite" = "즐겨찾기 추가";
+"Title" = "제목";
+"Address" = "주소";
+"Add" = "추가";
+"Please enter title or address" = "제목 또는 주소를 입력해주세요.";

@@ -84,3 +84,11 @@
 "There are no domains with notification permissions set." = "There are no domains with notification permissions set.";
 "There is no search history." = "There is no search history.";
 "There is no visit history." = "There is no visit history.";
+
+"Favorite" = "Favorite";
+"Frequent" = "Frequent";
+"Add Favorite" = "Add Favorite";
+"Title" = "Title";
+"Address" = "Address";
+"Add" = "Add";
+"Please enter title or address" = "Please enter title or address";
