@@ -84,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   var opacityModelContainer: ModelContainer = {
-    let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self])
+    let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       let container = try ModelContainer(for: schema, configurations: [modelConfiguration])

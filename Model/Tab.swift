@@ -121,9 +121,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   
   @MainActor func setDomainPermission(_ url: URL) {
     self.checkNotificationAuthorization { enabled in
-      if enabled {
+      if let host = url.host, enabled {
         self.isNotificationPermissionByApp = true
-        let host: String = url.host!
         let descriptor = FetchDescriptor<DomainPermission>(
           predicate: #Predicate { $0.domain == host }
         )
@@ -246,6 +245,9 @@ final class Tab: ObservableObject, Identifiable, Equatable {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
+      self.isPageProgress = true
+      self.pageProgress = 0.0
+      self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
     }
