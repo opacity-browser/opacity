@@ -272,7 +272,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
-      print(keyWindow)
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
         if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == activeId }) {

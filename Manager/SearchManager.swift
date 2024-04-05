@@ -18,7 +18,7 @@ class SearchManager {
         return searchHistoryGroup
       }
     } catch {
-      print("get search history group error")
+      print("ModelContainerError getSearchHistoryGroup")
     }
     return nil
   }
@@ -35,7 +35,7 @@ class SearchManager {
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
         self.addSearchHistory(uppLowLetters)
       } catch {
-        print("add search history, search history group error")
+        print("ModelContainerError addSearchHistory")
       }
     }
   }
@@ -45,7 +45,7 @@ class SearchManager {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
     } catch {
-      print("delete search history error")
+      print("ModelContainerError deleteSearchHistory")
     }
   }
   
@@ -59,8 +59,8 @@ class SearchManager {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
     } catch {
-       print("delete search history group error")
-     }
+      print("ModelContainerError deleteSearchHistoryGroup")
+    }
   }
   
   @MainActor static func deleteSearchHistoryById(_ id: UUID) {
@@ -77,7 +77,7 @@ class SearchManager {
         }
       }
     } catch {
-      print("delete search history error")
+      print("ModelContainerError deleteSearchHistoryById")
     }
   }
   
@@ -92,7 +92,7 @@ class SearchManager {
         }
       }
     } catch {
-      print("get empty search history group error")
+      print("ModelContainerError deleteSearchHistoryGroupById")
     }
   }
 }

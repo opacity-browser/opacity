@@ -43,6 +43,7 @@
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A139B1F62BBF86E50089C7D9 /* OpacityScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */; };
 		A139B1F82BBF94B70089C7D9 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */; };
+		A139B1FA2BC013130089C7D9 /* FavoriteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F92BC013130089C7D9 /* FavoriteManager.swift */; };
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
 		A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemNSView.swift */; };
 		A142461A2B735E5F0062C516 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246192B735E5F0062C516 /* Service.swift */; };
@@ -137,6 +138,7 @@
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityScriptHandler.swift; sourceTree = "<group>"; };
 		A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		A139B1F92BC013130089C7D9 /* FavoriteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteManager.swift; sourceTree = "<group>"; };
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		A14246172B71F1A80062C516 /* TabItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemNSView.swift; sourceTree = "<group>"; };
 		A14246192B735E5F0062C516 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				A10DA66B2BB0785C0053913D /* VisitManager.swift */,
 				A10DA6852BB922A90053913D /* PermissionManager.swift */,
 				A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */,
+				A139B1F92BC013130089C7D9 /* FavoriteManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -553,6 +556,7 @@
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */,
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,
+				A139B1FA2BC013130089C7D9 /* FavoriteManager.swift in Sources */,
 				A11EDAD52BA2D5F1000D07CB /* BookmarkSearchList.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A11EDACE2B9F087F000D07CB /* ManualUpdate.swift in Sources */,

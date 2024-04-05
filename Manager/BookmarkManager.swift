@@ -20,7 +20,7 @@ class BookmarkManager {
       AppDelegate.shared.opacityModelContainer.mainContext.insert(newBookmark)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
     } catch {
-      print("bookmark insert error")
+      print("ModelContainerError addBookmark")
     }
   }
   
@@ -83,7 +83,7 @@ class BookmarkManager {
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
       self.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark, isGroup: true)
     } catch {
-      print("bookmark group delete error")
+      print("ModelContainerError deleteBookmarkGroup")
     }
   }
   
@@ -94,7 +94,7 @@ class BookmarkManager {
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
       self.resetIndexByBookmark(bookmarks: bookmarks, cacheParent: cacheParent, bookmark: bookmark)
     } catch {
-      print("bookmark delete error")
+      print("ModelContainerError deleteBookmark")
     }
   }
 }
