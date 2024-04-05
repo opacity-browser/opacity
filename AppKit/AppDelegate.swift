@@ -83,11 +83,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
-  var opacityModelContainer: ModelContainer = {
+  @MainActor
+  let opacityModelContainer: ModelContainer = {
     let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+      let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+      
+      if try container.mainContext.fetch(descriptor).count == 0 {
+        container.mainContext.insert(OpacityBrowserSettings())
+      }
+      
       return container
     } catch {
       fatalError("Could not create ModelContainer: \(error)")
@@ -113,7 +120,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                              backing: .buffered, defer: false)
     
     let newWindowNo = newWindow.windowNumber
-    let newBrowser = Browser()
+    let newBrowser = Browser(service: service, windowNumber: newWindowNo, tabId: tabId)
     newBrowser.windowNumber = newWindowNo
     self.service.browsers[newWindowNo] = newBrowser
     

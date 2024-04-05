@@ -231,7 +231,7 @@ struct WebNSView: NSViewRepresentable {
             historySite.loadFavicon(url: faviconURL)
             if let currentURL = webView.url {
               Task {
-                var faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+                let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
                 await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
               }
             }
