@@ -29,7 +29,7 @@ enum DataRententionPeriodList: String {
 }
 
 @Model
-class OpacityBrowserSettings {
+class GeneralSetting {
   var searchEngine: String
   var screenMode: String
   var retentionPeriod = "1 Week"

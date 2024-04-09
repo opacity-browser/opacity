@@ -231,7 +231,7 @@ final class OpacityScriptHandler {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         var visitHistories: [VisitHistorySettings] = []
         for sh in filterHistoryList {
-          visitHistories.append(VisitHistorySettings(id: sh.id, title: sh.visitHistoryGroup!.title, url: sh.visitHistoryGroup!.url, createDate: dateFormatter.string(from: sh.createDate)))
+          visitHistories.append(VisitHistorySettings(id: sh.id, title: sh.visitHistoryGroup?.title, url: sh.visitHistoryGroup!.url, createDate: dateFormatter.string(from: sh.createDate)))
         }
         let jsonString = try encodeJSON(from: visitHistories)
         return """

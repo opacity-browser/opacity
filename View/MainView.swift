@@ -10,7 +10,6 @@ import SwiftData
 
 struct MainView: View {
   @ObservedObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate
   
   var body: some View {
     HStack(spacing: 0) {
@@ -28,8 +27,7 @@ struct MainView: View {
         }
       }
       if browser.isSideBar {
-        SideBarView(browser: browser, manualUpdate: manualUpdate)
-          .id(manualUpdate.bookmarks)
+        SideBarView(browser: browser)
       }
     }
   }

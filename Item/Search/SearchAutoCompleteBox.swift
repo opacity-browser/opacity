@@ -16,11 +16,10 @@ func inputTextWidth(_ text: String) -> CGFloat {
 }
 
 struct SearchAutoCompleteBox: View {
-  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  @Query var generalSettings: [GeneralSetting]
   
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @ObservedObject var manualUpdate: ManualUpdate
   
   var searchHistoryGroups: [SearchHistoryGroup]
   var visitHistoryGroups: [VisitHistoryGroup]
@@ -41,7 +40,7 @@ struct SearchAutoCompleteBox: View {
       HStack(spacing: 0) {
         if tab.isEditSearch {
           HStack(spacing: 0) {
-            if let settings = opacityBrowserSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
+            if let settings = generalSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
               let searchEngine = settings.searchEngine
               let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
               if let searchEngineFavicon = searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
@@ -188,7 +187,7 @@ struct SearchAutoCompleteBox: View {
               return .ignored
             }
         }
-          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
+          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
             .padding(.leading, 5)
             .padding(.trailing, 10)
       }
@@ -202,10 +201,10 @@ struct SearchAutoCompleteBox: View {
 
 
 extension String {
-    func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
-        guard let range = self.range(of: string, options: .caseInsensitive) else {
-            return self
-        }
-        return self.replacingCharacters(in: range, with: replacement)
+  func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
+    guard let range = self.range(of: string, options: .caseInsensitive) else {
+      return self
     }
+    return self.replacingCharacters(in: range, with: replacement)
+  }
 }

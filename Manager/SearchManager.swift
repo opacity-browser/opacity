@@ -27,7 +27,7 @@ class SearchManager {
     let uppLowLetters = StringURL.checkURL(url: keyword) ? keyword.lowercased() : keyword
     if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
       let newSearchHistory = SearchHistory(searchHistoryGroup: searchGroup)
-      searchGroup.searchHistories?.append(newSearchHistory)
+      searchGroup.searchHistories.append(newSearchHistory)
     } else {
       do {
         let newSearchHistoryGroup = SearchHistoryGroup(searchText: uppLowLetters)
@@ -50,11 +50,11 @@ class SearchManager {
   }
   
   @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
-    if let searchHistories = target.searchHistories {
-      for searchHistory in searchHistories {
+//    if let searchHistories = target.searchHistories {
+      for searchHistory in target.searchHistories {
         self.deleteSearchHistory(searchHistory)
       }
-    }
+//    }
     do {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
@@ -87,7 +87,7 @@ class SearchManager {
     )
     do {
       if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-        if emptySearchHistoryGroup.searchHistories!.count == 0 {
+        if emptySearchHistoryGroup.searchHistories.count == 0 {
           self.deleteSearchHistoryGroup(emptySearchHistoryGroup)
         }
       }

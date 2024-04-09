@@ -2,12 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  @Query var generalSettings: [GeneralSetting]
   
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate = ManualUpdate()
   
   var tabId: UUID?
   var width: CGFloat
@@ -25,8 +24,8 @@ struct ContentView: View {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
-            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen, manualUpdate: manualUpdate)
-            MainView(browser: browser, manualUpdate: manualUpdate)
+            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
+            MainView(browser: browser)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
               }
@@ -34,11 +33,11 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
-          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, manualUpdate: manualUpdate)
+          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId)
         }
       }
     }
-    .onChange(of: opacityBrowserSettings.first?.screenMode) { _, newValue in
+    .onChange(of: generalSettings.first?.screenMode) { _, newValue in
       if newValue == "Dark" {
         NSApp.appearance = NSAppearance(named: .darkAqua)
       }

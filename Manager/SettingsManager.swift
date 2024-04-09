@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 class SettingsManager {
-  @MainActor static func getGeneralSettings() -> OpacityBrowserSettings? {
-    var descriptor = FetchDescriptor<OpacityBrowserSettings>()
+  @MainActor static func getGeneralSettings() -> GeneralSetting? {
+    var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1
     do {
       if let generalSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
@@ -23,7 +23,7 @@ class SettingsManager {
   }
   
   @MainActor static func setSearchEngine(_ value: String) {
-    var descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1
     if let searchEngine = SearchEngineList(rawValue: value) {
       do {
@@ -37,7 +37,7 @@ class SettingsManager {
   }
   
   @MainActor static func setScreenMode(_ value: String) {
-    var descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1
     if let screenMode = ScreenModeList(rawValue: value) {
       do {
@@ -51,7 +51,7 @@ class SettingsManager {
   }
   
   @MainActor static func setRetentionPeriod(_ value: String) {
-    var descriptor = FetchDescriptor<OpacityBrowserSettings>()
+    var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1
     if let period = DataRententionPeriodList(rawValue: value) {
       do {

@@ -186,7 +186,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         newURL = "https://\(newURL)"
       }
     } else {
-      let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+      let descriptor = FetchDescriptor<GeneralSetting>()
       do {
         if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
           let searchEngine = browserSettings.searchEngine

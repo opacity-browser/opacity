@@ -43,7 +43,7 @@ struct SearchNSTextField: NSViewRepresentable {
         self.parent.tab.autoCompleteList = self.parent.searchHistoryGroups.filter {
           $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
         }.sorted {
-          $0.searchHistories!.count > $1.searchHistories!.count
+          $0.searchHistories.count > $1.searchHistories.count
         }.sorted {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
@@ -51,7 +51,7 @@ struct SearchNSTextField: NSViewRepresentable {
         self.parent.tab.autoCompleteVisitList = self.parent.visitHistoryGroups.filter {
           $0.url.contains(lowercaseKeyword)
         }.sorted {
-          $0.visitHistories!.count > $1.visitHistories!.count
+          $0.visitHistories.count > $1.visitHistories.count
         }
         
         if !self.parent.tab.isChangeByKeyDown {

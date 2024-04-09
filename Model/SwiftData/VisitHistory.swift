@@ -13,7 +13,7 @@ class VisitHistory {
   @Attribute(.unique)
   var id: UUID
   
-  var visitHistoryGroup: VisitHistoryGroup?
+  @Relationship var visitHistoryGroup: VisitHistoryGroup?
   
   var createDate: Date
   

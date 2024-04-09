@@ -10,38 +10,34 @@ import SwiftData
 
 struct BookmarkItem: View {
   @ObservedObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate
-  var bookmarks: [Bookmark]
   
-  init(browser: Browser, manualUpdate: ManualUpdate, bookmarks: [Bookmark]) {
-    self.bookmarks = bookmarks.sorted {
-      $0.index < $1.index
-    }.sorted {
-      $0.url == nil && $1.url != nil
-    }
+  var bookmarks: [Bookmark]
+  var bookmarkGroups: [BookmarkGroup]
+  
+  init(browser: Browser, bookmarkGroup: BookmarkGroup) {
     self.browser = browser
-    self.manualUpdate = manualUpdate
+    self.bookmarks = bookmarkGroup.bookmarks.sorted {
+      $0.index < $1.index
+    }
+    self.bookmarkGroups = bookmarkGroup.bookmarkGroups.sorted {
+      $0.index < $1.index
+    }
   }
   
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(Array(bookmarks.enumerated()), id: \.element.id) { index, bookmark in
-        VStack(spacing: 0) {
-          if let _ = bookmark.url {
-            BookmarkTitle(bookmarks: bookmarks, bookmark: bookmark, browser: browser, manualUpdate: manualUpdate)
-              .padding(.leading, 14)
-          } else {
-            ExpandList(bookmark: bookmark, title: {
-              BookmarkGroupTitle(bookmarks: bookmarks, bookmark: bookmark, manualUpdate: manualUpdate)
-            }, content: {
-              HStack(spacing: 0) {
-                if let childBookmark = bookmark.children, childBookmark.count > 0 {
-                  BookmarkItem(browser: browser, manualUpdate: manualUpdate, bookmarks: childBookmark)
-                }
-              }
-            })
+      ForEach(Array(bookmarkGroups.enumerated()), id: \.element.id) { index, bookmarkGroup in
+        ExpandList(bookmarkGroup: bookmarkGroup, title: {
+          BookmarkGroupTitle(bookmarkGroup: bookmarkGroup)
+        }, content: {
+          if bookmarkGroup.bookmarks.count > 0 || bookmarkGroup.bookmarkGroups.count > 0 {
+            BookmarkItem(browser: browser, bookmarkGroup: bookmarkGroup)
           }
-        }
+        })
+      }
+      ForEach(Array(bookmarks.enumerated()), id: \.element.id) { index, bookmark in
+        BookmarkTitle(browser: browser, bookmark: bookmark)
+          .padding(.leading, 14)
       }
     }
     .padding(.leading, 15)
@@ -50,12 +46,27 @@ struct BookmarkItem: View {
 
 struct BookmarkList: View {
   @ObservedObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate
-  var bookmarks: [Bookmark]
+  
+  @Query(filter: #Predicate<BookmarkGroup> {
+    $0.isBase == true
+  }) var baseBookmarkGroup: [BookmarkGroup]
+  
+  @Query var bookmarkGroups: [BookmarkGroup]
+  @Query var bookmarks: [Bookmark]
+  
+  func getHash() -> Int {
+    var hasher = Hasher()
+    hasher.combine(bookmarks)
+    hasher.combine(bookmarkGroups)
+    return hasher.finalize()
+  }
   
   var body: some View {
     VStack {
-      BookmarkItem(browser: browser, manualUpdate: manualUpdate, bookmarks: bookmarks)
+      if let bookmarkGroup = baseBookmarkGroup.first {
+        BookmarkItem(browser: browser, bookmarkGroup: bookmarkGroup)
+          .id(getHash())
+      }
     }
   }
 }

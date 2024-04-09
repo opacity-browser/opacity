@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 class Favorite {
+  @Attribute(.unique)
   var id: UUID
   var title: String
   var address: String

@@ -21,7 +21,7 @@ class VisitHistoryGroup {
   var faviconData: Data?
 
   @Relationship(deleteRule: .cascade, inverse: \VisitHistory.visitHistoryGroup)
-  var visitHistories: [VisitHistory]? = [VisitHistory]()
+  var visitHistories: [VisitHistory] = [VisitHistory]()
 
   var updateDate: Date
   

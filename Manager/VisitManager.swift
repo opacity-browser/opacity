@@ -26,9 +26,9 @@ class VisitManager {
   @MainActor static func addVisitHistory(url: String, title: String? = nil, faviconData: Data? = nil) {
     if let visitGroup = self.getVisitHistoryGroup(url) {
       let currentDate = Date()
-      if visitGroup.visitHistories?.count == 0 || currentDate.timeIntervalSince(visitGroup.updateDate) > 60 {
+      if visitGroup.visitHistories.count == 0 || currentDate.timeIntervalSince(visitGroup.updateDate) > 60 {
         let newVisitHistory = VisitHistory(visitHistoryGroup: visitGroup)
-        visitGroup.visitHistories?.append(newVisitHistory)
+        visitGroup.visitHistories.append(newVisitHistory)
       } else {
         if let title = title, title != "", (visitGroup.title == nil || visitGroup.title == "") {
           visitGroup.title = title
@@ -56,11 +56,11 @@ class VisitManager {
   }
   
   @MainActor static func deleteVisitHistoryGroup(_ target: VisitHistoryGroup) {
-    if let visitHistories = target.visitHistories {
-      for visitHistory in visitHistories {
+//    if let visitHistories = target.visitHistories {
+      for visitHistory in target.visitHistories {
         self.deleteVisitHistory(visitHistory)
       }
-    }
+//    }
     do {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
@@ -93,7 +93,7 @@ class VisitManager {
     )
     do {
       if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-        if emptySearchHistoryGroup.visitHistories!.count == 0 {
+        if emptySearchHistoryGroup.visitHistories.count == 0 {
           self.deleteVisitHistoryGroup(emptySearchHistoryGroup)
         }
       }
@@ -109,7 +109,7 @@ class VisitManager {
     do {
       let visitHistoryGroupList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
         .sorted {
-          $0.visitHistories!.count > $1.visitHistories!.count
+          $0.visitHistories.count > $1.visitHistories.count
         }
         .prefix(5)
       

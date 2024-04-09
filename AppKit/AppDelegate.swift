@@ -85,14 +85,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   @MainActor
   let opacityModelContainer: ModelContainer = {
-    let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
+    let schema = Schema([GeneralSetting.self, DomainPermission.self, BookmarkGroup.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-      let descriptor = FetchDescriptor<OpacityBrowserSettings>()
       
-      if try container.mainContext.fetch(descriptor).count == 0 {
-        container.mainContext.insert(OpacityBrowserSettings())
+      let generalSettingDescriptor = FetchDescriptor<GeneralSetting>()
+      if try container.mainContext.fetch(generalSettingDescriptor).count == 0 {
+        container.mainContext.insert(GeneralSetting())
+      }
+      
+      let baseBookmarkGroupDescriptor = FetchDescriptor<BookmarkGroup>(
+        predicate: #Predicate { $0.isBase == true }
+      )
+      if try container.mainContext.fetch(baseBookmarkGroupDescriptor).count == 0 {
+        let baseBookmarkGroup = BookmarkGroup(index: 0, depth: 0, name: "----", isBase: true)
+        container.mainContext.insert(baseBookmarkGroup)
+        if let baseGroup = try container.mainContext.fetch(baseBookmarkGroupDescriptor).first {
+          baseGroup.bookmarkGroups.append(BookmarkGroup(index: 0, depth: 1))
+        }
       }
       
       return container

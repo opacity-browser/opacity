@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct BookmarkTitle: View {
-  var bookmarks: [Bookmark]
-  var bookmark: Bookmark
   @ObservedObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate
+  var bookmark: Bookmark
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
   
@@ -57,7 +55,7 @@ struct BookmarkTitle: View {
         } else {
           VStack(spacing: 0) {
             HStack(spacing: 0) {
-              Text(bookmark.title)
+              Text(bookmark.title + String(bookmark.index))
                 .font(.system(size: 13))
                 .frame(height: 26)
               Spacer()
@@ -66,11 +64,10 @@ struct BookmarkTitle: View {
           .frame(maxWidth: .infinity)
           .background(Color("SearchBarBG"))
           .onTapGesture {
-            guard let url = bookmark.url else { return }
             if let activeTabId = browser.activeTabId, let thisTab = browser.tabs.first(where: { $0.id == activeTabId }), thisTab.isInit {
-              thisTab.updateURLBySearch(url: URL(string: url)!)
+              thisTab.updateURLBySearch(url: URL(string: bookmark.url)!)
             } else {
-              browser.newTab(URL(string: url)!)
+              browser.newTab(URL(string: bookmark.url)!)
             }
           }
         }
@@ -85,23 +82,13 @@ struct BookmarkTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
-        BookmarkManager.deleteBookmark(bookmarks: bookmarks, bookmark: bookmark)
-        manualUpdate.bookmarks = !manualUpdate.bookmarks
+        BookmarkManager.deleteBookmark(bookmark: bookmark)
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        if let parent = bookmark.parent, let children = parent.children {
-          let index = children.filter({ target in
-            target.url == nil
-          }).count
-          BookmarkManager.addBookmark(index: index, parent: parent)
-        } else {
-          let index = bookmarks.filter({ target in
-            target.url == nil
-          }).count
-          BookmarkManager.addBookmark(index: index)
+        if let bookmarkGroup = bookmark.bookmarkGroup {
+          BookmarkManager.addBookmarkGroup(parentGroup: bookmarkGroup)
         }
-        manualUpdate.bookmarks = !manualUpdate.bookmarks
       }
     }
   }

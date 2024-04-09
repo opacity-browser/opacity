@@ -10,22 +10,20 @@ import SwiftData
 
 struct SideBarView: View {
   @Environment(\.modelContext) var modelContext
-  @Query(filter: #Predicate<Bookmark> {
-    $0.parent == nil
-  }) var bookmarks: [Bookmark]
-  
-  @Query(filter: #Predicate<Bookmark> {
-    $0.url != nil
-  }) var onlyBookmarks: [Bookmark]
+  @Query var bookmarks: [Bookmark]
+//  @Query(filter: #Predicate<BookmarkGroup> {
+//    $0.isBase == true
+//  }) var baseBookmarkGroup: [BookmarkGroup]
   
 //  @Query var searchHistoryGroup: [SearchHistoryGroup]
 //  @Query var searchHistory: [SearchHistory]
 
-  @Query var visitHistoryGroup: [VisitHistoryGroup]
-  @Query var visitHistory: [VisitHistory]
+//  @Query var visitHistoryGroup: [VisitHistoryGroup]
+//  @Query var visitHistory: [VisitHistory]
+  
+//  @Query var books: [Bookmark]
   
   @ObservedObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate
   @State var isCloseHover: Bool = false
   @State var searchText: String = ""
   
@@ -36,6 +34,16 @@ struct SideBarView: View {
         .foregroundColor(Color("UIBorder"))
       
       ScrollView {
+//        ForEach(books) { book in
+//          VStack {
+//            HStack {
+//              Text(book.title)
+//            }
+//          }
+//          .padding(5)
+//          .background(.blue.opacity(0.2))
+//        }
+
 //        ForEach(visitHistory) { sh in
 //          VStack {
 //            HStack {
@@ -152,12 +160,12 @@ struct SideBarView: View {
               .foregroundColor(Color("UIBorder"))
             
             if searchText == "" {
-              BookmarkList(browser: browser, manualUpdate: manualUpdate, bookmarks: bookmarks)
+              BookmarkList(browser: browser)
                 .padding(.vertical, 10)
                 .padding(.leading, 5)
                 .padding(.trailing, 15)
             } else {
-              BookmarkSearchList(browser: browser, manualUpdate: manualUpdate, bookmarks: onlyBookmarks, searchText: $searchText)
+              BookmarkSearchList(browser: browser, bookmarks: bookmarks, searchText: $searchText)
                 .padding(.vertical, 10)
                 .padding(.horizontal, 15)
             }
@@ -169,15 +177,9 @@ struct SideBarView: View {
       .background(Color("SearchBarBG"))
       .contextMenu {
         Button(NSLocalizedString("Add Folder", comment: "")) {
-          let index = bookmarks.filter({ target in
-            target.url == nil
-          }).count
-          BookmarkManager.addBookmark(index: index)
-        }
-      }
-      .onAppear {
-        if bookmarks.count == 0 {
-          BookmarkManager.addBookmark(index: 0)
+          if let baseBookmarkGroup = BookmarkManager.getBaseBookmarkGroup() {
+            BookmarkManager.addBookmarkGroup(parentGroup: baseBookmarkGroup)
+          }
         }
       }
     }
