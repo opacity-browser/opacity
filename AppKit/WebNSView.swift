@@ -379,6 +379,7 @@ struct WebNSView: NSViewRepresentable {
     tab.webview.uiDelegate = context.coordinator
     tab.webview.allowsBackForwardNavigationGestures = true
     tab.webview.isInspectable = true
+    tab.webview.setValue(false, forKey: "drawsBackground")
     
     return tab.webview
   }

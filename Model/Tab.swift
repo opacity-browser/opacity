@@ -61,6 +61,8 @@ final class Tab: ObservableObject, Identifiable, Equatable {
   @Published var autoCompleteText: String = ""
   @Published var isChangeByKeyDown: Bool = false
   
+  @Published var isBlurBySearchField: Bool = false
+  
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     

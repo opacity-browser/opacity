@@ -46,21 +46,10 @@ class VisitManager {
     }
   }
   
-  @MainActor static func deleteVisitHistory(_ target: VisitHistory) {
-    do {
-      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
-      try AppDelegate.shared.opacityModelContainer.mainContext.save()
-    } catch {
-      print("ModelContainerError deleteVisitHistory")
-    }
-  }
-  
   @MainActor static func deleteVisitHistoryGroup(_ target: VisitHistoryGroup) {
-//    if let visitHistories = target.visitHistories {
-      for visitHistory in target.visitHistories {
-        self.deleteVisitHistory(visitHistory)
-      }
-//    }
+    for visitHistory in target.visitHistories {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(visitHistory)
+    }
     do {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()

@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct Navigation: View {
-  @Environment(\.colorScheme) var colorScheme
-  
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   

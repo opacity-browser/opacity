@@ -40,21 +40,10 @@ class SearchManager {
     }
   }
   
-  @MainActor static func deleteSearchHistory(_ target: SearchHistory) {
-    do {
-      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
-      try AppDelegate.shared.opacityModelContainer.mainContext.save()
-    } catch {
-      print("ModelContainerError deleteSearchHistory")
-    }
-  }
-  
   @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
-//    if let searchHistories = target.searchHistories {
-      for searchHistory in target.searchHistories {
-        self.deleteSearchHistory(searchHistory)
-      }
-//    }
+    for searchHistory in target.searchHistories {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(searchHistory)
+    }
     do {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()

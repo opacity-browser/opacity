@@ -49,7 +49,7 @@ struct SearchNSTextField: NSViewRepresentable {
         }
         
         self.parent.tab.autoCompleteVisitList = self.parent.visitHistoryGroups.filter {
-          $0.url.contains(lowercaseKeyword)
+          $0.url.contains(lowercaseKeyword) || ($0.title != nil && $0.title!.contains(lowercaseKeyword))
         }.sorted {
           $0.visitHistories.count > $1.visitHistories.count
         }
@@ -73,8 +73,10 @@ struct SearchNSTextField: NSViewRepresentable {
     
     func controlTextDidEndEditing(_ notification: Notification) {
       if let _ = notification.object as? NSTextField {
-        DispatchQueue.main.async {
-          self.parent.tab.isEditSearch = false
+        if self.parent.tab.isBlurBySearchField == false {
+//          DispatchQueue.main.async {
+            self.parent.tab.isEditSearch = false
+//          }
         }
       }
     }
@@ -84,7 +86,10 @@ struct SearchNSTextField: NSViewRepresentable {
         if self.parent.tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
           return true
         }
-        self.parent.tab.searchInSearchBar()
+        DispatchQueue.main.async {
+          self.parent.tab.isBlurBySearchField = true
+          self.parent.tab.searchInSearchBar()
+        }
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
         let selectedRange = textView.selectedRange()
@@ -101,7 +106,6 @@ struct SearchNSTextField: NSViewRepresentable {
       }
       return false
     }
-    
   }
   
   func makeCoordinator() -> Coordinator {
@@ -131,17 +135,25 @@ struct SearchNSTextField: NSViewRepresentable {
     nsView.stringValue = tab.inputURL
     nsView.tab = tab
     context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
-    if let window = nsView.window, !tab.isEditSearch {
-      window.makeFirstResponder(nil)
-    }
     if let textColor = NSColor(named: "UIText") {
       nsView.textColor = textColor.withAlphaComponent(tab.isEditSearch ? 0.85 : 0)
     }
-    if let window = nsView.window, tab.isInit, !tab.isEditSearch {
-      DispatchQueue.main.async {
-        tab.isEditSearch = true
-        tab.isInit = false
-        window.makeFirstResponder(nsView)
+    
+    if let window = nsView.window {
+      if tab.isInit {
+        DispatchQueue.main.async {
+          if tab.isEditSearch == false {
+            tab.isEditSearch = true
+          }
+          tab.isInit = false
+          window.makeFirstResponder(nsView)
+        }
+      }
+      if tab.isBlurBySearchField {
+        window.makeFirstResponder(nil)
+        DispatchQueue.main.async {
+          tab.isBlurBySearchField = false
+        }
       }
     }
   }

@@ -129,7 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)
-    
+    newWindow.backgroundColor = NSColor(named: "WindowTitleBG")
     let newWindowNo = newWindow.windowNumber
     let newBrowser = Browser(service: service, windowNumber: newWindowNo, tabId: tabId)
     newBrowser.windowNumber = newWindowNo

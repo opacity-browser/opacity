@@ -24,7 +24,7 @@ struct SearchAutoComplete: View {
         Rectangle()
           .frame(maxWidth: .infinity, maxHeight: 1)
           .foregroundColor(Color("UIBorder"))
-          .padding(.vertical, 5)
+          .padding(.vertical, 4)
           .opacity(0.5)
         ForEach(Array(tab.autoCompleteVisitList.enumerated().prefix(5)), id: \.element.id) { index, autoComplete in
           SearchAutoCompleteVisitItemNSView(browser: browser, tab: tab, visitHistoryGroup: autoComplete, isActive: tab.autoCompleteIndex == tab.autoCompleteList.count + index)

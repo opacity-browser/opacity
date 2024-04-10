@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct WindowTitlebar: View {
-  @Environment(\.colorScheme) var colorScheme
-
   @Binding var width: CGFloat?
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser

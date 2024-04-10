@@ -65,6 +65,7 @@ struct BookmarkGroupTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
+        bookmarkGroup.isOpen = true
         BookmarkManager.addBookmarkGroup(parentGroup: bookmarkGroup)
       }
     }
