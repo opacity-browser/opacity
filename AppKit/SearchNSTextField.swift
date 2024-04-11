@@ -73,11 +73,10 @@ struct SearchNSTextField: NSViewRepresentable {
     
     func controlTextDidEndEditing(_ notification: Notification) {
       if let _ = notification.object as? NSTextField {
-        if self.parent.tab.isBlurBySearchField == false {
 //          DispatchQueue.main.async {
             self.parent.tab.isEditSearch = false
 //          }
-        }
+//        }
       }
     }
     
@@ -125,9 +124,7 @@ struct SearchNSTextField: NSViewRepresentable {
     textField.cell?.usesSingleLineMode = true
     
     textField.font = NSFont.systemFont(ofSize: 13.5)
-    if let textColor = NSColor(named: "UIText") {      
-      textField.textColor = textColor.withAlphaComponent(0.85)
-    }
+    
     return textField
   }
   
@@ -135,8 +132,12 @@ struct SearchNSTextField: NSViewRepresentable {
     nsView.stringValue = tab.inputURL
     nsView.tab = tab
     context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
-    if let textColor = NSColor(named: "UIText") {
-      nsView.textColor = textColor.withAlphaComponent(tab.isEditSearch ? 0.85 : 0)
+    
+    let textAlpha = tab.isEditSearch ? 0.85 : 0
+    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+      nsView.textColor = NSColor.white.withAlphaComponent(textAlpha)
+    } else {
+      nsView.textColor = NSColor.black.withAlphaComponent(textAlpha)
     }
     
     if let window = nsView.window {

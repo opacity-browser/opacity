@@ -105,12 +105,12 @@ struct SearchAutoCompleteBox: View {
           SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
             .padding(.leading, tab.isEditSearch ? 4 : 9)
             .frame(height: tab.isEditSearch ? 36 : 32)
-            .onChange(of: tab) { _, nV in
-              if !nV.isInit {
-                tab.isBlurBySearchField = true
-                tab.isEditSearch = false
-              }
-            }
+//            .onChange(of: tab) { _, nV in
+//              if !nV.isInit {
+//                tab.isBlurBySearchField = true
+//                tab.isEditSearch = false
+//              }
+//            }
             .overlay {
               if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
                 let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")

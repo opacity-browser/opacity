@@ -18,7 +18,7 @@ enum WebViewErrorType {
   case noError
 }
 
-final class Tab: ObservableObject, Identifiable, Equatable {
+final class Tab: ObservableObject {
   var id = UUID()
   
   @Published var isInit: Bool = false
@@ -267,9 +267,5 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         }
       }
     }.resume()
-  }
-  
-  static func == (lhs: Tab, rhs: Tab) -> Bool {
-    return lhs.id == rhs.id
   }
 }

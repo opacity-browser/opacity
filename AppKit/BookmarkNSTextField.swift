@@ -40,14 +40,17 @@ struct BookmarkNSTextField: NSViewRepresentable {
     textField.cell?.usesSingleLineMode = true
     
     textField.font = NSFont.systemFont(ofSize: 13.5)
-    if let textColor = NSColor(named: "UIText") {
-      textField.textColor = textColor.withAlphaComponent(0.85)
-    }
     
     return textField
   }
   
   func updateNSView(_ nsView: NSTextField, context: Context) {
     nsView.stringValue = searchText
+    
+    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+      nsView.textColor = NSColor.white.withAlphaComponent(0.85)
+    } else {
+      nsView.textColor = NSColor.black.withAlphaComponent(0.85)
+    }
   }
 }
