@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SideBarView: View {
-  @Environment(\.modelContext) var modelContext
+//  @Environment(\.modelContext) var modelContext
   @Query var bookmarks: [Bookmark]
 //  @Query(filter: #Predicate<BookmarkGroup> {
 //    $0.isBase == true
@@ -30,9 +30,9 @@ struct SideBarView: View {
   var body: some View {
     HStack(spacing: 0) {
       Rectangle()
-        .frame(maxWidth: 1, maxHeight: .infinity)
+        .frame(maxWidth: 0.5, maxHeight: .infinity)
         .foregroundColor(Color("UIBorder"))
-      
+
       ScrollView {
 //        ForEach(books) { book in
 //          VStack {
@@ -115,7 +115,7 @@ struct SideBarView: View {
 //        Button("Update") {
 //          manualUpdate.bookmarks = !manualUpdate.bookmarks
 //        }
-        
+
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             VStack(spacing: 0) {
@@ -150,7 +150,7 @@ struct SideBarView: View {
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 5)
-            
+
             BookmarkSearch(searchText: $searchText)
               .padding(.horizontal, 15)
               .padding(.bottom, 15)

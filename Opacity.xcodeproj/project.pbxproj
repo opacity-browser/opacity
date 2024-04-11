@@ -25,6 +25,7 @@
 		A10DA68E2BBDA0050053913D /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA68D2BBDA0050053913D /* FavoriteItem.swift */; };
 		A10DDD7E2BC48402003E159A /* BookmarkGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD7D2BC48402003E159A /* BookmarkGroup.swift */; };
 		A10DDD812BC73976003E159A /* WebviewArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD802BC73976003E159A /* WebviewArea.swift */; };
+		A10DDD832BC819B6003E159A /* BookmarkNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */; };
 		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */; };
 		A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACF2BA09329000D07CB /* BookmarkManager.swift */; };
@@ -121,6 +122,7 @@
 		A10DA68D2BBDA0050053913D /* FavoriteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
 		A10DDD7D2BC48402003E159A /* BookmarkGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroup.swift; sourceTree = "<group>"; };
 		A10DDD802BC73976003E159A /* WebviewArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebviewArea.swift; sourceTree = "<group>"; };
+		A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkNSTextField.swift; sourceTree = "<group>"; };
 		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitle.swift; sourceTree = "<group>"; };
 		A11EDACF2BA09329000D07CB /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -302,9 +304,10 @@
 				A14246212B7C64FE0062C516 /* TabAreaNSView.swift */,
 				A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */,
 				A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */,
-				A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */,
 				A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */,
 				A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */,
+				A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */,
+				A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -580,6 +583,7 @@
 				A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */,
 				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
+				A10DDD832BC819B6003E159A /* BookmarkNSTextField.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */,
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,

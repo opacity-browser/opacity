@@ -55,7 +55,7 @@ struct BookmarkTitle: View {
         } else {
           VStack(spacing: 0) {
             HStack(spacing: 0) {
-              Text(bookmark.title + String(bookmark.index))
+              Text(bookmark.title)
                 .font(.system(size: 13))
                 .frame(height: 26)
               Spacer()
