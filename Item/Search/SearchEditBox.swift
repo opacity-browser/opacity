@@ -38,7 +38,6 @@ struct SearchEditBox: View {
           Spacer()
         }
         .padding(.top, tab.isEditSearch ? 4.5 : 6.5)
-//        .padding(.top, 6.5)
         .padding(.leading, searchBoxRect.minX - 2)
       }
     }

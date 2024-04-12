@@ -29,6 +29,7 @@ final class Browser: ObservableObject, Identifiable {
   func initTab() {
     let newTab = Tab(url: INIT_URL)
     newTab.isInit = true
+    newTab.isInitFocus = true
     newTab.inputURL = ""
     newTab.printURL = ""
     newTab.title = NSLocalizedString("New Tab", comment: "")

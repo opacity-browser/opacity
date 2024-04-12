@@ -73,10 +73,9 @@ struct SearchNSTextField: NSViewRepresentable {
     
     func controlTextDidEndEditing(_ notification: Notification) {
       if let _ = notification.object as? NSTextField {
-//          DispatchQueue.main.async {
-            self.parent.tab.isEditSearch = false
-//          }
-//        }
+        DispatchQueue.main.async {
+          self.parent.tab.isEditSearch = false
+        }
       }
     }
     
@@ -86,7 +85,6 @@ struct SearchNSTextField: NSViewRepresentable {
           return true
         }
         DispatchQueue.main.async {
-          self.parent.tab.isBlurBySearchField = true
           self.parent.tab.searchInSearchBar()
         }
         return true
@@ -141,20 +139,15 @@ struct SearchNSTextField: NSViewRepresentable {
     }
     
     if let window = nsView.window {
-      if tab.isInit {
+      if tab.isInit && tab.isInitFocus {
         DispatchQueue.main.async {
-          if tab.isEditSearch == false {
-            tab.isEditSearch = true
-          }
-          tab.isInit = false
-          window.makeFirstResponder(nsView)
+          tab.isInitFocus = false
         }
-      }
-      if tab.isBlurBySearchField {
+        window.makeFirstResponder(nsView)
+      } else if tab.isEditSearch == false && window.firstResponder == nsView.currentEditor() {
         window.makeFirstResponder(nil)
-        DispatchQueue.main.async {
-          tab.isBlurBySearchField = false
-        }
+      } else if tab.isEditSearch && window.firstResponder != nsView.currentEditor() {
+        window.makeFirstResponder(nsView)
       }
     }
   }
@@ -167,7 +160,9 @@ class FocusableTextField: NSTextField {
   override func becomeFirstResponder() -> Bool {
     let success = super.becomeFirstResponder()
     if success {
-      tab?.isEditSearch = true
+      DispatchQueue.main.async {
+        self.tab?.isEditSearch = true
+      }
       if let editor = self.currentEditor() {
         editor.perform(#selector(selectAll(_:)), with: self, afterDelay: 0)
       }

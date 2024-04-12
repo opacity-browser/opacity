@@ -67,7 +67,6 @@ struct SearchAutoCompleteItem: View {
     }
     .background(Color("AutoCompleteHover").opacity(isActive ? 0.8 : isHover ? 0.7 : 0))
     .onTapGesture {
-      tab.isBlurBySearchField = true
       tab.searchInSearchBar(searchHistoryGroup.searchText)
     }
   }

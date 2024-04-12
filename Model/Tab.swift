@@ -22,6 +22,7 @@ final class Tab: ObservableObject {
   var id = UUID()
   
   @Published var isInit: Bool = false
+  @Published var isInitFocus: Bool = false
   
   @Published var originURL: URL
   @Published var printURL: String
@@ -60,8 +61,6 @@ final class Tab: ObservableObject {
   @Published var autoCompleteIndex: Int?
   @Published var autoCompleteText: String = ""
   @Published var isChangeByKeyDown: Bool = false
-  
-  @Published var isBlurBySearchField: Bool = false
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
