@@ -18,7 +18,7 @@ class SearchManager {
         return searchHistoryGroup
       }
     } catch {
-      print("get search history group error")
+      print("ModelContainerError getSearchHistoryGroup")
     }
     return nil
   }
@@ -27,7 +27,7 @@ class SearchManager {
     let uppLowLetters = StringURL.checkURL(url: keyword) ? keyword.lowercased() : keyword
     if let searchGroup = self.getSearchHistoryGroup(uppLowLetters) {
       let newSearchHistory = SearchHistory(searchHistoryGroup: searchGroup)
-      searchGroup.searchHistories?.append(newSearchHistory)
+      searchGroup.searchHistories.append(newSearchHistory)
     } else {
       do {
         let newSearchHistoryGroup = SearchHistoryGroup(searchText: uppLowLetters)
@@ -35,32 +35,21 @@ class SearchManager {
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
         self.addSearchHistory(uppLowLetters)
       } catch {
-        print("add search history, search history group error")
+        print("ModelContainerError addSearchHistory")
       }
-    }
-  }
-  
-  @MainActor static func deleteSearchHistory(_ target: SearchHistory) {
-    do {
-      AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
-      try AppDelegate.shared.opacityModelContainer.mainContext.save()
-    } catch {
-      print("delete search history error")
     }
   }
   
   @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
-    if let searchHistories = target.searchHistories {
-      for searchHistory in searchHistories {
-        self.deleteSearchHistory(searchHistory)
-      }
+    for searchHistory in target.searchHistories {
+      AppDelegate.shared.opacityModelContainer.mainContext.delete(searchHistory)
     }
     do {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(target)
       try AppDelegate.shared.opacityModelContainer.mainContext.save()
     } catch {
-       print("delete search history group error")
-     }
+      print("ModelContainerError deleteSearchHistoryGroup")
+    }
   }
   
   @MainActor static func deleteSearchHistoryById(_ id: UUID) {
@@ -77,7 +66,7 @@ class SearchManager {
         }
       }
     } catch {
-      print("delete search history error")
+      print("ModelContainerError deleteSearchHistoryById")
     }
   }
   
@@ -87,12 +76,12 @@ class SearchManager {
     )
     do {
       if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-        if emptySearchHistoryGroup.searchHistories!.count == 0 {
+        if emptySearchHistoryGroup.searchHistories.count == 0 {
           self.deleteSearchHistoryGroup(emptySearchHistoryGroup)
         }
       }
     } catch {
-      print("get empty search history group error")
+      print("ModelContainerError deleteSearchHistoryGroupById")
     }
   }
 }

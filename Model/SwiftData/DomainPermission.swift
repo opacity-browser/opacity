@@ -14,6 +14,7 @@ enum DomainPermissionType: Int, Codable {
 
 @Model
 class DomainPermission {
+  @Attribute(.unique)
   var id: UUID
   var domain: String
   var permission: Int

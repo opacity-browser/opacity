@@ -2,13 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-  @Environment(\.modelContext) var modelContext
-  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  @Query var generalSettings: [GeneralSetting]
   
   @EnvironmentObject var windowDelegate: OpacityWindowDelegate
   @EnvironmentObject var service: Service
   @EnvironmentObject var browser: Browser
-  @ObservedObject var manualUpdate: ManualUpdate = ManualUpdate()
   
   var tabId: UUID?
   var width: CGFloat
@@ -26,8 +24,8 @@ struct ContentView: View {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
-            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen, manualUpdate: manualUpdate)
-            MainView(browser: browser, manualUpdate: manualUpdate)
+            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
+            MainView(browser: browser)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
               }
@@ -35,11 +33,11 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
-          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, manualUpdate: manualUpdate)
+          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId)
         }
       }
     }
-    .onChange(of: opacityBrowserSettings.first?.screenMode) { _, newValue in
+    .onChange(of: generalSettings.first?.screenMode) { _, newValue in
       if newValue == "Dark" {
         NSApp.appearance = NSAppearance(named: .darkAqua)
       }
@@ -53,36 +51,6 @@ struct ContentView: View {
     .toolbar {
       if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
         WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
-      }
-    }
-    .onAppear {
-      if opacityBrowserSettings.count == 0 {
-        do {
-          modelContext.insert(OpacityBrowserSettings())
-          try modelContext.save()
-        } catch {
-          print("initial browser setup error")
-        }
-      }
-      
-      guard let baseTabId = tabId else {
-        browser.initTab()
-        return
-      }
-      
-      for (_, targetBrowser) in service.browsers {
-        if let targetTabIndex = targetBrowser.tabs.firstIndex(where: { $0.id == baseTabId }) {
-          let targetTab = targetBrowser.tabs[targetTabIndex]
-          browser.tabs.append(targetTab)
-          browser.activeTabId = targetTab.id
-          
-          targetBrowser.tabs.remove(at: targetTabIndex)
-          if targetBrowser.tabs.count > 0 {
-            let newTargetTabIndex = targetTabIndex == 0 ? 0 : targetTabIndex - 1
-            targetBrowser.activeTabId = targetBrowser.tabs[newTargetTabIndex].id
-          }
-          break
-        }
       }
     }
   }

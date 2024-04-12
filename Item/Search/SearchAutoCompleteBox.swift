@@ -16,11 +16,11 @@ func inputTextWidth(_ text: String) -> CGFloat {
 }
 
 struct SearchAutoCompleteBox: View {
-  @Query var opacityBrowserSettings: [OpacityBrowserSettings]
+  @Environment(\.colorScheme) var colorScheme
+  @Query var generalSettings: [GeneralSetting]
   
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @ObservedObject var manualUpdate: ManualUpdate
   
   var searchHistoryGroups: [SearchHistoryGroup]
   var visitHistoryGroups: [VisitHistoryGroup]
@@ -41,16 +41,15 @@ struct SearchAutoCompleteBox: View {
       HStack(spacing: 0) {
         if tab.isEditSearch {
           HStack(spacing: 0) {
-            if let settings = opacityBrowserSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
+            if let settings = generalSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
               let searchEngine = settings.searchEngine
               let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
-              if let searchEngineFavicon = searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
+              if let searchEngineFavicon = colorScheme == .dark ? searchEngineData?.faviconWhite : searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
                 VStack(spacing: 0) {
                   Image(nsImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: 16, maxHeight: 16)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .frame(maxWidth: 15, maxHeight: 15)
                     .clipped()
                 }
                 .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
@@ -76,14 +75,14 @@ struct SearchAutoCompleteBox: View {
           } label: {
             HStack(spacing: 0) {
               Image(systemName: "lock")
-                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                .frame(maxWidth: 24, maxHeight: 24, alignment: .center)
                 .background(Color("SearchBarBG"))
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .font(.system(size: 13))
                 .fontWeight(.medium)
                 .foregroundColor(Color("Icon"))
             }
-            .padding(.leading, 3)
+            .padding(.leading, 4)
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
               SiteOptionDialog(tab: tab)
             }
@@ -104,8 +103,8 @@ struct SearchAutoCompleteBox: View {
             }
           }
           SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
-            .padding(.leading, tab.isEditSearch ? 5 : 9)
-            .frame(height: tab.isEditSearch ? 37 : 32)
+            .padding(.leading, tab.isEditSearch ? 4 : 9)
+            .frame(height: tab.isEditSearch ? 36 : 32)
             .overlay {
               if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
                 let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
@@ -188,7 +187,7 @@ struct SearchAutoCompleteBox: View {
               return .ignored
             }
         }
-          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover, manualUpdate: manualUpdate)
+          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
             .padding(.leading, 5)
             .padding(.trailing, 10)
       }
@@ -202,10 +201,10 @@ struct SearchAutoCompleteBox: View {
 
 
 extension String {
-    func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
-        guard let range = self.range(of: string, options: .caseInsensitive) else {
-            return self
-        }
-        return self.replacingCharacters(in: range, with: replacement)
+  func replacingFirstOccurrence(of string: String, with replacement: String) -> String {
+    guard let range = self.range(of: string, options: .caseInsensitive) else {
+      return self
     }
+    return self.replacingCharacters(in: range, with: replacement)
+  }
 }

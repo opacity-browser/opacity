@@ -231,7 +231,7 @@ struct WebNSView: NSViewRepresentable {
             historySite.loadFavicon(url: faviconURL)
             if let currentURL = webView.url {
               Task {
-                var faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+                let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
                 await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
               }
             }
@@ -379,6 +379,7 @@ struct WebNSView: NSViewRepresentable {
     tab.webview.uiDelegate = context.coordinator
     tab.webview.allowsBackForwardNavigationGestures = true
     tab.webview.isInspectable = true
+    tab.webview.setValue(false, forKey: "drawsBackground")
     
     return tab.webview
   }

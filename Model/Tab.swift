@@ -18,10 +18,11 @@ enum WebViewErrorType {
   case noError
 }
 
-final class Tab: ObservableObject, Identifiable, Equatable {
+final class Tab: ObservableObject {
   var id = UUID()
   
   @Published var isInit: Bool = false
+  @Published var isInitFocus: Bool = false
   
   @Published var originURL: URL
   @Published var printURL: String
@@ -186,7 +187,7 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         newURL = "https://\(newURL)"
       }
     } else {
-      let descriptor = FetchDescriptor<OpacityBrowserSettings>()
+      let descriptor = FetchDescriptor<GeneralSetting>()
       do {
         if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
           let searchEngine = browserSettings.searchEngine
@@ -265,9 +266,5 @@ final class Tab: ObservableObject, Identifiable, Equatable {
         }
       }
     }.resume()
-  }
-  
-  static func == (lhs: Tab, rhs: Tab) -> Bool {
-    return lhs.id == rhs.id
   }
 }

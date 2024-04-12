@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct BookmarkGroupTitle: View {
-  var bookmarks: [Bookmark]
-  var bookmark: Bookmark
-  @ObservedObject var manualUpdate: ManualUpdate
+  var bookmarkGroup: BookmarkGroup
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
   
@@ -27,7 +25,7 @@ struct BookmarkGroupTitle: View {
         .padding(.trailing, 2)
         
         if isEditName {
-          TextField("", text: Bindable(bookmark).title, onEditingChanged: { isEdit in
+          TextField("", text: Bindable(bookmarkGroup).name, onEditingChanged: { isEdit in
             if !isEdit {
               isEditName = false
             }
@@ -43,7 +41,7 @@ struct BookmarkGroupTitle: View {
         } else {
           VStack(spacing: 0) {
             HStack(spacing: 0) {
-              Text(bookmark.title)
+              Text(bookmarkGroup.name)
                 .font(.system(size: 13))
                 .frame(height: 26)
               Spacer()
@@ -63,19 +61,12 @@ struct BookmarkGroupTitle: View {
       }
       Divider()
       Button(NSLocalizedString("Delete", comment: "")) {
-        BookmarkManager.deleteBookmarkGroup(bookmarks: bookmarks, bookmark: bookmark)
-        manualUpdate.bookmarks = !manualUpdate.bookmarks
+        BookmarkManager.deleteBookmarkGroup(bookmarkGroup: bookmarkGroup)
       }
       Divider()
       Button(NSLocalizedString("Add Folder", comment: "")) {
-        if let children = bookmark.children {
-          let index = children.filter({ target in
-            BookmarkManager.isBookmarkGroup(target)
-          }).count
-          BookmarkManager.addBookmark(index: index, parent: bookmark)
-          bookmark.isOpen = true
-          manualUpdate.bookmarks = !manualUpdate.bookmarks
-        }
+        bookmarkGroup.isOpen = true
+        BookmarkManager.addBookmarkGroup(parentGroup: bookmarkGroup)
       }
     }
   }

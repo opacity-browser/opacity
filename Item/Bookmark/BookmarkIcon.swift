@@ -9,18 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct BookmarkIcon: View {
-  @Environment(\.modelContext) var modelContext
-  @Query(filter: #Predicate<Bookmark> {
-    $0.url == nil
-  }) var bookmarkGroups: [Bookmark]
-  
-  @Query(filter: #Predicate<Bookmark> {
-    $0.url != nil
-  }) var bookmarks: [Bookmark]
+  @Query var bookmarks: [Bookmark]
   
   @ObservedObject var tab: Tab
   @Binding var isBookmarkHover: Bool
-  @ObservedObject var manualUpdate: ManualUpdate
   
   @State private var isBookmarkDialog: Bool = false
   
@@ -50,7 +42,7 @@ struct BookmarkIcon: View {
         }
       }
       .popover(isPresented: $isBookmarkDialog, arrowEdge: .bottom) {
-        BookmarkDialog(tab: tab, bookmarks: bookmarks, bookmarkGroups: bookmarkGroups, manualUpdate: manualUpdate, onClose: {
+        BookmarkDialog(tab: tab, bookmarks: bookmarks, onClose: {
           self.isBookmarkDialog = false
         })
       }

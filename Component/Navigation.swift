@@ -8,11 +8,8 @@
 import SwiftUI
 
 struct Navigation: View {
-  @Environment(\.colorScheme) var colorScheme
-  
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
-  @ObservedObject var manualUpdate: ManualUpdate
   
   @State private var isSidebarHover: Bool = false
   @State private var isMoreHover: Bool = false

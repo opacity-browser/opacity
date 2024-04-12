@@ -83,11 +83,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
-  var opacityModelContainer: ModelContainer = {
-    let schema = Schema([OpacityBrowserSettings.self, DomainPermission.self, Bookmark.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
+  @MainActor
+  let opacityModelContainer: ModelContainer = {
+    let schema = Schema([GeneralSetting.self, DomainPermission.self, BookmarkGroup.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     do {
       let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+      
+      let generalSettingDescriptor = FetchDescriptor<GeneralSetting>()
+      if try container.mainContext.fetch(generalSettingDescriptor).count == 0 {
+        container.mainContext.insert(GeneralSetting())
+      }
+      
+      let baseBookmarkGroupDescriptor = FetchDescriptor<BookmarkGroup>(
+        predicate: #Predicate { $0.isBase == true }
+      )
+      if try container.mainContext.fetch(baseBookmarkGroupDescriptor).count == 0 {
+        let baseBookmarkGroup = BookmarkGroup(index: 0, depth: 0, name: "----", isBase: true)
+        container.mainContext.insert(baseBookmarkGroup)
+        if let baseGroup = try container.mainContext.fetch(baseBookmarkGroupDescriptor).first {
+          baseGroup.bookmarkGroups.append(BookmarkGroup(index: 0, depth: 1))
+        }
+      }
+      
       return container
     } catch {
       fatalError("Could not create ModelContainer: \(error)")
@@ -111,9 +129,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let newWindow = NSWindow(contentRect: windowRect,
                              styleMask: [.titled, .closable, .miniaturizable, .resizable],
                              backing: .buffered, defer: false)
-    
+    newWindow.backgroundColor = NSColor(named: "WindowTitleBG")
     let newWindowNo = newWindow.windowNumber
-    let newBrowser = Browser()
+    let newBrowser = Browser(service: service, windowNumber: newWindowNo, tabId: tabId)
     newBrowser.windowNumber = newWindowNo
     self.service.browsers[newWindowNo] = newBrowser
     
@@ -265,7 +283,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
-      print(keyWindow)
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
         if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == activeId }) {

@@ -17,7 +17,7 @@ class SearchHistoryGroup: Identifiable {
   var searchText: String
   
   @Relationship(deleteRule: .cascade, inverse: \SearchHistory.searchHistoryGroup)
-  var searchHistories: [SearchHistory]? = [SearchHistory]()
+  var searchHistories: [SearchHistory] = [SearchHistory]()
   
   var updateDate: Date
   

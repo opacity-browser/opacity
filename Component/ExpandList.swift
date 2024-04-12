@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ExpandList<bookmark: Bookmark, Title: View, Content: View>: View {
-  var bookmark: Bookmark
+  var bookmarkGroup: BookmarkGroup
   let title: () -> Title
   let content: () -> Content
 
-  init(bookmark: Bookmark, @ViewBuilder title: @escaping () -> Title, @ViewBuilder content: @escaping () -> Content) {
-    self.bookmark = bookmark
+  init(bookmarkGroup: BookmarkGroup, @ViewBuilder title: @escaping () -> Title, @ViewBuilder content: @escaping () -> Content) {
+    self.bookmarkGroup = bookmarkGroup
     self.title = title
     self.content = content
   }
@@ -22,7 +22,7 @@ struct ExpandList<bookmark: Bookmark, Title: View, Content: View>: View {
     VStack(spacing: 0) {
       VStack(spacing: 0) {
         HStack(spacing: 0) {
-          Image(systemName: self.bookmark.isOpen ? "chevron.down" : "chevron.right")
+          Image(systemName: self.bookmarkGroup.isOpen ? "chevron.down" : "chevron.right")
             .font(.system(size: 9))
             .bold()
             .frame(width: 10, height: 10, alignment: .center)
@@ -36,10 +36,10 @@ struct ExpandList<bookmark: Bookmark, Title: View, Content: View>: View {
       .padding(.bottom, 2)
       .buttonStyle(PlainButtonStyle())
       .onTapGesture {
-        self.bookmark.isOpen.toggle()
+        self.bookmarkGroup.isOpen.toggle()
       }
 
-      if self.bookmark.isOpen {
+      if self.bookmarkGroup.isOpen {
         content()
       }
     }

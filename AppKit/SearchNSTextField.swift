@@ -43,15 +43,15 @@ struct SearchNSTextField: NSViewRepresentable {
         self.parent.tab.autoCompleteList = self.parent.searchHistoryGroups.filter {
           $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
         }.sorted {
-          $0.searchHistories!.count > $1.searchHistories!.count
+          $0.searchHistories.count > $1.searchHistories.count
         }.sorted {
           $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
         }
         
         self.parent.tab.autoCompleteVisitList = self.parent.visitHistoryGroups.filter {
-          $0.url.contains(lowercaseKeyword)
+          $0.url.contains(lowercaseKeyword) || ($0.title != nil && $0.title!.contains(lowercaseKeyword))
         }.sorted {
-          $0.visitHistories!.count > $1.visitHistories!.count
+          $0.visitHistories.count > $1.visitHistories.count
         }
         
         if !self.parent.tab.isChangeByKeyDown {
@@ -84,7 +84,9 @@ struct SearchNSTextField: NSViewRepresentable {
         if self.parent.tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
           return true
         }
-        self.parent.tab.searchInSearchBar()
+        DispatchQueue.main.async {
+          self.parent.tab.searchInSearchBar()
+        }
         return true
       } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
         let selectedRange = textView.selectedRange()
@@ -101,7 +103,6 @@ struct SearchNSTextField: NSViewRepresentable {
       }
       return false
     }
-    
   }
   
   func makeCoordinator() -> Coordinator {
@@ -121,9 +122,7 @@ struct SearchNSTextField: NSViewRepresentable {
     textField.cell?.usesSingleLineMode = true
     
     textField.font = NSFont.systemFont(ofSize: 13.5)
-    if let textColor = NSColor(named: "UIText") {      
-      textField.textColor = textColor.withAlphaComponent(0.85)
-    }
+    
     return textField
   }
   
@@ -131,16 +130,23 @@ struct SearchNSTextField: NSViewRepresentable {
     nsView.stringValue = tab.inputURL
     nsView.tab = tab
     context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
-    if let window = nsView.window, !tab.isEditSearch {
-      window.makeFirstResponder(nil)
+    
+    let textAlpha = tab.isEditSearch ? 0.85 : 0
+    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+      nsView.textColor = NSColor.white.withAlphaComponent(textAlpha)
+    } else {
+      nsView.textColor = NSColor.black.withAlphaComponent(textAlpha)
     }
-    if let textColor = NSColor(named: "UIText") {
-      nsView.textColor = textColor.withAlphaComponent(tab.isEditSearch ? 0.85 : 0)
-    }
-    if let window = nsView.window, tab.isInit, !tab.isEditSearch {
-      DispatchQueue.main.async {
-        tab.isEditSearch = true
-        tab.isInit = false
+    
+    if let window = nsView.window {
+      if tab.isInit && tab.isInitFocus {
+        DispatchQueue.main.async {
+          tab.isInitFocus = false
+        }
+        window.makeFirstResponder(nsView)
+      } else if tab.isEditSearch == false && window.firstResponder == nsView.currentEditor() {
+        window.makeFirstResponder(nil)
+      } else if tab.isEditSearch && window.firstResponder != nsView.currentEditor() {
         window.makeFirstResponder(nsView)
       }
     }
@@ -154,7 +160,9 @@ class FocusableTextField: NSTextField {
   override func becomeFirstResponder() -> Bool {
     let success = super.becomeFirstResponder()
     if success {
-      tab?.isEditSearch = true
+      DispatchQueue.main.async {
+        self.tab?.isEditSearch = true
+      }
       if let editor = self.currentEditor() {
         editor.perform(#selector(selectAll(_:)), with: self, afterDelay: 0)
       }

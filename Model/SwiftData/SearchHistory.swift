@@ -13,7 +13,7 @@ class SearchHistory: Identifiable  {
   @Attribute(.unique)
   var id: UUID
   
-  var searchHistoryGroup: SearchHistoryGroup?
+  @Relationship var searchHistoryGroup: SearchHistoryGroup?
   
   var createDate: Date
   
