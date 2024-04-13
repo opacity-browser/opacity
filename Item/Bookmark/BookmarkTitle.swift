@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct BookmarkTitle: View {
-  @ObservedObject var browser: Browser
   var bookmark: Bookmark
   @FocusState private var isTextFieldFocused: Bool
   @State private var isEditName: Bool = false
@@ -62,18 +61,11 @@ struct BookmarkTitle: View {
             }
           }
           .frame(maxWidth: .infinity)
-          .background(Color("SearchBarBG"))
-          .onTapGesture {
-            if let activeTabId = browser.activeTabId, let thisTab = browser.tabs.first(where: { $0.id == activeTabId }), thisTab.isInit {
-              thisTab.updateURLBySearch(url: URL(string: bookmark.url)!)
-            } else {
-              browser.newTab(URL(string: bookmark.url)!)
-            }
-          }
         }
       }
-      .padding(0)
+      .padding(.leading, 4)
       .frame(maxWidth: .infinity)
+      .background(Color("SearchBarBG"))
     }
     .contextMenu {
       Button(NSLocalizedString("Change Name", comment: "")) {

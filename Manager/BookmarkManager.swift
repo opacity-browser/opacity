@@ -32,6 +32,48 @@ class BookmarkManager {
     return nil
   }
   
+  @MainActor static func moveBookamrkGroupToBase(baseGroup:BookmarkGroup, bookmarkGroup: BookmarkGroup) {
+    let newBookmarkGroup = BookmarkGroup(index: baseGroup.bookmarkGroups.count, depth: 1, name: bookmarkGroup.name)
+    self.deleteBookmarkGroup(bookmarkGroup: bookmarkGroup)
+    baseGroup.bookmarkGroups.append(newBookmarkGroup)
+  }
+  
+  @MainActor static func moveBookmarkGroupToBookmark(startBookmarkGroup: BookmarkGroup, endBookmark: Bookmark) {
+    if let endParentGroup = endBookmark.bookmarkGroup {
+      let startBookmarkGroupName = startBookmarkGroup.name
+      self.deleteBookmarkGroup(bookmarkGroup: startBookmarkGroup)
+      
+      let newBookmarkGroup = BookmarkGroup(index: endParentGroup.bookmarkGroups.count, depth: endParentGroup.depth + 1, name: startBookmarkGroupName)
+      endParentGroup.bookmarkGroups.append(newBookmarkGroup)
+    }
+  }
+  
+  @MainActor static func moveBookmark(from: Bookmark, to: Bookmark) {
+    let endIndex = to.index
+    let newMoveBookmark = Bookmark(index: endIndex, title: from.title, url: from.url)
+    
+    if let toParentGroup = to.bookmarkGroup {
+      self.deleteBookmark(bookmark: from)
+      for (index, child) in toParentGroup.bookmarks.sorted(by: { $0.index < $1.index }).enumerated() {
+        child.index = index >= endIndex ? index + 1 : index
+      }
+      toParentGroup.bookmarks.insert(newMoveBookmark, at: endIndex)
+    }
+  }
+  
+  @MainActor static func moveBookmarkGroup(from: BookmarkGroup, to: BookmarkGroup) {
+    let endIndex = to.index
+    let newMoveBookmarkGroup = BookmarkGroup(index: endIndex, depth: to.depth, name: from.name)
+    
+    if let toParentGroup = to.parent {
+      self.deleteBookmarkGroup(bookmarkGroup: from)
+      for (index, child) in toParentGroup.bookmarkGroups.sorted(by: { $0.index < $1.index }).enumerated() {
+        child.index = index >= endIndex ? index + 1 : index
+      }
+      toParentGroup.bookmarkGroups.insert(newMoveBookmarkGroup, at: endIndex)
+    }
+  }
+  
   @MainActor static func addBookmark(bookmarkGroup: BookmarkGroup, title: String = "", url: String, favicon: Data? = nil) {
     bookmarkGroup.bookmarks.append(Bookmark(index: bookmarkGroup.bookmarks.count, title: title, url: url, favicon: favicon))
   }

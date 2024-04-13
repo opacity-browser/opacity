@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   
   var body: some View {
@@ -29,7 +30,7 @@ struct MainView: View {
         }
       }
       if browser.isSideBar {
-        SideBarView(browser: browser)
+        SideBarView(service: service, browser: browser)
       }
     }
   }

@@ -22,7 +22,7 @@ struct WindowTitlebar: View {
     if let width = width {
       VStack(spacing: 0) {
         ZStack {
-          TabAreaNSView(service: service, tabs: $tabs, activeTabId: $activeTabId)
+          TabDragAreaNSView(service: service, tabs: $tabs, activeTabId: $activeTabId)
           
           HStack(spacing: 0) {
             HStack(spacing: 0) {
