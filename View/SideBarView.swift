@@ -9,20 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct SideBarView: View {
-//  @Environment(\.modelContext) var modelContext
   @Query var bookmarks: [Bookmark]
-//  @Query(filter: #Predicate<BookmarkGroup> {
-//    $0.isBase == true
-//  }) var baseBookmarkGroup: [BookmarkGroup]
-  
-//  @Query var searchHistoryGroup: [SearchHistoryGroup]
-//  @Query var searchHistory: [SearchHistory]
-
-//  @Query var visitHistoryGroup: [VisitHistoryGroup]
-//  @Query var visitHistory: [VisitHistory]
-  
-//  @Query var books: [Bookmark]
-  
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @State var isCloseHover: Bool = false
   @State var searchText: String = ""
@@ -32,90 +20,7 @@ struct SideBarView: View {
       Rectangle()
         .frame(maxWidth: 0.5, maxHeight: .infinity)
         .foregroundColor(Color("UIBorder"))
-
       ScrollView {
-//        ForEach(books) { book in
-//          VStack {
-//            HStack {
-//              Text(book.title)
-//            }
-//          }
-//          .padding(5)
-//          .background(.blue.opacity(0.2))
-//        }
-
-//        ForEach(visitHistory) { sh in
-//          VStack {
-//            HStack {
-//              Text(sh.title)
-//                .onTapGesture {
-//                  do {
-//                    modelContext.delete(sh)
-//                    try modelContext.save()
-//                  } catch {
-//
-//                  }
-//                }
-//              Text("\(sh.createDate)")
-//            }
-//          }
-//          .padding(5)
-//          .background(.blue.opacity(0.2))
-//        }
-        
-//        ForEach(visitHistoryGroup) { vhg in
-//          VStack {
-//            Text("\(vhg.url)-\(vhg.title)-\(vhg.updateDate)")
-//            Image(nsImage: NSImage(data: vhg.faviconData!)!)
-//            if let hitories = vhg.visitHistories, hitories.count > 0 {
-//              Divider()
-//              ForEach(hitories) { sh in
-//                Text("\(sh.id)")
-//              }
-//            }
-//          }
-//          .padding(5)
-//          .background(.red.opacity(0.2))
-//        }
-        
-//        ForEach(searchHistoryGroup) { shg in
-//          VStack {
-//            Text(shg.searchText)
-//            Text("\(shg.updateDate)")
-//            if let hitories = shg.searchHistories, hitories.count > 0 {
-//              Divider()
-//              ForEach(hitories) { sh in
-//                Text("\(sh.id)")
-//              }
-//            }
-//          }
-//          .padding(5)
-//          .background(.red.opacity(0.2))
-//        }
-
-//        ForEach(searchHistory) { sh in
-//          VStack {
-//            HStack {
-//              Text(sh.searchText)
-//                .onTapGesture {
-//                  do {
-//                    modelContext.delete(sh)
-//                    try modelContext.save()
-//                  } catch {
-//                    
-//                  }
-//                }
-//              Text("\(sh.createDate)")
-//            }
-//          }
-//          .padding(5)
-//          .background(.blue.opacity(0.2))
-//        }
-//        
-//        Button("Update") {
-//          manualUpdate.bookmarks = !manualUpdate.bookmarks
-//        }
-
         HStack(spacing: 0) {
           VStack(spacing: 0) {
             VStack(spacing: 0) {
@@ -160,12 +65,15 @@ struct SideBarView: View {
               .foregroundColor(Color("UIBorder"))
             
             if searchText == "" {
-              BookmarkList(browser: browser)
-                .padding(.vertical, 10)
+              BookmarkList(service: service, browser: browser)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.top, 10)
                 .padding(.leading, 5)
                 .padding(.trailing, 15)
+              BookmarkDragAreaNSView(service: service)
             } else {
-              BookmarkSearchList(browser: browser, bookmarks: bookmarks, searchText: $searchText)
+              BookmarkSearchList(service: service, browser: browser, bookmarks: bookmarks, searchText: $searchText)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.vertical, 10)
                 .padding(.horizontal, 15)
             }
@@ -174,6 +82,7 @@ struct SideBarView: View {
           }
         }
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color("SearchBarBG"))
       .contextMenu {
         Button(NSLocalizedString("Add Folder", comment: "")) {

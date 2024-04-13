@@ -1,41 +1,35 @@
 //
-//  TabAreaView.swift
+//  BookmarkDragArea.swift
 //  Opacity
 //
-//  Created by Falsy on 2/14/24.
+//  Created by Falsy on 4/13/24.
 //
 
 import SwiftUI
 
-struct TabAreaNSView: NSViewRepresentable {
+struct BookmarkDragAreaNSView: NSViewRepresentable {
   @ObservedObject var service: Service
-  @Binding var tabs: [Tab]
-  @Binding var activeTabId: UUID?
   
-  func moveTabArea() {
-    if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
-      let removedItem = tabs.remove(at: targetIndex)
-      tabs.append(removedItem)
-      activeTabId = removedItem.id
-    } else {
-      service.isMoveTab = true
-      for (_, browser) in service.browsers {
-        if let targetTab = browser.tabs.first(where: { $0.id == service.dragTabId }) {
-          tabs.append(targetTab)
-          activeTabId = targetTab.id
-          break
-        }
+  func moveBookmark() {
+    if let baseGroup = BookmarkManager.getBaseBookmarkGroup() {
+      if let startBookmark = service.dragBookmark {
+        BookmarkManager.addBookmark(bookmarkGroup: baseGroup, title: startBookmark.title, url: startBookmark.url, favicon: startBookmark.favicon)
+        BookmarkManager.deleteBookmark(bookmark: startBookmark)
+      }
+      
+      if let startBookmarkGroup = service.dragBookmarkGroup {
+        BookmarkManager.moveBookamrkGroupToBase(baseGroup: baseGroup, bookmarkGroup: startBookmarkGroup)
       }
     }
   }
   
   func makeNSView(context: Context) -> NSView {
-    let containerView = TabAreaDragSource()
+    let containerView = BookmarkAreaDragSource()
     containerView.dragDelegate = context.coordinator
-    containerView.moveTabArea = moveTabArea
+    containerView.moveBookmark = moveBookmark
     
     let hostingView = NSHostingView(rootView: VStack(spacing: 0) { }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .frame(width: 280, height: 100)
     )
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
@@ -48,7 +42,7 @@ struct TabAreaNSView: NSViewRepresentable {
       hostingView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
     ])
     
-    context.coordinator.tabAreaNSView = containerView
+    context.coordinator.bookmarkAreaDragSource = containerView
     return containerView
   }
   
@@ -61,10 +55,10 @@ struct TabAreaNSView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, NSDraggingSource {
-    var parent: TabAreaNSView
-    weak var tabAreaNSView: TabAreaDragSource?
+    var parent: BookmarkDragAreaNSView
+    weak var bookmarkAreaDragSource: BookmarkAreaDragSource?
     
-    init(_ parent: TabAreaNSView) {
+    init(_ parent: BookmarkDragAreaNSView) {
       self.parent = parent
     }
     
@@ -83,14 +77,13 @@ struct TabAreaNSView: NSViewRepresentable {
 }
 
 
-class TabAreaDragSource: NSView {
-  var appDelegate: AppDelegate?
+class BookmarkAreaDragSource: NSView {
   var dragDelegate: NSDraggingSource?
-  var moveTabArea: (() -> Void)?
+  var moveBookmark: (() -> Void)?
   
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
-    self.registerForDraggedTypes([.string]) // 드래그 대상으로 등록
+    self.registerForDraggedTypes([.string])
   }
   
   required init?(coder: NSCoder) {
@@ -113,8 +106,8 @@ class TabAreaDragSource: NSView {
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    if let moveFunc = self.moveTabArea {
-      moveFunc()
+    if let moveBookmark = self.moveBookmark {
+      moveBookmark()
     }
     return true
   }

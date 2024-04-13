@@ -152,7 +152,7 @@ class TabDialogDragSource: NSView {
   
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
-    self.registerForDraggedTypes([.string]) // 드래그 대상으로 등록
+    self.registerForDraggedTypes([.string])
   }
   
   required init?(coder: NSCoder) {

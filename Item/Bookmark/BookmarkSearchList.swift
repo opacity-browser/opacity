@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BookmarkSearchList: View {
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   var bookmarks: [Bookmark]
   @Binding var searchText: String
@@ -23,7 +24,7 @@ struct BookmarkSearchList: View {
     VStack(spacing: 0) {
       ForEach(Array(filteredItems.enumerated()), id: \.element.id) { index, bookmark in
         VStack(spacing: 0) {
-          BookmarkTitle(browser: browser, bookmark: bookmark)
+          BookmarkTitleNSView(service: service, browser: browser, bookmark: bookmark, enabledDrag: false)
         }
       }
     }

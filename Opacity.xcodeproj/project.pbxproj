@@ -26,6 +26,9 @@
 		A10DDD7E2BC48402003E159A /* BookmarkGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD7D2BC48402003E159A /* BookmarkGroup.swift */; };
 		A10DDD812BC73976003E159A /* WebviewArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD802BC73976003E159A /* WebviewArea.swift */; };
 		A10DDD832BC819B6003E159A /* BookmarkNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */; };
+		A10DDD852BC9A67A003E159A /* BookmarkTitleNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD842BC9A67A003E159A /* BookmarkTitleNSView.swift */; };
+		A10DDD872BCA9B63003E159A /* BookmarkGroupTitleNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */; };
+		A10DDD892BCABE22003E159A /* BookmarkDragAreaNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */; };
 		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */; };
 		A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACF2BA09329000D07CB /* BookmarkManager.swift */; };
@@ -49,7 +52,7 @@
 		A14246162B71EF190062C516 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246152B71EF190062C516 /* TabItem.swift */; };
 		A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246172B71F1A80062C516 /* TabItemNSView.swift */; };
 		A142461A2B735E5F0062C516 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246192B735E5F0062C516 /* Service.swift */; };
-		A14246222B7C64FE0062C516 /* TabAreaNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246212B7C64FE0062C516 /* TabAreaNSView.swift */; };
+		A14246222B7C64FE0062C516 /* TabDragAreaNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246212B7C64FE0062C516 /* TabDragAreaNSView.swift */; };
 		A14246242B7E51450062C516 /* TabDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246232B7E51450062C516 /* TabDialog.swift */; };
 		A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */; };
 		A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246272B7E7E010062C516 /* TabDialogItem.swift */; };
@@ -123,6 +126,9 @@
 		A10DDD7D2BC48402003E159A /* BookmarkGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroup.swift; sourceTree = "<group>"; };
 		A10DDD802BC73976003E159A /* WebviewArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebviewArea.swift; sourceTree = "<group>"; };
 		A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkNSTextField.swift; sourceTree = "<group>"; };
+		A10DDD842BC9A67A003E159A /* BookmarkTitleNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitleNSView.swift; sourceTree = "<group>"; };
+		A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupTitleNSView.swift; sourceTree = "<group>"; };
+		A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDragAreaNSView.swift; sourceTree = "<group>"; };
 		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitle.swift; sourceTree = "<group>"; };
 		A11EDACF2BA09329000D07CB /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -146,7 +152,7 @@
 		A14246152B71EF190062C516 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		A14246172B71F1A80062C516 /* TabItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemNSView.swift; sourceTree = "<group>"; };
 		A14246192B735E5F0062C516 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
-		A14246212B7C64FE0062C516 /* TabAreaNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabAreaNSView.swift; sourceTree = "<group>"; };
+		A14246212B7C64FE0062C516 /* TabDragAreaNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDragAreaNSView.swift; sourceTree = "<group>"; };
 		A14246232B7E51450062C516 /* TabDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialog.swift; sourceTree = "<group>"; };
 		A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItemNSView.swift; sourceTree = "<group>"; };
 		A14246272B7E7E010062C516 /* TabDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDialogItem.swift; sourceTree = "<group>"; };
@@ -301,13 +307,16 @@
 				A188C95C2B4EBBC700B39BC8 /* WebNSView.swift */,
 				A15D54222B590B4D007020CA /* VisualEffectNSView.swift */,
 				A14246172B71F1A80062C516 /* TabItemNSView.swift */,
-				A14246212B7C64FE0062C516 /* TabAreaNSView.swift */,
+				A14246212B7C64FE0062C516 /* TabDragAreaNSView.swift */,
 				A14246252B7E7DA30062C516 /* TabDialogItemNSView.swift */,
 				A142462B2B7FB5490062C516 /* HistoryKeyNSView.swift */,
 				A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */,
 				A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */,
 				A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */,
 				A10DDD822BC819B6003E159A /* BookmarkNSTextField.swift */,
+				A10DDD842BC9A67A003E159A /* BookmarkTitleNSView.swift */,
+				A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */,
+				A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -557,6 +566,7 @@
 				A16BCB122B9849FF004639F2 /* SideBarView.swift in Sources */,
 				A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */,
 				A10DA67C2BB522880053913D /* SearchHistorySettings.swift in Sources */,
+				A10DDD872BCA9B63003E159A /* BookmarkGroupTitleNSView.swift in Sources */,
 				A10DA68C2BBD99C90053913D /* Favorite.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A11EDAD92BA42E2F000D07CB /* VisitHistory.swift in Sources */,
@@ -574,7 +584,7 @@
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
 				A10DA66A2BAE62860053913D /* SearchAutoCompleteItemNSView.swift in Sources */,
-				A14246222B7C64FE0062C516 /* TabAreaNSView.swift in Sources */,
+				A14246222B7C64FE0062C516 /* TabDragAreaNSView.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
 				A10DA67A2BB3B64A0053913D /* GeneralSetting.swift in Sources */,
@@ -607,6 +617,7 @@
 				A11EDAD72BA422E7000D07CB /* SearchHistory.swift in Sources */,
 				A10DDD7E2BC48402003E159A /* BookmarkGroup.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
+				A10DDD852BC9A67A003E159A /* BookmarkTitleNSView.swift in Sources */,
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A16BCAF42B8FFBEB004639F2 /* HistoryBackBtn.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
@@ -635,6 +646,7 @@
 				A14246182B71F1A80062C516 /* TabItemNSView.swift in Sources */,
 				A139B1F62BBF86E50089C7D9 /* OpacityScriptHandler.swift in Sources */,
 				A10DA6862BB922A90053913D /* PermissionManager.swift in Sources */,
+				A10DDD892BCABE22003E159A /* BookmarkDragAreaNSView.swift in Sources */,
 				A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
