@@ -23,6 +23,11 @@ struct WindowTitlebar: View {
       VStack(spacing: 0) {
         ZStack {
           TabDragAreaNSView(service: service, tabs: $tabs, activeTabId: $activeTabId)
+            .onTapGesture(count: 2) {
+              if let window = NSApp.keyWindow {
+                window.zoom(nil)
+              }
+            }
           
           HStack(spacing: 0) {
             HStack(spacing: 0) {
