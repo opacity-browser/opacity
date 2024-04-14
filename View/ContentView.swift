@@ -33,7 +33,7 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
-          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId)
+          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
         }
       }
     }

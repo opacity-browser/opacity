@@ -22,14 +22,10 @@ struct WindowTitleBarView: View {
   var body: some View {
     if let width = windowWidth {
       ZStack {
-        Rectangle()
-          .frame(width: width - (isFullScreen ? 0 : 90), height: 38)
-          .foregroundColor(Color.clear)
         if isFullScreen {
           Rectangle()
-            .frame(height: 1)
-            .foregroundColor(Color("UIBorder"))
-            .offset(y: 18.5)
+            .frame(width: width, height: 38)
+            .foregroundColor(Color("WindowTitleBG"))
         }
         HStack(spacing: 0) {
           WindowTitlebar(width: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId)
