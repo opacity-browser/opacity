@@ -67,8 +67,8 @@ final class Tab: ObservableObject {
     
     let prefs = WKWebpagePreferences()
     prefs.allowsContentJavaScript = true
-    config.defaultWebpagePreferences = prefs
     
+    config.defaultWebpagePreferences = prefs
     config.setURLSchemeHandler(SchemeHandler(), forURLScheme: "opacity")
     
     let contentController = WKUserContentController()
@@ -100,6 +100,7 @@ final class Tab: ObservableObject {
     config.userContentController.addUserScript(userScript)
     
     let preferences = WKPreferences()
+    preferences.isElementFullscreenEnabled = true
     preferences.setValue(true, forKey: "developerExtrasEnabled")
     config.preferences = preferences
     

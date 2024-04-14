@@ -60,6 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let locationManager = CLLocationManager()
   let windowDelegate = OpacityWindowDelegate()
   
+  var sidebarToggleMenuItem: NSMenuItem!
+  
   override init() {
     super.init()
     NotificationCenter.default.addObserver(self, selector: #selector(windowDidResignKey(notification:)), name: NSWindow.didResignKeyNotification, object: nil)
@@ -176,11 +178,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let mainMenu = NSMenu()
       
       // Opacity
-      let opacityItem = NSMenuItem(title: NSLocalizedString("Fried Egg", comment: ""), action: nil, keyEquivalent: "")
-      let opacityMenu = NSMenu(title: NSLocalizedString("Fried Egg", comment: ""))
-      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Fried Egg", comment: ""), action: nil, keyEquivalent: ""))
+      let opacityItem = NSMenuItem(title: NSLocalizedString("Opacity", comment: ""), action: nil, keyEquivalent: "")
+      let opacityMenu = NSMenu(title: NSLocalizedString("Opacity", comment: ""))
+      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Opacity", comment: ""), action: nil, keyEquivalent: ""))
       opacityMenu.addItem(NSMenuItem.separator())
-      opacityMenu.addItem(withTitle: NSLocalizedString("Quit Fried Egg", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
+      opacityMenu.addItem(withTitle: NSLocalizedString("Quit Opacity", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
       opacityItem.submenu = opacityMenu
       
       mainMenu.addItem(opacityItem)
@@ -217,7 +219,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
       viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
       
-      viewMenu.addItem(withTitle: NSLocalizedString("Show/Hide Sidebar", comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
+      self.sidebarToggleMenuItem = NSMenuItem(title: NSLocalizedString("Show Sidebar", comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
+      viewMenu.addItem(self.sidebarToggleMenuItem)
+
+      let fullScreenMenuItem = NSMenuItem(title: "Enter Full Screen", action: #selector(self.toggleFullScreen), keyEquivalent: "f")
+      fullScreenMenuItem.keyEquivalentModifierMask = [.command, .control]
+      viewMenu.addItem(fullScreenMenuItem)
+      
       viewMenu.addItem(NSMenuItem.separator())
       viewItem.submenu = viewMenu
       
@@ -232,6 +240,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //      mainMenu.addItem(menuItem3)
       
       NSApplication.shared.mainMenu = mainMenu
+    }
+  }
+  
+  @objc func toggleFullScreen(_ sender: AnyObject?) {
+//        toggleFullScreen(nil)
+    if let keyWindow = NSApplication.shared.keyWindow {
+      keyWindow.toggleFullScreen(nil)
     }
   }
   
@@ -321,6 +336,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
         target.isSideBar = !target.isSideBar
+        sidebarToggleMenuItem.title = target.isSideBar ? NSLocalizedString("Hide Sidebar", comment: "") : NSLocalizedString("Show Sidebar", comment: "")
       }
     }
   }
