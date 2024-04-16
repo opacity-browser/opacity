@@ -49,7 +49,8 @@ struct BookmarkDialog: View {
           TextField(NSLocalizedString("Name", comment: ""), text: $bookmarkTitle)
             .textFieldStyle(PlainTextFieldStyle())
             .padding(.horizontal, 5)
-            .font(.system(size: 13))
+            .font(.system(size: 12))
+            .frame(height: 20)
         }
         .frame(width: 160, height: 20)
       }
@@ -88,6 +89,14 @@ struct BookmarkDialog: View {
     .padding(.top, 20)
     .padding(.horizontal, 20)
     .padding(.bottom, 10)
-    .frame(width: 260)
+    .frame(width: 240)
+    .background(GeometryReader { geometry in
+      Color("WindowTitleBG")
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height + 100)
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height,
+                  alignment: .bottom)
+    })
   }
 }

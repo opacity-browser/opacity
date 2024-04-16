@@ -24,7 +24,7 @@ struct ContentView: View {
             if windowDelegate.isFullScreen {
               WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
-            NavigationSearchView(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
+            NavigationSearchView(service: service, browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
             MainView(service: service, browser: browser)
               .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width

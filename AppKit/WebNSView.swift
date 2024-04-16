@@ -9,6 +9,7 @@ import SwiftUI
 import WebKit
 
 struct WebNSView: NSViewRepresentable {
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -16,13 +17,73 @@ struct WebNSView: NSViewRepresentable {
     Coordinator(self)
   }
   
-  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
+  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+      let savePanel = NSSavePanel()
+      savePanel.directoryURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
+      savePanel.nameFieldStringValue = suggestedFilename
+      
+      savePanel.begin { result in
+        if result == .OK {
+          completionHandler(savePanel.url)
+        } else {
+          completionHandler(nil)
+        }
+      }
+    }
+    
     var parent: WebNSView
     var errorPages: [WKBackForwardListItem: URL] = [:]
     var errorOriginURL: URL?
     
     init(_ parent: WebNSView) {
       self.parent = parent
+    }
+    
+    // Download Delegate Methods
+//    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+//      print("1")
+//    }
+    
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//      if let mimeType = navigationResponse.response.mimeType, mimeType != "text/html" {
+//        print("xxx")
+//        decisionHandler(.download)
+//      }
+//      
+//      if navigationResponse.canShowMIMEType {
+//        print("bbb")
+//        decisionHandler(.allow)
+//      } else {
+//        print("ccc")
+//        decisionHandler(.download)
+//      }
+//    }
+    
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+
+//    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, decidePolicyFor response: URLResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//      print("zzz")
+//      decisionHandler(.download)
+//    }
+
+//    func webView(_ webView: WKWebView, decideDestinationForDownload download: WKDownload, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+//      let saveURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0].appendingPathComponent(suggestedFilename)
+//      print("yyy")
+//      completionHandler(saveURL)
+//    }
+    
+    func webView(_ webView: WKWebView, download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+      print("Download failed: \(error.localizedDescription)")
+    }
+
+    func webView(_ webView: WKWebView, downloadDidFinish download: WKDownload) {
+      print("Download finished successfully.")
     }
     
     func getCurrentItem(of webView: WKWebView) -> WKBackForwardListItem? {
@@ -53,10 +114,15 @@ struct WebNSView: NSViewRepresentable {
         }
       }
     }
-
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
       guard let url = navigationAction.request.url else {
         decisionHandler(.cancel)
+        return
+      }
+      
+      if navigationAction.shouldPerformDownload {
+        decisionHandler(.download)
         return
       }
 
@@ -75,10 +141,8 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-      if let webviewURL = webView.url {
-        if String(describing: webviewURL) != String(describing: parent.tab.originURL) {
-          webView.load(URLRequest(url: webviewURL))
-        }
+      if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
+        webView.load(URLRequest(url: webviewURL))
       }
     }
     
@@ -372,6 +436,7 @@ struct WebNSView: NSViewRepresentable {
           }
       }
     }
+    
   }
       
   func makeNSView(context: Context) -> WKWebView {
@@ -385,26 +450,104 @@ struct WebNSView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    print("웹뷰 업데이트 시작")
+    
     if !tab.isUpdateBySearch && tab.webviewIsError {
+      print("업데이트가 아니며, 오류로 인한 업데이트 - 종료")
       return
     }
     
     guard let webviewURL = webView.url else {
+      print("웹뷰의 url 없음 - 요청된 URL 로드 - 종료")
+//      print("웹뷰의 url이 웹페이지인지 파일인지 확인 - 종료(재귀)")
       webView.load(URLRequest(url: tab.originURL))
+//      loadWebviewContent(webView: webView, url: tab.originURL)
       return
     }
     
-    if !tab.isUpdateBySearch && String(describing: webviewURL) == String(describing: tab.originURL) {
+    if !tab.isUpdateBySearch && webviewURL == tab.originURL {
+      print("업데이트가 아니며 탭의 url과 웹뷰의 url이 같음 - 종료")
       return
     }
     
     if tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
+//      print("검색으로 인한 업데이트로 url이 웹페이지인지 파일인지 확인 - 종료(재귀)")
+//      loadWebviewContent(webView: webView, url: tab.originURL)
+      print("새로운 검색으로 요청된 URL 로드 - 종료")
       webView.load(URLRequest(url: tab.originURL))
       return
     }
-    
+
+    print("웹페이지 내에서의 페이지 이동 요청으로, 웹뷰 URL로 다시 리로드 - 종료(재귀)")
     tab.updateURLByBrowser(url: webviewURL)
   }
+  
+//  private func preCheckGeneralURL(webView: WKWebView, url: URL) -> Bool {
+//    if url.scheme == "opacity" {
+//      webView.load(URLRequest(url: url))
+//      print("opacty 스키마일 경우 웹페이지로 바로 호출 - 종료(재귀)")
+//      return true
+//    }
+//    
+//    if url.lastPathComponent == "" {
+//      webView.load(URLRequest(url: url))
+//      print("url에 마지막 path가 없는 경우 웹페이지로 바로 호출 - 종료(재귀)")
+//      return true
+//    }
+//    
+//    return false
+//  }
+//  
+//  private func loadWebviewContent(webView: WKWebView, url: URL) {
+//    if preCheckGeneralURL(webView: webView, url: tab.originURL) {
+//      return
+//    }
+//    
+//    webView.load(URLRequest(url: url))
+//    
+////    checkContentType(url: url) { type in
+////      DispatchQueue.main.async {
+////        if type.contains("text/html") || type.contains("application/json") || type.contains("text/plain") {
+////          webView.load(URLRequest(url: url))
+////        } else if type == "error" {
+////          print("error")
+////        } else {
+////          // 파일 타입이면 다른 처리를 할 수 있습니다.
+////          if let download = service.downloads.first(where: { $0.url == url }) {
+////            print("동일한 다운로드가 존재함")
+////            let currentDate = Date()
+////            if currentDate.timeIntervalSince(download.createAt) < 10 {
+////              print("동일한 다운로드가 10초 이네 존재하기에 다운로드 중단")
+////              return
+////            }
+////          }
+////          
+////          let newDownload = Download(url: url)
+////          print("다운로드 실행")
+////          newDownload.downloadFile()
+////          print("다운로드 리스트에 등록")
+////          service.downloads.append(newDownload)
+////          print("Loaded a non-HTML content type: \(type)")
+////        }
+////      }
+////    }
+//  }
+//  
+//  private func checkContentType(url: URL, completion: @escaping (String) -> Void) {
+//    var headRequest = URLRequest(url: url)
+//    headRequest.httpMethod = "HEAD"
+//    
+//    URLSession.shared.dataTask(with: headRequest) { _, response, error in
+//      guard let httpResponse = response as? HTTPURLResponse, error == nil else {
+//        completion("error")
+//        return
+//      }
+//      
+//      let contentType = httpResponse.allHeaderFields["Content-Type"] as? String ?? "Unknown"
+//      completion(contentType)
+//    }.resume()
+//  }
 }
+

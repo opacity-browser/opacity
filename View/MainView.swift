@@ -20,7 +20,7 @@ struct MainView: View {
             ForEach(Array(browser.tabs.enumerated()), id: \.element.id) { index, tab in
               if let activeId = browser.activeTabId {
                 VStack(spacing: 0) {
-                  WebviewArea(browser: browser, tab: browser.tabs[index])
+                  WebviewArea(service: service, browser: browser, tab: browser.tabs[index])
                 }
                 .offset(y: tab.id == activeId ? 0 : geometry.size.height + 1)
                 .frame(height: geometry.size.height + 1)
