@@ -104,7 +104,7 @@ final class Tab: ObservableObject {
     preferences.setValue(true, forKey: "developerExtrasEnabled")
     config.preferences = preferences
     
-    let webView = WKWebView(frame: .zero, configuration: config)
+    let webView = OpacityWebView(frame: .zero, configuration: config)
     return webView
   }()
   

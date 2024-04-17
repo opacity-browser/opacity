@@ -30,6 +30,7 @@
 		A10DDD872BCA9B63003E159A /* BookmarkGroupTitleNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */; };
 		A10DDD892BCABE22003E159A /* BookmarkDragAreaNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */; };
 		A10DDD8B2BCC8E0C003E159A /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD8A2BCC8E0C003E159A /* Download.swift */; };
+		A10DDD8E2BCF5C13003E159A /* OpacityWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DDD8D2BCF5C13003E159A /* OpacityWebView.swift */; };
 		A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */; };
 		A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */; };
 		A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDACF2BA09329000D07CB /* BookmarkManager.swift */; };
@@ -131,6 +132,7 @@
 		A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupTitleNSView.swift; sourceTree = "<group>"; };
 		A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDragAreaNSView.swift; sourceTree = "<group>"; };
 		A10DDD8A2BCC8E0C003E159A /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		A10DDD8D2BCF5C13003E159A /* OpacityWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityWebView.swift; sourceTree = "<group>"; };
 		A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDialog.swift; sourceTree = "<group>"; };
 		A11EDACB2B9F0250000D07CB /* BookmarkTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTitle.swift; sourceTree = "<group>"; };
 		A11EDACF2BA09329000D07CB /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 				A10DDD842BC9A67A003E159A /* BookmarkTitleNSView.swift */,
 				A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */,
 				A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */,
+				A10DDD8D2BCF5C13003E159A /* OpacityWebView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -610,6 +613,7 @@
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,
 				A139B1FA2BC013130089C7D9 /* FavoriteManager.swift in Sources */,
 				A11EDAD52BA2D5F1000D07CB /* BookmarkSearchList.swift in Sources */,
+				A10DDD8E2BCF5C13003E159A /* OpacityWebView.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
 				A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */,
