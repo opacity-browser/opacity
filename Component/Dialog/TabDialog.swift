@@ -57,11 +57,19 @@ struct TabDialog: View {
             }
             Spacer()
           }
+          .padding(.vertical, 5)
         }
-        .frame(width: 250, height: 400)
+        .frame(width: 240, height: 400)
       }
-      .padding(.vertical, 5)
     }
-    .frame(width: 250)
+    .frame(width: 240)
+    .background(GeometryReader { geometry in
+      Color("WindowTitleBG")
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height + 100)
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height,
+                  alignment: .bottom)
+    })
   }
 }

@@ -26,10 +26,18 @@ struct HistoryDialog: View {
           }
           .padding(5)
         }
-        .frame(maxWidth: 250, maxHeight: 300)
+        .frame(maxWidth: 240, maxHeight: 300)
       }
       .padding(.vertical, 5)
     }
-    .frame(width: 250)
+    .frame(width: 240)
+    .background(GeometryReader { geometry in
+      Color("WindowTitleBG")
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height + 100)
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height,
+                  alignment: .bottom)
+    })
   }
 }

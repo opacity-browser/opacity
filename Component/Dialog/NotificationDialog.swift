@@ -62,5 +62,13 @@ struct NotificationDialog: View {
     .padding(.horizontal, 10)
     .padding(.top, 15)
     .padding(.bottom, 10)
+    .background(GeometryReader { geometry in
+      Color("WindowTitleBG")
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height + 100)
+          .frame(width: geometry.size.width,
+                  height: geometry.size.height,
+                  alignment: .bottom)
+    })
   }
 }

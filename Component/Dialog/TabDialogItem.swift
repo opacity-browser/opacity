@@ -60,11 +60,10 @@ struct TabDialogItem: View {
         }
       }
       .padding(5)
-      .padding(.bottom, 4)
+      .padding(.bottom, 5)
       .background(Color("SearchBarBG").opacity(tab.id == activeTabId ? 1 : isTabHover ? 0.5 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 10))
     }
-    .frame(width: 230, alignment: .leading)
     .padding(.horizontal, 10)
     .padding(.top, 5)
   }

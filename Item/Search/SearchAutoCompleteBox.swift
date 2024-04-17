@@ -71,7 +71,7 @@ struct SearchAutoCompleteBox: View {
           .padding(.leading, 7)
         } else {
           Button {
-            self.isSiteDialog.toggle()
+//            self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
               Image(systemName: "lock")

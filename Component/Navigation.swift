@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Navigation: View {
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -15,10 +16,12 @@ struct Navigation: View {
   @State private var isMoreHover: Bool = false
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
-//  @State private var isMoreMenuDialog: Bool = false
+  @State private var isDownloadHover: Bool = false
   
   @State private var isNotificationDetailDialog: Bool = true
   @State private var isLocationDetailDialog: Bool = true
+  @State private var isMoreMenuDialog: Bool = false
+  @State private var isDownloadDetailDialog: Bool = true
 
   let inputHeight: CGFloat = 32
   let iconHeight: CGFloat = 24
@@ -49,6 +52,32 @@ struct Navigation: View {
       Spacer()
       
       VStack(spacing: 0) { }.frame(width: 11)
+      
+      if let download = service.downloads.first(where: { $0.isDownloading == true }) {
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            Image(systemName: "square.and.arrow.down")
+              .foregroundColor(Color("Icon"))
+              .font(.system(size: 14))
+              .fontWeight(.regular)
+          }
+          .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+          .background(isDownloadHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+          .onHover { inside in
+            withAnimation {
+              isDownloadHover = inside
+            }
+          }
+          .onTapGesture {
+            isDownloadDetailDialog.toggle()
+          }
+          .popover(isPresented: $isDownloadDetailDialog, arrowEdge: .bottom) {
+            
+          }
+        }
+        .padding(.trailing, 13)
+      }
       
       if tab.isNotificationDialogIcon {
         VStack(spacing: 0) {
@@ -142,17 +171,12 @@ struct Navigation: View {
           }
         }
         .onTapGesture {
-//          self.isMoreMenuDialog.toggle()
-          if let schemeURL = URL(string:"opacity://settings") {
-            DispatchQueue.main.async {
-              browser.newTab(schemeURL)
-//              isMoreMenuDialog = false
-            }
-          }
+          self.isMoreMenuDialog.toggle()
         }
-//        .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
-//          MoreMenuDialog(browser: browser, isMoreMenuDialog: $isMoreMenuDialog)
-//        }
+        .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
+          MoreMenuDialog(browser: browser, isMoreMenuDialog: $isMoreMenuDialog)
+//            .background(Color("SearchBarBG"))
+        }
         .offset(y: -1)
       }
       .padding(.trailing, 10)

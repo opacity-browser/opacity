@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationSearchView: View {
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @Binding var activeTabId: UUID?
   @Binding var isFullScreen: Bool
@@ -18,10 +19,9 @@ struct NavigationSearchView: View {
         .frame(height: 3.5)
         .foregroundColor(Color("SearchBarBG"))
       if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
-        Navigation(browser: browser, tab: activeTab)
+        Navigation(service: service, browser: browser, tab: activeTab)
           .frame(maxWidth: .infinity,  maxHeight: 41)
           .background(Color("SearchBarBG"))
-          .background(.blue)
         Rectangle()
           .frame(height: 0.5)
           .foregroundColor(Color("SearchBarBG"))
