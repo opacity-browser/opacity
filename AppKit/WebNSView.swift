@@ -42,7 +42,6 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-      print("1")
     }
     
     func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {

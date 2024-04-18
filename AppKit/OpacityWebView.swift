@@ -12,8 +12,7 @@ enum ContextualMenuAction {
   case downloadImage
 }
 
-class OpacityWebView: WKWebView, WKNavigationDelegate {
-  
+class OpacityWebView: WKWebView {
   var contextualMenuAction: ContextualMenuAction?
   var openImageNewWindowMenuItem: NSMenuItem?
   
