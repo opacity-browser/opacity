@@ -62,6 +62,12 @@ final class Tab: ObservableObject {
   @Published var autoCompleteText: String = ""
   @Published var isChangeByKeyDown: Bool = false
   
+  // Find
+  @Published var isFindDialog: Bool = false
+  @Published var isFindAction: Bool = false
+  var isFindPrev: Bool = false
+  var findKeyword: String = ""
+  
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     

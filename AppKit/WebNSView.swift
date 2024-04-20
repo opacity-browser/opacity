@@ -26,6 +26,12 @@ struct WebNSView: NSViewRepresentable {
       self.parent = parent
     }
     
+    // Find Text
+    func searchWebView(_ webView: WKWebView, findText: String, isPrev: Bool) {
+      let script = "window.find('\(findText)', false, \(isPrev), true);"
+      webView.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
     // Download Delegate Methods
     func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
       let savePanel = NSSavePanel()
@@ -218,9 +224,9 @@ struct WebNSView: NSViewRepresentable {
       group.enter()
       webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
         guard let href = response as? String, let currentURL = webView.url else {
-          if let webviewURL = webView.url {
+          if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host  {
             if webviewURL.scheme != "opacity" {
-              let faviconURL = webviewURL.scheme! + "://" + webviewURL.host! + "/favicon.ico"
+              let faviconURL = scheme + "://" + host + "/favicon.ico"
               DispatchQueue.main.async {
                 cacheFaviconURL = URL(string: faviconURL)!
                 self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
@@ -462,6 +468,14 @@ struct WebNSView: NSViewRepresentable {
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     print("웹뷰 업데이트 시작")
+    
+    if !tab.findKeyword.isEmpty && tab.isFindAction {
+      DispatchQueue.main.async {
+        tab.isFindAction = false
+        context.coordinator.searchWebView(webView, findText: tab.findKeyword, isPrev: tab.isFindPrev)
+        return
+      }
+    }
     
     if !tab.isUpdateBySearch && tab.webviewIsError {
       print("업데이트가 아니며, 오류로 인한 업데이트 - 종료")

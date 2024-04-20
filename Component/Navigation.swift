@@ -16,12 +16,12 @@ struct Navigation: View {
   @State private var isMoreHover: Bool = false
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
-  @State private var isDownloadHover: Bool = false
+  @State private var isFindHover: Bool = false
   
   @State private var isNotificationDetailDialog: Bool = true
   @State private var isLocationDetailDialog: Bool = true
   @State private var isMoreMenuDialog: Bool = false
-  @State private var isDownloadDetailDialog: Bool = true
+  @State private var isFindDetailDialog: Bool = true
 
   let inputHeight: CGFloat = 32
   let iconHeight: CGFloat = 24
@@ -53,27 +53,32 @@ struct Navigation: View {
       
       VStack(spacing: 0) { }.frame(width: 11)
       
-      if let download = service.downloads.first(where: { $0.isDownloading == true }) {
+      if tab.isFindDialog {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
-            Image(systemName: "square.and.arrow.down")
+            Image(systemName: "doc.text.magnifyingglass")
               .foregroundColor(Color("Icon"))
               .font(.system(size: 14))
               .fontWeight(.regular)
           }
           .frame(maxWidth: iconHeight, maxHeight: iconHeight)
-          .background(isDownloadHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .background(isFindHover ? .gray.opacity(0.2) : .gray.opacity(0))
           .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+          .onAppear {
+            isFindDetailDialog = true
+          }
           .onHover { inside in
             withAnimation {
-              isDownloadHover = inside
+              isFindHover = inside
             }
           }
-          .onTapGesture {
-            isDownloadDetailDialog.toggle()
+          .onChange(of: isFindDetailDialog) { _, nV in
+            if nV == false {
+              tab.isFindDialog = false
+            }
           }
-          .popover(isPresented: $isDownloadDetailDialog, arrowEdge: .bottom) {
-            
+          .popover(isPresented: $isFindDetailDialog, arrowEdge: .bottom) {
+            FindDialog(tab: tab)
           }
         }
         .padding(.trailing, 13)

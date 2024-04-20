@@ -210,8 +210,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       editMenu.addItem(withTitle: NSLocalizedString("Paste", comment: ""), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
       editMenu.addItem(withTitle: NSLocalizedString("Select All", comment: ""), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
       editMenu.addItem(NSMenuItem.separator())
-      editItem.submenu = editMenu
       
+      let findMenu = NSMenuItem(title: NSLocalizedString("Find", comment: ""), action: nil, keyEquivalent: "")
+      let findSubMenu = NSMenu(title: NSLocalizedString("Find", comment: ""))
+      findMenu.submenu = findSubMenu
+      editMenu.addItem(findMenu)
+      
+      findSubMenu.addItem(withTitle: NSLocalizedString("Find in Page...", comment: ""), action: #selector(self.findKeyword), keyEquivalent: "f")
+      findSubMenu.addItem(withTitle: NSLocalizedString("Find Next", comment: ""), action: #selector(self.findKeywordNext), keyEquivalent: "g")
+      let findPrevMenu = NSMenuItem(title: NSLocalizedString("Find Previous", comment: ""), action: #selector(self.findKeywordPrev), keyEquivalent: "g")
+      findPrevMenu.keyEquivalentModifierMask = [.command, .shift]
+      findSubMenu.addItem(findPrevMenu)
+      
+      editItem.submenu = editMenu
       mainMenu.addItem(editItem)
       
       // View
@@ -243,8 +254,48 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
   
+  @objc func findKeywordPrev() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetTab = target.tabs.first(where: { $0.id == activeId }), targetTab.isFindDialog {
+          DispatchQueue.main.async {
+            targetTab.isFindPrev = true
+            targetTab.isFindAction = true
+          }
+        }
+      }
+    }
+  }
+  
+  @objc func findKeywordNext() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetTab = target.tabs.first(where: { $0.id == activeId }), targetTab.isFindDialog {
+          DispatchQueue.main.async {
+            targetTab.isFindPrev = false
+            targetTab.isFindAction = true
+          }
+        }
+      }
+    }
+  }
+  
+  @objc func findKeyword() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetTab = target.tabs.first(where: { $0.id == activeId }) {
+          DispatchQueue.main.async {
+            targetTab.isFindDialog.toggle()
+          }
+        }
+      }
+    }
+  }
+  
   @objc func toggleFullScreen(_ sender: AnyObject?) {
-//        toggleFullScreen(nil)
     if let keyWindow = NSApplication.shared.keyWindow {
       keyWindow.toggleFullScreen(nil)
     }
