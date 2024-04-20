@@ -50,7 +50,7 @@ struct MoreMenuDialog: View {
     }
     .frame(width: 240)
     .background(GeometryReader { geometry in
-      Color("WindowTitleBG")
+      Color("DialogBG")
           .frame(width: geometry.size.width,
                   height: geometry.size.height + 100)
           .frame(width: geometry.size.width,
