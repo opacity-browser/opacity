@@ -16,6 +16,10 @@
 "Copy" = "Copy";
 "Paste" = "Paste";
 "Select All" = "Select All";
+"Find" = "Find";
+"Find in Page..." = "Find in Page...";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
 "View" = "View";
 "Reload Page" = "Reload Page";
 "Show Sidebar" = "Show Sidebar";
@@ -96,4 +100,3 @@
 
 "Save Image As.." = "Save Image As..";
 "Save As:" = "Save As:";
-

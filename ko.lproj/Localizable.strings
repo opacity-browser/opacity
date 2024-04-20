@@ -16,6 +16,10 @@
 "Copy" = "복사";
 "Paste" = "붙여넣기";
 "Select All" = "모두 선택";
+"Find" = "찾기";
+"Find in Page..." = "찾기...";
+"Find Next" = "다음 찾기";
+"Find Previous" = "이전 찾기";
 "View" = "보기";
 "Reload Page" = "페이지 새로고침";
 "Show Sidebar" = "사이드바 보기";
