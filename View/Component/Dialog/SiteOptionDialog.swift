@@ -10,23 +10,24 @@ import SwiftData
 import UserNotifications
 
 struct SiteOptionDialog: View {
-  @Environment(\.modelContext) var modelContext
   @Query var generalSetting: [GeneralSetting]
   
   @ObservedObject var service: Service
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   @State var cacheBlockingLevel: String?
   
-  init(service: Service, tab: Tab) {
+  init(service: Service, browser: Browser, tab: Tab) {
     self.service = service
     self.tab = tab
+    self.browser = browser
     self._cacheBlockingLevel = State(initialValue: service.blockingLevel)
   }
   
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        Text(NSLocalizedString("Tracker blocking", comment: ""))
+        Text(NSLocalizedString("Tracker Blocking", comment: ""))
         Spacer()
         Picker("", selection: $service.blockingLevel) {
           Text(NSLocalizedString("blocking-strong", comment: "")).tag("blocking-strong")
@@ -71,6 +72,16 @@ struct SiteOptionDialog: View {
         .padding(.top, 5)
       }
       
+      HStack(spacing: 0) {
+        Text(NSLocalizedString("Learn More", comment: ""))
+          .font(.system(size: 11))
+          .foregroundStyle(Color("Point"))
+          .padding(.top, 4)
+          .onTapGesture {
+            browser.newTab(URL(string: "https://github.com/opacity-browser/tracker-blocking")!)
+          }
+        Spacer()
+      }
     }
     .frame(width: 220)
     .padding(.horizontal, 20)

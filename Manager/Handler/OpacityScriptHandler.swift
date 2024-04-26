@@ -309,6 +309,7 @@ final class OpacityScriptHandler {
   
   func setBlockingTracker(_ value: String) -> String? {
     SettingsManager.setBlockingTracker(value)
+    AppDelegate.shared.service.blockingLevel = value
     return """
     window.opacityResponse.setBlockingTracker({
       data: "success"
@@ -547,7 +548,10 @@ final class OpacityScriptHandler {
             "denied": '\(NSLocalizedString("denied", comment: ""))',
             "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
             "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
-            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))'
+            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
+            "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
+            "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
+            "Learn More": '\(NSLocalizedString("Learn More", comment: ""))'
           }
         })
       """
@@ -589,6 +593,10 @@ final class OpacityScriptHandler {
             retentionPeriod: {
               id: "\(browserSettings.retentionPeriod)",
               name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
+            },
+            blockingLevel: {
+              id: "\(browserSettings.blockingLevel)",
+              name: "\(NSLocalizedString(browserSettings.blockingLevel, comment: ""))"
             }
           }
         })

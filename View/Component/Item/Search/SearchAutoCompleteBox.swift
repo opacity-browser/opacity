@@ -85,7 +85,7 @@ struct SearchAutoCompleteBox: View {
             }
             .padding(.leading, 4)
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-              SiteOptionDialog(service: service, tab: tab)
+              SiteOptionDialog(service: service, browser: browser, tab: tab)
             }
           }
           .buttonStyle(.plain)

@@ -101,7 +101,7 @@
 "Save Image As.." = "Save Image As..";
 "Save As:" = "Save As:";
 
-"Tracker blocking" = "Tracker blocking";
+"Tracker Blocking" = "Tracker Blocking";
 
 "blocking-strong" = "Strong";
 "blocking-moderate" = "Moderate";
@@ -113,4 +113,5 @@
 "blocking-light-exp" = "It provides basic tracking protection without significantly disrupting the user experience.";
 "blocking-none-exp" = "It doesn't block anything.";
 
-"blocking-change-text" = "Changes take effect starting from newly created tabs.";
+"blocking-change-text" = "Changes will take effect starting from new tabs.";
+"Learn More" = "Learn More";
