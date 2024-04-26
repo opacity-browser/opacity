@@ -99,3 +99,18 @@
 
 "Save Image As.." = "이미지를 다른 이름으로 저장..";
 "Save As:" = "별도 저장:";
+
+"Tracker blocking" = "트래커 차단";
+
+"blocking-strong" = "강함";
+"blocking-moderate" = "중간";
+"blocking-light" = "약함";
+"blocking-none" = "끔";
+
+"blocking-strong-exp" = "사용자 데이터와 상호 작용을 최대한 보호합니다.";
+"blocking-moderate-exp" = "필요한 경우 일부 트래킹을 허용하면서도 합리적인 수준의 보호를 제공합니다.";
+"blocking-light-exp" = "사용자 경험을 크게 방해하지 않으면서 기본적인 트래킹 보호를 제공합니다.";
+"blocking-none-exp" = "아무것도 차단하지 않습니다.";
+
+"blocking-change-text" = "변경 사항은 새로 생성된 탭부터 적용됩니다.";
+

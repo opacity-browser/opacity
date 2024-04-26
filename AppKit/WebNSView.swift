@@ -47,12 +47,10 @@ struct WebNSView: NSViewRepresentable {
       }
     }
     
-    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-    }
-    
     func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
       download.delegate = self
     }
+  
     func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
       download.delegate = self
     }
@@ -101,7 +99,6 @@ struct WebNSView: NSViewRepresentable {
       }
       
       if navigationAction.shouldPerformDownload {
-        print("5")
         decisionHandler(.download)
         return
       }
@@ -333,6 +330,7 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+      print("Load failed with error: \(error.localizedDescription)")
       parent.tab.pageProgress = webView.estimatedProgress
       if (error as NSError).code == NSURLErrorCancelled {
         return
@@ -455,6 +453,43 @@ struct WebNSView: NSViewRepresentable {
       }
     }
   }
+  
+  private func addContentBlockingRules(_ webView: WKWebView) {
+    if service.blockingLevel > 0 {
+      let blockingRules = "blockingLevel\(service.blockingLevel)Rules"
+      if let rulePath = Bundle.main.path(forResource: blockingRules, ofType: "json"),
+         let ruleString = try? String(contentsOfFile: rulePath) {
+        WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
+          if let ruleList = ruleList {
+            webView.configuration.userContentController.add(ruleList)
+          } else if let error = error {
+            print("Error compiling content rule list: \(error)")
+          }
+        }
+      }
+    }
+  }
+  
+  private func clearContentBlockingRules() {
+    WKContentRuleListStore.default().getAvailableContentRuleListIdentifiers { identifiers in
+      if ((identifiers?.contains("ContentBlockingRules")) != nil) {
+        WKContentRuleListStore.default().removeContentRuleList(forIdentifier: "ContentBlockingRules") { error in
+          if let error = error {
+            print("Error removing content rule list: \(error)")
+          } else {
+            print("Content rule list successfully removed")
+          }
+        }
+      }
+    }
+  }
+  
+  private func updateBlockingRules(_ webView: WKWebView) {
+    clearContentBlockingRules()
+    if service.blockingLevel > 0 {
+      addContentBlockingRules(webView)
+    }
+  }
       
   func makeNSView(context: Context) -> WKWebView {
     tab.webview.navigationDelegate = context.coordinator
@@ -462,7 +497,7 @@ struct WebNSView: NSViewRepresentable {
     tab.webview.allowsBackForwardNavigationGestures = true
     tab.webview.isInspectable = true
     tab.webview.setValue(false, forKey: "drawsBackground")
-    
+    updateBlockingRules(tab.webview)
     return tab.webview
   }
   

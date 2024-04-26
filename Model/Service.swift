@@ -9,6 +9,7 @@ import SwiftUI
 
 final class Service: ObservableObject {
   @Published var browsers: [Int:Browser] = [:]
+  @Published var blockingLevel: Int = 2
   var dragBrowserNumber: Int?
   var dragTabId: UUID?
   var dragBookmark: Bookmark?

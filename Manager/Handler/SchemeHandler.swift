@@ -51,10 +51,8 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
   func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
     guard let requestUrl = urlSchemeTask.request.url,
         let host = requestUrl.host,
-        let scheme = requestUrl.scheme,
-        scheme == "opacity",
         let resourcePath = Bundle.main.resourcePath else {
-      urlSchemeTask.didFailWithError(NSError(domain: "Invalid URL or Scheme", code: 404, userInfo: nil))
+      urlSchemeTask.didFailWithError(NSError(domain: "Invalid Scheme", code: 404, userInfo: nil))
       return
     }
     

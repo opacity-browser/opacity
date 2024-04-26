@@ -63,4 +63,16 @@ class SettingsManager {
       }
     }
   }
+  
+  @MainActor static func setBlockTracker(_ value: Int) {
+    var descriptor = FetchDescriptor<GeneralSetting>()
+    descriptor.fetchLimit = 1
+    do {
+      if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        browserSettings.blockingLevel = value
+      }
+    } catch {
+      print("ModelContainerError setBlockTracker")
+    }
+  }
 }

@@ -33,10 +33,12 @@ class GeneralSetting {
   var searchEngine: String
   var screenMode: String
   var retentionPeriod = "1 Week"
+  var blockingLevel = 2
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: Int = 2) {
     self.searchEngine = searchEngine
     self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod
+    self.blockingLevel = blockingLevel
   }
 }

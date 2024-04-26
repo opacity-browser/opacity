@@ -71,6 +71,9 @@ final class OpacityScriptHandler {
         case "setRetentionPeriod":
           script = setRetentionPeriod(value)
           break
+        case "setBlockTracker":
+          script = setBlockTracker(value)
+          break
         case "getSearchHistoryList":
           script = getSearchHistoryList(value)
           break
@@ -299,6 +302,23 @@ final class OpacityScriptHandler {
       
     return """
       window.opacityResponse.getSearchHistoryList({
+        data: "error"
+      })
+    """
+  }
+  
+  func setBlockTracker(_ value: String) -> String? {
+    if let intValue = Int(value) {
+      SettingsManager.setBlockTracker(intValue)
+      return """
+      window.opacityResponse.setRetentionPeriod({
+        data: "success"
+      })
+    """
+    }
+    
+    return """
+      window.opacityResponse.setRetentionPeriod({
         data: "error"
       })
     """

@@ -81,7 +81,6 @@ final class Tab: ObservableObject {
     let scriptHandler = ScriptHandler(tab: self)
     AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
-    
     config.userContentController = contentController
     
     let scriptSource = """
