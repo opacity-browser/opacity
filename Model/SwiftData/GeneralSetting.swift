@@ -28,14 +28,21 @@ enum DataRententionPeriodList: String {
   case indefinite = "Indefinite"
 }
 
+enum BlockingTrakerList: String {
+  case blockingStrong = "blocking-strong"
+  case blockingModerate = "blocking-moderate"
+  case blockingLight = "blocking-light"
+  case blockingNone = "blocking-none"
+}
+
 @Model
 class GeneralSetting {
   var searchEngine: String
   var screenMode: String
-  var retentionPeriod = "1 Week"
-  var blockingLevel = 2
+  var retentionPeriod: String
+  var blockingLevel: String
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: Int = 2) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue) {
     self.searchEngine = searchEngine
     self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod

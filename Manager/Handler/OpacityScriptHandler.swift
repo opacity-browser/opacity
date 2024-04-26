@@ -71,8 +71,8 @@ final class OpacityScriptHandler {
         case "setRetentionPeriod":
           script = setRetentionPeriod(value)
           break
-        case "setBlockTracker":
-          script = setBlockTracker(value)
+        case "setBlockingTracker":
+          script = setBlockingTracker(value)
           break
         case "getSearchHistoryList":
           script = getSearchHistoryList(value)
@@ -307,21 +307,13 @@ final class OpacityScriptHandler {
     """
   }
   
-  func setBlockTracker(_ value: String) -> String? {
-    if let intValue = Int(value) {
-      SettingsManager.setBlockTracker(intValue)
-      return """
-      window.opacityResponse.setRetentionPeriod({
-        data: "success"
-      })
-    """
-    }
-    
+  func setBlockingTracker(_ value: String) -> String? {
+    SettingsManager.setBlockingTracker(value)
     return """
-      window.opacityResponse.setRetentionPeriod({
-        data: "error"
-      })
-    """
+    window.opacityResponse.setBlockingTracker({
+      data: "success"
+    })
+  """
   }
   
   func setRetentionPeriod(_ value: String) -> String? {
@@ -474,6 +466,7 @@ final class OpacityScriptHandler {
     var searchEngineList: [SettingListItem] = []
     var screenModeList: [SettingListItem] = []
     var periodList: [SettingListItem] = []
+    var blockingList: [SettingListItem] = []
     
     for engine in SEARCH_ENGINE_LIST {
       searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
@@ -484,17 +477,22 @@ final class OpacityScriptHandler {
     for periodItem in RETENTION_PERIOD_LIST {
       periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
     }
+    for blockingItem in BLOCKING_TRACKER_LIST {
+      blockingList.append(SettingListItem(id: blockingItem, name: NSLocalizedString(blockingItem, comment: "")))
+    }
     
     do {
       let searchString = try encodeJSON(from: searchEngineList)
       let screenModeString = try encodeJSON(from: screenModeList)
       let periodString = try encodeJSON(from: periodList)
+      let blockingString = try encodeJSON(from: blockingList)
       return """
         window.opacityResponse.getGeneralSettingList({
           data: {
             searchEngine: \(searchString),
             screenMode: \(screenModeString),
-            retentionPeriod: \(periodString)
+            retentionPeriod: \(periodString),
+            blockingLevel: \(blockingString)
           }
         })
      """

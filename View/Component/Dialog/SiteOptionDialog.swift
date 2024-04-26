@@ -15,7 +15,7 @@ struct SiteOptionDialog: View {
   
   @ObservedObject var service: Service
   @ObservedObject var tab: Tab
-  @State var cacheBlockingLevel: Int?
+  @State var cacheBlockingLevel: String?
   
   init(service: Service, tab: Tab) {
     self.service = service
@@ -29,10 +29,10 @@ struct SiteOptionDialog: View {
         Text(NSLocalizedString("Tracker blocking", comment: ""))
         Spacer()
         Picker("", selection: $service.blockingLevel) {
-          Text(NSLocalizedString("blocking-strong", comment: "")).tag(3)
-          Text(NSLocalizedString("blocking-moderate", comment: "")).tag(2)
-          Text(NSLocalizedString("blocking-light", comment: "")).tag(1)
-          Text(NSLocalizedString("blocking-none", comment: "")).tag(0)
+          Text(NSLocalizedString("blocking-strong", comment: "")).tag("blocking-strong")
+          Text(NSLocalizedString("blocking-moderate", comment: "")).tag("blocking-moderate")
+          Text(NSLocalizedString("blocking-light", comment: "")).tag("blocking-light")
+          Text(NSLocalizedString("blocking-none", comment: "")).tag("blocking-none")
         }
         .frame(maxWidth: .infinity)
       }
@@ -42,11 +42,11 @@ struct SiteOptionDialog: View {
   
       HStack(spacing: 0) {
         Text(
-          service.blockingLevel == 1 ?
+          service.blockingLevel == "blocking-strong" ?
           NSLocalizedString("blocking-light-exp", comment: "")
-          : service.blockingLevel == 2 ?
+          : service.blockingLevel == "blocking-moderate" ?
           NSLocalizedString("blocking-moderate-exp", comment: "")
-          : service.blockingLevel == 3 ?
+          : service.blockingLevel == "blocking-light" ?
           NSLocalizedString("blocking-strong-exp", comment: "")
           : NSLocalizedString("blocking-none-exp", comment: "")
         )

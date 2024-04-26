@@ -455,16 +455,25 @@ struct WebNSView: NSViewRepresentable {
   }
   
   private func addContentBlockingRules(_ webView: WKWebView) {
-    if service.blockingLevel > 0 {
-      let blockingRules = "blockingLevel\(service.blockingLevel)Rules"
-      if let rulePath = Bundle.main.path(forResource: blockingRules, ofType: "json"),
-         let ruleString = try? String(contentsOfFile: rulePath) {
-        WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
-          if let ruleList = ruleList {
-            webView.configuration.userContentController.add(ruleList)
-          } else if let error = error {
-            print("Error compiling content rule list: \(error)")
-          }
+    var blockingRules: String = "blockingLevel2Rules"
+    if service.blockingLevel == BlockingTrakerList.blockingLight.rawValue {
+      blockingRules = "blockingLevel1Rules"
+    }
+    if service.blockingLevel == BlockingTrakerList.blockingModerate.rawValue {
+      blockingRules = "blockingLevel2Rules"
+    }
+    if service.blockingLevel == BlockingTrakerList.blockingStrong.rawValue {
+      blockingRules = "blockingLevel3Rules"
+    }
+    
+    if let rulePath = Bundle.main.path(forResource: blockingRules, ofType: "json"),
+       let ruleString = try? String(contentsOfFile: rulePath) {
+      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
+        if let ruleList = ruleList {
+          print("블로킹 트레커 설정 - \(blockingRules)")
+          webView.configuration.userContentController.add(ruleList)
+        } else if let error = error {
+          print("Error compiling content rule list: \(error)")
         }
       }
     }
@@ -477,7 +486,7 @@ struct WebNSView: NSViewRepresentable {
           if let error = error {
             print("Error removing content rule list: \(error)")
           } else {
-            print("Content rule list successfully removed")
+            print("블로킹 트레커 초기화")
           }
         }
       }
@@ -486,7 +495,7 @@ struct WebNSView: NSViewRepresentable {
   
   private func updateBlockingRules(_ webView: WKWebView) {
     clearContentBlockingRules()
-    if service.blockingLevel > 0 {
+    if service.blockingLevel != BlockingTrakerList.blockingNone.rawValue {
       addContentBlockingRules(webView)
     }
   }
