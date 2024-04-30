@@ -7,6 +7,8 @@
 
 import SwiftUI
 import WebKit
+import ASN1Decoder
+import Security
 
 struct WebNSView: NSViewRepresentable {
   @ObservedObject var service: Service
@@ -50,7 +52,7 @@ struct WebNSView: NSViewRepresentable {
     func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
       download.delegate = self
     }
-  
+    
     func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
       download.delegate = self
     }
@@ -162,7 +164,7 @@ struct WebNSView: NSViewRepresentable {
             title = NSLocalizedString("No internet connection", comment: "")
             message = NSLocalizedString("There is no internet connection.", comment: "")
             break
-          case .unkown:
+          case .unknown:
             title = NSLocalizedString("Unknown error", comment: "")
             message = NSLocalizedString("An unknown error occurred.", comment: "")
             break
@@ -446,10 +448,72 @@ struct WebNSView: NSViewRepresentable {
             webView.load(URLRequest(url: schemeURL))
           }
         default:
-          parent.tab.webviewErrorType = .unkown
+          parent.tab.webviewErrorType = .unknown
           if let schemeURL = URL(string:"opacity://unknown") {
             webView.load(URLRequest(url: schemeURL))
           }
+      }
+    }
+    
+    private func matchesDomain(pattern: String, host: String) -> Bool {
+      if pattern == host {
+        return true
+      }
+      if pattern.hasPrefix("*.") {
+        let basePattern = pattern.dropFirst(2)
+        let hostParts = host.split(separator: ".")
+        let patternParts = basePattern.split(separator: ".")
+        if hostParts.count == patternParts.count + 1 {
+          return Array(hostParts.suffix(patternParts.count)) == patternParts
+        }
+      }
+      return false
+    }
+    
+    private func matchesHostCertificate(certificate: SecCertificate, host: String) throws -> String? {
+      let data = SecCertificateCopyData(certificate) as Data
+      let x509 = try X509Certificate(data: data)
+      if let cn = x509.subjectDistinguishedName {
+        for pattern in x509.subjectAlternativeNames {
+          if self.matchesDomain(pattern: pattern, host: host) {
+            return cn
+          }
+        }
+      }
+      return nil
+    }
+    
+    func webView(_ webView: WKWebView, respondTo challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+      guard let serverTrust = challenge.protectionSpace.serverTrust else {
+        DispatchQueue.main.async {
+          self.parent.tab.certificateSummary = ""
+          self.parent.tab.isValidCertificate = false
+        }
+        return (.cancelAuthenticationChallenge, nil)
+      }
+      
+      var error: CFError?
+      let isValid = SecTrustEvaluateWithError(serverTrust, &error)
+
+      if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
+        for certificate in certificateChain {
+          if let _ = try? await matchesHostCertificate(certificate: certificate, host: webView.url?.host ?? "") {
+            let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
+            DispatchQueue.main.async {
+              self.parent.tab.certificateSummary = summary
+              self.parent.tab.isValidCertificate = true
+            }
+          }
+        }
+          
+        return (.useCredential, URLCredential(trust: serverTrust))
+      } else {
+        DispatchQueue.main.async {
+          self.parent.tab.certificateSummary = ""
+          self.parent.tab.isValidCertificate = false
+        }
+        
+        return (.cancelAuthenticationChallenge, nil)
       }
     }
   }
@@ -470,7 +534,6 @@ struct WebNSView: NSViewRepresentable {
        let ruleString = try? String(contentsOfFile: rulePath) {
       WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
         if let ruleList = ruleList {
-          print("블로킹 트레커 설정 - \(blockingRules)")
           webView.configuration.userContentController.add(ruleList)
         } else if let error = error {
           print("Error compiling content rule list: \(error)")
@@ -486,7 +549,7 @@ struct WebNSView: NSViewRepresentable {
           if let error = error {
             print("Error removing content rule list: \(error)")
           } else {
-            print("블로킹 트레커 초기화")
+            print("Remove blocking tracker")
           }
         }
       }
@@ -507,12 +570,12 @@ struct WebNSView: NSViewRepresentable {
     tab.webview.isInspectable = true
     tab.webview.setValue(false, forKey: "drawsBackground")
     updateBlockingRules(tab.webview)
+    
     return tab.webview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     print("웹뷰 업데이트 시작")
-    
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false

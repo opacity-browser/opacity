@@ -110,6 +110,7 @@
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
+		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -233,6 +234,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +538,9 @@
 			dependencies = (
 			);
 			name = Opacity;
+			packageProductDependencies = (
+				A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */,
+			);
 			productName = AhPuh;
 			productReference = A16920082B2FA82100F8B4C0 /* Opacity.app */;
 			productType = "com.apple.product-type.application";
@@ -571,6 +576,9 @@
 				Base,
 			);
 			mainGroup = A1691FFF2B2FA82100F8B4C0;
+			packageReferences = (
+				A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */,
+			);
 			productRefGroup = A16920092B2FA82100F8B4C0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -938,6 +946,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/filom/ASN1Decoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */;
+			productName = ASN1Decoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A16920002B2FA82100F8B4C0 /* Project object */;
 }

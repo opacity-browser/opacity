@@ -26,6 +26,71 @@ struct SiteOptionDialog: View {
   
   var body: some View {
     VStack(spacing: 0) {
+      
+      if tab.originURL.scheme == "opacity" {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            Image(systemName: "lock.square")
+              .font(.system(size: 30))
+              .foregroundColor(Color("Point"))
+              .padding(.top, 10)
+              .padding(.bottom, 15)
+          }
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This connection is secure.", comment: ""))
+            Spacer()
+          }
+          .padding(.bottom, 2)
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This is a page provided inside the app.", comment: ""))
+              .opacity(0.5)
+              .font(.system(size: 11))
+            Spacer()
+          }
+        }
+      } else if tab.isValidCertificate {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            Image(systemName: "lock.square")
+              .font(.system(size: 30))
+              .foregroundColor(Color("Point"))
+              .padding(.top, 10)
+              .padding(.bottom, 15)
+          }
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This connection is secure.", comment: ""))
+            Spacer()
+          }
+          .padding(.bottom, 2)
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("Certificate summary:", comment: ""))
+              .opacity(0.5)
+              .font(.system(size: 11))
+            Text(tab.certificateSummary)
+              .font(.system(size: 11))
+              .padding(.leading, 5)
+            Spacer()
+          }
+        }
+      } else {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            Image(systemName: "lock.slash")
+              .font(.system(size: 30))
+              .foregroundColor(Color("Danger"))
+              .padding(.top, 10)
+              .padding(.bottom, 15)
+          }
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This connection is not secure.", comment: ""))
+            Spacer()
+          }
+        }
+      }
+      
+      Divider()
+        .padding(.vertical, 10)
+      
       HStack(spacing: 0) {
         Text(NSLocalizedString("Tracker Blocking", comment: ""))
         Spacer()
@@ -37,9 +102,7 @@ struct SiteOptionDialog: View {
         }
         .frame(maxWidth: .infinity)
       }
-    
-      Divider()
-        .padding(.top, 5)
+      .padding(.bottom, 5)
   
       HStack(spacing: 0) {
         Text(
@@ -58,7 +121,7 @@ struct SiteOptionDialog: View {
         .fixedSize(horizontal: false, vertical: true)
         Spacer()
       }
-      .padding(.top, 5)
+      .padding(.bottom, 5)
       
       if let cache = cacheBlockingLevel, cache != service.blockingLevel {
         HStack(spacing: 0) {
@@ -69,14 +132,13 @@ struct SiteOptionDialog: View {
             .fixedSize(horizontal: false, vertical: true)
           Spacer()
         }
-        .padding(.top, 5)
+        .padding(.bottom, 5)
       }
       
       HStack(spacing: 0) {
         Text(NSLocalizedString("Learn More", comment: ""))
           .font(.system(size: 11))
           .foregroundStyle(Color("Point"))
-          .padding(.top, 4)
           .onTapGesture {
             browser.newTab(URL(string: "https://github.com/opacity-browser/tracker-blocking")!)
           }

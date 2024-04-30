@@ -14,7 +14,7 @@ enum WebViewErrorType {
   case notFindHost
   case notConnectHost
   case notConnectInternet
-  case unkown
+  case unknown
   case noError
 }
 
@@ -67,6 +67,10 @@ final class Tab: ObservableObject {
   @Published var isFindAction: Bool = false
   var isFindPrev: Bool = false
   var findKeyword: String = ""
+  
+  // SSL
+  @Published var isValidCertificate: Bool = false
+  var certificateSummary: String = ""
   
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
