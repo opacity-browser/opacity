@@ -150,7 +150,7 @@ struct SiteOptionDialog: View {
     .padding(.top, 15)
     .padding(.bottom, 15)
     .background(GeometryReader { geometry in
-      Color("WindowTitleBG")
+      Color("DialogBG")
           .frame(width: geometry.size.width,
                   height: geometry.size.height + 100)
           .frame(width: geometry.size.width,

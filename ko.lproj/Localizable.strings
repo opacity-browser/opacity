@@ -114,3 +114,8 @@
 
 "blocking-change-text" = "변경 사항은 새로운 탭부터 적용됩니다.";
 "Learn More" = "더 알아보기";
+
+"This connection is secure." = "이 연결은 안전합니다.";
+"This is a page provided inside the app." = "애플리케이션 내부의 페이지입니다.";
+"Certificate summary:" = "인증서 요약:";
+"This connection is not secure." = "이 연결은 안전하지 않습니다.";
