@@ -100,3 +100,23 @@
 
 "Save Image As.." = "Save Image As..";
 "Save As:" = "Save As:";
+
+"Tracker Blocking" = "Tracker Blocking";
+
+"blocking-strong" = "Strong";
+"blocking-moderate" = "Moderate";
+"blocking-light" = "Light";
+"blocking-none" = "None";
+
+"blocking-strong-exp" = "Provide maximum protection for user data and interactions.";
+"blocking-moderate-exp" = "It provides a reasonable level of protection while still allowing some tracking if necessary.";
+"blocking-light-exp" = "It provides basic tracking protection without significantly disrupting the user experience.";
+"blocking-none-exp" = "It doesn't block anything.";
+
+"blocking-change-text" = "Changes will take effect starting from new tabs.";
+"Learn More" = "Learn More";
+
+"This connection is secure." = "This connection is secure.";
+"This is a page provided inside the app." = "This is a page provided inside the app.";
+"Certificate summary:" = "Certificate summary:";
+"This connection is not secure." = "This connection is not secure.";

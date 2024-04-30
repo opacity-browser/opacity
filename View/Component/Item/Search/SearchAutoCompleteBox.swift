@@ -19,6 +19,7 @@ struct SearchAutoCompleteBox: View {
   @Environment(\.colorScheme) var colorScheme
   @Query var generalSettings: [GeneralSetting]
   
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -71,7 +72,7 @@ struct SearchAutoCompleteBox: View {
           .padding(.leading, 7)
         } else {
           Button {
-//            self.isSiteDialog.toggle()
+            self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
               Image(systemName: "lock")
@@ -84,7 +85,7 @@ struct SearchAutoCompleteBox: View {
             }
             .padding(.leading, 4)
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-              SiteOptionDialog(tab: tab)
+              SiteOptionDialog(service: service, browser: browser, tab: tab)
             }
           }
           .buttonStyle(.plain)

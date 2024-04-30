@@ -46,6 +46,9 @@
 		A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */; };
 		A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */; };
 		A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */; };
+		A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */; };
+		A127D49C2BDA57F80007D410 /* blockingLevel2Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */; };
+		A127D49D2BDA57F80007D410 /* blockingLevel3Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A139B1F62BBF86E50089C7D9 /* OpacityScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */; };
 		A139B1F82BBF94B70089C7D9 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */; };
@@ -107,6 +110,7 @@
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
+		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +153,9 @@
 		A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItem.swift; sourceTree = "<group>"; };
 		A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEditBox.swift; sourceTree = "<group>"; };
 		A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNSTextField.swift; sourceTree = "<group>"; };
+		A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel1Rules.json; sourceTree = "<group>"; };
+		A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel2Rules.json; sourceTree = "<group>"; };
+		A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel3Rules.json; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityScriptHandler.swift; sourceTree = "<group>"; };
 		A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
@@ -227,6 +234,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +280,17 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
-		A12D053C2B600C4C00CBC6B2 /* HTML */ = {
+		A127D4932BD9E25B0007D410 /* Rule */ = {
+			isa = PBXGroup;
+			children = (
+				A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */,
+				A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */,
+				A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */,
+			);
+			path = Rule;
+			sourceTree = "<group>";
+		};
+		A12D053C2B600C4C00CBC6B2 /* Scheme */ = {
 			isa = PBXGroup;
 			children = (
 				A10DA6712BB3952D0053913D /* settings */,
@@ -282,7 +300,7 @@
 				A16BCAFF2B93B38E004639F2 /* not-connect-host */,
 				A1B1A6F22B860023006B665E /* new-tab */,
 			);
-			path = HTML;
+			path = Scheme;
 			sourceTree = "<group>";
 		};
 		A139B2532BC3E5110089C7D9 /* SwiftData */ = {
@@ -389,14 +407,13 @@
 		A169200A2B2FA82100F8B4C0 /* Opacity */ = {
 			isa = PBXGroup;
 			children = (
-				A12D053C2B600C4C00CBC6B2 /* HTML */,
+				A127D4932BD9E25B0007D410 /* Rule */,
+				A12D053C2B600C4C00CBC6B2 /* Scheme */,
 				A15D54192B56B3F4007020CA /* AppKit */,
 				A15D54122B561BCF007020CA /* Shape */,
 				A188C9692B4F8E5800B39BC8 /* Manager */,
 				A188C9622B4EBE8B00B39BC8 /* Constant */,
 				A188C9592B4EBB7200B39BC8 /* Helper */,
-				A15FCB0F2B999D2900D64C05 /* Item */,
-				A188C94F2B4D3D3900B39BC8 /* Component */,
 				A188C93F2B4A910B00B39BC8 /* Model */,
 				A188C93C2B4A550E00B39BC8 /* View */,
 				A134711D2B43F00800A3AE59 /* OpacityApp.swift */,
@@ -428,6 +445,7 @@
 		A188C93C2B4A550E00B39BC8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A188C94F2B4D3D3900B39BC8 /* Component */,
 				A188C93D2B4A551B00B39BC8 /* ContentView.swift */,
 				A188C9652B4ECBB800B39BC8 /* MainView.swift */,
 				A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */,
@@ -454,6 +472,7 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A15FCB0F2B999D2900D64C05 /* Item */,
 				A10DDD8C2BCEDECC003E159A /* Dialog */,
 				A16BCAFB2B907878004639F2 /* ToggleSwitch.swift */,
 				A14246152B71EF190062C516 /* TabItem.swift */,
@@ -519,6 +538,9 @@
 			dependencies = (
 			);
 			name = Opacity;
+			packageProductDependencies = (
+				A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */,
+			);
 			productName = AhPuh;
 			productReference = A16920082B2FA82100F8B4C0 /* Opacity.app */;
 			productType = "com.apple.product-type.application";
@@ -554,6 +576,9 @@
 				Base,
 			);
 			mainGroup = A1691FFF2B2FA82100F8B4C0;
+			packageReferences = (
+				A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */,
+			);
 			productRefGroup = A16920092B2FA82100F8B4C0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -570,11 +595,14 @@
 			files = (
 				A16BCB092B944ECD004639F2 /* not-connect-internet in Resources */,
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
+				A127D49C2BDA57F80007D410 /* blockingLevel2Rules.json in Resources */,
+				A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */,
 				A16BCB082B944ECD004639F2 /* not-find-host in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A16BCB002B93B38E004639F2 /* not-connect-host in Resources */,
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
+				A127D49D2BDA57F80007D410 /* blockingLevel3Rules.json in Resources */,
 				A16BCB0A2B944ECD004639F2 /* unknown in Resources */,
 				A10DA6722BB3952D0053913D /* settings in Resources */,
 			);
@@ -918,6 +946,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/filom/ASN1Decoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */;
+			productName = ASN1Decoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A16920002B2FA82100F8B4C0 /* Project object */;
 }

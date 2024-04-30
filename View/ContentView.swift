@@ -33,8 +33,13 @@ struct ContentView: View {
                 windowWidth = geometry.size.width
               }
           }
-          SearchBoxDialog(browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
+          SearchBoxDialog(service: service, browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
         }
+      }
+    }
+    .onAppear {
+      if let generalSetting = generalSettings.first {
+        service.blockingLevel = generalSetting.blockingLevel
       }
     }
     .onChange(of: generalSettings.first?.screenMode) { _, newValue in

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import WebKit
+import ASN1Decoder
+import Security
 
 struct WebNSView: NSViewRepresentable {
   @ObservedObject var service: Service
@@ -17,10 +19,11 @@ struct WebNSView: NSViewRepresentable {
     Coordinator(self)
   }
   
-  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
     var parent: WebNSView
     var errorPages: [WKBackForwardListItem: URL] = [:]
     var errorOriginURL: URL?
+    var currentURL: URL?
     
     init(_ parent: WebNSView) {
       self.parent = parent
@@ -47,12 +50,10 @@ struct WebNSView: NSViewRepresentable {
       }
     }
     
-    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-    }
-    
     func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
       download.delegate = self
     }
+    
     func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
       download.delegate = self
     }
@@ -88,7 +89,7 @@ struct WebNSView: NSViewRepresentable {
         }
       } else {
         if let currentItem = getCurrentItem(of: webView), let originalURL = errorPages[currentItem] {
-          webView.load(URLRequest(url: originalURL))
+          load(url: originalURL, in: webView)
           errorPages.removeValue(forKey: currentItem)
         }
       }
@@ -101,7 +102,6 @@ struct WebNSView: NSViewRepresentable {
       }
       
       if navigationAction.shouldPerformDownload {
-        print("5")
         decisionHandler(.download)
         return
       }
@@ -111,7 +111,7 @@ struct WebNSView: NSViewRepresentable {
         components.scheme = "https"
         
         if let httpsUrl = components.url {
-          webView.load(URLRequest(url: httpsUrl))
+          load(url: httpsUrl, in: webView)
           decisionHandler(.cancel)
           return
         }
@@ -122,7 +122,7 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
-        webView.load(URLRequest(url: webviewURL))
+        load(url: webviewURL, in: webView)
       }
     }
     
@@ -165,7 +165,7 @@ struct WebNSView: NSViewRepresentable {
             title = NSLocalizedString("No internet connection", comment: "")
             message = NSLocalizedString("There is no internet connection.", comment: "")
             break
-          case .unkown:
+          case .unknown:
             title = NSLocalizedString("Unknown error", comment: "")
             message = NSLocalizedString("An unknown error occurred.", comment: "")
             break
@@ -333,6 +333,7 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+      print("Load failed with error: \(error.localizedDescription)")
       parent.tab.pageProgress = webView.estimatedProgress
       if (error as NSError).code == NSURLErrorCancelled {
         return
@@ -448,11 +449,138 @@ struct WebNSView: NSViewRepresentable {
             webView.load(URLRequest(url: schemeURL))
           }
         default:
-          parent.tab.webviewErrorType = .unkown
+          parent.tab.webviewErrorType = .unknown
           if let schemeURL = URL(string:"opacity://unknown") {
             webView.load(URLRequest(url: schemeURL))
           }
       }
+    }
+    
+    private func matchesDomain(pattern: String, host: String) -> Bool {
+      if pattern == host {
+        return true
+      }
+      if pattern.hasPrefix("*.") {
+        let basePattern = pattern.dropFirst(2)
+        let hostParts = host.split(separator: ".")
+        let patternParts = basePattern.split(separator: ".")
+        if hostParts.count == patternParts.count + 1 {
+          return Array(hostParts.suffix(patternParts.count)) == patternParts
+        }
+      }
+      return false
+    }
+    
+    private func matchesHostCertificate(certificate: SecCertificate, host: String) throws -> String? {
+      let data = SecCertificateCopyData(certificate) as Data
+      let x509 = try X509Certificate(data: data)
+      if let cn = x509.subjectDistinguishedName {
+        print("cn: \(cn)")
+        for pattern in x509.subjectAlternativeNames {
+          if self.matchesDomain(pattern: pattern, host: host) {
+            return cn
+          }
+        }
+      }
+      return nil
+    }
+    
+    func load(url: URL, in webView: WKWebView) {
+      currentURL = url
+      
+      if url.scheme == "opacity" {
+        webView.load(URLRequest(url: url))
+        return
+      }
+      
+      let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+      let request = URLRequest(url: url)
+      let task = session.dataTask(with: request) { data, response, error in
+        guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+          return
+        }
+        DispatchQueue.main.async {
+          webView.load(request)
+        }
+      }
+      task.resume()
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+      if let serverTrust = challenge.protectionSpace.serverTrust, let host = currentURL?.host {
+        var error: CFError?
+        let isValid = SecTrustEvaluateWithError(serverTrust, &error)
+        if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
+          for certificate in certificateChain {
+            if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
+              let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
+              DispatchQueue.main.async {
+                self.parent.tab.certificateSummary = summary
+                self.parent.tab.isValidCertificate = true
+              }
+            }
+          }
+          completionHandler(.useCredential, URLCredential(trust: serverTrust))
+        } else {
+          DispatchQueue.main.async {
+            self.parent.tab.certificateSummary = ""
+            self.parent.tab.isValidCertificate = false
+          }
+          completionHandler(.cancelAuthenticationChallenge, nil)
+        }
+      } else {
+        DispatchQueue.main.async {
+          self.parent.tab.certificateSummary = ""
+          self.parent.tab.isValidCertificate = false
+        }
+        completionHandler(.cancelAuthenticationChallenge, nil)
+      }
+    }
+  }
+    
+  
+  private func addContentBlockingRules(_ webView: WKWebView) {
+    var blockingRules: String = "blockingLevel2Rules"
+    if service.blockingLevel == BlockingTrakerList.blockingLight.rawValue {
+      blockingRules = "blockingLevel1Rules"
+    }
+    if service.blockingLevel == BlockingTrakerList.blockingModerate.rawValue {
+      blockingRules = "blockingLevel2Rules"
+    }
+    if service.blockingLevel == BlockingTrakerList.blockingStrong.rawValue {
+      blockingRules = "blockingLevel3Rules"
+    }
+    
+    if let rulePath = Bundle.main.path(forResource: blockingRules, ofType: "json"),
+       let ruleString = try? String(contentsOfFile: rulePath) {
+      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
+        if let ruleList = ruleList {
+          webView.configuration.userContentController.add(ruleList)
+        } else if let error = error {
+          print("Error compiling content rule list: \(error)")
+        }
+      }
+    }
+  }
+  
+  private func clearContentBlockingRules() {
+    WKContentRuleListStore.default().getAvailableContentRuleListIdentifiers { identifiers in
+      if ((identifiers?.contains("ContentBlockingRules")) != nil) {
+        WKContentRuleListStore.default().removeContentRuleList(forIdentifier: "ContentBlockingRules") { error in
+          if let error = error {
+            print("Error removing content rule list: \(error)")
+          } else {
+            print("Remove blocking tracker")
+          }
+        }
+      }
+    }
+  }
+  
+  private func updateBlockingRules(_ webView: WKWebView) {
+    clearContentBlockingRules()
+    if service.blockingLevel != BlockingTrakerList.blockingNone.rawValue {
+      addContentBlockingRules(webView)
     }
   }
       
@@ -462,13 +590,13 @@ struct WebNSView: NSViewRepresentable {
     tab.webview.allowsBackForwardNavigationGestures = true
     tab.webview.isInspectable = true
     tab.webview.setValue(false, forKey: "drawsBackground")
+    updateBlockingRules(tab.webview)
     
     return tab.webview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     print("웹뷰 업데이트 시작")
-    
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
@@ -484,7 +612,7 @@ struct WebNSView: NSViewRepresentable {
     
     guard let webviewURL = webView.url else {
       print("웹뷰의 url 없음 - 요청된 URL 로드 - 종료")
-      webView.load(URLRequest(url: tab.originURL))
+      context.coordinator.load(url: tab.originURL, in: webView)
       return
     }
     
@@ -497,7 +625,7 @@ struct WebNSView: NSViewRepresentable {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
       print("새로운 검색으로 요청된 URL 로드 - 종료")
-      webView.load(URLRequest(url: tab.originURL))
+      context.coordinator.load(url: tab.originURL, in: webView)
       return
     }
 

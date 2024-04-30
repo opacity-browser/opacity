@@ -71,6 +71,9 @@ final class OpacityScriptHandler {
         case "setRetentionPeriod":
           script = setRetentionPeriod(value)
           break
+        case "setBlockingTracker":
+          script = setBlockingTracker(value)
+          break
         case "getSearchHistoryList":
           script = getSearchHistoryList(value)
           break
@@ -304,6 +307,16 @@ final class OpacityScriptHandler {
     """
   }
   
+  func setBlockingTracker(_ value: String) -> String? {
+    SettingsManager.setBlockingTracker(value)
+    AppDelegate.shared.service.blockingLevel = value
+    return """
+    window.opacityResponse.setBlockingTracker({
+      data: "success"
+    })
+  """
+  }
+  
   func setRetentionPeriod(_ value: String) -> String? {
     SettingsManager.setRetentionPeriod(value)
     return """
@@ -454,6 +467,7 @@ final class OpacityScriptHandler {
     var searchEngineList: [SettingListItem] = []
     var screenModeList: [SettingListItem] = []
     var periodList: [SettingListItem] = []
+    var blockingList: [SettingListItem] = []
     
     for engine in SEARCH_ENGINE_LIST {
       searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
@@ -464,17 +478,22 @@ final class OpacityScriptHandler {
     for periodItem in RETENTION_PERIOD_LIST {
       periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
     }
+    for blockingItem in BLOCKING_TRACKER_LIST {
+      blockingList.append(SettingListItem(id: blockingItem, name: NSLocalizedString(blockingItem, comment: "")))
+    }
     
     do {
       let searchString = try encodeJSON(from: searchEngineList)
       let screenModeString = try encodeJSON(from: screenModeList)
       let periodString = try encodeJSON(from: periodList)
+      let blockingString = try encodeJSON(from: blockingList)
       return """
         window.opacityResponse.getGeneralSettingList({
           data: {
             searchEngine: \(searchString),
             screenMode: \(screenModeString),
-            retentionPeriod: \(periodString)
+            retentionPeriod: \(periodString),
+            blockingLevel: \(blockingString)
           }
         })
      """
@@ -529,7 +548,10 @@ final class OpacityScriptHandler {
             "denied": '\(NSLocalizedString("denied", comment: ""))',
             "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
             "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
-            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))'
+            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
+            "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
+            "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
+            "Learn More": '\(NSLocalizedString("Learn More", comment: ""))'
           }
         })
       """
@@ -571,6 +593,10 @@ final class OpacityScriptHandler {
             retentionPeriod: {
               id: "\(browserSettings.retentionPeriod)",
               name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
+            },
+            blockingLevel: {
+              id: "\(browserSettings.blockingLevel)",
+              name: "\(NSLocalizedString(browserSettings.blockingLevel, comment: ""))"
             }
           }
         })

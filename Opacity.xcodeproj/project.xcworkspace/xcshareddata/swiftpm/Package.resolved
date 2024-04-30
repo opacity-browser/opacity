@@ -1,0 +1,15 @@
+{
+  "originHash" : "4805b6dde2fc8601d0f773708adcf6f1b355eb88f74dd0414253fce4a645117f",
+  "pins" : [
+    {
+      "identity" : "asn1decoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/filom/ASN1Decoder",
+      "state" : {
+        "revision" : "7e1523662c69d019a3299bbfb22fb824141dd1f6",
+        "version" : "1.10.0"
+      }
+    }
+  ],
+  "version" : 3
+}

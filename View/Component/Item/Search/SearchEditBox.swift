@@ -16,6 +16,7 @@ struct SearchEditBox: View {
   @Query(sort: \VisitHistoryGroup.updateDate, order: .reverse)
   var visitHistoryGroups: [VisitHistoryGroup]
 
+  @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
@@ -26,7 +27,7 @@ struct SearchEditBox: View {
           HStack(spacing: 0) {
             HStack(spacing: 0) {
               VStack(spacing: 0) {
-                SearchAutoCompleteBox(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
+                SearchAutoCompleteBox(service: service, browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
               }
               .frame(width: searchBoxRect.width + 4)
             }
@@ -38,7 +39,6 @@ struct SearchEditBox: View {
           Spacer()
         }
         .padding(.top, tab.isEditSearch ? 4.5 : 6.5)
-//        .padding(.leading, searchBoxRect.minX - 2)
         .padding(.leading, 125)
       }
     }

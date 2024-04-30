@@ -14,7 +14,7 @@ enum WebViewErrorType {
   case notFindHost
   case notConnectHost
   case notConnectInternet
-  case unkown
+  case unknown
   case noError
 }
 
@@ -68,6 +68,10 @@ final class Tab: ObservableObject {
   var isFindPrev: Bool = false
   var findKeyword: String = ""
   
+  // SSL
+  @Published var isValidCertificate: Bool = false
+  var certificateSummary: String = ""
+  
   lazy var webview: WKWebView = {
     let config = WKWebViewConfiguration()
     
@@ -81,7 +85,6 @@ final class Tab: ObservableObject {
     let scriptHandler = ScriptHandler(tab: self)
     AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
-    
     config.userContentController = contentController
     
     let scriptSource = """
