@@ -19,10 +19,11 @@ struct WebNSView: NSViewRepresentable {
     Coordinator(self)
   }
   
-  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
     var parent: WebNSView
     var errorPages: [WKBackForwardListItem: URL] = [:]
     var errorOriginURL: URL?
+    var currentURL: URL?
     
     init(_ parent: WebNSView) {
       self.parent = parent
@@ -88,7 +89,7 @@ struct WebNSView: NSViewRepresentable {
         }
       } else {
         if let currentItem = getCurrentItem(of: webView), let originalURL = errorPages[currentItem] {
-          webView.load(URLRequest(url: originalURL))
+          load(url: originalURL, in: webView)
           errorPages.removeValue(forKey: currentItem)
         }
       }
@@ -110,7 +111,7 @@ struct WebNSView: NSViewRepresentable {
         components.scheme = "https"
         
         if let httpsUrl = components.url {
-          webView.load(URLRequest(url: httpsUrl))
+          load(url: httpsUrl, in: webView)
           decisionHandler(.cancel)
           return
         }
@@ -121,7 +122,7 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
-        webView.load(URLRequest(url: webviewURL))
+        load(url: webviewURL, in: webView)
       }
     }
     
@@ -474,6 +475,7 @@ struct WebNSView: NSViewRepresentable {
       let data = SecCertificateCopyData(certificate) as Data
       let x509 = try X509Certificate(data: data)
       if let cn = x509.subjectDistinguishedName {
+        print("cn: \(cn)")
         for pattern in x509.subjectAlternativeNames {
           if self.matchesDomain(pattern: pattern, host: host) {
             return cn
@@ -483,40 +485,59 @@ struct WebNSView: NSViewRepresentable {
       return nil
     }
     
-    func webView(_ webView: WKWebView, respondTo challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
-      guard let serverTrust = challenge.protectionSpace.serverTrust else {
-        DispatchQueue.main.async {
-          self.parent.tab.certificateSummary = ""
-          self.parent.tab.isValidCertificate = false
-        }
-        return (.cancelAuthenticationChallenge, nil)
+    func load(url: URL, in webView: WKWebView) {
+      currentURL = url
+      
+      if url.scheme == "opacity" {
+        webView.load(URLRequest(url: url))
+        return
       }
       
-      var error: CFError?
-      let isValid = SecTrustEvaluateWithError(serverTrust, &error)
-
-      if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
-        for certificate in certificateChain {
-          if let _ = try? await matchesHostCertificate(certificate: certificate, host: webView.url?.host ?? "") {
-            let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
-            DispatchQueue.main.async {
-              self.parent.tab.certificateSummary = summary
-              self.parent.tab.isValidCertificate = true
+      let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+      let request = URLRequest(url: url)
+      let task = session.dataTask(with: request) { data, response, error in
+        guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+          return
+        }
+        DispatchQueue.main.async {
+          webView.load(request)
+        }
+      }
+      task.resume()
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+      if let serverTrust = challenge.protectionSpace.serverTrust, let host = currentURL?.host {
+        var error: CFError?
+        let isValid = SecTrustEvaluateWithError(serverTrust, &error)
+        if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
+          for certificate in certificateChain {
+            if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
+              let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
+              DispatchQueue.main.async {
+                self.parent.tab.certificateSummary = summary
+                self.parent.tab.isValidCertificate = true
+              }
             }
           }
+          completionHandler(.useCredential, URLCredential(trust: serverTrust))
+        } else {
+          DispatchQueue.main.async {
+            self.parent.tab.certificateSummary = ""
+            self.parent.tab.isValidCertificate = false
+          }
+          completionHandler(.cancelAuthenticationChallenge, nil)
         }
-          
-        return (.useCredential, URLCredential(trust: serverTrust))
       } else {
         DispatchQueue.main.async {
           self.parent.tab.certificateSummary = ""
           self.parent.tab.isValidCertificate = false
         }
-        
-        return (.cancelAuthenticationChallenge, nil)
+        completionHandler(.cancelAuthenticationChallenge, nil)
       }
     }
   }
+    
   
   private func addContentBlockingRules(_ webView: WKWebView) {
     var blockingRules: String = "blockingLevel2Rules"
@@ -591,7 +612,7 @@ struct WebNSView: NSViewRepresentable {
     
     guard let webviewURL = webView.url else {
       print("웹뷰의 url 없음 - 요청된 URL 로드 - 종료")
-      webView.load(URLRequest(url: tab.originURL))
+      context.coordinator.load(url: tab.originURL, in: webView)
       return
     }
     
@@ -604,7 +625,7 @@ struct WebNSView: NSViewRepresentable {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
       print("새로운 검색으로 요청된 URL 로드 - 종료")
-      webView.load(URLRequest(url: tab.originURL))
+      context.coordinator.load(url: tab.originURL, in: webView)
       return
     }
 
