@@ -30,7 +30,7 @@ struct SiteOptionDialog: View {
       if tab.originURL.scheme == "opacity" {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            Image(systemName: "lock.square")
+            Image(systemName: "lock.circle.fill")
               .font(.system(size: 30))
               .foregroundColor(Color("Point"))
               .padding(.top, 10)
@@ -48,10 +48,11 @@ struct SiteOptionDialog: View {
             Spacer()
           }
         }
-      } else if tab.isValidCertificate {
+      }
+      else if tab.isValidCertificate {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            Image(systemName: "lock.square")
+            Image(systemName: "lock.circle.fill")
               .font(.system(size: 30))
               .foregroundColor(Color("Point"))
               .padding(.top, 10)
@@ -75,9 +76,9 @@ struct SiteOptionDialog: View {
       } else {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            Image(systemName: "lock.slash")
+            Image(systemName: "exclamationmark.triangle.fill")
               .font(.system(size: 30))
-              .foregroundColor(Color("Danger"))
+              .foregroundColor(Color("AlertText"))
               .padding(.top, 10)
               .padding(.bottom, 15)
           }

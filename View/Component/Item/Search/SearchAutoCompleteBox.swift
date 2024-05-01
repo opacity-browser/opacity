@@ -75,19 +75,28 @@ struct SearchAutoCompleteBox: View {
             self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
-              Image(systemName: "lock")
-                .frame(maxWidth: 24, maxHeight: 24, alignment: .center)
-                .background(Color("SearchBarBG"))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .font(.system(size: 13))
-                .fontWeight(.medium)
-                .foregroundColor(Color("Icon"))
+              if tab.originURL.scheme == "opacity" || tab.isValidCertificate {
+                Image(systemName: "lock.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("Icon"))
+              } else {
+                Image(systemName: "exclamationmark.triangle.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("AlertText"))
+              }
             }
-            .padding(.leading, 4)
+            .background(Color("InputBG"))
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
               SiteOptionDialog(service: service, browser: browser, tab: tab)
             }
           }
+          .padding(.leading, 7)
           .buttonStyle(.plain)
         }
         
@@ -96,7 +105,7 @@ struct SearchAutoCompleteBox: View {
             HStack(spacing: 0) {
               Text(tab.printURL)
                 .font(.system(size: 13.5))
-                .padding(.leading, 9)
+                .padding(.leading, 4)
                 .frame(height: 32)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -182,11 +191,26 @@ struct SearchAutoCompleteBox: View {
                   DispatchQueue.main.async {
                     tab.inputURL = targetString
                   }
+                  return .handled
                 }
-                return .handled
               }
               return .ignored
             }
+//            .onKeyPress(.leftArrow) {
+//              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+//                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+//                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+//                : tab.autoCompleteList[choiceIndex].searchText
+//                
+//                if targetString != tab.inputURL {
+//                  DispatchQueue.main.async {
+//                    tab.inputURL = targetString
+//                  }
+//                  return .handled
+//                }
+//              }
+//              return .ignored
+//            }
         }
           BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
             .padding(.leading, 5)

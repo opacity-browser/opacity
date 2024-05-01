@@ -6,6 +6,11 @@
 	<array>
 		<string>Intent</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>This permission is required to provide notifications in the web service.</string>
 </dict>

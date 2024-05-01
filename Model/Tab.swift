@@ -31,7 +31,7 @@ final class Tab: ObservableObject {
   var isUpdateBySearch: Bool = false
   
   var webviewIsError: Bool = false
-  var webviewCheckError: Bool = false
+//  var webviewCheckError: Bool = false
   var webviewErrorType: WebViewErrorType = .noError
   
   @Published var title: String = ""
@@ -242,6 +242,8 @@ final class Tab: ObservableObject {
       self.isPageProgress = true
       self.pageProgress = 0.0
       self.isEditSearch = false
+      self.isValidCertificate = false
+      self.certificateSummary = ""
       self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
