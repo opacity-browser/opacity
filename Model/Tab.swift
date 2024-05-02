@@ -239,7 +239,6 @@ final class Tab: ObservableObject {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
-//      self.isPageProgress = true
 //      self.pageProgress = 0.0
       self.isEditSearch = false
       self.isValidCertificate = false
@@ -247,10 +246,19 @@ final class Tab: ObservableObject {
       self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
+      withAnimation {
+        self.pageProgress = 0.1
+      }
     }
   }
   
-  func updateURLByBrowser(url: URL) {
+  func redirectURLByBrowser(url: URL) {
+    self.originURL = url
+    self.inputURL = StringURL.setInputURL(url)
+    self.printURL = StringURL.setPrintURL(url)
+  }
+  
+  func updateURLByBrowser(url: URL, isClearCertificate: Bool) {
     DispatchQueue.main.async {
       self.isInit = false
       self.originURL = url
@@ -258,17 +266,24 @@ final class Tab: ObservableObject {
       self.printURL = StringURL.setPrintURL(url)
 //      self.title = StringURL.setTitleURL(url)
 //      self.favicon = nil
-//      self.isPageProgress = true
-//      self.pageProgress = 0.0
-//      self.isEditSearch = false
+      self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
+      
+      if isClearCertificate {
+        self.isUpdateBySearch = true
+        self.isValidCertificate = false
+        self.certificateSummary = ""
+      }
     }
   }
   
   func loadFavicon(url: URL) {
     URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, let uiImage = NSImage(data: data) else {
+        DispatchQueue.main.async {
+          self.favicon = nil
+        }
         return
       }
       DispatchQueue.main.async {

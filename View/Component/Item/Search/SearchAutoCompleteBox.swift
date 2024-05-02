@@ -50,13 +50,9 @@ struct SearchAutoCompleteBox: View {
               HStack(spacing: 0) {
                 Rectangle()
                   .foregroundColor(Color("Point"))
-                  .frame(maxWidth: CGFloat(tabWidth) * CGFloat(tab.pageProgress), maxHeight: 2)
-//                  .animation(.linear(duration: 0.5), value: tab.pageProgress)
-                if tab.pageProgress < 1.0 {
-                  Spacer()
-                }
+                  .frame(maxWidth: CGFloat(tabWidth) * CGFloat(tab.pageProgress), maxHeight: 2, alignment: .leading)
               }
-              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
@@ -218,25 +214,20 @@ struct SearchAutoCompleteBox: View {
                 }
                 return .ignored
               }
-            //            .onKeyPress(.leftArrow) {
-            //              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
-            //                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
-            //                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
-            //                : tab.autoCompleteList[choiceIndex].searchText
-            //
-            //                if targetString != tab.inputURL {
-            //                  DispatchQueue.main.async {
-            //                    tab.inputURL = targetString
-            //                  }
-            //                  return .handled
-            //                }
-            //              }
-            //              return .ignored
-            //            }
           }
           BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
             .padding(.leading, 5)
             .padding(.trailing, 10)
+            .onChange(of: tab.pageProgress) { oldValue, newValue in
+              print("progress: \(newValue)")
+              if newValue == 1.0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                  withAnimation {
+                    tab.pageProgress = 0
+                  }
+                }
+              }
+            }
         }
       }
       if tab.isEditSearch && tab.inputURL != "" && (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {

@@ -76,11 +76,11 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
       print("didStartProvisionalNavigation")
-      print(webView.estimatedProgress)
+//      print(webView.estimatedProgress)
 //      if parent.tab.pageProgress == 0.1 {
-      withAnimation {
-        parent.tab.pageProgress = webView.estimatedProgress
-      }
+//      withAnimation {
+//        parent.tab.pageProgress = webView.estimatedProgress
+//      }
 //      }
     }
     
@@ -117,18 +117,22 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+      print("didReceiveServerRedirectForProvisionalNavigation")
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
-        load(url: webviewURL, in: webView)
+        print("didReceiveServerRedirectForProvisionalNavigation - action load")
+//        load(url: webviewURL, in: webView)
 //        webView.load(URLRequest(url: webviewURL))
+        DispatchQueue.main.async {
+          self.parent.tab.updateURLByBrowser(url: webviewURL, isClearCertificate: true)
+        }
       }
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+      print("didFinish")
       let group = DispatchGroup()
       
       DispatchQueue.main.async {
-        print("didFinish")
-        print(webView.estimatedProgress)
         withAnimation {
           self.parent.tab.pageProgress = webView.estimatedProgress
         }
@@ -270,15 +274,13 @@ struct WebNSView: NSViewRepresentable {
       }
       
       group.notify(queue: .main) {
-        if let title = cacheTitle {
+        if let title = cacheTitle, let currentURL = webView.url {
           let historySite = HistorySite(title: title, url: self.parent.tab.originURL)
           if let faviconURL = cacheFaviconURL {
             historySite.loadFavicon(url: faviconURL)
-            if let currentURL = webView.url {
-              Task {
-                let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-                await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
-              }
+            Task {
+              let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+              await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
             }
           }
           self.parent.tab.historySiteDataList.append(historySite)
@@ -491,6 +493,9 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func load(url: URL, in webView: WKWebView) {
+//      print("urlSession load start")
+//      print("currentURL: \(currentURL)")
+//      print("url: \(url)")
       if let currentURL = currentURL, currentURL == url, isProgress {
         print("동일한 URL로 진행중으로 load 실행하지 않음")
         return
@@ -500,6 +505,7 @@ struct WebNSView: NSViewRepresentable {
         print("load - currentURL: \(currentURL)")
         print("load - url: \(url)")
         print("load - isProgress: \(isProgress)")
+        print("load - tabURL: \(self.parent.tab.originURL)")
       }
       
       currentURL = url
@@ -510,7 +516,14 @@ struct WebNSView: NSViewRepresentable {
         return
       }
       
-      let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+//      DispatchQueue.main.async {
+//        self.parent.tab.originURL = url
+//        self.parent.tab.updateURLByBrowser(url: url, isClearCertificate: false)
+//      }
+      let config = URLSessionConfiguration.default
+      config.requestCachePolicy = .reloadIgnoringLocalCacheData
+      config.urlCache = nil
+      let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
       let request = URLRequest(url: url)
       let task = session.dataTask(with: request) { data, response, error in
         guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
@@ -537,22 +550,31 @@ struct WebNSView: NSViewRepresentable {
           for certificate in certificateChain {
             if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
               let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
+              print("certificate - true - 1")
               DispatchQueue.main.async {
+                print("certificate - true - 2")
                 self.parent.tab.certificateSummary = summary
                 self.parent.tab.isValidCertificate = true
               }
+            } else {
+              print("certificate - true - 3")
             }
           }
+          
           completionHandler(.useCredential, URLCredential(trust: serverTrust))
         } else {
+          print("certificate - false - 1")
           DispatchQueue.main.async {
+            print("certificate - false - 2")
             self.parent.tab.certificateSummary = ""
             self.parent.tab.isValidCertificate = false
           }
           completionHandler(.cancelAuthenticationChallenge, nil)
         }
       } else {
+        print("certificate - false - 11")
         DispatchQueue.main.async {
+          print("certificate - false - 22")
           self.parent.tab.certificateSummary = ""
           self.parent.tab.isValidCertificate = false
         }
@@ -623,6 +645,7 @@ struct WebNSView: NSViewRepresentable {
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     print("웹뷰 업데이트 시작")
+    print("self.parent.tab.isValidCertificate: \(tab.isValidCertificate)")
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
@@ -650,6 +673,7 @@ struct WebNSView: NSViewRepresentable {
     if tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
+      context.coordinator.isProgress = true
       print("새로운 검색으로 요청된 URL 로드")
       context.coordinator.load(url: tab.originURL, in: webView)
       return
@@ -662,8 +686,11 @@ struct WebNSView: NSViewRepresentable {
     }
 
     print("웹페이지 내에서의 페이지 이동 요청으로, 웹뷰 URL로 다시 리로드 - 재귀")
-    print(webviewURL)
-    tab.updateURLByBrowser(url: webviewURL)
+    let isClearCertificate = webviewURL.host != tab.originURL.host
+//    print("webviewURL.host: \(webviewURL.host)")
+//    print("tab.originURL.host: \(tab.originURL.host)")
+//    print("isClearCertificate: \(isClearCertificate)")
+    tab.updateURLByBrowser(url: webviewURL, isClearCertificate: isClearCertificate)
   }
 }
 
