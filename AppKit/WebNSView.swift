@@ -75,7 +75,13 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-      parent.tab.pageProgress = webView.estimatedProgress
+      print("didStartProvisionalNavigation")
+      print(webView.estimatedProgress)
+//      if parent.tab.pageProgress == 0.1 {
+      withAnimation {
+        parent.tab.pageProgress = webView.estimatedProgress
+      }
+//      }
     }
     
 //    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -121,7 +127,11 @@ struct WebNSView: NSViewRepresentable {
       let group = DispatchGroup()
       
       DispatchQueue.main.async {
-        self.parent.tab.pageProgress = webView.estimatedProgress
+        print("didFinish")
+        print(webView.estimatedProgress)
+        withAnimation {
+          self.parent.tab.pageProgress = webView.estimatedProgress
+        }
         self.parent.tab.isBack = webView.canGoBack
         self.parent.tab.isForward = webView.canGoForward
         self.parent.tab.historyBackList = webView.backForwardList.backList
@@ -325,7 +335,7 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
       print("Load failed with error: \(error.localizedDescription)")
-      parent.tab.pageProgress = webView.estimatedProgress
+//      parent.tab.pageProgress = webView.estimatedProgress
       if (error as NSError).code == NSURLErrorCancelled {
         return
       }
@@ -338,7 +348,7 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-      parent.tab.pageProgress = webView.estimatedProgress
+//      parent.tab.pageProgress = webView.estimatedProgress
       handleWebViewError(webView: webView, error: error)
     }
     
@@ -652,6 +662,7 @@ struct WebNSView: NSViewRepresentable {
     }
 
     print("웹페이지 내에서의 페이지 이동 요청으로, 웹뷰 URL로 다시 리로드 - 재귀")
+    print(webviewURL)
     tab.updateURLByBrowser(url: webviewURL)
   }
 }

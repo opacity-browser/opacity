@@ -90,7 +90,7 @@ struct SiteOptionDialog: View {
       }
       
       Divider()
-        .padding(.vertical, 10)
+        .padding(.vertical, 15)
       
       HStack(spacing: 0) {
         Text(NSLocalizedString("Tracker Blocking", comment: ""))

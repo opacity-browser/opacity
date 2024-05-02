@@ -26,6 +26,8 @@ struct SearchAutoCompleteBox: View {
   var searchHistoryGroups: [SearchHistoryGroup]
   var visitHistoryGroups: [VisitHistoryGroup]
   
+  var tabWidth: CGFloat
+  
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
   
@@ -39,21 +41,48 @@ struct SearchAutoCompleteBox: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      HStack(spacing: 0) {
-        if tab.isEditSearch {
-          HStack(spacing: 0) {
-            if let settings = generalSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
-              let searchEngine = settings.searchEngine
-              let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
-              if let searchEngineFavicon = colorScheme == .dark ? searchEngineData?.faviconWhite : searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
-                VStack(spacing: 0) {
-                  Image(nsImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: 15, maxHeight: 15)
-                    .clipped()
+      ZStack {
+        if !tab.isEditSearch {
+          Rectangle()
+            .frame(maxWidth: .infinity, maxHeight: 32)
+            .foregroundColor(Color("InputBG"))
+            .overlay {
+              HStack(spacing: 0) {
+                Rectangle()
+                  .foregroundColor(Color("Point"))
+                  .frame(maxWidth: CGFloat(tabWidth) * CGFloat(tab.pageProgress), maxHeight: 2)
+//                  .animation(.linear(duration: 0.5), value: tab.pageProgress)
+                if tab.pageProgress < 1.0 {
+                  Spacer()
                 }
-                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+              }
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        
+        HStack(spacing: 0) {
+          if tab.isEditSearch {
+            HStack(spacing: 0) {
+              if let settings = generalSettings.first, !StringURL.checkURL(url: tab.inputURL), tab.inputURL != "" {
+                let searchEngine = settings.searchEngine
+                let searchEngineData = SEARCH_ENGINE_LIST.first(where: { $0.name == searchEngine })
+                if let searchEngineFavicon = colorScheme == .dark ? searchEngineData?.faviconWhite : searchEngineData?.favicon, let uiImage = decodeBase64ToNSImage(base64: searchEngineFavicon) {
+                  VStack(spacing: 0) {
+                    Image(nsImage: uiImage)
+                      .resizable()
+                      .aspectRatio(contentMode: .fill)
+                      .frame(maxWidth: 15, maxHeight: 15)
+                      .clipped()
+                  }
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                } else {
+                  Image(systemName: "magnifyingglass")
+                    .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                    .font(.system(size: 13))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .foregroundColor(Color("Icon"))
+                }
               } else {
                 Image(systemName: "magnifyingglass")
                   .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
@@ -61,162 +90,155 @@ struct SearchAutoCompleteBox: View {
                   .clipShape(RoundedRectangle(cornerRadius: 14))
                   .foregroundColor(Color("Icon"))
               }
-            } else {
-              Image(systemName: "magnifyingglass")
-                .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-                .font(.system(size: 13))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .foregroundColor(Color("Icon"))
             }
-          }
-          .padding(.leading, 7)
-        } else {
-          Button {
-            self.isSiteDialog.toggle()
-          } label: {
-            HStack(spacing: 0) {
-              if tab.originURL.scheme == "opacity" || tab.isValidCertificate {
-                Image(systemName: "lock.fill")
-                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-                  .clipShape(RoundedRectangle(cornerRadius: 14))
-                  .font(.system(size: 13))
-                  .fontWeight(.medium)
-                  .foregroundColor(Color("Icon"))
-              } else {
-                Image(systemName: "exclamationmark.triangle.fill")
-                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-                  .clipShape(RoundedRectangle(cornerRadius: 14))
-                  .font(.system(size: 13))
-                  .fontWeight(.medium)
-                  .foregroundColor(Color("AlertText"))
-              }
-            }
-            .background(Color("InputBG"))
-            .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-              SiteOptionDialog(service: service, browser: browser, tab: tab)
-            }
-          }
-          .padding(.leading, 7)
-          .buttonStyle(.plain)
-        }
-        
-        ZStack {
-          if !tab.isEditSearch {
-            HStack(spacing: 0) {
-              Text(tab.printURL)
-                .font(.system(size: 13.5))
-                .padding(.leading, 4)
-                .frame(height: 32)
-                .lineLimit(1)
-                .truncationMode(.tail)
-              Spacer()
-            }
-          }
-          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
-            .padding(.leading, tab.isEditSearch ? 4 : 9)
-            .frame(height: tab.isEditSearch ? 36 : 32)
-            .overlay {
-              if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
-                let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
-                HStack(spacing: 0) {
-                  VStack(spacing: 0) {
-                    Text("\(autoCompleteText)")
-                      .font(.system(size: 13.5))
-                  }
-                  .frame(height: 16)
-                  .background(Color("AccentColor").opacity(0.3))
-                  .padding(.leading, 5)
-                  .padding(.leading, inputTextWidth(tab.inputURL))
-                  Spacer()
+            .padding(.leading, 7)
+          } else {
+            Button {
+              self.isSiteDialog.toggle()
+            } label: {
+              HStack(spacing: 0) {
+                if tab.originURL.scheme == "opacity" || tab.isValidCertificate {
+                  Image(systemName: "lock.fill")
+                    .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .font(.system(size: 13))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Icon"))
+                } else {
+                  Image(systemName: "exclamationmark.triangle.fill")
+                    .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .font(.system(size: 13))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("AlertText"))
                 }
               }
+              .background(Color("InputBG"))
+              .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
+                SiteOptionDialog(service: service, browser: browser, tab: tab)
+              }
             }
-            .onKeyPress(.upArrow) {
-              if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
-                DispatchQueue.main.async {
-                  tab.isChangeByKeyDown = true
-                  if let choiceIndex = tab.autoCompleteIndex {
-                    if choiceIndex > 0 {
-                      tab.autoCompleteIndex = choiceIndex - 1
+            .padding(.leading, 7)
+            .buttonStyle(.plain)
+          }
+          
+          ZStack {
+            if !tab.isEditSearch {
+              HStack(spacing: 0) {
+                Text(tab.printURL)
+                  .font(.system(size: 13.5))
+                  .padding(.leading, 4)
+                  .frame(height: 32)
+                  .lineLimit(1)
+                  .truncationMode(.tail)
+                Spacer()
+              }
+            }
+            SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
+              .padding(.leading, tab.isEditSearch ? 4 : 9)
+              .frame(height: tab.isEditSearch ? 36 : 32)
+              .overlay {
+                if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
+                  let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
+                  HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                      Text("\(autoCompleteText)")
+                        .font(.system(size: 13.5))
+                    }
+                    .frame(height: 16)
+                    .background(Color("AccentColor").opacity(0.3))
+                    .padding(.leading, 5)
+                    .padding(.leading, inputTextWidth(tab.inputURL))
+                    Spacer()
+                  }
+                }
+              }
+              .onKeyPress(.upArrow) {
+                if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                  DispatchQueue.main.async {
+                    tab.isChangeByKeyDown = true
+                    if let choiceIndex = tab.autoCompleteIndex {
+                      if choiceIndex > 0 {
+                        tab.autoCompleteIndex = choiceIndex - 1
+                      } else {
+                        tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
+                      }
                     } else {
                       tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
                     }
-                  } else {
-                    tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
-                  }
-                  
-                  if let choiceIndex = tab.autoCompleteIndex {
-                    let targetString = choiceIndex + 1 > tab.autoCompleteList.count
-                    ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
-                    : tab.autoCompleteList[choiceIndex].searchText
-                    tab.inputURL = targetString
-                  }
-                }
-                return .handled
-              }
-              return .ignored
-            }
-            .onKeyPress(.downArrow) {
-              if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
-                DispatchQueue.main.async {
-                  tab.isChangeByKeyDown = true
-                  if let choiceIndex = tab.autoCompleteIndex {
-                    if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > choiceIndex + 1 {
-                      tab.autoCompleteIndex = choiceIndex + 1
-                    } else {
-                      tab.autoCompleteIndex = 0
+                    
+                    if let choiceIndex = tab.autoCompleteIndex {
+                      let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                      ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                      : tab.autoCompleteList[choiceIndex].searchText
+                      tab.inputURL = targetString
                     }
-                  } else {
-                    tab.autoCompleteIndex = 0
-                  }
-                  
-                  if let choiceIndex = tab.autoCompleteIndex {
-                    let targetString = choiceIndex + 1 > tab.autoCompleteList.count
-                    ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
-                    : tab.autoCompleteList[choiceIndex].searchText
-                    tab.inputURL = targetString
-                  }
-                }
-                return .handled
-              }
-              return .ignored
-            }
-            .onKeyPress(.rightArrow) {
-              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
-                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
-                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
-                : tab.autoCompleteList[choiceIndex].searchText
-                
-                if targetString != tab.inputURL {
-                  DispatchQueue.main.async {
-                    tab.inputURL = targetString
                   }
                   return .handled
                 }
+                return .ignored
               }
-              return .ignored
-            }
-//            .onKeyPress(.leftArrow) {
-//              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
-//                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
-//                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
-//                : tab.autoCompleteList[choiceIndex].searchText
-//                
-//                if targetString != tab.inputURL {
-//                  DispatchQueue.main.async {
-//                    tab.inputURL = targetString
-//                  }
-//                  return .handled
-//                }
-//              }
-//              return .ignored
-//            }
-        }
+              .onKeyPress(.downArrow) {
+                if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                  DispatchQueue.main.async {
+                    tab.isChangeByKeyDown = true
+                    if let choiceIndex = tab.autoCompleteIndex {
+                      if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > choiceIndex + 1 {
+                        tab.autoCompleteIndex = choiceIndex + 1
+                      } else {
+                        tab.autoCompleteIndex = 0
+                      }
+                    } else {
+                      tab.autoCompleteIndex = 0
+                    }
+                    
+                    if let choiceIndex = tab.autoCompleteIndex {
+                      let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                      ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                      : tab.autoCompleteList[choiceIndex].searchText
+                      tab.inputURL = targetString
+                    }
+                  }
+                  return .handled
+                }
+                return .ignored
+              }
+              .onKeyPress(.rightArrow) {
+                if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                  let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                  ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                  : tab.autoCompleteList[choiceIndex].searchText
+                  
+                  if targetString != tab.inputURL {
+                    DispatchQueue.main.async {
+                      tab.inputURL = targetString
+                    }
+                    return .handled
+                  }
+                }
+                return .ignored
+              }
+            //            .onKeyPress(.leftArrow) {
+            //              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+            //                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+            //                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+            //                : tab.autoCompleteList[choiceIndex].searchText
+            //
+            //                if targetString != tab.inputURL {
+            //                  DispatchQueue.main.async {
+            //                    tab.inputURL = targetString
+            //                  }
+            //                  return .handled
+            //                }
+            //              }
+            //              return .ignored
+            //            }
+          }
           BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
             .padding(.leading, 5)
             .padding(.trailing, 10)
+        }
       }
-      
       if tab.isEditSearch && tab.inputURL != "" && (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
         SearchAutoComplete(browser: browser, tab: tab)
       }

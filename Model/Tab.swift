@@ -239,8 +239,8 @@ final class Tab: ObservableObject {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
-      self.isPageProgress = true
-      self.pageProgress = 0.0
+//      self.isPageProgress = true
+//      self.pageProgress = 0.0
       self.isEditSearch = false
       self.isValidCertificate = false
       self.certificateSummary = ""
@@ -256,11 +256,11 @@ final class Tab: ObservableObject {
       self.originURL = url
       self.inputURL = StringURL.setInputURL(url)
       self.printURL = StringURL.setPrintURL(url)
-      self.title = StringURL.setTitleURL(url)
-      self.favicon = nil
-      self.isPageProgress = true
-      self.pageProgress = 0.0
-      self.isEditSearch = false
+//      self.title = StringURL.setTitleURL(url)
+//      self.favicon = nil
+//      self.isPageProgress = true
+//      self.pageProgress = 0.0
+//      self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
     }
