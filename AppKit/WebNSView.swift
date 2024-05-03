@@ -350,7 +350,12 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+      print("didFail")
 //      parent.tab.pageProgress = webView.estimatedProgress
+      if (error as NSError).code == NSURLErrorCancelled {
+        return
+      }
+      
       handleWebViewError(webView: webView, error: error)
     }
     
@@ -358,6 +363,7 @@ struct WebNSView: NSViewRepresentable {
       let nsError = error as NSError
 //      parent.tab.webviewCheckError = true
       parent.tab.webviewIsError = true
+      print("handleWebViewError")
       print(nsError)
       switch nsError.code {
         //          case NSFileNoSuchFileError:
@@ -527,6 +533,7 @@ struct WebNSView: NSViewRepresentable {
       let request = URLRequest(url: url)
       let task = session.dataTask(with: request) { data, response, error in
         guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+          print(error)
           print("url session error")
           return
         }
