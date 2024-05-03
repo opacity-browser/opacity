@@ -122,3 +122,7 @@
 
 "SSL/TLS certificate error" = "SSL/TLS 인증서 오류";
 "A secure connection cannot be made because the certificate is not valid." = "인증서가 유효하지 않기 때문에 보안 연결을 설정할 수 없습니다.";
+
+"Blocked content" = "차단된 컨텐츠";
+"This content is blocked. To use the service, you must lower or turn off tracker blocking." = "이 콘텐츠는 차단되었습니다. 서비스를 이용하려면 추적기 차단을 낮추거나 꺼야 합니다.";
+"Go back" = "뒤로가기";

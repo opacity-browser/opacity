@@ -15,6 +15,7 @@ enum WebViewErrorType {
   case notConnectHost
   case notConnectInternet
   case occurredSSLError
+  case blockedContent
   case unknown
   case noError
 }

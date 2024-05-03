@@ -97,6 +97,7 @@
 		A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C976F2BD32A19009240B9 /* FindDialog.swift */; };
 		A17C97722BD33D0F009240B9 /* FindNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C97712BD33D0F009240B9 /* FindNSTextField.swift */; };
 		A181F3CD2BE51DA200FA111B /* occurred-ssl-error in Resources */ = {isa = PBXBuildFile; fileRef = A181F3CC2BE51DA200FA111B /* occurred-ssl-error */; };
+		A181F3CF2BE59CB100FA111B /* blocked-content in Resources */ = {isa = PBXBuildFile; fileRef = A181F3CE2BE59CB100FA111B /* blocked-content */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
 		A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9442B4A948C00B39BC8 /* Tab.swift */; };
 		A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9482B4ACECD00B39BC8 /* Navigation.swift */; };
@@ -208,6 +209,7 @@
 		A17C976F2BD32A19009240B9 /* FindDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDialog.swift; sourceTree = "<group>"; };
 		A17C97712BD33D0F009240B9 /* FindNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindNSTextField.swift; sourceTree = "<group>"; };
 		A181F3CC2BE51DA200FA111B /* occurred-ssl-error */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "occurred-ssl-error"; sourceTree = "<group>"; };
+		A181F3CE2BE59CB100FA111B /* blocked-content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "blocked-content"; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A188C9442B4A948C00B39BC8 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		A188C9482B4ACECD00B39BC8 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 		A12D053C2B600C4C00CBC6B2 /* Scheme */ = {
 			isa = PBXGroup;
 			children = (
+				A181F3CE2BE59CB100FA111B /* blocked-content */,
 				A181F3CC2BE51DA200FA111B /* occurred-ssl-error */,
 				A10DA6712BB3952D0053913D /* settings */,
 				A16BCB062B944ECD004639F2 /* not-connect-internet */,
@@ -603,6 +606,7 @@
 				A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */,
 				A16BCB082B944ECD004639F2 /* not-find-host in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
+				A181F3CF2BE59CB100FA111B /* blocked-content in Resources */,
 				A16BCB002B93B38E004639F2 /* not-connect-host in Resources */,
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,

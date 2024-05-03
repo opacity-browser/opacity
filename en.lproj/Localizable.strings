@@ -123,3 +123,7 @@
 
 "SSL/TLS certificate error" = "SSL/TLS certificate error";
 "A secure connection cannot be made because the certificate is not valid." = "A secure connection cannot be made because the certificate is not valid.";
+
+"Blocked content" = "Blocked content";
+"This content is blocked. To use the service, you must lower or turn off tracker blocking." = "This content is blocked. To use the service, you must lower or turn off tracker blocking.";
+"Go back" = "Go back";
