@@ -14,6 +14,7 @@ enum WebViewErrorType {
   case notFindHost
   case notConnectHost
   case notConnectInternet
+  case occurredSSLError
   case unknown
   case noError
 }
@@ -246,9 +247,6 @@ final class Tab: ObservableObject {
       self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
-      withAnimation {
-        self.pageProgress = 0.1
-      }
     }
   }
   
@@ -272,6 +270,7 @@ final class Tab: ObservableObject {
       
       if isClearCertificate {
         self.isUpdateBySearch = true
+        self.webviewIsError = false
         self.isValidCertificate = false
         self.certificateSummary = ""
       }

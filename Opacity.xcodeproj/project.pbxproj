@@ -96,6 +96,7 @@
 		A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */; };
 		A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C976F2BD32A19009240B9 /* FindDialog.swift */; };
 		A17C97722BD33D0F009240B9 /* FindNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C97712BD33D0F009240B9 /* FindNSTextField.swift */; };
+		A181F3CD2BE51DA200FA111B /* occurred-ssl-error in Resources */ = {isa = PBXBuildFile; fileRef = A181F3CC2BE51DA200FA111B /* occurred-ssl-error */; };
 		A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C93D2B4A551B00B39BC8 /* ContentView.swift */; };
 		A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9442B4A948C00B39BC8 /* Tab.swift */; };
 		A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9482B4ACECD00B39BC8 /* Navigation.swift */; };
@@ -206,6 +207,7 @@
 		A17C97632BD293C7009240B9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		A17C976F2BD32A19009240B9 /* FindDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDialog.swift; sourceTree = "<group>"; };
 		A17C97712BD33D0F009240B9 /* FindNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindNSTextField.swift; sourceTree = "<group>"; };
+		A181F3CC2BE51DA200FA111B /* occurred-ssl-error */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "occurred-ssl-error"; sourceTree = "<group>"; };
 		A188C93D2B4A551B00B39BC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A188C9442B4A948C00B39BC8 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		A188C9482B4ACECD00B39BC8 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		A12D053C2B600C4C00CBC6B2 /* Scheme */ = {
 			isa = PBXGroup;
 			children = (
+				A181F3CC2BE51DA200FA111B /* occurred-ssl-error */,
 				A10DA6712BB3952D0053913D /* settings */,
 				A16BCB062B944ECD004639F2 /* not-connect-internet */,
 				A16BCB052B944ECD004639F2 /* not-find-host */,
@@ -593,6 +596,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A181F3CD2BE51DA200FA111B /* occurred-ssl-error in Resources */,
 				A16BCB092B944ECD004639F2 /* not-connect-internet in Resources */,
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
 				A127D49C2BDA57F80007D410 /* blockingLevel2Rules.json in Resources */,

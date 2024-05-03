@@ -50,6 +50,9 @@ final class OpacityScriptHandler {
     
     if let value = value {
       switch name {
+        case "replacePage":
+          script = replacePage(value)
+          break
         case "goPage":
           script = goPage(value)
           break
@@ -563,6 +566,14 @@ final class OpacityScriptHandler {
       window.opacityResponse.getPageStrings({
         data: "error"
       })
+    """
+  }
+  
+  func replacePage(_ address: String) -> String? {
+    
+    tab.webviewIsError = false
+    return """
+      window.location.replace("\(address)")
     """
   }
   

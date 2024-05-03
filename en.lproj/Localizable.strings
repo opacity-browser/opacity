@@ -120,3 +120,6 @@
 "This is a page provided inside the app." = "This is a page provided inside the app.";
 "Certificate summary:" = "Certificate summary:";
 "This connection is not secure." = "This connection is not secure.";
+
+"SSL/TLS certificate error" = "SSL/TLS certificate error";
+"A secure connection cannot be made because the certificate is not valid." = "A secure connection cannot be made because the certificate is not valid.";
