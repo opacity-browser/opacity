@@ -21,12 +21,7 @@ struct WebNSView: NSViewRepresentable {
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
     var parent: WebNSView
-//    var errorPages: [WKBackForwardListItem: URL] = [:]
-//    var errorOriginURL: URL?
-    var currentURL: URL?
-    var isProgress: Bool = false
-    var certificateInfo: [String: String] = [:]
-    var isUsingBackOrForward: Bool = false
+    var cacheErrorURL: URL?
     
     init(_ parent: WebNSView) {
       self.parent = parent
@@ -83,71 +78,20 @@ struct WebNSView: NSViewRepresentable {
           self.parent.tab.pageProgress = webView.estimatedProgress
         }
       }
-      
-//      if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
-//        DispatchQueue.main.async {
-////          self.parent.tab.updateURLByBrowser(url: webviewURL, isClearCertificate: true)
-//          self.checkedSSLCertificate(url: webviewURL)
-//          self.parent.tab.redirectURLByBrowser(url: webviewURL)
-//        }
-//      }
-//      if let webviewURL = webView.url, let host = webviewURL.host,
-//          parent.tab.webviewIsError == false,
-//          webviewURL != parent.tab.originURL {
-//        
-//        DispatchQueue.main.async {
-//          print("navWebviewURL: \(webviewURL)")
-//          print("navTabURL: \(self.parent.tab.originURL)")
-//          
-//          withAnimation {
-//            self.parent.tab.pageProgress = webView.estimatedProgress
-//          }
-//          
-//          if host != self.parent.tab.originURL.host && self.isUsingBackOrForward == false {
-//            self.parent.tab.updateURLByBrowser(url: webviewURL, isClearCertificate: true)
-//          } else {
-//            if self.isUsingBackOrForward == true {
-//              if let summary = self.certificateInfo[host] {
-//                self.parent.tab.isValidCertificate = true
-//                self.parent.tab.certificateSummary = summary
-//              } else {
-//                self.parent.tab.isValidCertificate = false
-//                self.parent.tab.certificateSummary = ""
-//              }
-//              self.isUsingBackOrForward = false
-//              print("clear Back or Forward")
-//            }
-//            self.parent.tab.redirectURLByBrowser(url: webviewURL)
-//          }
-//        }
-//      }
     }
     
-//    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-//      parent.tab.webviewIsError = false
-//      if parent.tab.webviewCheckError {
-//        parent.tab.webviewCheckError = false
-//        parent.tab.webviewIsError = true
-//        
-//        if let errorURL = errorOriginURL, let currentItem = getCurrentItem(of: webView) {
-//          errorPages[currentItem] = errorURL
-//          errorOriginURL = nil
-//        }
-//      } else {
-//        if let currentItem = getCurrentItem(of: webView), let originalURL = errorPages[currentItem] {
-//          load(url: originalURL, in: webView)
-//          errorPages.removeValue(forKey: currentItem)
-//        }
-//      }
-//    }
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+      if let webviewURL = webView.url, webviewURL != self.parent.tab.originURL {
+        self.checkedSSLCertificate(url: webviewURL)
+        if let errorContnetURL = self.cacheErrorURL, self.parent.tab.webviewIsError {
+          self.parent.tab.redirectURLByBrowser(url: errorContnetURL)
+        } else {
+          self.parent.tab.redirectURLByBrowser(url: webviewURL)
+        }
+      }
+    }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//      print("decidePolicyFor")
-//      if navigationAction.navigationType == .backForward {
-//        print("is Back or Forward")
-//        isUsingBackOrForward = true
-//      }
-      
       guard let _ = navigationAction.request.url else {
         decisionHandler(.cancel)
         return
@@ -162,9 +106,9 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-      print("didReceiveServerRedirectForProvisionalNavigation")
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
         DispatchQueue.main.async {
+          self.checkedSSLCertificate(url: webviewURL)
           self.parent.tab.redirectURLByBrowser(url: webviewURL)
         }
       }
@@ -182,19 +126,6 @@ struct WebNSView: NSViewRepresentable {
         self.parent.tab.isForward = webView.canGoForward
         self.parent.tab.historyBackList = webView.backForwardList.backList
         self.parent.tab.historyForwardList = webView.backForwardList.forwardList
-        
-        if let webviewURL = webView.url {
-          print("webviewURL: \(webviewURL)")
-          print("self.parent.tab.originURL: \(self.parent.tab.originURL)")
-          self.checkedSSLCertificate(url: webviewURL)
-          if webviewURL != self.parent.tab.originURL {
-            if webviewURL.scheme == "opacity" {
-              self.parent.tab.redirectURLByBrowser(url: self.parent.tab.originURL)
-            } else {
-              self.parent.tab.redirectURLByBrowser(url: webviewURL)
-            }
-          }
-        }
       }
       
       let historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
@@ -209,7 +140,7 @@ struct WebNSView: NSViewRepresentable {
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         let headTitle = parent.tab.printURL
         let href = parent.tab.originURL
-        var refreshBtn = NSLocalizedString("Refresh", comment: "")
+        let refreshBtn = NSLocalizedString("Refresh", comment: "")
         var title = ""
         var message = ""
         
@@ -233,7 +164,6 @@ struct WebNSView: NSViewRepresentable {
           case .blockedContent:
             title = NSLocalizedString("Blocked content", comment: "")
             message = NSLocalizedString("This content is blocked. To use the service, you must lower or turn off tracker blocking.", comment: "")
-            refreshBtn = NSLocalizedString("Go back", comment: "")
             break
           case .unknown:
             title = NSLocalizedString("Unknown error", comment: "")
@@ -402,22 +332,18 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-      print("Load failed with error: \(error.localizedDescription)")
-      parent.tab.pageProgress = webView.estimatedProgress
+      print("didFailProvisionalNavigation")
+      parent.tab.pageProgress = 1.0
       if (error as NSError).code == NSURLErrorCancelled {
         return
       }
-//      if let urlError = error as? URLError {
-//        if let failingURL = urlError.userInfo[NSURLErrorFailingURLErrorKey] as? URL {
-//          errorOriginURL = failingURL
-//        }
-//      }
+      
       handleWebViewError(webView: webView, error: error)
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
       print("didFail")
-      parent.tab.pageProgress = webView.estimatedProgress
+      parent.tab.pageProgress = 1.0
       if (error as NSError).code == NSURLErrorCancelled {
         return
       }
@@ -427,10 +353,14 @@ struct WebNSView: NSViewRepresentable {
     
     private func handleWebViewError(webView: WKWebView, error: Error) {
       let nsError = error as NSError
-//      parent.tab.webviewCheckError = true
-      parent.tab.webviewIsError = true
       print("handleWebViewError")
-      print(nsError)
+      print("Load failed with error: \(error.localizedDescription)")
+
+      parent.tab.webviewIsError = true
+      if let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL {
+        self.cacheErrorURL = failingURL
+      }
+      
       switch nsError.code {
         //          case NSFileNoSuchFileError:
         //            // 파일을 찾을 수 없음
@@ -564,9 +494,6 @@ struct WebNSView: NSViewRepresentable {
       let data = SecCertificateCopyData(certificate) as Data
       let x509 = try X509Certificate(data: data)
       if let cn = x509.subjectDistinguishedName {
-        print("host: \(host)")
-        print("cn: \(cn)")
-        print("list: \(x509.subjectAlternativeNames)")
         for pattern in x509.subjectAlternativeNames {
           if self.matchesDomain(pattern: pattern, host: host) {
             return cn
@@ -576,18 +503,22 @@ struct WebNSView: NSViewRepresentable {
       return nil
     }
     
+    private var URLSessionHost: String = ""
+    
     func checkedSSLCertificate(url: URL) {
-      if url.scheme == "opacity" {
-        return
-      }
-      
-      currentURL = url
-      
       DispatchQueue.main.async {
         self.parent.tab.certificateSummary = ""
         self.parent.tab.isValidCertificate = false
       }
       
+      if url.scheme == "opacity" {
+        return
+      }
+      
+      if let host = url.host {
+        self.URLSessionHost = host
+      }
+            
       let config = URLSessionConfiguration.default
       config.requestCachePolicy = .reloadIgnoringLocalCacheData
       config.urlCache = nil
@@ -603,14 +534,13 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-      if let serverTrust = challenge.protectionSpace.serverTrust, let host = currentURL?.host {
+      if let serverTrust = challenge.protectionSpace.serverTrust {
         var error: CFError?
         let isValid = SecTrustEvaluateWithError(serverTrust, &error)
         if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
           for certificate in certificateChain {
-            if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
+            if let _ = try? matchesHostCertificate(certificate: certificate, host: self.URLSessionHost) {
               let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
-              certificateInfo[host] = summary
               DispatchQueue.main.async {
                 self.parent.tab.certificateSummary = summary
                 self.parent.tab.isValidCertificate = true
@@ -623,114 +553,8 @@ struct WebNSView: NSViewRepresentable {
         }
       }
     }
-    
-//    func load(url: URL, in webView: WKWebView) {
-////      print("urlSession load start")
-////      print("currentURL: \(currentURL)")
-////      print("url: \(url)")
-//      if let currentURL = currentURL, currentURL == url, isProgress {
-//        print("동일한 URL로 진행중으로 load 실행하지 않음")
-//        return
-//      }
-//      
-//      if let currentURL = currentURL {
-//        print("load - currentURL: \(currentURL)")
-//        print("load - url: \(url)")
-//        print("load - isProgress: \(isProgress)")
-//        print("load - tabURL: \(self.parent.tab.originURL)")
-//      }
-//      
-//      currentURL = url
-//      isProgress = true
-//      print("load - 1")
-//      if url.scheme == "opacity" {
-//        webView.load(URLRequest(url: url))
-//        isProgress = false
-//        return
-//      }
-//      
-////      DispatchQueue.main.async {
-////        self.parent.tab.originURL = url
-////        self.parent.tab.updateURLByBrowser(url: url, isClearCertificate: false)
-////      }
-////      let config = URLSessionConfiguration.default
-////      config.requestCachePolicy = .reloadIgnoringLocalCacheData
-////      config.urlCache = nil
-//      let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-//      let request = URLRequest(url: url)
-//      let task = session.dataTask(with: request) { data, response, error in
-//        guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-//          print("url session error")
-//          DispatchQueue.main.async {
-//            self.parent.tab.webviewIsError = true
-//            self.parent.tab.webviewErrorType = .occurredSSLError
-//            if let schemeURL = URL(string:"opacity://occurred-ssl-error") {
-//              webView.load(URLRequest(url: schemeURL))
-//            }
-//          }
-//          self.isProgress = false
-//          return
-//        }
-//        
-//        DispatchQueue.main.async {
-//          print("load - 2")
-//          webView.load(request)
-//          self.isProgress = false
-//        }
-//      }
-//      task.resume()
-//    }
-//    
-//    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-//      print("url sesison start")
-//      
-//      if let serverTrust = challenge.protectionSpace.serverTrust, let host = currentURL?.host {
-//        var error: CFError?
-//        let isValid = SecTrustEvaluateWithError(serverTrust, &error)
-//        if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
-//          for certificate in certificateChain {
-//            if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
-//              let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
-//              certificateInfo[host] = summary
-//              print("certificate - true - 1")
-//              DispatchQueue.main.async {
-//                print("certificate - true - 2")
-//                self.parent.tab.certificateSummary = summary
-//                self.parent.tab.isValidCertificate = true
-//              }
-//            } else {
-//              print("certificate - true - 3")
-//            }
-//          }
-//          
-//          completionHandler(.useCredential, URLCredential(trust: serverTrust))
-//        } else {
-//          print("certificate - false - 1")
-//          DispatchQueue.main.async {
-//            print("certificate - false - 2")
-//            self.parent.tab.certificateSummary = ""
-//            self.parent.tab.isValidCertificate = false
-//          }
-//          completionHandler(.cancelAuthenticationChallenge, nil)
-//        }
-//      } else {
-//        print("certificate - false - 11")
-//        DispatchQueue.main.async {
-//          print("certificate - false - 22")
-//          self.parent.tab.certificateSummary = ""
-//          self.parent.tab.isValidCertificate = false
-//        }
-//        completionHandler(.cancelAuthenticationChallenge, nil)
-//      }
-//    }
-    
-//    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-//    }
-    
-    
   // end coordinator
   }
-    
   
   private func addContentBlockingRules(_ webView: WKWebView) {
     var blockingRules: String = "blockingLevel2Rules"
@@ -789,9 +613,7 @@ struct WebNSView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-    print("웹뷰 업데이트 시작")
-    print("self.parent.tab.isValidCertificate: \(tab.isValidCertificate)")
-    print("self.parent.tab.pageProgress: \(tab.pageProgress)")
+    // Word Search
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
@@ -800,26 +622,16 @@ struct WebNSView: NSViewRepresentable {
       }
     }
     
-    if !tab.isUpdateBySearch && tab.webviewIsError {
-      print("업데이트가 아니며, 오류로 인한 업데이트 - 종료")
+    // Interruption due to webview loading error
+    if tab.webviewIsError && !tab.isUpdateBySearch {
       return
     }
     
-    guard let webviewURL = webView.url else {
-      print("웹뷰의 url 없음 - 요청된 URL 로드")
-      webView.load(URLRequest(url: tab.originURL))
-      return
-    }
-    
-    if !tab.isUpdateBySearch && webviewURL == tab.originURL {
-      print("업데이트가 아니며 탭의 url과 웹뷰의 url이 같음 - 종료")
-      return
-    }
-    
-    if tab.isUpdateBySearch {
-      print("새로운 검색으로 요청된 URL 로드")
+    // Load new requested webview URL
+    if webView.url == nil || tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
+      context.coordinator.checkedSSLCertificate(url: tab.originURL)
       webView.load(URLRequest(url: tab.originURL))
       return
     }

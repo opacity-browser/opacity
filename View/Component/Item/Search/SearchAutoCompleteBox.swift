@@ -219,7 +219,6 @@ struct SearchAutoCompleteBox: View {
             .padding(.leading, 5)
             .padding(.trailing, 10)
             .onChange(of: tab.pageProgress) { oldValue, newValue in
-              print("progress: \(newValue)")
               if newValue == 1.0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                   withAnimation {

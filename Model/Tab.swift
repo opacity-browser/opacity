@@ -33,7 +33,6 @@ final class Tab: ObservableObject {
   var isUpdateBySearch: Bool = false
   
   var webviewIsError: Bool = false
-//  var webviewCheckError: Bool = false
   var webviewErrorType: WebViewErrorType = .noError
   
   @Published var title: String = ""
@@ -47,7 +46,6 @@ final class Tab: ObservableObject {
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
   
-  @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
   @Published var isLocationDialogIcon: Bool = false
@@ -241,7 +239,6 @@ final class Tab: ObservableObject {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
-//      self.pageProgress = 0.0
       self.isEditSearch = false
       self.isValidCertificate = false
       self.certificateSummary = ""
@@ -263,8 +260,6 @@ final class Tab: ObservableObject {
       self.originURL = url
       self.inputURL = StringURL.setInputURL(url)
       self.printURL = StringURL.setPrintURL(url)
-//      self.title = StringURL.setTitleURL(url)
-//      self.favicon = nil
       self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
