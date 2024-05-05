@@ -33,7 +33,7 @@ struct HistoryDialogItem: View {
             }
             .frame(maxWidth: 20, maxHeight: 20, alignment: .center)
           }
-          Text(siteData.title)
+          Text(siteData.title == "" ? item.url.absoluteString : siteData.title)
             .frame(maxWidth: 230, maxHeight: 22, alignment: .leading)
             .font(.system(size: 12))
             .padding(.leading, 5)

@@ -111,8 +111,13 @@ struct WebNSView: NSViewRepresentable {
 //      print("webView.url: \(webView.url)")
 //      print("request.url: \(navigationAction.request.url)")
 //      print("----")
+      guard let requestURL = navigationAction.request.url else {
+        decisionHandler(.cancel)
+        return
+      }
       
-      guard let _ = navigationAction.request.url else {
+      if navigationAction.modifierFlags.contains(.command) {
+        self.parent.browser.newTab(requestURL)
         decisionHandler(.cancel)
         return
       }
