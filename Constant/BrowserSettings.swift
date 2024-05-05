@@ -28,6 +28,7 @@ let SCREEN_MODE_LIST: [String] = [
 ]
 
 let RETENTION_PERIOD_LIST: [String] = [
+  DataRententionPeriodList.oneDay.rawValue,
   DataRententionPeriodList.oneWeek.rawValue,
   DataRententionPeriodList.oneMonth.rawValue,
   DataRententionPeriodList.indefinite.rawValue

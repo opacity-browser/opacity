@@ -23,6 +23,7 @@ enum ScreenModeList: String {
 }
 
 enum DataRententionPeriodList: String {
+  case oneDay = "1 Day"
   case oneWeek = "1 Week"
   case oneMonth = "1 Month"
   case indefinite = "Indefinite"

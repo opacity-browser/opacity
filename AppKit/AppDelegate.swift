@@ -35,6 +35,7 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
     guard let window = notification.object as? NSWindow else { return }
     let frameString = NSStringFromRect(window.frame)
     UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
+    AppDelegate.shared.deleteExpiredData()
   }
   
   func windowShouldClose(_ sender: NSWindow) -> Bool {
@@ -88,7 +89,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @MainActor
   let opacityModelContainer: ModelContainer = {
     let schema = Schema([GeneralSetting.self, DomainPermission.self, BookmarkGroup.self,  SearchHistoryGroup.self, VisitHistoryGroup.self, Favorite.self])
-    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+//    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
     do {
       let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
       
@@ -434,6 +436,46 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
       exitWindow.close()
       self.isTerminating = false
+    }
+  }
+  
+  @MainActor func deleteExpiredData() {
+    do {
+      let generalSettingDescriptor = FetchDescriptor<GeneralSetting>()
+      if let generalSetting = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(generalSettingDescriptor).first {
+        if generalSetting.retentionPeriod != DataRententionPeriodList.indefinite.rawValue {
+          let calendar = Calendar.current
+          let today = Date()
+          let searchHistory = FetchDescriptor<SearchHistory>()
+          let visitHistory = FetchDescriptor<VisitHistory>()
+          let searchHistories = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(searchHistory)
+          let visitHIstories = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(visitHistory)
+                    
+          for searchData in searchHistories {
+            let components = calendar.dateComponents([.day], from: searchData.createDate, to: today)
+            if let days = components.day {
+              if (generalSetting.retentionPeriod == DataRententionPeriodList.oneDay.rawValue && days >= 1)
+                  || (generalSetting.retentionPeriod == DataRententionPeriodList.oneWeek.rawValue && days >= 7)
+                  || (generalSetting.retentionPeriod == DataRententionPeriodList.oneMonth.rawValue && days >= 30) {
+                AppDelegate.shared.opacityModelContainer.mainContext.delete(searchData)
+              }
+            }
+          }
+
+          for visitData in visitHIstories {
+            let components = calendar.dateComponents([.day], from: visitData.createDate, to: today)
+            if let days = components.day {
+              if (generalSetting.retentionPeriod == DataRententionPeriodList.oneDay.rawValue && days >= 1)
+                  || (generalSetting.retentionPeriod == DataRententionPeriodList.oneWeek.rawValue && days >= 7)
+                  || (generalSetting.retentionPeriod == DataRententionPeriodList.oneMonth.rawValue && days >= 30) {
+                AppDelegate.shared.opacityModelContainer.mainContext.delete(visitData)
+              }
+            }
+          }
+        }
+      }
+    } catch {
+      fatalError("Could not deleteExpiredData ModelContainer: \(error)")
     }
   }
 }
