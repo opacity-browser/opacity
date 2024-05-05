@@ -23,7 +23,7 @@ struct HistoryDialogItem: View {
             HStack(spacing: 0) {
               VStack(spacing: 0) {
                 favicon
-                  .resizable() // 이미지 크기 조절 가능하게 함
+                  .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(maxWidth: 14, maxHeight: 14)
                   .clipShape(RoundedRectangle(cornerRadius: 4))
@@ -36,7 +36,14 @@ struct HistoryDialogItem: View {
           Text(siteData.title)
             .frame(maxWidth: 230, maxHeight: 22, alignment: .leading)
             .font(.system(size: 12))
-            .padding(.leading, siteData.favicon != nil ? 5 : 10)
+            .padding(.leading, 5)
+            .lineLimit(1)
+            .truncationMode(.tail)
+        } else {
+          Text(item.url.absoluteString)
+            .frame(maxWidth: 230, maxHeight: 22, alignment: .leading)
+            .font(.system(size: 12))
+            .padding(.leading, 5)
             .lineLimit(1)
             .truncationMode(.tail)
         }

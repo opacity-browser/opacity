@@ -54,6 +54,9 @@ final class Tab: ObservableObject {
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
   
+  // History
+  @Published var updateWebHistory: Bool = false
+  
   // Search
   @Published var isEditSearch: Bool = false
   @Published var autoCompleteList: [SearchHistoryGroup] = []

@@ -23,6 +23,7 @@ struct HistoryBackBtn: View {
       },
       longPressAction: {
         if tab.isBack {
+          self.tab.updateWebHistory = true
           self.isBackDialog = true
         }
       })
