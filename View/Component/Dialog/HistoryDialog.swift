@@ -13,14 +13,13 @@ struct HistoryDialog: View {
   @Binding var closeDialog: Bool
   
   var body: some View {
-    
     let historyList = isBack ? tab.historyBackList : tab.historyForwardList
-    
+    let reverseHistoryList = isBack ? historyList.reversed() : historyList
     VStack(spacing: 0) {
       VStack(spacing: 0) {
         ScrollView(.vertical, showsIndicators: true) {
           VStack(spacing: 0) {
-            ForEach(historyList, id: \.self) { item in
+            ForEach(reverseHistoryList, id: \.self) { item in
               HistoryDialogItem(tab: tab, item: item, closeDialog: $closeDialog)
             }
           }
@@ -30,7 +29,7 @@ struct HistoryDialog: View {
       }
       .padding(.vertical, 5)
     }
-    .frame(width: 240)
+    .frame(width: 240, height: (CGFloat(reverseHistoryList.count) * 32 + 20) > 300 ? 300 : CGFloat(reverseHistoryList.count) * 32 + 20)
     .background(GeometryReader { geometry in
       Color("DialogBG")
           .frame(width: geometry.size.width,

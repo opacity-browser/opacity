@@ -77,7 +77,14 @@ struct SearchAutoCompleteBox: View {
             self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
-              if tab.originURL.scheme != "opacity" && tab.isValidCertificate == false {
+              if tab.originURL.scheme == "opacity" || tab.isValidCertificate == true {
+                Image(systemName: "lock.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("Icon"))
+              } else if tab.isValidCertificate == false {
                 Image(systemName: "exclamationmark.triangle.fill")
                   .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
                   .clipShape(RoundedRectangle(cornerRadius: 14))
@@ -91,6 +98,7 @@ struct SearchAutoCompleteBox: View {
                   .font(.system(size: 13))
                   .fontWeight(.medium)
                   .foregroundColor(Color("Icon"))
+                  .opacity(0.5)
               }
             }
             .background(Color("InputBG"))
@@ -205,9 +213,7 @@ struct SearchAutoCompleteBox: View {
           .onChange(of: tab.pageProgress) { oldValue, newValue in
             if newValue == 1.0 {
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                withAnimation {
-                  tab.pageProgress = 0
-                }
+                tab.pageProgress = 0
               }
             }
           }

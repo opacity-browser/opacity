@@ -25,6 +25,22 @@ struct WebNSView: NSViewRepresentable {
     
     init(_ parent: WebNSView) {
       self.parent = parent
+      super.init()
+      self.parent.tab.webview.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
+      self.parent.tab.webview.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+      DispatchQueue.main.async {
+        self.parent.tab.isBack = self.parent.tab.webview.canGoBack
+        self.parent.tab.isForward = self.parent.tab.webview.canGoForward
+      }
+    }
+
+    deinit {
+      print("deinit")
+      self.parent.tab.webview.removeObserver(self, forKeyPath: "canGoBack")
+      self.parent.tab.webview.removeObserver(self, forKeyPath: "canGoForward")
     }
     
     // Find Text
@@ -74,24 +90,28 @@ struct WebNSView: NSViewRepresentable {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
       print("didStartProvisionalNavigation")
       DispatchQueue.main.async {
-        withAnimation {
-          self.parent.tab.pageProgress = webView.estimatedProgress
-        }
+        self.parent.tab.pageProgress = webView.estimatedProgress
       }
     }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+      print("didCommit")
       if let webviewURL = webView.url, webviewURL != self.parent.tab.originURL {
-        self.checkedSSLCertificate(url: webviewURL)
         if let errorContnetURL = self.cacheErrorURL, self.parent.tab.webviewIsError {
+          self.checkedSSLCertificate(url: errorContnetURL)
           self.parent.tab.redirectURLByBrowser(url: errorContnetURL)
         } else {
+          self.checkedSSLCertificate(url: webviewURL)
           self.parent.tab.redirectURLByBrowser(url: webviewURL)
         }
       }
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//      print("webView.url: \(webView.url)")
+//      print("request.url: \(navigationAction.request.url)")
+//      print("----")
+      
       guard let _ = navigationAction.request.url else {
         decisionHandler(.cancel)
         return
@@ -105,7 +125,11 @@ struct WebNSView: NSViewRepresentable {
       decisionHandler(.allow)
     }
     
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//    }
+    
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+      print("didReceiveServerRedirectForProvisionalNavigation")
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
         DispatchQueue.main.async {
           self.checkedSSLCertificate(url: webviewURL)
@@ -119,13 +143,7 @@ struct WebNSView: NSViewRepresentable {
       let group = DispatchGroup()
       
       DispatchQueue.main.async {
-        withAnimation {
-          self.parent.tab.pageProgress = 1.0
-        }
-        self.parent.tab.isBack = webView.canGoBack
-        self.parent.tab.isForward = webView.canGoForward
-        self.parent.tab.historyBackList = webView.backForwardList.backList
-        self.parent.tab.historyForwardList = webView.backForwardList.forwardList
+        self.parent.tab.pageProgress = 1.0
       }
       
       let historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
@@ -618,13 +636,23 @@ struct WebNSView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    // History
+    if tab.updateWebHistory {
+      DispatchQueue.main.async {
+        tab.historyBackList = webView.backForwardList.backList
+        tab.historyForwardList = webView.backForwardList.forwardList
+        tab.updateWebHistory = false
+      }
+      return
+    }
+    
     // Word Search
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
         context.coordinator.searchWebView(webView, findText: tab.findKeyword, isPrev: tab.isFindPrev)
-        return
       }
+      return
     }
     
     // Interruption due to webview loading error

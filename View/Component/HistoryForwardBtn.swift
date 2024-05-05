@@ -23,6 +23,7 @@ struct HistoryForwardBtn: View {
       },
       longPressAction: {
         if tab.isForward {
+          self.tab.updateWebHistory = true
           self.isForwardDialog = true
         }
       })
