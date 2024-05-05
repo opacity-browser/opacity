@@ -119,3 +119,9 @@
 "This is a page provided inside the app." = "애플리케이션 내부의 페이지입니다.";
 "Certificate summary:" = "인증서 요약:";
 "This connection is not secure." = "이 연결은 안전하지 않습니다.";
+
+"SSL/TLS certificate error" = "SSL/TLS 인증서 오류";
+"A secure connection cannot be made because the certificate is not valid." = "인증서가 유효하지 않기 때문에 보안 연결을 설정할 수 없습니다.";
+
+"Blocked content" = "차단된 컨텐츠";
+"This content is blocked. To use the service, you must lower or turn off tracker blocking." = "이 콘텐츠는 차단되었습니다. 서비스를 이용하시려면 트래커 차단 수준을 조정해 주세요.";

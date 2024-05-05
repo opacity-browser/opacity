@@ -12,8 +12,8 @@ struct TabItem: View {
   @ObservedObject var tab: Tab
   @Binding var activeTabId: UUID?
   @Binding var tabWidth: CGFloat
-  @Binding var loadingAnimation: Bool
   
+  @State var loadingAnimation: Bool = false
   @State var isTabHover: Bool = false
   
   var isActive: Bool {
@@ -24,37 +24,32 @@ struct TabItem: View {
     ZStack {
       ZStack {
         HStack(spacing: 0) {
-          if let favicon = tab.favicon {
+          if !tab.isInit && (tab.pageProgress > 0 || tab.favicon != nil) {
             HStack(spacing: 0) {
-              VStack(spacing: 0) {
-                favicon
-                  .resizable()
-                  .aspectRatio(contentMode: .fill)
-                  .frame(maxWidth: 14, maxHeight: 14)
-                  .clipShape(RoundedRectangle(cornerRadius: 4))
-                  .clipped()
+              if !tab.isInit && tab.pageProgress > 0 {
+                VStack(spacing: 0) {
+                  Circle()
+                    .trim(from: 0, to: 0.7)
+                    .stroke(Color("Icon").opacity(0.5), lineWidth: 2)
+                    .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
+                    .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
+                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
+                }
+                .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
+              } else if let favicon = tab.favicon {
+                VStack(spacing: 0) {
+                  favicon
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: 14, maxHeight: 14)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .clipped()
+                }
+                .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
               }
-              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
             }
-            .frame(maxWidth: 20, maxHeight: 20, alignment: .center)
-            .padding(.leading, tabWidth > 60 ? 8 : 0)
-          } else if !tab.isInit && tab.isPageProgress {
-            HStack(spacing: 0) {
-              VStack(spacing: 0) {
-                Circle()
-                  .trim(from: 0, to: 0.7)
-                  .stroke(Color("Icon").opacity(0.5), lineWidth: 2)
-                  .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
-                  .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
-                  .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
-                  .onAppear {
-                    self.loadingAnimation = true
-                  }
-              }
-              .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
-            }
-            .frame(maxWidth: 20, maxHeight: 20, alignment: .center)
-            .padding(.leading, tabWidth > 60 ? 8 : 0)
+            .frame(maxWidth: 16, maxHeight: 16, alignment: .center)
+            .padding(.leading, tabWidth > 60 ? 5 : 0)
           }
           
           if tabWidth > 60 || tab.favicon == nil {
@@ -62,7 +57,7 @@ struct TabItem: View {
               .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
               .foregroundColor(Color("UIText").opacity(isActive || isTabHover ? 1 : 0.8))
               .font(.system(size: 12))
-              .padding(.leading, !tab.isInit && (tab.favicon != nil || tab.isPageProgress) ? 5 : 10)
+              .padding(.leading, (!tab.isInit && (tab.favicon != nil || tab.pageProgress > 0)) ? 5 : 10)
               .padding(.trailing, 25)
               .lineLimit(1)
               .truncationMode(.tail)
@@ -71,6 +66,9 @@ struct TabItem: View {
         .opacity(tabWidth < 60 && isActive ? 0 : 1)
         .onHover { hovering in
           isTabHover = hovering
+        }
+        .onChange(of: tab.pageProgress) { _, nV in
+          self.loadingAnimation = nV > 0
         }
       }
       .frame(height: 29)

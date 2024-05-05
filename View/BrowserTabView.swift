@@ -25,8 +25,9 @@ struct BrowserTabView: View {
   var onClose: () -> Void
   
   @State var isTabHover: Bool = false
-  @State var loadingAnimation: Bool = false
   @State private var isCloseHover: Bool = false
+  
+  @State var cacheProgress: CGFloat = 0.0
   
   var isActive: Bool {
     return tab.id == activeTabId
@@ -45,7 +46,7 @@ struct BrowserTabView: View {
             Button {
             
             } label: {
-              TabItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation)
+              TabItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth)
                 .frame(maxWidth: 218)
             }
             .buttonStyle(StaticColorButtonStyle())
@@ -93,26 +94,32 @@ struct BrowserTabView: View {
         }
       }
       .frame(maxWidth: 220, maxHeight: 38)
-      .onChange(of: tab.isPageProgress) { _, newValue in
-        if newValue == false {
-          DispatchQueue.main.async {
-            loadingAnimation = false
-          }
-        }
-      }
-      .onChange(of: tab.pageProgress) { _, newValue in
-        if newValue == 1.0 {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            tab.isPageProgress = false
-            tab.pageProgress = 0.0
-          }
-        } else if newValue > 0.0 && newValue < 1.0 {
-          DispatchQueue.main.async {
-            tab.isPageProgress = true
-          }
-        }
-      }
+//      .onChange(of: tab.isPageProgress) { _, newValue in
+//        if newValue == false {
+//          DispatchQueue.main.async {
+//            loadingAnimation = false
+//          }
+//        }
+//      }
+//      .onChange(of: tab.pageProgress) { _, newValue in
+//        cacheProgress = newValue
+//        if newValue == 1.0 {
+////          checkAfterProgress()
+//          tab.pageProgress = 0.0
+//        }
+//      }
     }
   }
+  
+//  func checkAfterProgress() {
+//    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//      if self.cacheProgress == 1.0 {
+////        tab.isPageProgress = false
+//        tab.pageProgress = 0.0
+//      } else {
+//        checkAfterProgress()
+//      }
+//    }
+//  }
 }
 

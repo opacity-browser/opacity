@@ -21,9 +21,7 @@ struct WebNSView: NSViewRepresentable {
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
     var parent: WebNSView
-    var errorPages: [WKBackForwardListItem: URL] = [:]
-    var errorOriginURL: URL?
-    var currentURL: URL?
+    var cacheErrorURL: URL?
     
     init(_ parent: WebNSView) {
       self.parent = parent
@@ -74,29 +72,27 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-      parent.tab.pageProgress = webView.estimatedProgress
+      print("didStartProvisionalNavigation")
+      DispatchQueue.main.async {
+        withAnimation {
+          self.parent.tab.pageProgress = webView.estimatedProgress
+        }
+      }
     }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-      parent.tab.webviewIsError = false
-      if parent.tab.webviewCheckError {
-        parent.tab.webviewCheckError = false
-        parent.tab.webviewIsError = true
-        
-        if let errorURL = errorOriginURL, let currentItem = getCurrentItem(of: webView) {
-          errorPages[currentItem] = errorURL
-          errorOriginURL = nil
-        }
-      } else {
-        if let currentItem = getCurrentItem(of: webView), let originalURL = errorPages[currentItem] {
-          load(url: originalURL, in: webView)
-          errorPages.removeValue(forKey: currentItem)
+      if let webviewURL = webView.url, webviewURL != self.parent.tab.originURL {
+        self.checkedSSLCertificate(url: webviewURL)
+        if let errorContnetURL = self.cacheErrorURL, self.parent.tab.webviewIsError {
+          self.parent.tab.redirectURLByBrowser(url: errorContnetURL)
+        } else {
+          self.parent.tab.redirectURLByBrowser(url: webviewURL)
         }
       }
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-      guard let url = navigationAction.request.url else {
+      guard let _ = navigationAction.request.url else {
         decisionHandler(.cancel)
         return
       }
@@ -106,31 +102,26 @@ struct WebNSView: NSViewRepresentable {
         return
       }
       
-      if url.scheme == "http" {
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
-        components.scheme = "https"
-        
-        if let httpsUrl = components.url {
-          load(url: httpsUrl, in: webView)
-          decisionHandler(.cancel)
-          return
-        }
-      }
-      
       decisionHandler(.allow)
     }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
       if let webviewURL = webView.url, webviewURL != parent.tab.originURL {
-        load(url: webviewURL, in: webView)
+        DispatchQueue.main.async {
+          self.checkedSSLCertificate(url: webviewURL)
+          self.parent.tab.redirectURLByBrowser(url: webviewURL)
+        }
       }
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+      print("didFinish")
       let group = DispatchGroup()
       
       DispatchQueue.main.async {
-        self.parent.tab.pageProgress = webView.estimatedProgress
+        withAnimation {
+          self.parent.tab.pageProgress = 1.0
+        }
         self.parent.tab.isBack = webView.canGoBack
         self.parent.tab.isForward = webView.canGoForward
         self.parent.tab.historyBackList = webView.backForwardList.backList
@@ -145,6 +136,7 @@ struct WebNSView: NSViewRepresentable {
       }
       
       if parent.tab.webviewIsError {
+        print("error page init script")
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         let headTitle = parent.tab.printURL
         let href = parent.tab.originURL
@@ -165,6 +157,14 @@ struct WebNSView: NSViewRepresentable {
             title = NSLocalizedString("No internet connection", comment: "")
             message = NSLocalizedString("There is no internet connection.", comment: "")
             break
+          case .occurredSSLError:
+            title = NSLocalizedString("SSL/TLS certificate error", comment: "")
+            message = NSLocalizedString("A secure connection cannot be made because the certificate is not valid.", comment: "")
+            break
+          case .blockedContent:
+            title = NSLocalizedString("Blocked content", comment: "")
+            message = NSLocalizedString("This content is blocked. To use the service, you must lower or turn off tracker blocking.", comment: "")
+            break
           case .unknown:
             title = NSLocalizedString("Unknown error", comment: "")
             message = NSLocalizedString("An unknown error occurred.", comment: "")
@@ -184,6 +184,8 @@ struct WebNSView: NSViewRepresentable {
             message: '\(message)'})
          """)
         }
+        
+        parent.tab.webviewIsError = false
       }
       
       webView.evaluateJavaScript("""
@@ -223,33 +225,32 @@ struct WebNSView: NSViewRepresentable {
       var cacheFaviconURL: URL?
       group.enter()
       webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
-        guard let href = response as? String, let currentURL = webView.url else {
+        let unwantedCharacters = CharacterSet(charactersIn: "\n\r\t")
+        guard let href = response as? String, let currentURL = webView.url, href.components(separatedBy: unwantedCharacters).joined() != "" else {
           if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host  {
             if webviewURL.scheme != "opacity" {
               let faviconURL = scheme + "://" + host + "/favicon.ico"
               DispatchQueue.main.async {
                 cacheFaviconURL = URL(string: faviconURL)!
                 self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
-                group.leave()
               }
-            } else {
-              group.leave()
             }
-          } else {
-            group.leave()
           }
+          group.leave()
           return
         }
+      
+        let cleanedHref = href.components(separatedBy: unwantedCharacters).joined()
         
         let faviconURL: URL
-        if href.hasPrefix("http") {
-          faviconURL = URL(string: href)!
-        } else if href.hasPrefix("//") {
-          faviconURL = URL(string: "https:\(href)")!
-        } else if href.hasPrefix("/") {
+        if cleanedHref.hasPrefix("http") {
+          faviconURL = URL(string: cleanedHref)!
+        } else if cleanedHref.hasPrefix("//") {
+          faviconURL = URL(string: "https:\(cleanedHref)")!
+        } else if cleanedHref.hasPrefix("/") {
           var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
           
-          let splitHref = href.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+          let splitHref = cleanedHref.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
           let pathPart = String(splitHref[0])
           let queryPart = splitHref.count > 1 ? String(splitHref[1]) : nil
           
@@ -258,7 +259,7 @@ struct WebNSView: NSViewRepresentable {
           
           faviconURL = components.url!
         } else {
-          faviconURL = URL(string: href, relativeTo: currentURL)!
+          faviconURL = URL(string: cleanedHref, relativeTo: currentURL)!
         }
         
         DispatchQueue.main.async {
@@ -269,15 +270,13 @@ struct WebNSView: NSViewRepresentable {
       }
       
       group.notify(queue: .main) {
-        if let title = cacheTitle {
+        if let title = cacheTitle, let currentURL = webView.url {
           let historySite = HistorySite(title: title, url: self.parent.tab.originURL)
           if let faviconURL = cacheFaviconURL {
             historySite.loadFavicon(url: faviconURL)
-            if let currentURL = webView.url {
-              Task {
-                let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-                await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
-              }
+            Task {
+              let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+              await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
             }
           }
           self.parent.tab.historySiteDataList.append(historySite)
@@ -333,22 +332,87 @@ struct WebNSView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-      print("Load failed with error: \(error.localizedDescription)")
-      parent.tab.pageProgress = webView.estimatedProgress
+      print("didFailProvisionalNavigation")
+      parent.tab.pageProgress = 1.0
       if (error as NSError).code == NSURLErrorCancelled {
         return
       }
-      if let urlError = error as? URLError {
-        if let failingURL = urlError.userInfo[NSURLErrorFailingURLErrorKey] as? URL {
-          errorOriginURL = failingURL
-        }
-      }
+      
       handleWebViewError(webView: webView, error: error)
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-      parent.tab.pageProgress = webView.estimatedProgress
+      print("didFail")
+      parent.tab.pageProgress = 1.0
+      if (error as NSError).code == NSURLErrorCancelled {
+        return
+      }
+      
       handleWebViewError(webView: webView, error: error)
+    }
+    
+    private func handleWebViewError(webView: WKWebView, error: Error) {
+      let nsError = error as NSError
+      print("handleWebViewError")
+      print("Load failed with error: \(error.localizedDescription)")
+
+      parent.tab.webviewIsError = true
+      if let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL {
+        self.cacheErrorURL = failingURL
+      }
+      
+      switch nsError.code {
+        //          case NSFileNoSuchFileError:
+        //            // 파일을 찾을 수 없음
+        //          case NSFileReadNoPermissionError:
+        //            // 파일 읽기 권한 없음
+        //          case NSFileReadCorruptFileError:
+        //            // 손상된 파일
+        case 104:
+          parent.tab.webviewErrorType = .blockedContent
+          if let schemeURL = URL(string:"opacity://blocked-content") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        case WebKitErrorFrameLoadInterruptedByPolicyChange:
+          print("Frame load interrupted by policy change: \(error.localizedDescription)")
+          break
+        case NSURLErrorCannotFindHost:
+          parent.tab.webviewErrorType = .notFindHost
+          if let schemeURL = URL(string:"opacity://not-find-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        case NSURLErrorCannotConnectToHost:
+          parent.tab.webviewErrorType = .notConnectHost
+          if let schemeURL = URL(string:"opacity://not-connect-host") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        case NSURLErrorSecureConnectionFailed:
+          parent.tab.webviewErrorType = .occurredSSLError
+          if let schemeURL = URL(string:"opacity://occurred-ssl-error") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        case NSURLErrorServerCertificateHasBadDate:
+          parent.tab.webviewErrorType = .occurredSSLError
+          if let schemeURL = URL(string:"opacity://occurred-ssl-error") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        case NSURLErrorNotConnectedToInternet:
+          parent.tab.webviewErrorType = .notConnectInternet
+          if let schemeURL = URL(string:"opacity://not-connect-internet") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+          break
+        default:
+          parent.tab.webviewErrorType = .unknown
+          if let schemeURL = URL(string:"opacity://unknown") {
+            webView.load(URLRequest(url: schemeURL))
+          }
+      }
     }
     
     // alert
@@ -411,51 +475,6 @@ struct WebNSView: NSViewRepresentable {
       }
     }
     
-    private func handleWebViewError(webView: WKWebView, error: Error) {
-      let nsError = error as NSError
-      parent.tab.webviewCheckError = true
-      parent.tab.webviewIsError = true
-      
-      switch nsError.code {
-          //          case NSFileNoSuchFileError:
-          //            // 파일을 찾을 수 없음
-          //          case NSFileReadNoPermissionError:
-          //            // 파일 읽기 권한 없음
-          //          case NSFileReadCorruptFileError:
-          //            // 손상된 파일
-        case NSURLErrorCannotFindHost:
-          parent.tab.webviewErrorType = .notFindHost
-          if let schemeURL = URL(string:"opacity://not-find-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-        case NSURLErrorCannotConnectToHost:
-          parent.tab.webviewErrorType = .notConnectHost
-          if let schemeURL = URL(string:"opacity://not-connect-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-        case NSURLErrorSecureConnectionFailed:
-          parent.tab.webviewErrorType = .notConnectHost
-          if let schemeURL = URL(string:"opacity://not-connect-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-        case NSURLErrorServerCertificateHasBadDate:
-          parent.tab.webviewErrorType = .notConnectHost
-          if let schemeURL = URL(string:"opacity://not-connect-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-        case NSURLErrorNotConnectedToInternet:
-          parent.tab.webviewErrorType = .notConnectInternet
-          if let schemeURL = URL(string:"opacity://not-connect-internet") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-        default:
-          parent.tab.webviewErrorType = .unknown
-          if let schemeURL = URL(string:"opacity://unknown") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-      }
-    }
-    
     private func matchesDomain(pattern: String, host: String) -> Bool {
       if pattern == host {
         return true
@@ -475,7 +494,6 @@ struct WebNSView: NSViewRepresentable {
       let data = SecCertificateCopyData(certificate) as Data
       let x509 = try X509Certificate(data: data)
       if let cn = x509.subjectDistinguishedName {
-        print("cn: \(cn)")
         for pattern in x509.subjectAlternativeNames {
           if self.matchesDomain(pattern: pattern, host: host) {
             return cn
@@ -485,59 +503,63 @@ struct WebNSView: NSViewRepresentable {
       return nil
     }
     
-    func load(url: URL, in webView: WKWebView) {
-      currentURL = url
+    private var URLSessionHost: String = ""
+    private var cacheisValidCertificate: Bool = false
+    private var cacheCertificateSummary: String = ""
+    
+    func checkedSSLCertificate(url: URL) {
+      DispatchQueue.main.async {
+        self.parent.tab.certificateSummary = ""
+        self.parent.tab.isValidCertificate = nil
+      }
+      
+      self.cacheisValidCertificate = false
+      self.cacheCertificateSummary = ""
       
       if url.scheme == "opacity" {
-        webView.load(URLRequest(url: url))
         return
       }
       
-      let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+      if let host = url.host {
+        self.URLSessionHost = host
+      }
+            
+      let config = URLSessionConfiguration.default
+      config.requestCachePolicy = .reloadIgnoringLocalCacheData
+      config.urlCache = nil
+      let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
       let request = URLRequest(url: url)
       let task = session.dataTask(with: request) { data, response, error in
-        guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-          return
+        if error != nil {
+          print("Error: \(error!.localizedDescription)")
         }
         DispatchQueue.main.async {
-          webView.load(request)
+          self.parent.tab.certificateSummary = self.cacheCertificateSummary
+          self.parent.tab.isValidCertificate = self.cacheisValidCertificate
         }
       }
       task.resume()
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-      if let serverTrust = challenge.protectionSpace.serverTrust, let host = currentURL?.host {
+      if let serverTrust = challenge.protectionSpace.serverTrust {
         var error: CFError?
         let isValid = SecTrustEvaluateWithError(serverTrust, &error)
         if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
           for certificate in certificateChain {
-            if let _ = try? matchesHostCertificate(certificate: certificate, host: host) {
-              let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
-              DispatchQueue.main.async {
-                self.parent.tab.certificateSummary = summary
-                self.parent.tab.isValidCertificate = true
-              }
+            if let _ = try? matchesHostCertificate(certificate: certificate, host: self.URLSessionHost) {
+              self.cacheisValidCertificate = true
+              self.cacheCertificateSummary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
             }
           }
           completionHandler(.useCredential, URLCredential(trust: serverTrust))
         } else {
-          DispatchQueue.main.async {
-            self.parent.tab.certificateSummary = ""
-            self.parent.tab.isValidCertificate = false
-          }
           completionHandler(.cancelAuthenticationChallenge, nil)
         }
-      } else {
-        DispatchQueue.main.async {
-          self.parent.tab.certificateSummary = ""
-          self.parent.tab.isValidCertificate = false
-        }
-        completionHandler(.cancelAuthenticationChallenge, nil)
       }
     }
+  // end coordinator
   }
-    
   
   private func addContentBlockingRules(_ webView: WKWebView) {
     var blockingRules: String = "blockingLevel2Rules"
@@ -596,7 +618,7 @@ struct WebNSView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-    print("웹뷰 업데이트 시작")
+    // Word Search
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
@@ -605,32 +627,19 @@ struct WebNSView: NSViewRepresentable {
       }
     }
     
-    if !tab.isUpdateBySearch && tab.webviewIsError {
-      print("업데이트가 아니며, 오류로 인한 업데이트 - 종료")
+    // Interruption due to webview loading error
+    if tab.webviewIsError && !tab.isUpdateBySearch {
       return
     }
     
-    guard let webviewURL = webView.url else {
-      print("웹뷰의 url 없음 - 요청된 URL 로드 - 종료")
-      context.coordinator.load(url: tab.originURL, in: webView)
-      return
-    }
-    
-    if !tab.isUpdateBySearch && webviewURL == tab.originURL {
-      print("업데이트가 아니며 탭의 url과 웹뷰의 url이 같음 - 종료")
-      return
-    }
-    
-    if tab.isUpdateBySearch {
+    // Load new requested webview URL
+    if webView.url == nil || tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
-      print("새로운 검색으로 요청된 URL 로드 - 종료")
-      context.coordinator.load(url: tab.originURL, in: webView)
+      context.coordinator.checkedSSLCertificate(url: tab.originURL)
+      webView.load(URLRequest(url: tab.originURL))
       return
     }
-
-    print("웹페이지 내에서의 페이지 이동 요청으로, 웹뷰 URL로 다시 리로드 - 종료(재귀)")
-    tab.updateURLByBrowser(url: webviewURL)
   }
 }
 

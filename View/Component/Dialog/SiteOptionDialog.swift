@@ -26,11 +26,10 @@ struct SiteOptionDialog: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      
       if tab.originURL.scheme == "opacity" {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            Image(systemName: "lock.square")
+            Image(systemName: "lock.circle.fill")
               .font(.system(size: 30))
               .foregroundColor(Color("Point"))
               .padding(.top, 10)
@@ -48,10 +47,24 @@ struct SiteOptionDialog: View {
             Spacer()
           }
         }
-      } else if tab.isValidCertificate {
+      } else if tab.isValidCertificate == false {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            Image(systemName: "lock.square")
+            Image(systemName: "exclamationmark.triangle.fill")
+              .font(.system(size: 30))
+              .foregroundColor(Color("AlertText"))
+              .padding(.top, 10)
+              .padding(.bottom, 15)
+          }
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This connection is not secure.", comment: ""))
+            Spacer()
+          }
+        }
+      } else {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            Image(systemName: "lock.circle.fill")
               .font(.system(size: 30))
               .foregroundColor(Color("Point"))
               .padding(.top, 10)
@@ -72,24 +85,10 @@ struct SiteOptionDialog: View {
             Spacer()
           }
         }
-      } else {
-        VStack(spacing: 0) {
-          HStack(spacing: 0) {
-            Image(systemName: "lock.slash")
-              .font(.system(size: 30))
-              .foregroundColor(Color("Danger"))
-              .padding(.top, 10)
-              .padding(.bottom, 15)
-          }
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This connection is not secure.", comment: ""))
-            Spacer()
-          }
-        }
       }
       
       Divider()
-        .padding(.vertical, 10)
+        .padding(.vertical, 15)
       
       HStack(spacing: 0) {
         Text(NSLocalizedString("Tracker Blocking", comment: ""))

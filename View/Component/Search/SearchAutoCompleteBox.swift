@@ -26,6 +26,8 @@ struct SearchAutoCompleteBox: View {
   var searchHistoryGroups: [SearchHistoryGroup]
   var visitHistoryGroups: [VisitHistoryGroup]
   
+  var tabWidth: CGFloat
+  
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
   
@@ -75,19 +77,28 @@ struct SearchAutoCompleteBox: View {
             self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
-              Image(systemName: "lock")
-                .frame(maxWidth: 24, maxHeight: 24, alignment: .center)
-                .background(Color("SearchBarBG"))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .font(.system(size: 13))
-                .fontWeight(.medium)
-                .foregroundColor(Color("Icon"))
+              if tab.originURL.scheme != "opacity" && tab.isValidCertificate == false {
+                Image(systemName: "exclamationmark.triangle.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("AlertText"))
+              } else {
+                Image(systemName: "lock.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("Icon"))
+              }
             }
-            .padding(.leading, 4)
+            .background(Color("InputBG"))
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
               SiteOptionDialog(service: service, browser: browser, tab: tab)
             }
           }
+          .padding(.leading, 7)
           .buttonStyle(.plain)
         }
         
@@ -96,7 +107,7 @@ struct SearchAutoCompleteBox: View {
             HStack(spacing: 0) {
               Text(tab.printURL)
                 .font(.system(size: 13.5))
-                .padding(.leading, 9)
+                .padding(.leading, 4)
                 .frame(height: 32)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -182,17 +193,25 @@ struct SearchAutoCompleteBox: View {
                   DispatchQueue.main.async {
                     tab.inputURL = targetString
                   }
+                  return .handled
                 }
-                return .handled
               }
               return .ignored
             }
         }
-          BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
-            .padding(.leading, 5)
-            .padding(.trailing, 10)
+        BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
+          .padding(.leading, 5)
+          .padding(.trailing, 10)
+          .onChange(of: tab.pageProgress) { oldValue, newValue in
+            if newValue == 1.0 {
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation {
+                  tab.pageProgress = 0
+                }
+              }
+            }
+          }
       }
-      
       if tab.isEditSearch && tab.inputURL != "" && (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
         SearchAutoComplete(browser: browser, tab: tab)
       }

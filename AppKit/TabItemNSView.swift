@@ -15,7 +15,6 @@ struct TabItemNSView: NSViewRepresentable {
   @Binding var activeTabId: UUID?
   var index: Int
   @Binding var tabWidth: CGFloat
-  @Binding var loadingAnimation: Bool
   
   func moveTab(_ idx: Int) {
     if let targetIndex = tabs.firstIndex(where: { $0.id == service.dragTabId }) {
@@ -43,7 +42,7 @@ struct TabItemNSView: NSViewRepresentable {
     containerView.moveTab = moveTab
     containerView.index = index
     
-    let hostingView = NSHostingView(rootView: TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation))
+    let hostingView = NSHostingView(rootView: TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
     
     containerView.addSubview(hostingView)
@@ -65,7 +64,7 @@ struct TabItemNSView: NSViewRepresentable {
     
     for subview in nsView.subviews {
       if let hostingView = subview as? NSHostingView<TabItem> {
-        hostingView.rootView = TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth, loadingAnimation: $loadingAnimation)
+        hostingView.rootView = TabItem(browser: browser, tab: tab, activeTabId: $activeTabId, tabWidth: $tabWidth)
         hostingView.layout()
       }
     }

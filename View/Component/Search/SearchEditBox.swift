@@ -27,7 +27,7 @@ struct SearchEditBox: View {
           HStack(spacing: 0) {
             HStack(spacing: 0) {
               VStack(spacing: 0) {
-                SearchAutoCompleteBox(service: service, browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
+                SearchAutoCompleteBox(service: service, browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups, tabWidth: CGFloat(searchBoxRect.width) + 4)
               }
               .frame(width: searchBoxRect.width + 4)
             }

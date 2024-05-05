@@ -14,6 +14,8 @@ enum WebViewErrorType {
   case notFindHost
   case notConnectHost
   case notConnectInternet
+  case occurredSSLError
+  case blockedContent
   case unknown
   case noError
 }
@@ -31,7 +33,6 @@ final class Tab: ObservableObject {
   var isUpdateBySearch: Bool = false
   
   var webviewIsError: Bool = false
-  var webviewCheckError: Bool = false
   var webviewErrorType: WebViewErrorType = .noError
   
   @Published var title: String = ""
@@ -45,7 +46,6 @@ final class Tab: ObservableObject {
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
   
-  @Published var isPageProgress: Bool = false
   @Published var pageProgress: Double = 0.0
   
   @Published var isLocationDialogIcon: Bool = false
@@ -69,7 +69,7 @@ final class Tab: ObservableObject {
   var findKeyword: String = ""
   
   // SSL
-  @Published var isValidCertificate: Bool = false
+  @Published var isValidCertificate: Bool?
   var certificateSummary: String = ""
   
   lazy var webview: WKWebView = {
@@ -239,34 +239,46 @@ final class Tab: ObservableObject {
       self.printURL = StringURL.setPrintURL(url)
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
-      self.isPageProgress = true
-      self.pageProgress = 0.0
       self.isEditSearch = false
+      self.isValidCertificate = nil
+      self.certificateSummary = ""
       self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
     }
   }
   
-  func updateURLByBrowser(url: URL) {
+  func redirectURLByBrowser(url: URL) {
+    self.originURL = url
+    self.inputURL = StringURL.setInputURL(url)
+    self.printURL = StringURL.setPrintURL(url)
+  }
+  
+  func updateURLByBrowser(url: URL, isClearCertificate: Bool) {
     DispatchQueue.main.async {
       self.isInit = false
       self.originURL = url
       self.inputURL = StringURL.setInputURL(url)
       self.printURL = StringURL.setPrintURL(url)
-      self.title = StringURL.setTitleURL(url)
-      self.favicon = nil
-      self.isPageProgress = true
-      self.pageProgress = 0.0
       self.isEditSearch = false
       self.clearPermission()
       self.setDomainPermission(url)
+      
+      if isClearCertificate {
+        self.isUpdateBySearch = true
+        self.webviewIsError = false
+        self.isValidCertificate = nil
+        self.certificateSummary = ""
+      }
     }
   }
   
   func loadFavicon(url: URL) {
     URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, let uiImage = NSImage(data: data) else {
+        DispatchQueue.main.async {
+          self.favicon = nil
+        }
         return
       }
       DispatchQueue.main.async {
