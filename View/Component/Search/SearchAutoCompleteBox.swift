@@ -77,20 +77,20 @@ struct SearchAutoCompleteBox: View {
             self.isSiteDialog.toggle()
           } label: {
             HStack(spacing: 0) {
-              if tab.originURL.scheme == "opacity" || tab.isValidCertificate {
-                Image(systemName: "lock.fill")
-                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
-                  .clipShape(RoundedRectangle(cornerRadius: 14))
-                  .font(.system(size: 13))
-                  .fontWeight(.medium)
-                  .foregroundColor(Color("Icon"))
-              } else {
+              if tab.originURL.scheme != "opacity" && tab.isValidCertificate == false {
                 Image(systemName: "exclamationmark.triangle.fill")
                   .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
                   .clipShape(RoundedRectangle(cornerRadius: 14))
                   .font(.system(size: 13))
                   .fontWeight(.medium)
                   .foregroundColor(Color("AlertText"))
+              } else {
+                Image(systemName: "lock.fill")
+                  .frame(maxWidth: 26, maxHeight: 26, alignment: .center)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .font(.system(size: 13))
+                  .fontWeight(.medium)
+                  .foregroundColor(Color("Icon"))
               }
             }
             .background(Color("InputBG"))

@@ -26,7 +26,6 @@ struct SiteOptionDialog: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      
       if tab.originURL.scheme == "opacity" {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
@@ -48,8 +47,21 @@ struct SiteOptionDialog: View {
             Spacer()
           }
         }
-      }
-      else if tab.isValidCertificate {
+      } else if tab.isValidCertificate == false {
+        VStack(spacing: 0) {
+          HStack(spacing: 0) {
+            Image(systemName: "exclamationmark.triangle.fill")
+              .font(.system(size: 30))
+              .foregroundColor(Color("AlertText"))
+              .padding(.top, 10)
+              .padding(.bottom, 15)
+          }
+          HStack(spacing: 0) {
+            Text(NSLocalizedString("This connection is not secure.", comment: ""))
+            Spacer()
+          }
+        }
+      } else {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
             Image(systemName: "lock.circle.fill")
@@ -70,20 +82,6 @@ struct SiteOptionDialog: View {
             Text(tab.certificateSummary)
               .font(.system(size: 11))
               .padding(.leading, 5)
-            Spacer()
-          }
-        }
-      } else {
-        VStack(spacing: 0) {
-          HStack(spacing: 0) {
-            Image(systemName: "exclamationmark.triangle.fill")
-              .font(.system(size: 30))
-              .foregroundColor(Color("AlertText"))
-              .padding(.top, 10)
-              .padding(.bottom, 15)
-          }
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This connection is not secure.", comment: ""))
             Spacer()
           }
         }

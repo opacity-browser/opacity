@@ -69,7 +69,7 @@ final class Tab: ObservableObject {
   var findKeyword: String = ""
   
   // SSL
-  @Published var isValidCertificate: Bool = false
+  @Published var isValidCertificate: Bool?
   var certificateSummary: String = ""
   
   lazy var webview: WKWebView = {
@@ -240,7 +240,7 @@ final class Tab: ObservableObject {
       self.title = StringURL.setTitleURL(url)
       self.favicon = nil
       self.isEditSearch = false
-      self.isValidCertificate = false
+      self.isValidCertificate = nil
       self.certificateSummary = ""
       self.clearAutoComplete()
       self.clearPermission()
@@ -267,7 +267,7 @@ final class Tab: ObservableObject {
       if isClearCertificate {
         self.isUpdateBySearch = true
         self.webviewIsError = false
-        self.isValidCertificate = false
+        self.isValidCertificate = nil
         self.certificateSummary = ""
       }
     }

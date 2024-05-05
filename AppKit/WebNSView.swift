@@ -504,12 +504,17 @@ struct WebNSView: NSViewRepresentable {
     }
     
     private var URLSessionHost: String = ""
+    private var cacheisValidCertificate: Bool = false
+    private var cacheCertificateSummary: String = ""
     
     func checkedSSLCertificate(url: URL) {
       DispatchQueue.main.async {
         self.parent.tab.certificateSummary = ""
-        self.parent.tab.isValidCertificate = false
+        self.parent.tab.isValidCertificate = nil
       }
+      
+      self.cacheisValidCertificate = false
+      self.cacheCertificateSummary = ""
       
       if url.scheme == "opacity" {
         return
@@ -525,9 +530,12 @@ struct WebNSView: NSViewRepresentable {
       let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
       let request = URLRequest(url: url)
       let task = session.dataTask(with: request) { data, response, error in
-        guard error == nil else {
+        if error != nil {
           print("Error: \(error!.localizedDescription)")
-          return
+        }
+        DispatchQueue.main.async {
+          self.parent.tab.certificateSummary = self.cacheCertificateSummary
+          self.parent.tab.isValidCertificate = self.cacheisValidCertificate
         }
       }
       task.resume()
@@ -540,11 +548,8 @@ struct WebNSView: NSViewRepresentable {
         if isValid, let certificateChain = SecTrustCopyCertificateChain(serverTrust) as? [SecCertificate] {
           for certificate in certificateChain {
             if let _ = try? matchesHostCertificate(certificate: certificate, host: self.URLSessionHost) {
-              let summary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
-              DispatchQueue.main.async {
-                self.parent.tab.certificateSummary = summary
-                self.parent.tab.isValidCertificate = true
-              }
+              self.cacheisValidCertificate = true
+              self.cacheCertificateSummary = SecCertificateCopySubjectSummary(certificate) as String? ?? "Unknown"
             }
           }
           completionHandler(.useCredential, URLCredential(trust: serverTrust))

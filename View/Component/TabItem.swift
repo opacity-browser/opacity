@@ -34,9 +34,6 @@ struct TabItem: View {
                     .frame(maxWidth: 12, maxHeight: 12, alignment: .center)
                     .rotationEffect(Angle(degrees: loadingAnimation ? 360 : 0))
                     .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: loadingAnimation)
-                    .onAppear {
-                      self.loadingAnimation = true
-                    }
                 }
                 .frame(maxWidth: 14, maxHeight: 14, alignment: .center)
               } else if let favicon = tab.favicon {
@@ -69,6 +66,9 @@ struct TabItem: View {
         .opacity(tabWidth < 60 && isActive ? 0 : 1)
         .onHover { hovering in
           isTabHover = hovering
+        }
+        .onChange(of: tab.pageProgress) { _, nV in
+          self.loadingAnimation = nV > 0
         }
       }
       .frame(height: 29)
