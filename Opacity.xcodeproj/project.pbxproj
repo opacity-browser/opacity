@@ -371,15 +371,6 @@
 			path = AppKit;
 			sourceTree = "<group>";
 		};
-		A15FCB0F2B999D2900D64C05 /* Item */ = {
-			isa = PBXGroup;
-			children = (
-				A11EDAE42BA62C9E000D07CB /* Search */,
-				A15FCB102B999D5100D64C05 /* Bookmark */,
-			);
-			path = Item;
-			sourceTree = "<group>";
-		};
 		A15FCB102B999D5100D64C05 /* Bookmark */ = {
 			isa = PBXGroup;
 			children = (
@@ -478,7 +469,8 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				A15FCB0F2B999D2900D64C05 /* Item */,
+				A15FCB102B999D5100D64C05 /* Bookmark */,
+				A11EDAE42BA62C9E000D07CB /* Search */,
 				A10DDD8C2BCEDECC003E159A /* Dialog */,
 				A16BCAFB2B907878004639F2 /* ToggleSwitch.swift */,
 				A14246152B71EF190062C516 /* TabItem.swift */,
