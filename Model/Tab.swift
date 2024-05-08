@@ -199,9 +199,7 @@ final class Tab: ObservableObject {
   var complateCleanUpWebview: (() -> Void)?
   
   func closeTab(completion: @escaping () -> Void) {
-    print("1")
     DispatchQueue.main.async {
-      print("2")
       self.complateCleanUpWebview = completion
       self.isClearWebview = true
     }

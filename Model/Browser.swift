@@ -84,15 +84,12 @@ final class Browser: ObservableObject, Identifiable {
   func closeAllTab(completion: @escaping () -> Void) {
     let group = DispatchGroup()
     for tab in tabs {
-      print("close tab: \(tab.title)")
       group.enter()
       tab.closeTab {
-        print("\(tab.title) closed.")
         group.leave()
       }
     }
     group.notify(queue: .main) {
-      print("closed all tab.")
       completion()
     }
   }

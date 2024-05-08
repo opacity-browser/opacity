@@ -38,13 +38,10 @@ struct WindowTitlebar: View {
                       let removeTabId = tabs[index].id
                       print("close tab clean up webview")
                       tabs[index].closeTab {
-                        print("d")
                         tabs.remove(at: index)
                         if tabs.count == 0 {
-                          print("e")
                           AppDelegate.shared.closeWindow()
                         } else {
-                          print("g")
                           let targetIndex = tabs.count > index ? index : tabs.count - 1
                           activeTabId = tabs[targetIndex].id
                           AppDelegate.shared.closeInspector(removeTabId)

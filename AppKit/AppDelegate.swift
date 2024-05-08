@@ -71,15 +71,6 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
     } else {
       return true
     }
-    
-//    let windowNo = sender.windowNumber
-//    if let childTabs = AppDelegate.shared.service.browsers[windowNo]?.tabs {
-//      for childTab in childTabs {
-//        AppDelegate.shared.closeInspector(childTab.id)
-//      }
-//    }
-    
-//    return true
   }
 }
 
@@ -395,14 +386,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           print("close tab clean up webview")
           let targetTab = browser.tabs[targetRemoveIndex]
           targetTab.closeTab {
-            print("1")
             browser.tabs.remove(at: targetRemoveIndex)
-            print("2")
             if browser.tabs.count == 0 {
-              print("3")
               keyWindow.close()
             } else {
-              print("4")
               let targetIndex = browser.tabs.count > targetRemoveIndex ? targetRemoveIndex : browser.tabs.count - 1
               browser.activeTabId = browser.tabs[targetIndex].id
             }

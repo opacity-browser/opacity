@@ -95,8 +95,10 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
       print("didStartProvisionalNavigation")
-      DispatchQueue.main.async {
-        self.parent.tab.pageProgress = webView.estimatedProgress
+      if isCleanUpAction == false {
+        DispatchQueue.main.async {
+          self.parent.tab.pageProgress = webView.estimatedProgress
+        }
       }
     }
     
@@ -152,16 +154,21 @@ struct WebNSView: NSViewRepresentable {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
       print("didFinish")
       if let complateCleanUpWebview = self.parent.tab.complateCleanUpWebview, isCleanUpAction {
-        DispatchQueue.main.async {
-          print("c")
-          webView.removeObserver(self, forKeyPath: "canGoBack")
-          webView.removeObserver(self, forKeyPath: "canGoForward")
-          webView.navigationDelegate = nil
-          webView.uiDelegate = nil
-          webView.configuration.userContentController.removeAllScriptMessageHandlers()
-          self.parent.tab.webview = nil
-          print("d")
-          complateCleanUpWebview()
+        let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+        let dateFrom = Date(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
+          DispatchQueue.main.async {
+            webView.stopLoading()
+            webView.removeObserver(self, forKeyPath: "canGoBack")
+            webView.removeObserver(self, forKeyPath: "canGoForward")
+            webView.navigationDelegate = nil
+            webView.uiDelegate = nil
+            webView.configuration.userContentController.removeAllScriptMessageHandlers()
+            webView.removeFromSuperview()
+            self.parent.tab.webview = nil
+            URLCache.shared.removeAllCachedResponses()
+            complateCleanUpWebview()
+          }
         }
         return
       }
@@ -580,6 +587,7 @@ struct WebNSView: NSViewRepresentable {
           self.parent.tab.certificateSummary = self.cacheCertificateSummary
           self.parent.tab.isValidCertificate = self.cacheisValidCertificate
         }
+        session.finishTasksAndInvalidate()
       }
       task.resume()
     }
@@ -667,17 +675,11 @@ struct WebNSView: NSViewRepresentable {
   func updateNSView(_ webView: WKWebView, context: Context) {
     // End webview (Cleanup)
     if tab.isClearWebview {
-      print("a")
-      let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
-      let dateFrom = Date(timeIntervalSince1970: 0)
-      WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
-        DispatchQueue.main.async {
-          print("b")
-          tab.isClearWebview = false
-          webView.stopLoading()
-          webView.load(URLRequest(url: URL(string: "about:blank")!))
-          context.coordinator.isCleanUpAction = true
-        }
+      DispatchQueue.main.async {
+        tab.isClearWebview = false
+        webView.stopLoading()
+        webView.load(URLRequest(url: URL(string: "about:blank")!))
+        context.coordinator.isCleanUpAction = true
       }
       return
     }
