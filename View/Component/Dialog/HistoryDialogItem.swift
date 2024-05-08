@@ -56,7 +56,9 @@ struct HistoryDialogItem: View {
       .background(Color("SearchBarBG").opacity(isHistoryHover ? 0.5 : 0))
       .clipShape(RoundedRectangle(cornerRadius: 5))
       .onTapGesture {
-        tab.webview.go(to: item)
+        if let webview = tab.webview {
+          webview.go(to: item)
+        }
         closeDialog = false
       }
     }

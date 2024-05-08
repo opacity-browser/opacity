@@ -75,7 +75,8 @@ final class Tab: ObservableObject {
   @Published var isValidCertificate: Bool?
   var certificateSummary: String = ""
   
-  lazy var webview: WKWebView = {
+  
+  lazy var webview: WKWebView? = {
     let config = WKWebViewConfiguration()
     
     let prefs = WKWebpagePreferences()
@@ -174,6 +175,35 @@ final class Tab: ObservableObject {
             completion(false)
         }
       }
+    }
+  }
+  
+  @Published var isClearWebview: Bool = false
+  
+//  func clearWebview() {
+//    if let webview = self.webview {
+//      print("c")
+//      DispatchQueue.main.async {
+//        webview.stopLoading()
+//        self.isClearWebview = true
+//        webview.load(URLRequest(url: URL(string: "about:blank")!))
+//        webview.navigationDelegate = nil
+//        webview.uiDelegate = nil
+//        webview.configuration.userContentController.removeAllScriptMessageHandlers()
+//        print("d")
+//      }
+//    }
+////    self.webview = nil
+//  }
+  
+  var complateCleanUpWebview: (() -> Void)?
+  
+  func closeTab(completion: @escaping () -> Void) {
+    print("1")
+    DispatchQueue.main.async {
+      print("2")
+      self.complateCleanUpWebview = completion
+      self.isClearWebview = true
     }
   }
   

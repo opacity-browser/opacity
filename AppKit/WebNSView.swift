@@ -22,25 +22,31 @@ struct WebNSView: NSViewRepresentable {
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
     var parent: WebNSView
     var cacheErrorURL: URL?
+    var isCleanUpAction: Bool = false
     
     init(_ parent: WebNSView) {
       self.parent = parent
       super.init()
-      self.parent.tab.webview.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
-      self.parent.tab.webview.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+      if let webview = self.parent.tab.webview {
+        webview.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
+        webview.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+      }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-      DispatchQueue.main.async {
-        self.parent.tab.isBack = self.parent.tab.webview.canGoBack
-        self.parent.tab.isForward = self.parent.tab.webview.canGoForward
+      if let webview = self.parent.tab.webview {
+        DispatchQueue.main.async {
+          self.parent.tab.isBack = webview.canGoBack
+          self.parent.tab.isForward = webview.canGoForward
+        }
       }
     }
 
     deinit {
-      print("deinit")
-      self.parent.tab.webview.removeObserver(self, forKeyPath: "canGoBack")
-      self.parent.tab.webview.removeObserver(self, forKeyPath: "canGoForward")
+      if let webview = self.parent.tab.webview {
+        webview.removeObserver(self, forKeyPath: "canGoBack")
+        webview.removeObserver(self, forKeyPath: "canGoForward")
+      }
     }
     
     // Find Text
@@ -145,6 +151,21 @@ struct WebNSView: NSViewRepresentable {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
       print("didFinish")
+      if let complateCleanUpWebview = self.parent.tab.complateCleanUpWebview, isCleanUpAction {
+        DispatchQueue.main.async {
+          print("c")
+          webView.removeObserver(self, forKeyPath: "canGoBack")
+          webView.removeObserver(self, forKeyPath: "canGoForward")
+          webView.navigationDelegate = nil
+          webView.uiDelegate = nil
+          webView.configuration.userContentController.removeAllScriptMessageHandlers()
+          self.parent.tab.webview = nil
+          print("d")
+          complateCleanUpWebview()
+        }
+        return
+      }
+      
       let group = DispatchGroup()
       
       DispatchQueue.main.async {
@@ -224,7 +245,6 @@ struct WebNSView: NSViewRepresentable {
       group.enter()
       webView.evaluateJavaScript("document.title") { (response, error) in
         if let title = response as? String {
-          
           DispatchQueue.main.async {
             cacheTitle = title
             self.parent.tab.title = title
@@ -630,17 +650,38 @@ struct WebNSView: NSViewRepresentable {
   }
       
   func makeNSView(context: Context) -> WKWebView {
-    tab.webview.navigationDelegate = context.coordinator
-    tab.webview.uiDelegate = context.coordinator
-    tab.webview.allowsBackForwardNavigationGestures = true
-    tab.webview.isInspectable = true
-    tab.webview.setValue(false, forKey: "drawsBackground")
-    updateBlockingRules(tab.webview)
+    guard let webview = tab.webview else {
+      return WKWebView()
+    }
     
-    return tab.webview
+    webview.navigationDelegate = context.coordinator
+    webview.uiDelegate = context.coordinator
+    webview.allowsBackForwardNavigationGestures = true
+    webview.isInspectable = true
+    webview.setValue(false, forKey: "drawsBackground")
+    updateBlockingRules(webview)
+    
+    return webview
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    // End webview (Cleanup)
+    if tab.isClearWebview {
+      print("a")
+      let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+      let dateFrom = Date(timeIntervalSince1970: 0)
+      WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
+        DispatchQueue.main.async {
+          print("b")
+          tab.isClearWebview = false
+          webView.stopLoading()
+          webView.load(URLRequest(url: URL(string: "about:blank")!))
+          context.coordinator.isCleanUpAction = true
+        }
+      }
+      return
+    }
+    
     // History
     if tab.updateWebHistory {
       DispatchQueue.main.async {
@@ -669,8 +710,13 @@ struct WebNSView: NSViewRepresentable {
     if webView.url == nil || tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
-      context.coordinator.checkedSSLCertificate(url: tab.originURL)
-      webView.load(URLRequest(url: tab.originURL))
+      let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+      let dateFrom = Date(timeIntervalSince1970: 0)
+      WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
+        webView.stopLoading()
+        context.coordinator.checkedSSLCertificate(url: tab.originURL)
+        webView.load(URLRequest(url: tab.originURL))
+      }
       return
     }
   }

@@ -34,14 +34,22 @@ struct WindowTitlebar: View {
               ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
                 if Int(width / 80) > index {
                   BrowserTabView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth) {
-                    let removeTabId = tabs[index].id
-                    tabs.remove(at: index)
-                    if tabs.count == 0 {
-                      AppDelegate.shared.closeWindow()
-                    } else {
-                      let targetIndex = tabs.count > index ? index : tabs.count - 1
-                      activeTabId = tabs[targetIndex].id
-                      AppDelegate.shared.closeInspector(removeTabId)
+                    DispatchQueue.main.async {
+                      let removeTabId = tabs[index].id
+                      print("close tab clean up webview")
+                      tabs[index].closeTab {
+                        print("d")
+                        tabs.remove(at: index)
+                        if tabs.count == 0 {
+                          print("e")
+                          AppDelegate.shared.closeWindow()
+                        } else {
+                          print("g")
+                          let targetIndex = tabs.count > index ? index : tabs.count - 1
+                          activeTabId = tabs[targetIndex].id
+                          AppDelegate.shared.closeInspector(removeTabId)
+                        }
+                    }
                     }
                   }
                   .contentShape(Rectangle())
