@@ -25,6 +25,7 @@ final class Tab: ObservableObject {
   
   @Published var isInit: Bool = false
   @Published var isInitFocus: Bool = false
+  @Published var stopProcess: Bool = false
   
   @Published var originURL: URL
   @Published var printURL: String

@@ -113,6 +113,7 @@
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
+		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -231,6 +232,7 @@
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
+		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -479,6 +481,7 @@
 				A16BCAF32B8FFBEB004639F2 /* HistoryBackBtn.swift */,
 				A16BCAF52B8FFBFD004639F2 /* HistoryForwardBtn.swift */,
 				A16BCAF72B8FFC11004639F2 /* HistoryRefreshBtn.swift */,
+				A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */,
 				A188C9482B4ACECD00B39BC8 /* Navigation.swift */,
 				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
 				A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */,
@@ -634,6 +637,7 @@
 				A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */,
 				A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
+				A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */,
 				A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */,
 				A16BCAFC2B907878004639F2 /* ToggleSwitch.swift in Sources */,
 				A16BCAF62B8FFBFD004639F2 /* HistoryForwardBtn.swift in Sources */,

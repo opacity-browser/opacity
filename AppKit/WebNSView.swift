@@ -673,6 +673,16 @@ struct WebNSView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    // Stop Process
+    if tab.stopProcess && tab.pageProgress > 0 && tab.pageProgress < 1 {
+      DispatchQueue.main.async {
+        webView.stopLoading()
+        self.tab.stopProcess = false
+        self.tab.pageProgress = 1.0
+      }
+      return
+    }
+    
     // End webview (Cleanup)
     if tab.isClearWebview {
       DispatchQueue.main.async {

@@ -41,7 +41,11 @@ struct Navigation: View {
       
       VStack(spacing: 0) { }.frame(width: 13)
       
-      HistoryRefreshBtn(iconHeight: iconHeight, iconRadius: iconRadius)
+      if tab.pageProgress > 0 && tab.pageProgress < 1 {
+        HistoryStopBtn(tab: tab, iconHeight: iconHeight, iconRadius: iconRadius)
+      } else {
+        HistoryRefreshBtn(iconHeight: iconHeight, iconRadius: iconRadius)
+      }
       
       VStack(spacing: 0) { }.frame(width: 11)
       
