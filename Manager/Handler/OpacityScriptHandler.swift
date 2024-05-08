@@ -117,8 +117,8 @@ final class OpacityScriptHandler {
       }
     }
     
-    if let script = script {
-      tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    if let webview = tab.webview, let script = script {
+      webview.evaluateJavaScript(script, completionHandler: nil)
     }
   }
   

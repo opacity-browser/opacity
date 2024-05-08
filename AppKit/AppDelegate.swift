@@ -12,6 +12,7 @@ import CoreLocation
 class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   var windowMap: [UUID:NSWindow] = [:]
   @Published var isFullScreen: Bool = false
+  var lastActivationTime: Date?
   
   func windowWillEnterFullScreen(_ notification: Notification) {
     DispatchQueue.main.async {
@@ -31,21 +32,45 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   func windowDidExitFullScreen(_ notification: Notification) {
   }
   
+  func windowDidBecomeMain(_ notification: Notification) {
+    print("windowDidBecomeMain")
+    let currentTime = Date()
+    if let lastTime = lastActivationTime {
+      let elapsedTime = currentTime.timeIntervalSince(lastTime)
+      if elapsedTime >= 3600 {
+        AppDelegate.shared.deleteExpiredData()
+        lastActivationTime = currentTime
+      }
+    } else {
+      AppDelegate.shared.deleteExpiredData()
+      lastActivationTime = currentTime
+    }
+  }
+  
   func windowWillClose(_ notification: Notification) {
+    print("windowWillClose")
     guard let window = notification.object as? NSWindow else { return }
     let frameString = NSStringFromRect(window.frame)
     UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
-    AppDelegate.shared.deleteExpiredData()
   }
   
   func windowShouldClose(_ sender: NSWindow) -> Bool {
-    let windowNo = sender.windowNumber
-    if let childTabs = AppDelegate.shared.service.browsers[windowNo]?.tabs {
-      for childTab in childTabs {
-        AppDelegate.shared.closeInspector(childTab.id)
+    print("windowShouldClose")
+    let windowNumber = sender.windowNumber
+    if let browser = AppDelegate.shared.service.browsers[windowNumber] {
+      let tabs = browser.tabs
+      for tab in tabs {
+        AppDelegate.shared.closeInspector(tab.id)
       }
+      browser.closeAllTab {
+        browser.tabs = []
+        AppDelegate.shared.service.browsers[windowNumber] = nil
+        sender.close()
+      }
+      return false
+    } else {
+      return true
     }
-    return true
   }
 }
 
@@ -332,13 +357,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func closeWindow() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let childTabs = self.service.browsers[windowNumber]?.tabs {
-        for childTab in childTabs {
-          self.closeInspector(childTab.id)
+      if let browser = self.service.browsers[windowNumber] {
+        let tabs = browser.tabs
+        for tab in tabs {
+          self.closeInspector(tab.id)
+        }
+        browser.closeAllTab {
+          browser.tabs = []
+          self.service.browsers[windowNumber] = nil
+          keyWindow.close()
         }
       }
-      self.service.browsers[windowNumber] = nil
-      keyWindow.close()
     }
   }
   
@@ -352,14 +381,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func closeTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
-        if let targetRemoveIndex = target.tabs.firstIndex(where: { $0.id == activeId }) {
-          target.tabs.remove(at: targetRemoveIndex)
-          if target.tabs.count == 0 {
-            self.closeWindow()
-          } else {
-            let targetIndex = target.tabs.count > targetRemoveIndex ? targetRemoveIndex : target.tabs.count - 1
-            target.activeTabId = target.tabs[targetIndex].id
+      if let browser = self.service.browsers[windowNumber], let activeId = browser.activeTabId {
+        if let targetRemoveIndex = browser.tabs.firstIndex(where: { $0.id == activeId }) {
+          print("close tab clean up webview")
+          let targetTab = browser.tabs[targetRemoveIndex]
+          targetTab.closeTab {
+            browser.tabs.remove(at: targetRemoveIndex)
+            if browser.tabs.count == 0 {
+              keyWindow.close()
+            } else {
+              let targetIndex = browser.tabs.count > targetRemoveIndex ? targetRemoveIndex : browser.tabs.count - 1
+              browser.activeTabId = browser.tabs[targetIndex].id
+            }
           }
         }
         self.closeInspector(activeId)
@@ -377,8 +410,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc func refreshTab() {
     if let keyWindow = NSApplication.shared.keyWindow {
       let windowNumber = keyWindow.windowNumber
-      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }) {
-        tab.webview.reload()
+      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }), let webview = tab.webview {
+        webview.reload()
         tab.clearPermission()
       }
     }

@@ -146,7 +146,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    guard let location = locations.first else { return }
+    guard let location = locations.first, let webview = tab.webview else { return }
 
     let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
@@ -159,11 +159,12 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
       }
     """
     
-    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    webview.evaluateJavaScript(script, completionHandler: nil)
     AppDelegate.shared.locationManager.stopUpdatingLocation()
   }
   
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    guard let webview = tab.webview else { return }
     let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
         error({
@@ -172,10 +173,11 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         });
       };
     """
-    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    webview.evaluateJavaScript(script, completionHandler: nil)
   }
 
   func deniedGeolocation() {
+    guard let webview = tab.webview else { return }
     let script = """
       navigator.geolocation.getCurrentPosition = function(success, error, options) {
         error({
@@ -185,7 +187,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
       }
     """
-    tab.webview.evaluateJavaScript(script, completionHandler: nil)
+    webview.evaluateJavaScript(script, completionHandler: nil)
   }
   
   func showLocationSetIcon() {

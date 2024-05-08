@@ -17,8 +17,8 @@ struct HistoryForwardBtn: View {
       tab: tab,
       isBack: false,
       clickAction: {
-        if tab.isForward {
-          tab.webview.goForward()
+        if let webview = tab.webview, tab.isForward {
+          webview.goForward()
         }
       },
       longPressAction: {

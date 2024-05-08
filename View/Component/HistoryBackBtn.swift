@@ -17,8 +17,8 @@ struct HistoryBackBtn: View {
       tab: tab,
       isBack: true,
       clickAction: {
-        if tab.isBack {
-          tab.webview.goBack()
+        if let webview = tab.webview, tab.isBack {
+          webview.goBack()
         }
       },
       longPressAction: {
