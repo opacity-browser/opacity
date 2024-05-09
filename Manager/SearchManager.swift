@@ -40,6 +40,24 @@ class SearchManager {
     }
   }
   
+  @MainActor static func deleteAllSearchHistory() {
+    let descriptor = FetchDescriptor<SearchHistory>()
+    let descriptorGroup = FetchDescriptor<SearchHistoryGroup>()
+    do {
+      let allSearchHistory = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      let allSearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptorGroup)
+      for searchHistory in allSearchHistory {
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(searchHistory)
+      }
+      for shGroup in allSearchHistoryGroup {
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(shGroup)
+      }
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+       print("ModelContainerError deleteAllSearchHistory")
+     }
+  }
+  
   @MainActor static func deleteSearchHistoryGroup(_ target: SearchHistoryGroup) {
     for searchHistory in target.searchHistories {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(searchHistory)

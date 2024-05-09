@@ -46,6 +46,24 @@ class VisitManager {
     }
   }
   
+  @MainActor static func deleteAllVisitHistory() {
+    let descriptor = FetchDescriptor<VisitHistory>()
+    let descriptorGroup = FetchDescriptor<VisitHistoryGroup>()
+    do {
+      let allVisitHistory = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      let allVisitHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptorGroup)
+      for visitHistory in allVisitHistory {
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(visitHistory)
+      }
+      for vhGroup in allVisitHistoryGroup {
+        AppDelegate.shared.opacityModelContainer.mainContext.delete(vhGroup)
+      }
+      try AppDelegate.shared.opacityModelContainer.mainContext.save()
+    } catch {
+       print("ModelContainerError deleteAllVisitHistory")
+     }
+  }
+  
   @MainActor static func deleteVisitHistoryGroup(_ target: VisitHistoryGroup) {
     for visitHistory in target.visitHistories {
       AppDelegate.shared.opacityModelContainer.mainContext.delete(visitHistory)

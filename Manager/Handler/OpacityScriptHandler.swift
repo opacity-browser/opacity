@@ -113,6 +113,12 @@ final class OpacityScriptHandler {
         case "getFrequentList":
           script = getFrequentList()
           break
+        case "deleteAllSearchHistory":
+          script = deleteAllSearchHistory()
+          break
+        case "deleteAllVisitHistory":
+          script = deleteAllVisitHistory()
+          break
         default: break
       }
     }
@@ -120,6 +126,24 @@ final class OpacityScriptHandler {
     if let webview = tab.webview, let script = script {
       webview.evaluateJavaScript(script, completionHandler: nil)
     }
+  }
+
+  func deleteAllSearchHistory() -> String {
+    SearchManager.deleteAllSearchHistory()
+    return """
+      window.opacityResponse.deleteAllSearchHistory({
+        data: "success"
+      })
+    """
+  }
+  
+  func deleteAllVisitHistory() -> String {
+    VisitManager.deleteAllVisitHistory()
+    return """
+      window.opacityResponse.deleteAllVisitHistory({
+        data: "success"
+      })
+    """
   }
   
   func updateNotificationPermissions(_ updateParmas: String) -> String {
@@ -554,7 +578,8 @@ final class OpacityScriptHandler {
             "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
             "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
             "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
-            "Learn More": '\(NSLocalizedString("Learn More", comment: ""))'
+            "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
+            "Clear All": '\(NSLocalizedString("Clear All", comment: ""))'
           }
         })
       """
