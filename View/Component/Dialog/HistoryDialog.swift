@@ -23,13 +23,12 @@ struct HistoryDialog: View {
               HistoryDialogItem(tab: tab, item: item, closeDialog: $closeDialog)
             }
           }
-          .padding(5)
         }
         .frame(maxWidth: 240, maxHeight: 300)
       }
       .padding(.vertical, 5)
     }
-    .frame(width: 240, height: (CGFloat(reverseHistoryList.count) * 32 + 20) > 300 ? 300 : CGFloat(reverseHistoryList.count) * 32 + 20)
+    .frame(width: 240, height: (CGFloat(reverseHistoryList.count) * 30 + 10) > 300 ? 300 : CGFloat(reverseHistoryList.count) * 30 + 10)
     .background(GeometryReader { geometry in
       Color("DialogBG")
           .frame(width: geometry.size.width,

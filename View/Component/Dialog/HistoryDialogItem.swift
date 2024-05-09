@@ -34,21 +34,21 @@ struct HistoryDialogItem: View {
             .frame(maxWidth: 20, maxHeight: 20, alignment: .center)
           }
           Text(siteData.title == "" ? item.url.absoluteString : siteData.title)
-            .frame(maxWidth: 230, maxHeight: 22, alignment: .leading)
+            .frame(maxWidth: 230, maxHeight: 20, alignment: .leading)
             .font(.system(size: 12))
             .padding(.leading, 5)
             .lineLimit(1)
             .truncationMode(.tail)
         } else {
           Text(item.url.absoluteString)
-            .frame(maxWidth: 230, maxHeight: 22, alignment: .leading)
+            .frame(maxWidth: 230, maxHeight: 20, alignment: .leading)
             .font(.system(size: 12))
             .padding(.leading, 5)
             .lineLimit(1)
             .truncationMode(.tail)
         }
       }
-      .frame(height: 22)
+      .frame(height: 20)
       .padding(5)
       .onHover { hovering in
         isHistoryHover = hovering

@@ -166,7 +166,6 @@ struct Navigation: View {
       VStack(spacing: 0) {
         VStack(spacing: 0) {
           Image(systemName: "ellipsis")
-            .rotationEffect(.degrees(90))
             .foregroundColor(Color("Icon"))
             .font(.system(size: 14))
             .fontWeight(.regular)
@@ -184,7 +183,6 @@ struct Navigation: View {
         }
         .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
           MoreMenuDialog(browser: browser, isMoreMenuDialog: $isMoreMenuDialog)
-//            .background(Color("SearchBarBG"))
         }
         .offset(y: -1)
       }
