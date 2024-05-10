@@ -132,3 +132,8 @@
 "Contact Us" = "문의";
 "Zoom In" = "확대";
 "Zoom Out" = "축소";
+
+"Cookie" = "쿠키";
+"No web storage data found on the website." = "웹 스토리지 데이터를 찾을 수 없습니다.";
+"Web storage data is present on the website." = "웹 스토리지 데이터가 사용되고 있습니다.";
+"Clear Cookies and Storage" = "쿠키 및 스토리지 정리";

@@ -237,6 +237,35 @@ struct WebNSView: NSViewRepresentable {
         }
         
         parent.tab.webviewIsError = false
+      } else {// not error
+        // Fetch Cookie
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+          var cacheCookies: [HTTPCookie] = []
+          for cookie in cookies {
+            cacheCookies.append(cookie)
+          }
+          DispatchQueue.main.async {
+            print(cacheCookies)
+            self.parent.tab.cookies = cacheCookies
+          }
+        }
+        // Fetch localStorage
+        webView.evaluateJavaScript("JSON.stringify(localStorage)") { (result, error) in
+          if let localStorage = result as? String {
+            DispatchQueue.main.async {
+              self.parent.tab.localStorage = localStorage
+            }
+          }
+        }
+        // Fetch sessionStorage
+        webView.evaluateJavaScript("JSON.stringify(sessionStorage)") { (result, error) in
+          if let sessionStorage = result as? String {
+            DispatchQueue.main.async {
+              self.parent.tab.sessionStorage = sessionStorage
+            }
+          }
+        }
+        
       }
       
       webView.evaluateJavaScript("""
@@ -693,6 +722,26 @@ struct WebNSView: NSViewRepresentable {
       }
       return
     }
+    
+    // Clear Cookies and Web Storage
+    if tab.isClearCookieNStorage {
+      DispatchQueue.main.async {
+        tab.isClearCookieNStorage = false
+        let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
+        cookieStore.getAllCookies { cookies in
+          for cookie in cookies {
+            cookieStore.delete(cookie)
+          }
+        }
+        let jsString = """
+          localStorage.clear();
+          sessionStorage.clear();
+        """
+        webView.evaluateJavaScript(jsString, completionHandler: nil)
+      }
+      return
+    }
+    
     
     // Zoom In-Out
     if tab.isZoomDialog && tab.zoomLevel != tab.cacheZoomLevel {

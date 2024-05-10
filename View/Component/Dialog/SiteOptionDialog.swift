@@ -15,12 +15,15 @@ struct SiteOptionDialog: View {
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
+  @Binding var isSiteDialog: Bool
+  
   @State var cacheBlockingLevel: String?
   
-  init(service: Service, browser: Browser, tab: Tab) {
+  init(service: Service, browser: Browser, tab: Tab, isSiteDialog: Binding<Bool>) {
     self.service = service
     self.tab = tab
     self.browser = browser
+    self._isSiteDialog = isSiteDialog
     self._cacheBlockingLevel = State(initialValue: service.blockingLevel)
   }
   
@@ -30,65 +33,68 @@ struct SiteOptionDialog: View {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
             Image(systemName: "lock.circle.fill")
-              .font(.system(size: 30))
               .foregroundColor(Color("Point"))
-              .padding(.top, 10)
-              .padding(.bottom, 15)
-          }
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This connection is secure.", comment: ""))
-            Spacer()
-          }
-          .padding(.bottom, 2)
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This is a page provided inside the app.", comment: ""))
-              .opacity(0.5)
-              .font(.system(size: 11))
-            Spacer()
+              .font(.system(size: 26))
+            VStack(spacing: 0) {
+              HStack(spacing: 0) {
+                Text(NSLocalizedString("This connection is secure.", comment: ""))
+                Spacer()
+              }
+              .padding(.bottom, 2)
+              HStack(spacing: 0) {
+                Text(NSLocalizedString("This is a page provided inside the app.", comment: ""))
+                  .opacity(0.6)
+                  .font(.system(size: 11))
+                Spacer()
+              }
+            }
+            .padding(.leading, 10)
           }
         }
       } else if tab.isValidCertificate == false {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
             Image(systemName: "exclamationmark.triangle.fill")
-              .font(.system(size: 30))
+              .font(.system(size: 20))
               .foregroundColor(Color("AlertText"))
-              .padding(.top, 10)
-              .padding(.bottom, 15)
-          }
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This connection is not secure.", comment: ""))
-            Spacer()
+            VStack(spacing: 0) {
+              HStack(spacing: 0) {
+                Text(NSLocalizedString("This connection is not secure.", comment: ""))
+                Spacer()
+              }
+            }
+            .padding(.leading, 10)
           }
         }
       } else {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
             Image(systemName: "lock.circle.fill")
-              .font(.system(size: 30))
+              .font(.system(size: 26))
               .foregroundColor(Color("Point"))
-              .padding(.top, 10)
-              .padding(.bottom, 15)
-          }
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("This connection is secure.", comment: ""))
-            Spacer()
-          }
-          .padding(.bottom, 2)
-          HStack(spacing: 0) {
-            Text(NSLocalizedString("Certificate summary:", comment: ""))
-              .opacity(0.5)
-              .font(.system(size: 11))
-            Text(tab.certificateSummary)
-              .font(.system(size: 11))
-              .padding(.leading, 5)
-            Spacer()
+            VStack(spacing: 0) {
+              HStack(spacing: 0) {
+                Text(NSLocalizedString("This connection is secure.", comment: ""))
+                Spacer()
+              }
+              .padding(.bottom, 2)
+              HStack(spacing: 0) {
+                Text(NSLocalizedString("Certificate summary:", comment: ""))
+                  .opacity(0.6)
+                  .font(.system(size: 11))
+                Text(tab.certificateSummary)
+                  .font(.system(size: 11))
+                  .padding(.leading, 5)
+                Spacer()
+              }
+            }
+            .padding(.leading, 10)
           }
         }
       }
       
       Divider()
-        .padding(.vertical, 15)
+        .padding(.vertical, 10)
       
       HStack(spacing: 0) {
         Text(NSLocalizedString("Tracker Blocking", comment: ""))
@@ -101,21 +107,21 @@ struct SiteOptionDialog: View {
         }
         .frame(maxWidth: .infinity)
       }
-      .padding(.bottom, 5)
+      .padding(.bottom, 6)
   
       HStack(spacing: 0) {
         Text(
           service.blockingLevel == "blocking-strong" ?
-          NSLocalizedString("blocking-light-exp", comment: "")
+          NSLocalizedString("blocking-strong-exp", comment: "")
           : service.blockingLevel == "blocking-moderate" ?
           NSLocalizedString("blocking-moderate-exp", comment: "")
           : service.blockingLevel == "blocking-light" ?
-          NSLocalizedString("blocking-strong-exp", comment: "")
+          NSLocalizedString("blocking-light-exp", comment: "")
           : NSLocalizedString("blocking-none-exp", comment: "")
         )
         .font(.system(size: 11))
         .foregroundStyle(Color("UIText"))
-        .opacity(0.5)
+        .opacity(0.6)
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
         Spacer()
@@ -143,6 +149,59 @@ struct SiteOptionDialog: View {
           }
         Spacer()
       }
+      
+      Divider()
+        .padding(.vertical, 10)
+      
+      HStack(spacing: 0) {
+        Image(systemName: "xserve")
+          .frame(maxWidth: 15, maxHeight: 15)
+          .foregroundColor(Color("Icon"))
+        Text("\(NSLocalizedString("Cookie", comment: "")) :")
+          .padding(.leading, 8)
+        Text("\(tab.cookies.count)")
+          .foregroundColor(Color(tab.cookies.count > 0 ? "Point" : "UIText"))
+          .opacity(tab.cookies.count > 0 ? 1 : 0.5)
+          .padding(.leading, 5)
+        Spacer()
+      }
+      .padding(.bottom, 5)
+      
+      HStack(spacing: 0) {
+        Text("\(tab.localStorage == "{}" && tab.sessionStorage == "{}" ? NSLocalizedString("No web storage data found on the website.", comment: "") : NSLocalizedString("Web storage data is present on the website.", comment: ""))")
+          .font(.system(size: 11))
+          .foregroundStyle(Color("UIText"))
+          .opacity(0.6)
+          .lineLimit(nil)
+          .fixedSize(horizontal: false, vertical: true)
+        Spacer()
+      }
+      
+      HStack(spacing: 0) {
+        if tab.localStorage != "{}" || tab.sessionStorage != "{}" || tab.cookies.count > 0 {
+          Button {
+            DispatchQueue.main.async {
+              tab.isClearCookieNStorage = true
+              self.isSiteDialog = false
+              AppDelegate.shared.refreshTab()
+            }
+          } label: {
+            Text(NSLocalizedString("Clear Cookies and Storage", comment: ""))
+              .frame(maxWidth: .infinity)
+          }
+          .buttonStyle(DialogButtonStyle())
+        } else {
+          Button {
+            
+          } label: {
+            Text(NSLocalizedString("Clear Cookies and Storage", comment: ""))
+              .frame(maxWidth: .infinity)
+          }
+          .buttonStyle(DialogButtonCancelStyle())
+        }
+      }
+      .padding(.top, 10)
+      
     }
     .frame(width: 220)
     .padding(.horizontal, 20)

@@ -133,3 +133,8 @@
 "Contact Us" = "Contact US";
 "Zoom In" = "Zoom In";
 "Zoom Out" = "Zoom Out";
+
+"Cookie" = "Cookie";
+"No web storage data found on the website." = "No web storage data found on the website.";
+"Web storage data is present on the website." = "Web storage data is present on the website.";
+"Clear Cookies and Storage" = "Clear Cookies and Storage";

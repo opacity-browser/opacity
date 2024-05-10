@@ -81,6 +81,12 @@ final class Tab: ObservableObject {
   @Published var zoomLevel: CGFloat = 1.0
   var cacheZoomLevel: CGFloat = 1.0
   
+  // Cookies & Storage
+  @Published var isClearCookieNStorage: Bool = false
+  @Published var cookies: [HTTPCookie] = []
+  @Published var localStorage: String = "{}"
+  @Published var sessionStorage: String = "{}"
+  
   
   lazy var webview: WKWebView? = {
     let config = WKWebViewConfiguration()
