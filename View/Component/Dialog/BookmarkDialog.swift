@@ -84,6 +84,17 @@ struct BookmarkDialog: View {
           Text(NSLocalizedString("Save", comment: ""))
         }
         .buttonStyle(DialogButtonStyle())
+        
+        if let bookmark = bookmarks.first(where: { $0.url == tab.originURL.absoluteString }) {
+          Button {
+            BookmarkManager.deleteBookmark(bookmark: bookmark)
+            self.onClose()
+          } label: {
+            Text(NSLocalizedString("Delete", comment: ""))
+          }
+          .buttonStyle(DialogButtonCancelStyle())
+          .padding(.leading, 8)
+        }
       }
     }
     .padding(.top, 20)

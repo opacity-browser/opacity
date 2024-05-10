@@ -694,6 +694,14 @@ struct WebNSView: NSViewRepresentable {
       return
     }
     
+    // Zoom In-Out
+    if tab.isZoomDialog && tab.zoomLevel != tab.cacheZoomLevel {
+      let jsString = "document.body.style.zoom = '\(tab.zoomLevel)'"
+      webView.evaluateJavaScript(jsString, completionHandler: nil)
+      tab.cacheZoomLevel = tab.zoomLevel
+      return
+    }
+    
     // History
     if tab.updateWebHistory {
       DispatchQueue.main.async {

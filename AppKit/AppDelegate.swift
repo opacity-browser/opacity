@@ -265,8 +265,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       viewMenu.addItem(fullScreenMenuItem)
       
       viewMenu.addItem(NSMenuItem.separator())
-      viewItem.submenu = viewMenu
       
+      viewMenu.addItem(withTitle: NSLocalizedString("Zoom In", comment: ""), action: #selector(self.zoomIn), keyEquivalent: "+")
+      viewMenu.addItem(withTitle: NSLocalizedString("Zoom Out", comment: ""), action: #selector(self.zoomOut), keyEquivalent: "-")
+      
+      viewMenu.addItem(NSMenuItem.separator())
+      
+      viewItem.submenu = viewMenu
       mainMenu.addItem(viewItem)
 //      // 단축키에 파라미터 전송 예시
 //      let menuItem3 = NSMenuItem(title: "File2", action: nil, keyEquivalent: "")
@@ -278,6 +283,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //      mainMenu.addItem(menuItem3)
       
       NSApplication.shared.mainMenu = mainMenu
+    }
+  }
+  
+  @objc func zoomIn() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetTab = target.tabs.first(where: { $0.id == activeId }) {
+          DispatchQueue.main.async {
+            targetTab.isZoomDialog = true
+            targetTab.zoomLevel = ((targetTab.zoomLevel * 10) + 1) / 10
+          }
+        }
+      }
+    }
+  }
+  
+  @objc func zoomOut() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let activeId = target.activeTabId {
+        if let targetTab = target.tabs.first(where: { $0.id == activeId }) {
+          DispatchQueue.main.async {
+            targetTab.isZoomDialog = true
+            targetTab.zoomLevel = ((targetTab.zoomLevel * 10) - 1) / 10
+          }
+        }
+      }
     }
   }
   

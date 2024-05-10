@@ -114,6 +114,7 @@
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
 		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
+		A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -233,6 +234,7 @@
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
+		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,6 +272,7 @@
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
 				A10DA6732BB395B60053913D /* MoreMenuDialog.swift */,
 				A17C976F2BD32A19009240B9 /* FindDialog.swift */,
+				A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -690,6 +693,7 @@
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
+				A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */,
 				A10DA6882BB928460053913D /* PermissionItem.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
