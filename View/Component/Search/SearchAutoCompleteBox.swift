@@ -103,7 +103,7 @@ struct SearchAutoCompleteBox: View {
             }
             .background(Color("InputBG"))
             .popover(isPresented: $isSiteDialog, arrowEdge: .bottom) {
-              SiteOptionDialog(service: service, browser: browser, tab: tab)
+              SiteOptionDialog(service: service, browser: browser, tab: tab, isSiteDialog: $isSiteDialog)
             }
           }
           .padding(.leading, 7)

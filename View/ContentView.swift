@@ -41,6 +41,17 @@ struct ContentView: View {
       if let generalSetting = generalSettings.first {
         service.blockingLevel = generalSetting.blockingLevel
       }
+      if let screenMode = generalSettings.first?.screenMode {
+        if screenMode == "Dark" {
+          NSApp.appearance = NSAppearance(named: .darkAqua)
+        }
+        if screenMode == "Light" {
+          NSApp.appearance = NSAppearance(named: .aqua)
+        }
+        if screenMode == "System" {
+          NSApp.appearance = nil
+        }
+      }
     }
     .onChange(of: generalSettings.first?.screenMode) { _, newValue in
       if newValue == "Dark" {
