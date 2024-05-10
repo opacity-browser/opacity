@@ -17,6 +17,7 @@ struct Navigation: View {
   @State private var isLocaionHover: Bool = false
   @State private var isNotificationHover: Bool = false
   @State private var isFindHover: Bool = false
+  @State private var isZoomHover: Bool = false
   
   @State private var isNotificationDetailDialog: Bool = true
   @State private var isLocationDetailDialog: Bool = true
@@ -57,6 +58,32 @@ struct Navigation: View {
       
       VStack(spacing: 0) { }.frame(width: 11)
       
+      if tab.isZoomDialog {
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            Image(systemName: "plus.magnifyingglass")
+              .foregroundColor(Color("Icon"))
+              .font(.system(size: 14))
+              .fontWeight(.regular)
+          }
+          .frame(maxWidth: iconHeight, maxHeight: iconHeight)
+          .background(isZoomHover ? .gray.opacity(0.2) : .gray.opacity(0))
+          .clipShape(RoundedRectangle(cornerRadius: iconRadius))
+          .onTapGesture {
+            tab.isZoomDialog.toggle()
+          }
+          .onHover { hover in
+            withAnimation {
+              isZoomHover = hover
+            }
+          }
+          .popover(isPresented: $tab.isZoomDialog, arrowEdge: .bottom) {
+            ZoomDialog(tab: tab)
+          }
+        }
+        .padding(.trailing, 13)
+      }
+      
       if tab.isFindDialog {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
@@ -71,14 +98,16 @@ struct Navigation: View {
           .onAppear {
             isFindDetailDialog = true
           }
-          .onHover { inside in
+          .onHover { hover in
             withAnimation {
-              isFindHover = inside
+              isFindHover = hover
             }
           }
           .onChange(of: isFindDetailDialog) { _, nV in
             if nV == false {
-              tab.isFindDialog = false
+              DispatchQueue.main.async {
+                tab.isFindDialog = false
+              }
             }
           }
           .popover(isPresented: $isFindDetailDialog, arrowEdge: .bottom) {
@@ -99,9 +128,9 @@ struct Navigation: View {
           .frame(maxWidth: iconHeight, maxHeight: iconHeight)
           .background(isNotificationHover ? .gray.opacity(0.2) : .gray.opacity(0))
           .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-          .onHover { inside in
+          .onHover { hover in
             withAnimation {
-              isNotificationHover = inside
+              isNotificationHover = hover
             }
           }
           .onTapGesture {
@@ -125,9 +154,9 @@ struct Navigation: View {
           .frame(maxWidth: iconHeight, maxHeight: iconHeight)
           .background(isLocaionHover ? .gray.opacity(0.2) : .gray.opacity(0))
           .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-          .onHover { inside in
+          .onHover { hover in
             withAnimation {
-              isLocaionHover = inside
+              isLocaionHover = hover
             }
           }
           .onTapGesture {
@@ -151,9 +180,9 @@ struct Navigation: View {
         .frame(maxWidth: iconHeight, maxHeight: iconHeight)
         .background(isSidebarHover || browser.isSideBar ? .gray.opacity(0.2) : .gray.opacity(0))
         .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-        .onHover { hovering in
+        .onHover { hover in
           withAnimation {
-            isSidebarHover = hovering
+            isSidebarHover = hover
           }
         }
         .onTapGesture {
@@ -173,16 +202,16 @@ struct Navigation: View {
         .frame(maxWidth: iconHeight, maxHeight: iconHeight)
         .background(isMoreHover ? .gray.opacity(0.2) : .gray.opacity(0))
         .clipShape(RoundedRectangle(cornerRadius: iconRadius))
-        .onHover { hovering in
+        .onHover { hover in
           withAnimation {
-            isMoreHover = hovering
+            isMoreHover = hover
           }
         }
         .onTapGesture {
           self.isMoreMenuDialog.toggle()
         }
         .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
-          MoreMenuDialog(browser: browser, isMoreMenuDialog: $isMoreMenuDialog)
+          MoreMenuDialog(browser: browser, tab: tab, isMoreMenuDialog: $isMoreMenuDialog)
         }
         .offset(y: -1)
       }

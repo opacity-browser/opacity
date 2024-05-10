@@ -76,6 +76,11 @@ final class Tab: ObservableObject {
   @Published var isValidCertificate: Bool?
   var certificateSummary: String = ""
   
+  // Zoom
+  @Published var isZoomDialog: Bool = false
+  @Published var zoomLevel: CGFloat = 1.0
+  var cacheZoomLevel: CGFloat = 1.0
+  
   
   lazy var webview: WKWebView? = {
     let config = WKWebViewConfiguration()
