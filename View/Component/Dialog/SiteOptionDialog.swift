@@ -157,6 +157,7 @@ struct SiteOptionDialog: View {
         Image(systemName: "xserve")
           .frame(maxWidth: 15, maxHeight: 15)
           .foregroundColor(Color("Icon"))
+          .offset(y: 1)
         Text("\(NSLocalizedString("Cookie", comment: "")) :")
           .padding(.leading, 8)
         Text("\(tab.cookies.count)")

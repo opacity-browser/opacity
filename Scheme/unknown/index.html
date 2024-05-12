@@ -107,9 +107,11 @@
         button.innerText = pageData.refreshBtn
         
         button.addEventListener('click', () => {
+          const urlParams = new URLSearchParams(window.location.search)
+          const decodeURL = atob(urlParams.get("url"))
           window.webkit.messageHandlers.opacityBrowser.postMessage({
             name: "replacePage",
-            value: pageData.href
+            value: decodeURL
           })
         })
         document.body.style.display = 'flex'
