@@ -99,6 +99,28 @@ struct WebNSView: NSViewRepresentable {
         DispatchQueue.main.async {
           self.parent.tab.pageProgress = webView.estimatedProgress
         }
+        let errorHosts = ["blocked-content", "not-find-host", "not-connect-host", "occurred-ssl-error", "not-connect-internet", "unknown"]
+        if let webviewURL = webView.url, let host = webviewURL.host, webviewURL.scheme == "opacity", parent.tab.webviewIsError == false, errorHosts.contains(host) {
+          self.parent.tab.webviewIsError = true
+          if host == "blocked-content" {
+            self.parent.tab.webviewErrorType = .blockedContent
+          }
+          if host == "not-find-host" {
+            self.parent.tab.webviewErrorType = .notFindHost
+          }
+          if host == "not-connect-host" {
+            self.parent.tab.webviewErrorType = .notConnectHost
+          }
+          if host == "occurred-ssl-error" {
+            self.parent.tab.webviewErrorType = .occurredSSLError
+          }
+          if host == "not-connect-internet" {
+            self.parent.tab.webviewErrorType = .notConnectInternet
+          }
+          if host == "unknown" {
+            self.parent.tab.webviewErrorType = .unknown
+          }
+        }
       }
     }
     
@@ -190,7 +212,6 @@ struct WebNSView: NSViewRepresentable {
         print("error page init script")
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         let headTitle = parent.tab.printURL
-        let href = parent.tab.originURL
         let refreshBtn = NSLocalizedString("Refresh", comment: "")
         var title = ""
         var message = ""
@@ -228,11 +249,11 @@ struct WebNSView: NSViewRepresentable {
           webView.evaluateJavaScript("""
           window.opacityPage.initPageData({
             lang: '\(lang)',
-            href: '\(href)',
             headTitle: '\(headTitle)',
             title: '\(title)',
             refreshBtn: '\(refreshBtn)',
-            message: '\(message)'})
+            message: '\(message)'
+          })
          """)
         }
         
@@ -245,7 +266,6 @@ struct WebNSView: NSViewRepresentable {
             cacheCookies.append(cookie)
           }
           DispatchQueue.main.async {
-            print(cacheCookies)
             self.parent.tab.cookies = cacheCookies
           }
         }
@@ -438,59 +458,60 @@ struct WebNSView: NSViewRepresentable {
       parent.tab.webviewIsError = true
       if let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL {
         self.cacheErrorURL = failingURL
-      }
-      
-      switch nsError.code {
-        //          case NSFileNoSuchFileError:
-        //            // 파일을 찾을 수 없음
-        //          case NSFileReadNoPermissionError:
-        //            // 파일 읽기 권한 없음
-        //          case NSFileReadCorruptFileError:
-        //            // 손상된 파일
-        case 104:
-          parent.tab.webviewErrorType = .blockedContent
-          if let schemeURL = URL(string:"opacity://blocked-content") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        case WebKitErrorFrameLoadInterruptedByPolicyChange:
-          print("Frame load interrupted by policy change: \(error.localizedDescription)")
-          break
-        case NSURLErrorCannotFindHost:
-          parent.tab.webviewErrorType = .notFindHost
-          if let schemeURL = URL(string:"opacity://not-find-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        case NSURLErrorCannotConnectToHost:
-          parent.tab.webviewErrorType = .notConnectHost
-          if let schemeURL = URL(string:"opacity://not-connect-host") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        case NSURLErrorSecureConnectionFailed:
-          parent.tab.webviewErrorType = .occurredSSLError
-          if let schemeURL = URL(string:"opacity://occurred-ssl-error") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        case NSURLErrorServerCertificateHasBadDate:
-          parent.tab.webviewErrorType = .occurredSSLError
-          if let schemeURL = URL(string:"opacity://occurred-ssl-error") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        case NSURLErrorNotConnectedToInternet:
-          parent.tab.webviewErrorType = .notConnectInternet
-          if let schemeURL = URL(string:"opacity://not-connect-internet") {
-            webView.load(URLRequest(url: schemeURL))
-          }
-          break
-        default:
-          parent.tab.webviewErrorType = .unknown
-          if let schemeURL = URL(string:"opacity://unknown") {
-            webView.load(URLRequest(url: schemeURL))
-          }
+        let errorURLBase64: Data = failingURL.absoluteString.data(using: .utf8)!
+        
+        switch nsError.code {
+            //          case NSFileNoSuchFileError:
+            //            // 파일을 찾을 수 없음
+            //          case NSFileReadNoPermissionError:
+            //            // 파일 읽기 권한 없음
+            //          case NSFileReadCorruptFileError:
+            //            // 손상된 파일
+          case 104:
+            parent.tab.webviewErrorType = .blockedContent
+            if let schemeURL = URL(string:"opacity://blocked-content?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          case WebKitErrorFrameLoadInterruptedByPolicyChange:
+            print("Frame load interrupted by policy change: \(error.localizedDescription)")
+            break
+          case NSURLErrorCannotFindHost:
+            parent.tab.webviewErrorType = .notFindHost
+            if let schemeURL = URL(string:"opacity://not-find-host?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          case NSURLErrorCannotConnectToHost:
+            parent.tab.webviewErrorType = .notConnectHost
+            if let schemeURL = URL(string:"opacity://not-connect-host?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          case NSURLErrorSecureConnectionFailed:
+            parent.tab.webviewErrorType = .occurredSSLError
+            if let schemeURL = URL(string:"opacity://occurred-ssl-error?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          case NSURLErrorServerCertificateHasBadDate:
+            parent.tab.webviewErrorType = .occurredSSLError
+            if let schemeURL = URL(string:"opacity://occurred-ssl-error?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          case NSURLErrorNotConnectedToInternet:
+            parent.tab.webviewErrorType = .notConnectInternet
+            if let schemeURL = URL(string:"opacity://not-connect-internet?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+            break
+          default:
+            parent.tab.webviewErrorType = .unknown
+            if let schemeURL = URL(string:"opacity://unknown?url=\(errorURLBase64.base64EncodedString())") {
+              webView.load(URLRequest(url: schemeURL))
+            }
+        }
       }
     }
     
