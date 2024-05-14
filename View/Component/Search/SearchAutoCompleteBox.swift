@@ -112,16 +112,16 @@ struct SearchAutoCompleteBox: View {
                   .padding(.trailing, 20)
                   .clipped()
               }
-              .frame(height: 16)
+              .frame(height: 17)
             }
             .padding(.leading, 4)
           } else {
             if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
               HStack(spacing: 0) {
                 HStack(spacing: 0) {
-                  SearchNSTextView(text: tab.autoCompleteList[choiceIndex].searchText, opacity: 0.4)
+                  SearchNSTextView(text: searchBackgroundText(choiceIndex), opacity: 0.35)
                 }
-                .frame(height: 16)
+                .frame(height: 17)
               }
               .padding(.leading, 4)
             }
@@ -131,7 +131,6 @@ struct SearchAutoCompleteBox: View {
             .padding(.leading, tab.isEditSearch ? 4 : 9)
             .padding(.leading, isScrollable ? 0.2 : 0)
             .frame(height: tab.isEditSearch ? 36 : 32)
-            .offset(y: -0.5)
             .onKeyPress(.upArrow) {
               if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
                 let maxSearchCount = tab.autoCompleteList.count > 5 ? 5 : tab.autoCompleteList.count
@@ -213,6 +212,16 @@ struct SearchAutoCompleteBox: View {
         SearchAutoComplete(browser: browser, tab: tab)
       }
     }
+  }
+  
+  func searchBackgroundText(_ choiceIndex: Int) -> String {
+    var printText = tab.autoCompleteList[choiceIndex].searchText
+    for (index, char) in tab.inputURL.enumerated() {
+      guard index < printText.count else { break }
+      let resultIndex = printText.index(printText.startIndex, offsetBy: index)
+      printText.replaceSubrange(resultIndex...resultIndex, with: String(char))
+    }
+    return printText
   }
 }
 
