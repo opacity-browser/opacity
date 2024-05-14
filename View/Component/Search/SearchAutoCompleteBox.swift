@@ -134,16 +134,19 @@ struct SearchAutoCompleteBox: View {
             .offset(y: -0.5)
             .onKeyPress(.upArrow) {
               if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                let maxSearchCount = tab.autoCompleteList.count > 5 ? 5 : tab.autoCompleteList.count
+                let maxVisitCount = tab.autoCompleteVisitList.count > 5 ? 5 : tab.autoCompleteVisitList.count
+                let maxCount = maxSearchCount + maxVisitCount
                 DispatchQueue.main.async {
                   tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
                     if choiceIndex > 0 {
                       tab.autoCompleteIndex = choiceIndex - 1
                     } else {
-                      tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
+                      tab.autoCompleteIndex = maxCount - 1
                     }
                   } else {
-                    tab.autoCompleteIndex = (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) - 1
+                    tab.autoCompleteIndex = maxCount - 1
                   }
                   
                   if let choiceIndex = tab.autoCompleteIndex {
@@ -159,10 +162,13 @@ struct SearchAutoCompleteBox: View {
             }
             .onKeyPress(.downArrow) {
               if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                let maxSearchCount = tab.autoCompleteList.count > 5 ? 5 : tab.autoCompleteList.count
+                let maxVisitCount = tab.autoCompleteVisitList.count > 5 ? 5 : tab.autoCompleteVisitList.count
+                let maxCount = maxSearchCount + maxVisitCount
                 DispatchQueue.main.async {
                   tab.isChangeByKeyDown = true
                   if let choiceIndex = tab.autoCompleteIndex {
-                    if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > choiceIndex + 1 {
+                    if maxCount > choiceIndex + 1 {
                       tab.autoCompleteIndex = choiceIndex + 1
                     } else {
                       tab.autoCompleteIndex = 0
