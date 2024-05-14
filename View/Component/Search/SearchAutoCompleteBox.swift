@@ -8,13 +8,6 @@
 import SwiftUI
 import SwiftData
 
-func inputTextWidth(_ text: String) -> CGFloat {
-  let attributes = [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 13.5)]
-  let attributedString = NSAttributedString(string: text, attributes: attributes)
-  let size = attributedString.size()
-  return size.width
-}
-
 struct SearchAutoCompleteBox: View {
   @Environment(\.colorScheme) var colorScheme
   @Query var generalSettings: [GeneralSetting]
@@ -30,6 +23,7 @@ struct SearchAutoCompleteBox: View {
   
   @State private var isSiteDialog: Bool = false
   @State var isBookmarkHover: Bool = false
+  @State var isScrollable: Bool = false
   
   func decodeBase64ToNSImage(base64: String) -> NSImage? {
     guard let imageData = Data(base64Encoded: base64, options: .ignoreUnknownCharacters) else {
@@ -113,34 +107,31 @@ struct SearchAutoCompleteBox: View {
         ZStack {
           if !tab.isEditSearch {
             HStack(spacing: 0) {
-              Text(tab.printURL)
-                .font(.system(size: 13.5))
-                .padding(.leading, 4)
-                .frame(height: 32)
-                .lineLimit(1)
-                .truncationMode(.tail)
-              Spacer()
+              HStack {
+                SearchNSTextView(text: tab.printURL, opacity: 0.9)
+                  .padding(.trailing, 20)
+                  .clipped()
+              }
+              .frame(height: 16)
+            }
+            .padding(.leading, 4)
+          } else {
+            if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
+              HStack(spacing: 0) {
+                HStack(spacing: 0) {
+                  SearchNSTextView(text: tab.autoCompleteList[choiceIndex].searchText, opacity: 0.4)
+                }
+                .frame(height: 16)
+              }
+              .padding(.leading, 4)
             }
           }
-          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
+          
+          SearchNSTextField(browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups, isScrollable: $isScrollable)
             .padding(.leading, tab.isEditSearch ? 4 : 9)
+            .padding(.leading, isScrollable ? 0.2 : 0)
             .frame(height: tab.isEditSearch ? 36 : 32)
-            .overlay {
-              if let choiceIndex = tab.autoCompleteIndex, tab.isEditSearch, tab.autoCompleteList.count > 0, choiceIndex < tab.autoCompleteList.count {
-                let autoCompleteText = tab.autoCompleteList[choiceIndex].searchText.replacingFirstOccurrence(of: tab.inputURL, with: "")
-                HStack(spacing: 0) {
-                  VStack(spacing: 0) {
-                    Text("\(autoCompleteText)")
-                      .font(.system(size: 13.5))
-                  }
-                  .frame(height: 16)
-                  .background(Color("AccentColor").opacity(0.3))
-                  .padding(.leading, 5)
-                  .padding(.leading, inputTextWidth(tab.inputURL))
-                  Spacer()
-                }
-              }
-            }
+            .offset(y: -0.5)
             .onKeyPress(.upArrow) {
               if (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
                 DispatchQueue.main.async {
@@ -207,16 +198,10 @@ struct SearchAutoCompleteBox: View {
               return .ignored
             }
         }
+        
         BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
           .padding(.leading, 5)
           .padding(.trailing, 10)
-          .onChange(of: tab.pageProgress) { oldValue, newValue in
-            if newValue == 1.0 {
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                tab.pageProgress = 0
-              }
-            }
-          }
       }
       if tab.isEditSearch && tab.inputURL != "" && (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
         SearchAutoComplete(browser: browser, tab: tab)

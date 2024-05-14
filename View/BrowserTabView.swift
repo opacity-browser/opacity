@@ -94,32 +94,14 @@ struct BrowserTabView: View {
         }
       }
       .frame(maxWidth: 220, maxHeight: 38)
-//      .onChange(of: tab.isPageProgress) { _, newValue in
-//        if newValue == false {
-//          DispatchQueue.main.async {
-//            loadingAnimation = false
-//          }
-//        }
-//      }
-//      .onChange(of: tab.pageProgress) { _, newValue in
-//        cacheProgress = newValue
-//        if newValue == 1.0 {
-////          checkAfterProgress()
-//          tab.pageProgress = 0.0
-//        }
-//      }
+      .onChange(of: tab.pageProgress) { _, newValue in
+        if newValue == 1.0 {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            tab.pageProgress = 0
+          }
+        }
+      }
     }
   }
-  
-//  func checkAfterProgress() {
-//    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//      if self.cacheProgress == 1.0 {
-////        tab.isPageProgress = false
-//        tab.pageProgress = 0.0
-//      } else {
-//        checkAfterProgress()
-//      }
-//    }
-//  }
 }
 
