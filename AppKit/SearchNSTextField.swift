@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct SearchNSTextField: NSViewRepresentable {
+  @Environment(\.colorScheme) var colorScheme
+  
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   var searchHistoryGroups: [SearchHistoryGroup]
   var visitHistoryGroups: [VisitHistoryGroup]
+  @Binding var isScrollable: Bool
   
   class Coordinator: NSObject, NSTextFieldDelegate {
     var parent: SearchNSTextField
@@ -68,6 +71,20 @@ struct SearchNSTextField: NSViewRepresentable {
         }
         
         self.parent.tab.inputURL = textField.stringValue
+        self.checkScrollable(textField: textField)
+      }
+    }
+    
+    func checkScrollable(textField: NSTextField) {
+      guard let textView = textField.currentEditor() as? NSTextView else { return }
+      let layoutManager = textView.layoutManager!
+      let textContainer = textView.textContainer!
+      
+      layoutManager.ensureLayout(for: textContainer)
+      let usedRect = layoutManager.usedRect(for: textContainer)
+      
+      DispatchQueue.main.async {
+        self.parent.isScrollable = usedRect.size.width > textField.bounds.size.width
       }
     }
     
@@ -92,6 +109,7 @@ struct SearchNSTextField: NSViewRepresentable {
         let selectedRange = textView.selectedRange()
         if let index = self.parent.tab.autoCompleteIndex,
            self.parent.tab.autoCompleteList.count > 0,
+           self.parent.tab.autoCompleteList.count > index,
            self.parent.tab.autoCompleteList[index].searchText != self.parent.tab.inputURL,
            selectedRange.length == 0 {
           DispatchQueue.main.async {
@@ -117,11 +135,14 @@ struct SearchNSTextField: NSViewRepresentable {
     textField.focusRingType = .none
     textField.drawsBackground = false
     
-    textField.cell?.wraps = false
-    textField.cell?.isScrollable = true
-    textField.cell?.usesSingleLineMode = true
+    if let textCell = textField.cell as? NSTextFieldCell {
+      textCell.wraps = false
+      textCell.isScrollable = true
+      textCell.usesSingleLineMode = true
+    }
     
-    textField.font = NSFont.systemFont(ofSize: 13.5)
+    let font = NSFont.systemFont(ofSize: 14, weight: .regular)
+    textField.font = font
     
     return textField
   }
@@ -131,12 +152,14 @@ struct SearchNSTextField: NSViewRepresentable {
     nsView.tab = tab
     context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
     
-    let textAlpha = tab.isEditSearch ? 0.85 : 0
-    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+    let textAlpha = tab.isEditSearch ? 0.85 : 0.0
+    if colorScheme == .dark {
       nsView.textColor = NSColor.white.withAlphaComponent(textAlpha)
     } else {
       nsView.textColor = NSColor.black.withAlphaComponent(textAlpha)
     }
+    
+    context.coordinator.checkScrollable(textField: nsView)
     
     if let window = nsView.window {
       if tab.isInit && tab.isInitFocus {

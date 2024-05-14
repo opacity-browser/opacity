@@ -659,7 +659,29 @@ struct WebNSView: NSViewRepresentable {
         }
       }
     }
-  // end coordinator
+    
+    func setUserAgent(for webView: WKWebView) {
+      webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
+        if let userAgent = result as? String {
+          var addAgentText = ""
+          
+          if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            addAgentText = " Opacity/" + version
+          }
+          
+          if let range = userAgent.range(of: "AppleWebKit/") {
+            let versionStartIndex = userAgent.index(range.upperBound, offsetBy: 0)
+            let versionEndIndex = userAgent[versionStartIndex...].firstIndex(where: { !$0.isNumber && $0 != "." }) ?? userAgent.endIndex
+            let safariVersion = String(userAgent[versionStartIndex..<versionEndIndex])
+            addAgentText = addAgentText + " Safari/" + safariVersion
+          }
+          
+          webView.customUserAgent = userAgent + addAgentText
+        }
+      }
+    }
+  
+    // end coordinator
   }
   
   private func addContentBlockingRules(_ webView: WKWebView) {
@@ -718,6 +740,8 @@ struct WebNSView: NSViewRepresentable {
     webview.isInspectable = true
     webview.setValue(false, forKey: "drawsBackground")
     updateBlockingRules(webview)
+    
+    context.coordinator.setUserAgent(for: webview)
     
     return webview
   }

@@ -166,7 +166,7 @@ struct SiteOptionDialog: View {
           .padding(.leading, 5)
         Spacer()
       }
-      .padding(.bottom, 5)
+      .padding(.bottom, 4)
       
       HStack(spacing: 0) {
         Text("\(tab.localStorage == "{}" && tab.sessionStorage == "{}" ? NSLocalizedString("No web storage data found on the website.", comment: "") : NSLocalizedString("Web storage data is present on the website.", comment: ""))")

@@ -72,6 +72,7 @@
 		A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54262B5BA457007020CA /* ImageLoader.swift */; };
 		A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */; };
 		A15FCB122B999D7700D64C05 /* BookmarkGroupTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15FCB112B999D7700D64C05 /* BookmarkGroupTitle.swift */; };
+		A16163C12BF2D79800228BE3 /* SearchNSTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16163C02BF2D79800228BE3 /* SearchNSTextView.swift */; };
 		A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A169200F2B2FA82200F8B4C0 /* Assets.xcassets */; };
 		A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */; };
 		A16BCAEE2B8EAC34004639F2 /* DomainPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCAED2B8EAC34004639F2 /* DomainPermission.swift */; };
@@ -183,6 +184,7 @@
 		A15D54262B5BA457007020CA /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		A15FCB0D2B9980A000D64C05 /* BookmarkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkList.swift; sourceTree = "<group>"; };
 		A15FCB112B999D7700D64C05 /* BookmarkGroupTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkGroupTitle.swift; sourceTree = "<group>"; };
+		A16163C02BF2D79800228BE3 /* SearchNSTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNSTextView.swift; sourceTree = "<group>"; };
 		A16920082B2FA82100F8B4C0 /* Opacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Opacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A169200F2B2FA82200F8B4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Opacity/Assets.xcassets; sourceTree = "<group>"; };
 		A16920122B2FA82200F8B4C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				A10DDD862BCA9B63003E159A /* BookmarkGroupTitleNSView.swift */,
 				A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */,
 				A10DDD8D2BCF5C13003E159A /* OpacityWebView.swift */,
+				A16163C02BF2D79800228BE3 /* SearchNSTextView.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -639,6 +642,7 @@
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
 				A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */,
 				A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */,
+				A16163C12BF2D79800228BE3 /* SearchNSTextView.swift in Sources */,
 				A14246162B71EF190062C516 /* TabItem.swift in Sources */,
 				A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */,
 				A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */,
@@ -888,7 +892,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = falsy.Opacity;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -924,7 +928,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = falsy.Opacity;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
