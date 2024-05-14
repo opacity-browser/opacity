@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SearchNSTextField: NSViewRepresentable {
+  @Environment(\.colorScheme) var colorScheme
+  
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   var searchHistoryGroups: [SearchHistoryGroup]
@@ -151,7 +153,13 @@ struct SearchNSTextField: NSViewRepresentable {
     context.coordinator.updateTab(tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups)
     
     let textAlpha = tab.isEditSearch ? 0.85 : 0.0
-    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+//    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+//      nsView.textColor = NSColor.white.withAlphaComponent(textAlpha)
+//    } else {
+//      nsView.textColor = NSColor.black.withAlphaComponent(textAlpha)
+//    }
+    
+    if colorScheme == .dark {
       nsView.textColor = NSColor.white.withAlphaComponent(textAlpha)
     } else {
       nsView.textColor = NSColor.black.withAlphaComponent(textAlpha)

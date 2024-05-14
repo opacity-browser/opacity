@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SearchNSTextView: NSViewRepresentable {
+  @Environment(\.colorScheme) var colorScheme
+  
   var text: String
   var opacity: CGFloat
   
@@ -15,15 +17,16 @@ struct SearchNSTextView: NSViewRepresentable {
     let scrollView = NSScrollView()
     let textView = NSTextView()
     scrollView.documentView = textView
+    textView.string = text
     textView.isEditable = false
     textView.drawsBackground = false
-    textView.string = text
+    textView.autoresizingMask = [.width, .height]
     textView.textContainer?.containerSize = CGSize(width: CGFloat.infinity, height: CGFloat.infinity)
     textView.textContainer?.widthTracksTextView = false
+    textView.textContainer?.lineFragmentPadding = 0
     textView.isHorizontallyResizable = true
     textView.maxSize = CGSize(width: CGFloat.infinity, height: CGFloat.infinity)
     textView.textContainerInset = .zero
-    textView.moveToBeginningOfDocument(nil)
     
     let font = NSFont.systemFont(ofSize: 14, weight: .regular)
     textView.font = font
@@ -34,7 +37,7 @@ struct SearchNSTextView: NSViewRepresentable {
   func updateNSView(_ nsView: NSTextView, context: Context) {
     nsView.string = text
     
-    if nsView.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+    if colorScheme == .dark {
       nsView.textColor = NSColor.white.withAlphaComponent(opacity)
     } else {
       nsView.textColor = NSColor.black.withAlphaComponent(opacity)
