@@ -554,35 +554,40 @@ final class OpacityScriptHandler {
         })
       """
       case "settings":
-        return """
-        window.opacityResponse.getPageStrings({
-          data: {
-            "Settings": '\(NSLocalizedString("Settings", comment: ""))',
-            "General": '\(NSLocalizedString("General", comment: ""))',
-            "Search History": '\(NSLocalizedString("Search History", comment: ""))',
-            "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
-            "Permission": '\(NSLocalizedString("Permission", comment: ""))',
-            "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
-            "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
-            "History Data Retention Period": '\(NSLocalizedString("History Data Retention Period", comment: ""))',
-            "View More": '\(NSLocalizedString("View More", comment: ""))',
-            "$n were selected.": '\(NSLocalizedString("$n were selected.", comment: ""))',
-            "Delete": '\(NSLocalizedString("Delete", comment: ""))',
-            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
-            "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
-            "Notification": '\(NSLocalizedString("Notification", comment: ""))',
-            "allowed": '\(NSLocalizedString("allowed", comment: ""))',
-            "denied": '\(NSLocalizedString("denied", comment: ""))',
-            "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
-            "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
-            "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
-            "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
-            "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
-            "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
-            "Clear All": '\(NSLocalizedString("Clear All", comment: ""))'
-          }
-        })
-      """
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+          return """
+          window.opacityResponse.getPageStrings({
+            data: {
+              "Settings": '\(NSLocalizedString("Settings", comment: ""))',
+              "General": '\(NSLocalizedString("General", comment: ""))',
+              "Search History": '\(NSLocalizedString("Search History", comment: ""))',
+              "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
+              "Permission": '\(NSLocalizedString("Permission", comment: ""))',
+              "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
+              "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
+              "History Data Retention Period": '\(NSLocalizedString("History Data Retention Period", comment: ""))',
+              "View More": '\(NSLocalizedString("View More", comment: ""))',
+              "$n were selected.": '\(NSLocalizedString("$n were selected.", comment: ""))',
+              "Delete": '\(NSLocalizedString("Delete", comment: ""))',
+              "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
+              "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
+              "Notification": '\(NSLocalizedString("Notification", comment: ""))',
+              "allowed": '\(NSLocalizedString("allowed", comment: ""))',
+              "denied": '\(NSLocalizedString("denied", comment: ""))',
+              "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
+              "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
+              "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
+              "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
+              "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
+              "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
+              "Clear All": '\(NSLocalizedString("Clear All", comment: ""))',
+              "Library": '\(NSLocalizedString("Library", comment: ""))',
+              "This is a library used in service development.": '\(NSLocalizedString("This is a library used in service development.", comment: ""))',
+              "version": "\(version)"
+            }
+          })
+        """
+        }
       default:
         print("ParameterError getPageStrings")
     }

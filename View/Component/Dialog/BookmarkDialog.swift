@@ -39,6 +39,7 @@ struct BookmarkDialog: View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
         Text(NSLocalizedString("Name", comment: ""))
+          .font(.system(size: 12))
         Spacer()
         ZStack {
           Rectangle()
@@ -52,11 +53,12 @@ struct BookmarkDialog: View {
             .font(.system(size: 12))
             .frame(height: 20)
         }
-        .frame(width: 160, height: 20)
+        .frame(width: 145, height: 20)
       }
       .padding(.bottom, 7)
       HStack(spacing: 0) {
         Text(NSLocalizedString("Folder", comment: ""))
+          .font(.system(size: 12))
         Spacer()
         Picker("", selection: $selectId) {
           ForEach(bookmarkGroups
@@ -65,7 +67,7 @@ struct BookmarkDialog: View {
             Text(target.name).tag(target.id as UUID?)
           }
         }
-        .frame(width: 168)
+        .frame(width: 153)
       }
       .padding(.bottom, 10)
       HStack(spacing: 0) {
