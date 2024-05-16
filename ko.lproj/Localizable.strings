@@ -1,145 +1,146 @@
+
 // App
-"lang" = "en";
-"to quit, press ⌘Q agin" = "to quit, press ⌘Q agin";
+"lang" = "ko";
+"to quit, press ⌘Q agin" = "종료하려면, ⌘Q를 한 번 더 눌러주세요.";
 
 // Menu
 "Opacity" = "Opacity";
-"About Opacity" = "About Opacity";
-"Quit Opacity" = "Quit Opacity";
-"File" = "File";
-"New Window" = "New Window";
-"New Tab" = "New Tab";
-"Close Window" = "Close Window";
-"Close Tab" = "Close Tab";
-"Edit" = "Edit";
-"Cut" = "Cut";
-"Copy" = "Copy";
-"Paste" = "Paste";
-"Select All" = "Select All";
-"Find" = "Find";
-"Find in Page..." = "Find in Page...";
-"Find Next" = "Find Next";
-"Find Previous" = "Find Previous";
-"View" = "View";
-"Reload Page" = "Reload Page";
-"Show Sidebar" = "Show Sidebar";
-"Hide Sidebar" = "Hide Sidebar";
-"Window" = "Window";
-"Minimize" = "Minimize";
-"Zoom" = "Zoom";
+"About Opacity" = "Opacity 정보";
+"Quit Opacity" = "Opacity 종료";
+"File" = "파일";
+"New Window" = "새로운 윈도우";
+"New Tab" = "새로운 탭";
+"Close Window" = "윈도우 닫기";
+"Close Tab" = "탭 닫기";
+"Edit" = "편집";
+"Cut" = "잘라내기";
+"Copy" = "복사";
+"Paste" = "붙여넣기";
+"Select All" = "모두 선택";
+"Find" = "찾기";
+"Find in Page..." = "찾기...";
+"Find Next" = "다음 찾기";
+"Find Previous" = "이전 찾기";
+"View" = "보기";
+"Reload Page" = "페이지 새로고침";
+"Show Sidebar" = "사이드바 보기";
+"Hide Sidebar" = "사이드바 숨기기";
+"Window" = "창";
+"Minimize" = "최소화";
+"Zoom" = "확대";
 
 // Error Page
-"Page not found" = "Page not found";
-"The server IP address for \\'%@\\' could not be found." = "The server IP address for \\'%@\\' could not be found.";
-"Unable to connect to site" = "Unable to connect to site";
-"Connection has been reset." = "Connection has been reset.";
-"No internet connection" = "No internet connection";
-"There is no internet connection." = "There is no internet connection.";
-"Unknown error" = "Unknown error";
-"An unknown error occurred." = "An unknown error occurred.";
+"Page not found" = "페이지를 찾을 수 없음";
+"The server IP address for \\'%@\\' could not be found." = "\\'%@\\'의 서버 IP 주소를 찾을 수 없습니다.";
+"Unable to connect to site" = "사이트에 연결할 수 없음";
+"Connection has been reset." = "연결이 재설정되었습니다.";
+"No internet connection" = "인터넷에 연결되어 있지 않음";
+"There is no internet connection." = "인터넷에 연결되어 있지 않습니다.";
+"Unknown error" = "알 수 없는 오류";
+"An unknown error occurred." = "알 수 없는 오류가 발생했습니다.";
 
-"Refresh" = "Refresh";
+"Refresh" = "새로고침";
 
-"Search.." = "Search..";
+"Search.." = "검색..";
 
-"Location services are disabled in your Mac system settings" = "Location services are disabled in your Mac system settings";
-"Open Settings" = "Open Settings";
+"Location services are disabled in your Mac system settings" = "Mac 시스템 설정에서 위치 서비스가 사용 중지되었습니다.";
+"Open Settings" = "설정 열기";
 
-"Notification Permissions" = "Notification Permissions";
-"Notification permission granted." = "Notification permission granted.";
+"Notification Permissions" = "알림 권한";
+"Notification permission granted." = "알림 권한이 허용되었습니다.";
 
-"Do you want to allow notifications from '%@'?" = "Do you want to allow notifications from '%@'?";
-"Allow" = "Allow";
-"Deny" = "Deny";
+"Do you want to allow notifications from '%@'?" = "'%@'의 알림을 허용하시겠습니까?";
+"Allow" = "허용";
+"Deny" = "거부";
 
-"Notification" = "Notification";
+"Notification" = "알림";
 
-"New Folder" = "New Folder";
-"Bookmark" = "Bookmark";
+"New Folder" = "새 폴더";
+"Bookmark" = "북마크";
 
-"Change Name" = "Change Name";
-"Delete" = "Delete";
-"Add Folder" = "Add Folder";
-"Folder" = "Folder";
-"Name" = "Name";
-"Save" = "Save";
+"Change Name" = "이름 변경";
+"Delete" = "삭제";
+"Add Folder" = "폴더 추가";
+"Folder" = "폴더";
+"Name" = "이름";
+"Save" = "저장";
 
-"System" = "System";
-"Light" = "Light";
-"Dark" = "Dark";
+"System" = "시스템 모드";
+"Light" = "라이트 모드";
+"Dark" = "다크 모드";
 
-"1 Day" = "1 Day";
-"1 Week" = "1 Week";
-"1 Month" = "1 Month";
-"Indefinite" = "Indefinite";
+"1 Day" = "하루";
+"1 Week" = "일주일";
+"1 Month" = "한달";
+"Indefinite" = "무기한";
 
-"Settings" = "Settings";
-"General" = "General";
-"Search History" = "Search History";
-"Visit History" = "Visit History";
-"Permission" = "Permission";
-"Search Engine" = "Search Engine";
-"Screen Mode" = "Screen Mode";
-"History Data Retention Period" = "History Data Retention Period";
-"View More" = "View More";
-"$n were selected." = "$n were selected.";
-"Delete" = "Delete";
-"Cancel" = "Cancel";
-"An error occurred" = "An error occurred";
-"Notification" = "Notification";
-"allowed" = "allowed";
-"denied" = "denied";
-"There are no domains with notification permissions set." = "There are no domains with notification permissions set.";
-"There is no search history." = "There is no search history.";
-"There is no visit history." = "There is no visit history.";
+"Settings" = "설정";
+"General" = "일반";
+"Search History" = "검색기록";
+"Visit History" = "방문기록";
+"Permission" = "권한";
+"Search Engine" = "검색 엔진";
+"Screen Mode" = "화면 모드";
+"History Data Retention Period" = "검색, 방문기록 보관 기간";
+"View More" = "더보기";
+"$n were selected." = "$n개 선택되었습니다.";
+"Delete" = "삭제";
+"Cancel" = "취소";
+"An error occurred" = "오류가 발생하였습니다";
+"Notification" = "알림";
+"allowed" = "허용됨";
+"denied" = "거부됨";
+"There are no domains with notification permissions set." = "알림 권한이 설정된 도메인이 없습니다.";
+"There is no search history." = "검색기록이 없습니다.";
+"There is no visit history." = "방문기록이 없습니다.";
 
-"Favorite" = "Favorite";
-"Frequent" = "Frequent";
-"Add Favorite" = "Add Favorite";
-"Title" = "Title";
-"Address" = "Address";
-"Add" = "Add";
-"Please enter title or address" = "Please enter title or address";
+"Favorite" = "즐겨찾기";
+"Frequent" = "자주 방문한 웹 사이트";
+"Add Favorite" = "즐겨찾기 추가";
+"Title" = "제목";
+"Address" = "주소";
+"Add" = "추가";
+"Please enter title or address" = "제목 또는 주소를 입력해주세요.";
 
-"Save Image As.." = "Save Image As..";
-"Save As:" = "Save As:";
+"Save Image As.." = "이미지를 다른 이름으로 저장..";
+"Save As:" = "별도 저장:";
 
-"Tracker Blocking" = "Tracker Blocking";
+"Tracker Blocking" = "트래커 차단";
 
-"blocking-strong" = "Strong";
-"blocking-moderate" = "Moderate";
-"blocking-light" = "Light";
-"blocking-none" = "None";
+"blocking-strong" = "강함";
+"blocking-moderate" = "중간";
+"blocking-light" = "약함";
+"blocking-none" = "끔";
 
-"blocking-strong-exp" = "Provide maximum protection for user data and interactions.";
-"blocking-moderate-exp" = "It provides a reasonable level of protection while still allowing some tracking if necessary.";
-"blocking-light-exp" = "It provides basic tracking protection without significantly disrupting the user experience.";
-"blocking-none-exp" = "It doesn't block anything.";
+"blocking-strong-exp" = "사용자 데이터와 상호 작용을 최대한 보호합니다.";
+"blocking-moderate-exp" = "필요한 경우 일부 트래킹을 허용하면서도 합리적인 수준의 보호를 제공합니다.";
+"blocking-light-exp" = "사용자 경험을 크게 방해하지 않으면서 기본적인 트래킹 보호를 제공합니다.";
+"blocking-none-exp" = "아무것도 차단하지 않습니다.";
 
-"blocking-change-text" = "Changes will take effect starting from new tabs.";
-"Learn More" = "Learn More";
+"blocking-change-text" = "변경 사항은 새로운 탭부터 적용됩니다.";
+"Learn More" = "더 알아보기";
 
-"This connection is secure." = "This connection is secure.";
-"This is a page provided inside the app." = "This is a page provided inside the app.";
-"Certificate:" = "Certificate:";
-"This connection is not secure." = "This connection is not secure.";
+"This connection is secure." = "이 연결은 안전합니다.";
+"This is a page provided inside the app." = "애플리케이션 내부의 페이지입니다.";
+"Certificate:" = "인증서:";
+"This connection is not secure." = "이 연결은 안전하지 않습니다.";
 
-"SSL/TLS certificate error" = "SSL/TLS certificate error";
-"A secure connection cannot be made because the certificate is not valid." = "A secure connection cannot be made because the certificate is not valid.";
+"SSL/TLS certificate error" = "SSL/TLS 인증서 오류";
+"A secure connection cannot be made because the certificate is not valid." = "인증서가 유효하지 않기 때문에 보안 연결을 설정할 수 없습니다.";
 
-"Blocked content" = "Blocked content";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "This content has been blocked. To use the service, please adjust the tracker blocker level.";
+"Blocked content" = "차단된 컨텐츠";
+"This content is blocked. To use the service, you must lower or turn off tracker blocking." = "이 콘텐츠는 차단되었습니다. 서비스를 이용하시려면 트래커 차단 수준을 조정해 주세요.";
 
-"Clear All" = "Clear All";
+"Clear All" = "모두 정리";
 
-"Contact Us" = "Contact Us";
-"Zoom In" = "Zoom In";
-"Zoom Out" = "Zoom Out";
+"Contact Us" = "문의";
+"Zoom In" = "확대";
+"Zoom Out" = "축소";
 
-"Cookie" = "Cookie";
-"No web storage data found on the website." = "No web storage data found on the website.";
-"Web storage data is present on the website." = "Web storage data is present on the website.";
-"Clear Cookies and Storage" = "Clear Cookies and Storage";
+"Cookie" = "쿠키";
+"No web storage data found on the website." = "웹 저장소 데이터를 찾을 수 없습니다.";
+"Web storage data is present on the website." = "웹 저장소 데이터를 사용하고 있습니다.";
+"Clear Cookies and Storage" = "쿠키 및 스토리지 정리";
 
-"Library" = "Library";
-"This is a library used in service development." = "This is a library used in service development.";
+"Library" = "라이브러리";
+"This is a library used in service development." = "서비스 개발에 사용되는 라이브러리 입니다.";

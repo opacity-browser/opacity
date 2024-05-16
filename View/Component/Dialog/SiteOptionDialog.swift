@@ -204,7 +204,7 @@ struct SiteOptionDialog: View {
       .padding(.top, 10)
       
     }
-    .frame(width: 230)
+    .frame(width: 220)
     .padding(.horizontal, 20)
     .padding(.top, 15)
     .padding(.bottom, 15)
