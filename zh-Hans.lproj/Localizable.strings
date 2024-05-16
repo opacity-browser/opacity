@@ -135,7 +135,7 @@
 // Connection status
 "This connection is secure." = "此连接是安全的。";
 "This is a page provided inside the app." = "这是应用内提供的页面。";
-"Certificate summary:" = "证书摘要：";
+"Certificate:" = "证书证书:";
 "This connection is not secure." = "此连接不安全";
 
 // SSL/TLS certificate error

@@ -135,7 +135,7 @@
 // Connection status
 "This connection is secure." = "यह कनेक्शन सुरक्षित है।";
 "This is a page provided inside the app." = "यह ऐप के अंदर प्रदान किया गया पृष्ठ है।";
-"Certificate summary:" = "प्रमाणपत्र सारांश:";
+"Certificate:" = "प्रमाणपत्र:";
 "This connection is not secure." = "यह कनेक्शन सुरक्षित नहीं है";
 
 // SSL/TLS certificate error

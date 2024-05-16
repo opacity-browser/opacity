@@ -121,7 +121,7 @@
 
 "This connection is secure." = "This connection is secure.";
 "This is a page provided inside the app." = "This is a page provided inside the app.";
-"Certificate summary:" = "Certificate summary:";
+"Certificate:" = "Certificate:";
 "This connection is not secure." = "This connection is not secure.";
 
 "SSL/TLS certificate error" = "SSL/TLS certificate error";

@@ -135,7 +135,7 @@
 // Connection status
 "This connection is secure." = "Esta conexión es segura.";
 "This is a page provided inside the app." = "Esta es una página proporcionada dentro de la aplicación.";
-"Certificate summary:" = "Resumen del certificado:";
+"Certificate:" = "Certificado:";
 "This connection is not secure." = "Esta conexión no es segura";
 
 // SSL/TLS certificate error

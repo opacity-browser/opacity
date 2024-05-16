@@ -79,7 +79,7 @@ struct SiteOptionDialog: View {
               }
               .padding(.bottom, 2)
               HStack(spacing: 0) {
-                Text(NSLocalizedString("Certificate summary:", comment: ""))
+                Text(NSLocalizedString("Certificate:", comment: ""))
                   .opacity(0.6)
                   .font(.system(size: 11))
                 Text(tab.certificateSummary)
@@ -204,7 +204,7 @@ struct SiteOptionDialog: View {
       .padding(.top, 10)
       
     }
-    .frame(width: 220)
+    .frame(width: 230)
     .padding(.horizontal, 20)
     .padding(.top, 15)
     .padding(.bottom, 15)

@@ -134,7 +134,7 @@
 
 "This connection is secure." = "この接続は安全です";
 "This is a page provided inside the app." = "これはアプリ内で提供されるページです";
-"Certificate summary:" = "証明書の概要:";
+"Certificate:" = "証明書:";
 "This connection is not secure." = "この接続は安全ではありません";
 
 // SSL/TLS certificate error
