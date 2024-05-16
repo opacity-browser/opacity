@@ -65,6 +65,7 @@
 		A14246322B810D100062C516 /* HistorySite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246312B810D100062C516 /* HistorySite.swift */; };
 		A14246342B8132E50062C516 /* HistoryDialogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246332B8132E50062C516 /* HistoryDialogItem.swift */; };
 		A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14246352B813A5B0062C516 /* HistoryKeyButton.swift */; };
+		A158DD082BF5DA7400BE9A48 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = A158DD072BF5DA7400BE9A48 /* About.swift */; };
 		A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54102B5574B9007020CA /* WindowTitlebar.swift */; };
 		A15D54142B561BEC007020CA /* BrowserTabShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D54132B561BEC007020CA /* BrowserTabShape.swift */; };
 		A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15D541A2B56B40F007020CA /* AppDelegate.swift */; };
@@ -177,6 +178,7 @@
 		A14246312B810D100062C516 /* HistorySite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySite.swift; sourceTree = "<group>"; };
 		A14246332B8132E50062C516 /* HistoryDialogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDialogItem.swift; sourceTree = "<group>"; };
 		A14246352B813A5B0062C516 /* HistoryKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryKeyButton.swift; sourceTree = "<group>"; };
+		A158DD072BF5DA7400BE9A48 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		A15D54102B5574B9007020CA /* WindowTitlebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowTitlebar.swift; sourceTree = "<group>"; };
 		A15D54132B561BEC007020CA /* BrowserTabShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabShape.swift; sourceTree = "<group>"; };
 		A15D541A2B56B40F007020CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				A10DA6732BB395B60053913D /* MoreMenuDialog.swift */,
 				A17C976F2BD32A19009240B9 /* FindDialog.swift */,
 				A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */,
+				A158DD072BF5DA7400BE9A48 /* About.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -659,6 +662,7 @@
 				A15FCB122B999D7700D64C05 /* BookmarkGroupTitle.swift in Sources */,
 				A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */,
 				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
+				A158DD082BF5DA7400BE9A48 /* About.swift in Sources */,
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
 				A10DDD832BC819B6003E159A /* BookmarkNSTextField.swift in Sources */,
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,

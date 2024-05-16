@@ -3,10 +3,10 @@
 "to quit, press ⌘Q agin" = "to quit, press ⌘Q agin";
 
 // Menu
-"Fried Egg" = "Fried Egg";
-"About Fried Egg" = "About Fried Egg";
+"Opacity" = "Opacity";
+"About Opacity" = "About Opacity";
+"Quit Opacity" = "Quit Opacity";
 "File" = "File";
-"Quit Fried Egg" = "Quit Fried Egg";
 "New Window" = "New Window";
 "New Tab" = "New Tab";
 "Close Window" = "Close Window";
@@ -24,6 +24,9 @@
 "Reload Page" = "Reload Page";
 "Show Sidebar" = "Show Sidebar";
 "Hide Sidebar" = "Hide Sidebar";
+"Window" = "Window";
+"Minimize" = "Minimize";
+"Zoom" = "Zoom";
 
 // Error Page
 "Page not found" = "Page not found";
@@ -50,7 +53,6 @@
 "Deny" = "Deny";
 
 "Notification" = "Notification";
-//NSLocalizedString("", comment: "")
 
 "New Folder" = "New Folder";
 "Bookmark" = "Bookmark";

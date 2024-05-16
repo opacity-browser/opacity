@@ -1,8 +1,165 @@
-/* 
-  Localizable.strings
-  Opacity
+// App
+"lang" = "zh";
+"to quit, press ⌘Q again" = "要退出，请再次按⌘Q";
 
-  Created by Falsy on 1/26/24.
-  
-*/
+// Menu
+"Opacity" = "Opacity";
+"About Opacity" = "Opacity 信息";
+"Quit Opacity" = "Opacity 结尾";
+"File" = "文件";
+"New Window" = "新建窗口";
+"New Tab" = "新建标签页";
+"Close Window" = "关闭窗口";
+"Close Tab" = "关闭标签页";
+"Edit" = "编辑";
+"Cut" = "剪切";
+"Copy" = "复制";
+"Paste" = "粘贴";
+"Select All" = "全选";
+"Find" = "查找";
+"Find in Page..." = "在页面中查找...";
+"Find Next" = "查找下一个";
+"Find Previous" = "查找上一个";
+"View" = "查看";
+"Reload Page" = "重新加载页面";
+"Show Sidebar" = "显示侧边栏";
+"Hide Sidebar" = "隐藏侧边栏";
+"Window" = "窗口";
+"Minimize" = "最小化";
+"Zoom" = "缩放";
 
+// Error Page
+"Page not found" = "页面未找到";
+"The server IP address for \\'%@\\' could not be found." = "无法找到\\'%@\\'的服务器IP地址。";
+"Unable to connect to site" = "无法连接到网站";
+"Connection has been reset." = "连接已重置。";
+"No internet connection" = "没有互联网连接";
+"There is no internet connection." = "没有互联网连接。";
+"Unknown error" = "未知错误";
+"An unknown error occurred." = "发生未知错误。";
+
+// Refresh
+"Refresh" = "刷新";
+
+// Search
+"Search.." = "搜索...";
+
+// Location services
+"Location services are disabled in your Mac system settings" = "在Mac系统设置中禁用了定位服务";
+"Open Settings" = "打开设置";
+
+// Notification Permissions
+"Notification Permissions" = "通知权限";
+"Notification permission granted." = "已授予通知权限。";
+
+// Notifications
+"Do you want to allow notifications from '%@'?" = "您要允许'%@'的通知吗？";
+"Allow" = "允许";
+"Deny" = "拒绝";
+
+"Notification" = "通知";
+
+// New Folder and Bookmark
+"New Folder" = "新建文件夹";
+"Bookmark" = "书签";
+
+// Change Name, Delete, Add Folder
+"Change Name" = "更改名称";
+"Delete" = "删除";
+"Add Folder" = "添加文件夹";
+"Folder" = "文件夹";
+"Name" = "名称";
+"Save" = "保存";
+
+// System, Light, Dark
+"System" = "系统";
+"Light" = "浅色";
+"Dark" = "深色";
+
+// Time Periods
+"1 Day" = "1天";
+"1 Week" = "1周";
+"1 Month" = "1个月";
+"Indefinite" = "无限期";
+
+// Settings, General, Search History
+"Settings" = "设置";
+"General" = "通用";
+"Search History" = "搜索历史";
+"Visit History" = "访问历史";
+"Permission" = "权限";
+"Search Engine" = "搜索引擎";
+"Screen Mode" = "屏幕模式";
+"History Data Retention Period" = "历史数据保留期";
+"View More" = "查看更多";
+"$n were selected." = "已选择$n。";
+"Delete" = "删除";
+"Cancel" = "取消";
+"An error occurred" = "发生错误";
+"Notification" = "通知";
+"allowed" = "已允许";
+"denied" = "已拒绝";
+"There are no domains with notification permissions set." = "没有设置通知权限的域。";
+"There is no search history." = "没有搜索历史。";
+"There is no visit history." = "没有访问历史。";
+
+// Favorites, Frequent, Add Favorite
+"Favorite" = "收藏";
+"Frequent" = "常用";
+"Add Favorite" = "添加到收藏";
+"Title" = "标题";
+"Address" = "地址";
+"Add" = "添加";
+"Please enter title or address" = "请输入标题或地址";
+
+// Save Image As
+"Save Image As.." = "图片另存为...";
+"Save As:" = "另存为：";
+
+// Tracker Blocking
+"Tracker Blocking" = "跟踪器阻止";
+
+"blocking-strong" = "强";
+"blocking-moderate" = "中";
+"blocking-light" = "弱";
+"blocking-none" = "无";
+
+"blocking-strong-exp" = "为用户数据和互动提供最大保护。";
+"blocking-moderate-exp" = "在必要时允许某些跟踪的同时提供合理的保护级别。";
+"blocking-light-exp" = "在不显著影响用户体验的情况下提供基本的跟踪保护。";
+"blocking-none-exp" = "它不阻止任何内容。";
+
+"blocking-change-text" = "更改将在新标签页中生效。";
+"Learn More" = "了解更多";
+
+// Connection status
+"This connection is secure." = "此连接是安全的。";
+"This is a page provided inside the app." = "这是应用内提供的页面。";
+"Certificate summary:" = "证书摘要：";
+"This connection is not secure." = "此连接不安全";
+
+// SSL/TLS certificate error
+"SSL/TLS certificate error" = "SSL/TLS证书错误";
+"A secure connection cannot be made because the certificate is not valid." = "由于证书无效，无法建立安全连接。";
+
+// Blocked content
+"Blocked content" = "被阻止的内容";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "此内容已被阻止。要使用此服务，请调整跟踪器阻止级别。";
+
+// Clear All
+"Clear All" = "清除所有";
+
+// Contact Us
+"Contact Us" = "联系我们";
+"Zoom In" = "放大";
+"Zoom Out" = "缩小";
+
+// Cookie
+"Cookie" = "Cookie";
+"No web storage data found on the website." = "网站上未找到网络存储数据。";
+"Web storage data is present on the website." = "网站上存在网络存储数据。";
+"Clear Cookies and Storage" = "清除Cookies和存储";
+
+// Library
+"Library" = "库";
+"This is a library used in service development." = "这是用于服务开发的库。";

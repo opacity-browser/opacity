@@ -1,8 +1,145 @@
-/* 
-  Localizable.strings
-  Opacity
+// App
+"lang" = "de";
+"to quit, press ⌘Q again" = "Zum Beenden drücken Sie ⌘Q erneut";
 
-  Created by Falsy on 1/26/24.
-  
-*/
+// Menu
+"Opacity" = "Opacity";
+"About Opacity" = "Über Opacity";
+"Quit Opacity" = "Opacity beenden";
+"File" = "Datei";
+"New Window" = "Neues Fenster";
+"New Tab" = "Neuer Tab";
+"Close Window" = "Fenster schließen";
+"Close Tab" = "Tab schließen";
+"Edit" = "Bearbeiten";
+"Cut" = "Ausschneiden";
+"Copy" = "Kopieren";
+"Paste" = "Einfügen";
+"Select All" = "Alles auswählen";
+"Find" = "Suchen";
+"Find in Page..." = "Auf der Seite suchen...";
+"Find Next" = "Weitersuchen";
+"Find Previous" = "Vorheriges suchen";
+"View" = "Ansicht";
+"Reload Page" = "Seite neu laden";
+"Show Sidebar" = "Seitenleiste anzeigen";
+"Hide Sidebar" = "Seitenleiste ausblenden";
+"Window" = "Fenster";
+"Minimize" = "Minimieren";
+"Zoom" = "Vergrößern";
 
+// Error Page
+"Page not found" = "Seite nicht gefunden";
+"The server IP address for \\'%@\\' could not be found." = "Die IP-Adresse des Servers für \\'%@\\' konnte nicht gefunden werden.";
+"Unable to connect to site" = "Verbindung zur Seite konnte nicht hergestellt werden";
+"Connection has been reset." = "Die Verbindung wurde zurückgesetzt.";
+"No internet connection" = "Keine Internetverbindung";
+"There is no internet connection." = "Es besteht keine Internetverbindung.";
+"Unknown error" = "Unbekannter Fehler";
+"An unknown error occurred." = "Ein unbekannter Fehler ist aufgetreten.";
+
+"Refresh" = "Aktualisieren";
+
+"Search.." = "Suchen...";
+
+"Location services are disabled in your Mac system settings" = "Ortungsdienste sind in Ihren Mac-Systemeinstellungen deaktiviert";
+"Open Settings" = "Einstellungen öffnen";
+
+"Notification Permissions" = "Benachrichtigungserlaubnisse";
+"Notification permission granted." = "Benachrichtigungserlaubnis erteilt.";
+
+"Do you want to allow notifications from '%@'?" = "Möchten Sie Benachrichtigungen von '%@' zulassen?";
+"Allow" = "Erlauben";
+"Deny" = "Ablehnen";
+
+"Notification" = "Benachrichtigung";
+
+"New Folder" = "Neuer Ordner";
+"Bookmark" = "Lesezeichen";
+
+"Change Name" = "Namen ändern";
+"Delete" = "Löschen";
+"Add Folder" = "Ordner hinzufügen";
+"Folder" = "Ordner";
+"Name" = "Name";
+"Save" = "Speichern";
+
+"System" = "System";
+"Light" = "Hell";
+"Dark" = "Dunkel";
+
+"1 Day" = "1 Tag";
+"1 Week" = "1 Woche";
+"1 Month" = "1 Monat";
+"Indefinite" = "Unbegrenzt";
+
+"Settings" = "Einstellungen";
+"General" = "Allgemein";
+"Search History" = "Suchverlauf";
+"Visit History" = "Besuchsverlauf";
+"Permission" = "Berechtigung";
+"Search Engine" = "Suchmaschine";
+"Screen Mode" = "Bildschirmmodus";
+"History Data Retention Period" = "Aufbewahrungsfrist für Verlaufsdaten";
+"View More" = "Mehr anzeigen";
+"$n were selected." = "$n wurden ausgewählt.";
+"Delete" = "Löschen";
+"Cancel" = "Abbrechen";
+"An error occurred" = "Ein Fehler ist aufgetreten";
+"Notification" = "Benachrichtigung";
+"allowed" = "erlaubt";
+"denied" = "abgelehnt";
+"There are no domains with notification permissions set." = "Es sind keine Domains mit Benachrichtigungserlaubnissen festgelegt.";
+"There is no search history." = "Es gibt keinen Suchverlauf.";
+"There is no visit history." = "Es gibt keinen Besuchsverlauf.";
+
+"Favorite" = "Favorit";
+"Frequent" = "Häufig";
+"Add Favorite" = "Zu Favoriten hinzufügen";
+"Title" = "Titel";
+"Address" = "Adresse";
+"Add" = "Hinzufügen";
+"Please enter title or address" = "Bitte Titel oder Adresse eingeben";
+
+"Save Image As.." = "Bild speichern unter...";
+"Save As:" = "Speichern unter:";
+
+"Tracker Blocking" = "Tracker-Blockierung";
+
+"blocking-strong" = "Stark";
+"blocking-moderate" = "Mäßig";
+"blocking-light" = "Leicht";
+"blocking-none" = "Keine";
+
+"blocking-strong-exp" = "Bietet maximalen Schutz für Benutzerdaten und Interaktionen.";
+"blocking-moderate-exp" = "Es bietet ein angemessenes Schutzniveau und erlaubt bei Bedarf dennoch ein gewisses Tracking.";
+"blocking-light-exp" = "Es bietet grundlegenden Tracking-Schutz, ohne das Benutzererlebnis erheblich zu beeinträchtigen.";
+"blocking-none-exp" = "Es blockiert nichts.";
+
+"blocking-change-text" = "Änderungen werden ab neuen Tabs wirksam.";
+"Learn More" = "Mehr erfahren";
+
+"This connection is secure." = "Diese Verbindung ist sicher.";
+"This is a page provided inside the app." = "Dies ist eine in der App bereitgestellte Seite.";
+"Certificate summary:" = "Zertifikatsübersicht:";
+"This connection is not secure." = "Diese Verbindung ist nicht sicher.";
+
+"SSL/TLS certificate error" = "SSL/TLS-Zertifikatfehler";
+"A secure connection cannot be made because the certificate is not valid." = "Eine sichere Verbindung kann nicht hergestellt werden, da das Zertifikat ungültig ist.";
+
+"Blocked content" = "Blockierter Inhalt";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Dieser Inhalt wurde blockiert. Um den Dienst zu nutzen, passen Sie bitte die Stufe der Tracker-Blockierung an.";
+
+"Clear All" = "Alles löschen";
+
+"Contact Us" = "Kontaktieren Sie uns";
+"Zoom In" = "Vergrößern";
+"Zoom Out" = "Verkleinern";
+
+"Cookie" = "Cookie";
+"No web storage data found on the website." = "Keine Webspeicherdaten auf der Website gefunden.";
+"Web storage data is present on the website." = "Webspeicherdaten sind auf der Website vorhanden.";
+"Clear Cookies and Storage" = "Cookies und Speicher löschen";
+
+"Library" = "Library";
+"This is a library used in service development." = "Dies ist eine Library, die in der Serviceentwicklung verwendet wird.";

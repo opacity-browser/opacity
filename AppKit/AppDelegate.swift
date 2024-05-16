@@ -207,7 +207,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       // Opacity
       let opacityItem = NSMenuItem(title: NSLocalizedString("Opacity", comment: ""), action: nil, keyEquivalent: "")
       let opacityMenu = NSMenu(title: NSLocalizedString("Opacity", comment: ""))
-      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Opacity", comment: ""), action: nil, keyEquivalent: ""))
+      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Opacity", comment: ""), action: #selector(self.openAboutWindow), keyEquivalent: ""))
+      opacityMenu.addItem(NSMenuItem.separator())
+      opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("Settings", comment: ""), action: #selector(self.openSettings), keyEquivalent: ","))
       opacityMenu.addItem(NSMenuItem.separator())
       opacityMenu.addItem(withTitle: NSLocalizedString("Quit Opacity", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
       opacityItem.submenu = opacityMenu
@@ -273,6 +275,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       
       viewItem.submenu = viewMenu
       mainMenu.addItem(viewItem)
+      
+      // Window Menu
+      let windowMenuItem = NSMenuItem(title: NSLocalizedString("Window", comment: ""), action: nil, keyEquivalent: "")
+      let windowMenu = NSMenu(title: NSLocalizedString("Window", comment: ""))
+
+      windowMenu.addItem(withTitle: NSLocalizedString("Minimize", comment: ""), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+      windowMenu.addItem(withTitle: NSLocalizedString("Zoom", comment: ""), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
+      
+      windowMenuItem.submenu = windowMenu
+      mainMenu.addItem(windowMenuItem)
+      
 //      // 단축키에 파라미터 전송 예시
 //      let menuItem3 = NSMenuItem(title: "File2", action: nil, keyEquivalent: "")
 //      let myMenu = NSMenu()
@@ -460,6 +473,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
   
+  @objc func openAboutWindow() {
+    aboutWindow()
+    setMainMenu()
+  }
+  
+  @objc func openSettings() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber] {
+        target.openSettings()
+      }
+    }
+  }
+  
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
     if !flag {
       createWindow()
@@ -503,6 +530,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       exitWindow.close()
       self.isTerminating = false
     }
+  }
+  
+  private func aboutWindow() {
+    let windowRect = NSRect(x: 0, y: 0, width: 400, height: 200)
+    let aboutWindow = NSWindow(contentRect: windowRect,
+                             styleMask: [.titled, .closable],
+                             backing: .buffered, defer: false)
+    
+//    aboutWindow.backgroundColor = NSColor(named: "WindowTitleBG")
+
+    let contentView = About()
+    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
+    aboutWindow.setContentSize(newContentSize)
+    
+    aboutWindow.contentView = NSHostingController(rootView: contentView).view
+    aboutWindow.center()
+    
+//    aboutWindow.titlebarAppearsTransparent = true
+//    aboutWindow.titleVisibility = .hidden
+//    aboutWindow.styleMask.insert(.fullSizeContentView)
+
+    aboutWindow.makeKeyAndOrderFront(nil)
+    
+    let windowController = NSWindowController(window: aboutWindow)
+    windowController.showWindow(self)
   }
   
   @MainActor func deleteExpiredData() {

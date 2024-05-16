@@ -1,8 +1,165 @@
-/* 
-  Localizable.strings
-  Opacity
+// App
+"lang" = "hi";
+"to quit, press ⌘Q again" = "बंद करने के लिए, ⌘Q फिर से दबाएँ";
 
-  Created by Falsy on 1/26/24.
-  
-*/
+// Menu
+"Opacity" = "Opacity";
+"About Opacity" = "Opacity के बारे में";
+"Quit Opacity" = "Opacity छोड़ें";
+"File" = "फ़ाइल";
+"New Window" = "नई विंडो";
+"New Tab" = "नई टैब";
+"Close Window" = "विंडो बंद करें";
+"Close Tab" = "टैब बंद करें";
+"Edit" = "संपादित करें";
+"Cut" = "काटें";
+"Copy" = "प्रतिलिपि";
+"Paste" = "पेस्ट करें";
+"Select All" = "सभी चुनें";
+"Find" = "खोजें";
+"Find in Page..." = "पृष्ठ में खोजें...";
+"Find Next" = "अगला खोजें";
+"Find Previous" = "पिछला खोजें";
+"View" = "देखें";
+"Reload Page" = "पृष्ठ पुनः लोड करें";
+"Show Sidebar" = "साइडबार दिखाएँ";
+"Hide Sidebar" = "साइडबार छिपाएँ";
+"Window" = "विंडो";
+"Minimize" = "छोटा करें";
+"Zoom" = "ज़ूम";
 
+// Error Page
+"Page not found" = "पृष्ठ नहीं मिला";
+"The server IP address for \\'%@\\' could not be found." = "सर्वर आईपी पता \\'%@\\' के लिए नहीं मिल सका।";
+"Unable to connect to site" = "साइट से कनेक्ट नहीं हो पा रहा है";
+"Connection has been reset." = "कनेक्शन को रीसेट कर दिया गया है।";
+"No internet connection" = "कोई इंटरनेट कनेक्शन नहीं है";
+"There is no internet connection." = "कोई इंटरनेट कनेक्शन नहीं है।";
+"Unknown error" = "अज्ञात त्रुटि";
+"An unknown error occurred." = "एक अज्ञात त्रुटि हुई।";
+
+// Refresh
+"Refresh" = "ताज़ा करें";
+
+// Search
+"Search.." = "खोजें...";
+
+// Location services
+"Location services are disabled in your Mac system settings" = "स्थान सेवाएँ आपके मैक सिस्टम सेटिंग्स में अक्षम हैं";
+"Open Settings" = "सेटिंग्स खोलें";
+
+// Notification Permissions
+"Notification Permissions" = "सूचना अनुमतियाँ";
+"Notification permission granted." = "सूचना अनुमति दी गई है।";
+
+// Notifications
+"Do you want to allow notifications from '%@'?" = "क्या आप '%@' से सूचनाओं की अनुमति देना चाहते हैं?";
+"Allow" = "अनुमति दें";
+"Deny" = "अस्वीकार करें";
+
+"Notification" = "सूचना";
+
+// New Folder and Bookmark
+"New Folder" = "नया फ़ोल्डर";
+"Bookmark" = "बुकमार्क";
+
+// Change Name, Delete, Add Folder
+"Change Name" = "नाम बदलें";
+"Delete" = "हटाएं";
+"Add Folder" = "फ़ोल्डर जोड़ें";
+"Folder" = "फ़ोल्डर";
+"Name" = "नाम";
+"Save" = "सहेजें";
+
+// System, Light, Dark
+"System" = "सिस्टम";
+"Light" = "हल्का";
+"Dark" = "गहरा";
+
+// Time Periods
+"1 Day" = "1 दिन";
+"1 Week" = "1 सप्ताह";
+"1 Month" = "1 माह";
+"Indefinite" = "अनिश्चितकालीन";
+
+// Settings, General, Search History
+"Settings" = "सेटिंग्स";
+"General" = "सामान्य";
+"Search History" = "खोज इतिहास";
+"Visit History" = "भ्रमण इतिहास";
+"Permission" = "अनुमति";
+"Search Engine" = "सर्च इंजन";
+"Screen Mode" = "स्क्रीन मोड";
+"History Data Retention Period" = "इतिहास डेटा प्रतिधारण अवधि";
+"View More" = "और देखें";
+"$n were selected." = "$n का चयन किया गया था।";
+"Delete" = "हटाएं";
+"Cancel" = "रद्द करें";
+"An error occurred" = "एक त्रुटि हुई";
+"Notification" = "सूचना";
+"allowed" = "अनुमत";
+"denied" = "अस्वीकृत";
+"There are no domains with notification permissions set." = "कोई डोमेन अधिसूचना अनुमतियों के सेट के साथ नहीं हैं।";
+"There is no search history." = "कोई खोज इतिहास नहीं है।";
+"There is no visit history." = "कोई भ्रमण इतिहास नहीं है।";
+
+// Favorites, Frequent, Add Favorite
+"Favorite" = "पसंदीदा";
+"Frequent" = "बार-बार";
+"Add Favorite" = "पसंदीदा में जोड़ें";
+"Title" = "शीर्षक";
+"Address" = "पता";
+"Add" = "जोड़ें";
+"Please enter title or address" = "कृपया शीर्षक या पता दर्ज करें";
+
+// Save Image As
+"Save Image As.." = "छवि को इस रूप में सहेजें...";
+"Save As:" = "इस रूप में सहेजें:";
+
+// Tracker Blocking
+"Tracker Blocking" = "ट्रैकर ब्लॉकिंग";
+
+"blocking-strong" = "मजबूत";
+"blocking-moderate" = "मध्यम";
+"blocking-light" = "हल्का";
+"blocking-none" = "कोई नहीं";
+
+"blocking-strong-exp" = "उपयोगकर्ता डेटा और इंटरैक्शन के लिए अधिकतम सुरक्षा प्रदान करता है।";
+"blocking-moderate-exp" = "यह कुछ आवश्यक ट्रैकिंग की अनुमति देते हुए उचित स्तर की सुरक्षा प्रदान करता है।";
+"blocking-light-exp" = "यह उपयोगकर्ता अनुभव को महत्वपूर्ण रूप से बाधित किए बिना बुनियादी ट्रैकिंग सुरक्षा प्रदान करता है।";
+"blocking-none-exp" = "यह कुछ भी ब्लॉक नहीं करता है।";
+
+"blocking-change-text" = "परिवर्तन नए टैब से प्रभावी होंगे।";
+"Learn More" = "और जानें";
+
+// Connection status
+"This connection is secure." = "यह कनेक्शन सुरक्षित है।";
+"This is a page provided inside the app." = "यह ऐप के अंदर प्रदान किया गया पृष्ठ है।";
+"Certificate summary:" = "प्रमाणपत्र सारांश:";
+"This connection is not secure." = "यह कनेक्शन सुरक्षित नहीं है";
+
+// SSL/TLS certificate error
+"SSL/TLS certificate error" = "SSL/TLS प्रमाणपत्र त्रुटि";
+"A secure connection cannot be made because the certificate is not valid." = "सुरक्षित कनेक्शन नहीं बनाया जा सकता क्योंकि प्रमाणपत्र मान्य नहीं है।";
+
+// Blocked content
+"Blocked content" = "अवरुद्ध सामग्री";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "इस सामग्री को अवरुद्ध कर दिया गया है। सेवा का उपयोग करने के लिए, कृपया ट्रैकर ब्लॉकर स्तर को समायोजित करें।";
+
+// Clear All
+"Clear All" = "सभी साफ़ करें";
+
+// Contact Us
+"Contact Us" = "हमसे संपर्क करें";
+"Zoom In" = "ज़ूम इन";
+"Zoom Out" = "ज़ूम आउट";
+
+// Cookie
+"Cookie" = "कुकी";
+"No web storage data found on the website." = "वेबसाइट पर कोई वेब स्टोरेज डेटा नहीं मिला।";
+"Web storage data is present on the website." = "वेबसाइट पर वेब स्टोरेज डेटा मौजूद है।";
+"Clear Cookies and Storage" = "कुकीज़ और स्टोरेज साफ़ करें";
+
+// Library
+"Library" = "लाइब्रेरी";
+"This is a library used in service development." = "यह सेवा विकास में उपयोग की जाने वाली लाइब्रेरी है।";

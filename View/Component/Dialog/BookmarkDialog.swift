@@ -102,7 +102,7 @@ struct BookmarkDialog: View {
     .padding(.top, 20)
     .padding(.horizontal, 20)
     .padding(.bottom, 10)
-    .frame(width: 240)
+    .frame(width: 260)
     .background(GeometryReader { geometry in
       Color("DialogBG")
           .frame(width: geometry.size.width,

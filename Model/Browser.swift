@@ -81,6 +81,15 @@ final class Browser: ObservableObject, Identifiable {
     }
   }
   
+  func openSettings() {
+    let newTab = Tab(url: URL(string:"opacity://settings")!)
+    DispatchQueue.main.async {
+      self.clearSearchEditMode()
+      self.tabs.append(newTab)
+      self.activeTabId = newTab.id
+    }
+  }
+  
   func closeAllTab(completion: @escaping () -> Void) {
     let group = DispatchGroup()
     for tab in tabs {
