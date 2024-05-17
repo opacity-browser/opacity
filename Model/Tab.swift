@@ -49,9 +49,13 @@ final class Tab: ObservableObject {
   
   @Published var pageProgress: Double = 0.0
   
+  // GeoLocation
+  @Published var isRequestGeoLocation: Bool = false
+  @Published var isLocationDialog: Bool = true
   @Published var isLocationDialogIcon: Bool = false
-  @Published var isNotificationDialogIcon: Bool = false
   
+  // Notification
+  @Published var isNotificationDialogIcon: Bool = false
   @Published var isNotificationPermissionByApp: Bool = false
   @Published var isNotificationPermission: Bool = false
   
@@ -99,14 +103,10 @@ final class Tab: ObservableObject {
     
     let contentController = WKUserContentController()
     let scriptHandler = ScriptHandler(tab: self)
-    AppDelegate.shared.locationManager.delegate = scriptHandler
     contentController.add(scriptHandler, name: "opacityBrowser")
     config.userContentController = contentController
     
     let scriptSource = """
-      // geolocation
-      window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "initGeoPositions" });
-    
       // notification
       const originalNotification = Notification;
       class OpacityNotification {

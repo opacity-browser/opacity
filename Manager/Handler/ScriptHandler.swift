@@ -8,9 +8,7 @@
 import SwiftUI
 import WebKit
 import SwiftData
-import CoreLocation
 import UserNotifications
-//import AVFoundation
 
 struct NotificationOptions: Codable {
   var body: String
@@ -21,7 +19,7 @@ struct NotificationValue: Codable {
   var options: NotificationOptions?
 }
 
-class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate {
+class ScriptHandler: NSObject, WKScriptMessageHandler {
   @ObservedObject var tab: Tab
   var opacityScriptHandler: OpacityScriptHandler
   
@@ -54,11 +52,8 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
         }
       } else {
         switch scriptName {
-          case "initGeoPositions":
-            initGeoPositions()
-            break
-          case "showLocationSetIcon":
-            showLocationSetIcon()
+          case "requestWhenInUseAuthorization":
+            requestWhenInUseAuthorization()
             break
           case "notificationRequest":
             requestNotificationPermission()
@@ -117,86 +112,14 @@ class ScriptHandler: NSObject, WKScriptMessageHandler, CLLocationManagerDelegate
     }
   }
   
-  func initGeoPositions() {
-    switch AppDelegate.shared.locationManager.authorizationStatus {
-      case .authorizedWhenInUse, .authorizedAlways:
-        AppDelegate.shared.locationManager.startUpdatingLocation()
-        break
-      case .denied, .restricted, .notDetermined:
-        deniedGeolocation()
-        break
-      @unknown default: break
+  func requestWhenInUseAuthorization() {
+    DispatchQueue.main.async {
+      self.tab.isRequestGeoLocation = true
     }
   }
   
-  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-    switch status {
-      case .authorizedWhenInUse, .authorizedAlways:
-        AppDelegate.shared.locationManager.startUpdatingLocation()
-        withAnimation {
-          tab.isLocationDialogIcon = false
-        }
-        break
-      case .denied, .restricted:
-        deniedGeolocation()
-        break
-      default:
-        break
-    }
-  }
   
-  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    guard let location = locations.first, let webview = tab.webview else { return }
-
-    let script = """
-      navigator.geolocation.getCurrentPosition = function(success, error, options) {
-        success({
-          coords: {
-            latitude: \(location.coordinate.latitude),
-            longitude: \(location.coordinate.longitude)
-          }
-        })
-      }
-    """
-    
-    webview.evaluateJavaScript(script, completionHandler: nil)
-    AppDelegate.shared.locationManager.stopUpdatingLocation()
-  }
-  
-  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-    guard let webview = tab.webview else { return }
-    let script = """
-      navigator.geolocation.getCurrentPosition = function(success, error, options) {
-        error({
-          code: 1,
-          message: 'Location retrieval failed'
-        });
-      };
-    """
-    webview.evaluateJavaScript(script, completionHandler: nil)
-  }
-
-  func deniedGeolocation() {
-    guard let webview = tab.webview else { return }
-    let script = """
-      navigator.geolocation.getCurrentPosition = function(success, error, options) {
-        error({
-          code: 1,
-          message: 'User Denied Geolocation'
-        });
-        window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showLocationSetIcon" });
-      }
-    """
-    webview.evaluateJavaScript(script, completionHandler: nil)
-  }
-  
-  func showLocationSetIcon() {
-    AppDelegate.shared.locationManager.requestWhenInUseAuthorization()
-    withAnimation {
-      tab.isLocationDialogIcon = true
-    }
-  }
-  
+  // Notification
   func requestNotificationPermission() {
     self.checkNotificationAuthorization { enabled in
       if let host = self.tab.originURL.host, enabled == true {
