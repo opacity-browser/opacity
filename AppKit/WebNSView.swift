@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+import CoreLocation
 import ASN1Decoder
 import Security
 
@@ -19,8 +20,9 @@ struct WebNSView: NSViewRepresentable {
     Coordinator(self)
   }
   
-  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate {
+  class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate, CLLocationManagerDelegate {
     var parent: WebNSView
+    var locationManager: CLLocationManager?
     var cacheErrorURL: URL?
     var isCleanUpAction: Bool = false
     
@@ -195,8 +197,6 @@ struct WebNSView: NSViewRepresentable {
         return
       }
       
-      let group = DispatchGroup()
-      
       DispatchQueue.main.async {
         self.parent.tab.pageProgress = 1.0
       }
@@ -288,6 +288,9 @@ struct WebNSView: NSViewRepresentable {
         
       }
       
+      // Initial Geo Location
+      initGeoPositions()
+      
       webView.evaluateJavaScript("""
       window.addEventListener('hashchange', function() {
         window.webkit.messageHandlers.opacityBrowser.postMessage({
@@ -297,6 +300,7 @@ struct WebNSView: NSViewRepresentable {
       });
      """)
       
+      let group = DispatchGroup()
       var cacheTitle: String?
       group.enter()
       webView.evaluateJavaScript("document.title") { (response, error) in
@@ -680,8 +684,95 @@ struct WebNSView: NSViewRepresentable {
         }
       }
     }
+    
+    /*
+     Geo Locaiton
+     */
+    private func initGeoPositions() {
+      locationManager = CLLocationManager()
+      locationManager!.delegate = self
+
+      switch locationManager!.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+          locationManager!.startUpdatingLocation()
+          break
+        case .denied, .restricted, .notDetermined:
+          deniedGeolocation()
+          break
+        @unknown default: break
+      }
+    }
+    
+    func requestGeoLocationPermission() {
+      guard let locationManager = locationManager else { return }
+      locationManager.requestWhenInUseAuthorization()
+    }
+    
+    private func deniedGeolocation() {
+      guard let webview = self.parent.tab.webview else { return }
+      let script = """
+        navigator.geolocation.getCurrentPosition = function(success, error, options) {
+          error({
+            code: 1,
+            message: 'User Denied Geolocation'
+          });
+          window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "requestWhenInUseAuthorization" });
+        }
+      """
+      webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+      guard let locationManager = locationManager else { return }
+      switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+          locationManager.startUpdatingLocation()
+          DispatchQueue.main.async {
+            self.parent.tab.isLocationDialogIcon = false
+          }
+          break
+        case .denied, .restricted:
+          deniedGeolocation()
+          break
+        default:
+          break
+      }
+    }
   
-    // end coordinator
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+      guard let location = locations.first, let webview = self.parent.tab.webview, let locationManager = locationManager else { return }
+  
+      let script = """
+        navigator.geolocation.getCurrentPosition = function(success, error, options) {
+          success({
+            coords: {
+              latitude: \(location.coordinate.latitude),
+              longitude: \(location.coordinate.longitude)
+            }
+          })
+        }
+      """
+  
+      webview.evaluateJavaScript(script, completionHandler: nil)
+      locationManager.stopUpdatingLocation()
+    }
+  
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+      guard let webview = self.parent.tab.webview else { return }
+      let script = """
+        navigator.geolocation.getCurrentPosition = function(success, error, options) {
+          error({
+            code: 1,
+            message: 'Location retrieval failed'
+          });
+        };
+      """
+      webview.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
+  /*
+   End Coordinator
+   */
   }
   
   private func addContentBlockingRules(_ webView: WKWebView) {
@@ -785,6 +876,17 @@ struct WebNSView: NSViewRepresentable {
         webView.evaluateJavaScript(jsString, completionHandler: nil)
       }
       return
+    }
+    
+    // Geo Location Permission
+    if tab.isRequestGeoLocation {
+      DispatchQueue.main.async {
+        print("request geo location")
+        tab.isRequestGeoLocation = false
+        tab.isLocationDialogIcon = true
+        tab.isLocationDialog = true
+        context.coordinator.requestGeoLocationPermission()
+      }
     }
     
     

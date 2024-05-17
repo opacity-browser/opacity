@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import CoreLocation
 
 class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   var windowMap: [UUID:NSWindow] = [:]
@@ -83,7 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var windowMap: [UUID:NSWindow] = [:]
   
   var service: Service = Service()
-  let locationManager = CLLocationManager()
   let windowDelegate = OpacityWindowDelegate()
   
   var sidebarToggleMenuItem: NSMenuItem!

@@ -20,7 +20,6 @@ struct Navigation: View {
   @State private var isZoomHover: Bool = false
   
   @State private var isNotificationDetailDialog: Bool = true
-  @State private var isLocationDetailDialog: Bool = true
   @State private var isMoreMenuDialog: Bool = false
   @State private var isFindDetailDialog: Bool = true
 
@@ -134,7 +133,9 @@ struct Navigation: View {
             }
           }
           .onTapGesture {
-            isNotificationDetailDialog.toggle()
+            DispatchQueue.main.async {
+              isNotificationDetailDialog.toggle()
+            }
           }
           .popover(isPresented: $isNotificationDetailDialog, arrowEdge: .bottom) {
             NotificationDialog(tab: tab)
@@ -160,9 +161,11 @@ struct Navigation: View {
             }
           }
           .onTapGesture {
-            isLocationDetailDialog.toggle()
+            DispatchQueue.main.async {
+              tab.isLocationDialog.toggle()
+            }
           }
-          .popover(isPresented: $isLocationDetailDialog, arrowEdge: .bottom) {
+          .popover(isPresented: $tab.isLocationDialog, arrowEdge: .bottom) {
             GeoLocationDialog()
           }
         }
@@ -186,7 +189,9 @@ struct Navigation: View {
           }
         }
         .onTapGesture {
-          browser.isSideBar.toggle()
+          DispatchQueue.main.async {
+            browser.isSideBar.toggle()
+          }
         }
         .offset(y: -1)
       }
@@ -208,7 +213,9 @@ struct Navigation: View {
           }
         }
         .onTapGesture {
-          self.isMoreMenuDialog.toggle()
+          DispatchQueue.main.async {
+            isMoreMenuDialog.toggle()
+          }
         }
         .popover(isPresented: $isMoreMenuDialog, arrowEdge: .bottom) {
           MoreMenuDialog(browser: browser, tab: tab, isMoreMenuDialog: $isMoreMenuDialog)
