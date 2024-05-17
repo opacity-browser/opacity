@@ -1,9 +1,12 @@
 # Opacity Browser
+Opacity Browser is a WebKit-based web browser application for macOS.  
 
 ![screenshot](/Readme/screenshot.png)
 
-Opacity Browser is a WebKit-based web browser application for macOS.  
-We do not collect any user information whatsoever.
+## About
+* We do not collect any user information whatsoever.
+* By default, your browsing and browsing history is only kept for 7 days.
+* Trackers can be blocked at three levels.
 
 ## Download
 [ App Store](https://apps.apple.com/us/app/opacity-web-browser/id6502774960)
