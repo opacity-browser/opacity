@@ -178,21 +178,17 @@ struct WebNSView: NSViewRepresentable {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
       print("didFinish")
       if let complateCleanUpWebview = self.parent.tab.complateCleanUpWebview, isCleanUpAction {
-        let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
-        let dateFrom = Date(timeIntervalSince1970: 0)
-        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
-          DispatchQueue.main.async {
-            webView.stopLoading()
-            webView.removeObserver(self, forKeyPath: "canGoBack")
-            webView.removeObserver(self, forKeyPath: "canGoForward")
-            webView.navigationDelegate = nil
-            webView.uiDelegate = nil
-            webView.configuration.userContentController.removeAllScriptMessageHandlers()
-            webView.removeFromSuperview()
-            self.parent.tab.webview = nil
-            URLCache.shared.removeAllCachedResponses()
-            complateCleanUpWebview()
-          }
+        DispatchQueue.main.async {
+          webView.stopLoading()
+          webView.removeObserver(self, forKeyPath: "canGoBack")
+          webView.removeObserver(self, forKeyPath: "canGoForward")
+          webView.navigationDelegate = nil
+          webView.uiDelegate = nil
+          webView.configuration.userContentController.removeAllScriptMessageHandlers()
+          webView.removeFromSuperview()
+          self.parent.tab.webview = nil
+          URLCache.shared.removeAllCachedResponses()
+          complateCleanUpWebview()
         }
         return
       }
@@ -926,13 +922,9 @@ struct WebNSView: NSViewRepresentable {
     if webView.url == nil || tab.isUpdateBySearch {
       tab.isUpdateBySearch = false
       tab.webviewIsError = false
-      let websiteDataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
-      let dateFrom = Date(timeIntervalSince1970: 0)
-      WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes, modifiedSince: dateFrom) {
-        webView.stopLoading()
-        context.coordinator.checkedSSLCertificate(url: tab.originURL)
-        webView.load(URLRequest(url: tab.originURL))
-      }
+      webView.stopLoading()
+      context.coordinator.checkedSSLCertificate(url: tab.originURL)
+      webView.load(URLRequest(url: tab.originURL))
       return
     }
   }
