@@ -193,6 +193,15 @@ struct WebNSView: NSViewRepresentable {
         return
       }
       
+      if let webviewURL = webView.url, let host = webviewURL.host, let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"), host.contains("youtube.com") {
+        do {
+          let scriptContent = try String(contentsOf: scriptURL)
+          webView.evaluateJavaScript(scriptContent, completionHandler: nil)
+        } catch {
+          print("Failed to load JavaScript file: \(error.localizedDescription)")
+        }
+      }
+      
       DispatchQueue.main.async {
         self.parent.tab.pageProgress = 1.0
       }

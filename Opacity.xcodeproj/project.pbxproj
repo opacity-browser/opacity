@@ -114,6 +114,7 @@
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
+		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
 		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
 		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
 		A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */; };
@@ -237,6 +238,7 @@
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
+		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -415,6 +417,7 @@
 		A169200A2B2FA82100F8B4C0 /* Opacity */ = {
 			isa = PBXGroup;
 			children = (
+				A1E1A71E2BFBCC4600F537E0 /* Library */,
 				A127D4932BD9E25B0007D410 /* Rule */,
 				A12D053C2B600C4C00CBC6B2 /* Scheme */,
 				A15D54192B56B3F4007020CA /* AppKit */,
@@ -532,6 +535,14 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		A1E1A71E2BFBCC4600F537E0 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -610,6 +621,7 @@
 				A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */,
 				A16BCB082B944ECD004639F2 /* not-find-host in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
+				A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */,
 				A181F3CF2BE59CB100FA111B /* blocked-content in Resources */,
 				A16BCB002B93B38E004639F2 /* not-connect-host in Resources */,
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
@@ -876,7 +888,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -912,7 +924,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
