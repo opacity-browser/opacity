@@ -16,6 +16,9 @@ Opacity Browser is a WebKit-based web browser application for macOS.
 (The current tracker blocking feature is an early version and has many shortcomings.)  
 - [ ] Add search function to search history and visit history  
 - [ ] Add AD blocking  
+  - [x] AdSense
+  - [x] YouTube
+  - [ ] Other
 - [ ] Implementing the getUserMedia function  
 (We currently do not provide web camera and microphone features.)  
 - [ ] Add download history view  
