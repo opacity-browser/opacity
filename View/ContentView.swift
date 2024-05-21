@@ -39,16 +39,16 @@ struct ContentView: View {
     }
     .onAppear {
       if let generalSetting = generalSettings.first {
+        print(generalSetting)
         service.blockingLevel = generalSetting.blockingLevel
-      }
-      if let screenMode = generalSettings.first?.screenMode {
-        if screenMode == "Dark" {
+        service.isAdBlocking = generalSetting.adBlocking
+        if generalSetting.screenMode == "Dark" {
           NSApp.appearance = NSAppearance(named: .darkAqua)
         }
-        if screenMode == "Light" {
+        if generalSetting.screenMode == "Light" {
           NSApp.appearance = NSAppearance(named: .aqua)
         }
-        if screenMode == "System" {
+        if generalSetting.screenMode == "System" {
           NSApp.appearance = nil
         }
       }

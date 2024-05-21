@@ -77,4 +77,16 @@ class SettingsManager {
       }
     }
   }
+  
+  @MainActor static func setAdBlocking(_ value: Bool) {
+    var descriptor = FetchDescriptor<GeneralSetting>()
+    descriptor.fetchLimit = 1
+    do {
+      if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        browserSettings.adBlocking = value
+      }
+    } catch {
+      print("ModelContainerError setAdBlocking")
+    }
+  }
 }

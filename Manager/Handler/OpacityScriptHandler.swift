@@ -77,6 +77,9 @@ final class OpacityScriptHandler {
         case "setBlockingTracker":
           script = setBlockingTracker(value)
           break
+        case "setAdBlocking":
+          script = setAdBlocking(value)
+          break
         case "getSearchHistoryList":
           script = getSearchHistoryList(value)
           break
@@ -344,6 +347,24 @@ final class OpacityScriptHandler {
   """
   }
   
+  func setAdBlocking(_ value: String) -> String? {
+    guard let boolValue = Bool(value) else {
+      return """
+        window.opacityResponse.setAdBlocking({
+          data: "error"
+        })
+      """
+    }
+    
+    SettingsManager.setAdBlocking(boolValue)
+    AppDelegate.shared.service.isAdBlocking = boolValue
+    return """
+      window.opacityResponse.setAdBlocking({
+        data: "success"
+      })
+    """
+  }
+  
   func setRetentionPeriod(_ value: String) -> String? {
     SettingsManager.setRetentionPeriod(value)
     return """
@@ -583,6 +604,7 @@ final class OpacityScriptHandler {
               "Clear All": '\(NSLocalizedString("Clear All", comment: ""))',
               "Library": '\(NSLocalizedString("Library", comment: ""))',
               "This is a library used in service development.": '\(NSLocalizedString("This is a library used in service development.", comment: ""))',
+              "Ad Blocking": '\(NSLocalizedString("Ad Blocking", comment: ""))',
               "version": "\(version)"
             }
           })
@@ -638,7 +660,8 @@ final class OpacityScriptHandler {
             blockingLevel: {
               id: "\(browserSettings.blockingLevel)",
               name: "\(NSLocalizedString(browserSettings.blockingLevel, comment: ""))"
-            }
+            },
+            adBlocking: \(browserSettings.adBlocking)
           }
         })
       """

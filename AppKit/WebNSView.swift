@@ -193,7 +193,8 @@ struct WebNSView: NSViewRepresentable {
         return
       }
       
-      if let webviewURL = webView.url, let host = webviewURL.host, let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"), host.contains("youtube.com") {
+      if let webviewURL = webView.url, let host = webviewURL.host, let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"), 
+          self.parent.service.isAdBlocking == true, host.contains("youtube.com") == true {
         do {
           let scriptContent = try String(contentsOf: scriptURL)
           webView.evaluateJavaScript(scriptContent, completionHandler: nil)

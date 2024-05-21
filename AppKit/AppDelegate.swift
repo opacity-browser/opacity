@@ -386,6 +386,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let windowFrame = keyWindow.frame
       let newWindowFrame = NSRect(x: windowFrame.origin.x + 30, y: windowFrame.origin.y - 20, width: windowFrame.width, height: windowFrame.height)
       createWindow(frame: newWindowFrame)
+    } else {
+      createWindow()
     }
   }
   
@@ -395,6 +397,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if let target = self.service.browsers[windowNumber] {
         target.initTab()
       }
+    } else{
+      createWindow()
     }
   }
   

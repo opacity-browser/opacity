@@ -42,11 +42,13 @@ class GeneralSetting {
   var screenMode: String
   var retentionPeriod: String
   var blockingLevel: String
+  var adBlocking: Bool = true
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue, adBlocking: Bool = true) {
     self.searchEngine = searchEngine
     self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod
     self.blockingLevel = blockingLevel
+    self.adBlocking = adBlocking
   }
 }
