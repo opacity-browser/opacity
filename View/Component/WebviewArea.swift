@@ -15,7 +15,7 @@ struct WebviewArea: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      WebNSView(service: service, browser: browser, tab: tab)
+      MainWebView(service: service, browser: browser, tab: tab)
     }
     .background(tab.originURL.scheme == "opacity" ? Color("SearchBarBG") : .white)
   }

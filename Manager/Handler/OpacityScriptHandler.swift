@@ -347,6 +347,7 @@ final class OpacityScriptHandler {
   """
   }
   
+  // Deprecated
   func setAdBlocking(_ value: String) -> String? {
     guard let boolValue = Bool(value) else {
       return """

@@ -62,6 +62,9 @@ final class Tab: ObservableObject {
   // History
   @Published var updateWebHistory: Bool = false
   
+  // Blocking Tracker
+  var isBlockingTracker: Bool?
+  
   // Search
   @Published var isEditSearch: Bool = false
   @Published var autoCompleteList: [SearchHistoryGroup] = []

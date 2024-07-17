@@ -7,11 +7,12 @@
 
 import SwiftUI
 import WebKit
-import CoreLocation
-import ASN1Decoder
 import Security
+import CoreLocation
+import TrackerRadarKit
+import ASN1Decoder
 
-struct WebNSView: NSViewRepresentable {
+struct MainWebView: NSViewRepresentable {
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
@@ -21,12 +22,12 @@ struct WebNSView: NSViewRepresentable {
   }
   
   class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, URLSessionDelegate, CLLocationManagerDelegate {
-    var parent: WebNSView
+    var parent: MainWebView
     var locationManager: CLLocationManager?
     var cacheErrorURL: URL?
     var isCleanUpAction: Bool = false
     
-    init(_ parent: WebNSView) {
+    init(_ parent: MainWebView) {
       self.parent = parent
       super.init()
       if let webview = self.parent.tab.webview {
@@ -194,7 +195,7 @@ struct WebNSView: NSViewRepresentable {
       }
       
       if let webviewURL = webView.url, let host = webviewURL.host, let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"), 
-          self.parent.service.isAdBlocking == true, host.contains("youtube.com") == true {
+          self.parent.service.isBlockingTracker == true, host.contains("youtube.com") == true {
         do {
           let scriptContent = try String(contentsOf: scriptURL)
           webView.evaluateJavaScript(scriptContent, completionHandler: nil)
@@ -781,69 +782,83 @@ struct WebNSView: NSViewRepresentable {
    */
   }
   
-  private func addContentBlockingRules(_ webView: WKWebView) {
-    var blockingRules: String = "blockingLevel2Rules"
-    if service.blockingLevel == BlockingTrakerList.blockingLight.rawValue {
-      blockingRules = "blockingLevel1Rules"
-    }
-    if service.blockingLevel == BlockingTrakerList.blockingModerate.rawValue {
-      blockingRules = "blockingLevel2Rules"
-    }
-    if service.blockingLevel == BlockingTrakerList.blockingStrong.rawValue {
-      blockingRules = "blockingLevel3Rules"
-    }
-    
-    if let rulePath = Bundle.main.path(forResource: blockingRules, ofType: "json"),
+  private func addAdBlockingRules(_ webView: WKWebView) {
+    if let rulePath = Bundle.main.path(forResource: "blockingRules", ofType: "json"),
        let ruleString = try? String(contentsOfFile: rulePath) {
-      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { ruleList, error in
-        if let ruleList = ruleList {
-          webView.configuration.userContentController.add(ruleList)
-        } else if let error = error {
+      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { result, error in
+        if let error = error {
           print("Error compiling content rule list: \(error)")
+          return
+        }
+        
+        if let result = result {
+          webView.configuration.userContentController.add(result)
+          print("Add AD blocking tracker")
+          webView.reload()
         }
       }
     }
   }
   
-  private func clearContentBlockingRules() {
-    WKContentRuleListStore.default().getAvailableContentRuleListIdentifiers { identifiers in
-      if ((identifiers?.contains("ContentBlockingRules")) != nil) {
-        WKContentRuleListStore.default().removeContentRuleList(forIdentifier: "ContentBlockingRules") { error in
+  private func addContentBlockingRules(_ webView: WKWebView) {
+    if let rulePath = Bundle.main.path(forResource: "duckduckgo-tracker-blocklists-tds", ofType: "json") {
+      do {
+        let ruleData = try Data(contentsOf: URL(fileURLWithPath: rulePath))
+        let tds = try JSONDecoder().decode(TrackerData.self, from: ruleData)
+        let builder = ContentBlockerRulesBuilder(trackerData: tds)
+        let rules = builder.buildRules(withExceptions: [], andTemporaryUnprotectedDomains: [], andTrackerAllowlist: [])
+        let data = try JSONEncoder().encode(rules)
+        let ruleList = String(data: data, encoding: .utf8)!
+        
+        WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleList) { result, error in
           if let error = error {
-            print("Error removing content rule list: \(error)")
-          } else {
-            print("Remove blocking tracker")
+            print("Error compiling content rule list: \(error)")
+            return
+          }
+          
+          if let result = result {
+            webView.configuration.userContentController.add(result)
+            print("Add blocking tracker")
+            addAdBlockingRules(webView)
           }
         }
+      } catch {
+        print("Error loading or decoding tracker data: \(error)")
       }
     }
   }
   
   private func updateBlockingRules(_ webView: WKWebView) {
-    clearContentBlockingRules()
-    if service.blockingLevel != BlockingTrakerList.blockingNone.rawValue {
+    webView.configuration.userContentController.removeAllContentRuleLists()
+    if service.isBlockingTracker {
       addContentBlockingRules(webView)
+    } else {
+      webView.reload()
     }
   }
       
   func makeNSView(context: Context) -> WKWebView {
-    guard let webview = tab.webview else {
+    guard let webView = tab.webview else {
       return WKWebView()
     }
     
-    webview.navigationDelegate = context.coordinator
-    webview.uiDelegate = context.coordinator
-    webview.allowsBackForwardNavigationGestures = true
-    webview.isInspectable = true
-    webview.setValue(false, forKey: "drawsBackground")
-    updateBlockingRules(webview)
+    webView.navigationDelegate = context.coordinator
+    webView.uiDelegate = context.coordinator
+    webView.allowsBackForwardNavigationGestures = true
+    webView.isInspectable = true
+    webView.setValue(false, forKey: "drawsBackground")
+    context.coordinator.setUserAgent(for: webView)
     
-    context.coordinator.setUserAgent(for: webview)
-    
-    return webview
+    return webView
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    // Blocking Tracker
+    if tab.isBlockingTracker != service.isBlockingTracker {
+      tab.isBlockingTracker = service.isBlockingTracker
+      updateBlockingRules(webView)
+    }
+    
     // Stop Process
     if tab.stopProcess && tab.pageProgress > 0 && tab.pageProgress < 1 {
       DispatchQueue.main.async {

@@ -97,7 +97,7 @@ struct SearchNSTextField: NSViewRepresentable {
     }
     
     func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-      if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
+      if commandSelector == #selector(NSResponder.insertNewline(_:)) {
         if self.parent.tab.inputURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
           return true
         }
@@ -105,7 +105,7 @@ struct SearchNSTextField: NSViewRepresentable {
           self.parent.tab.searchInSearchBar()
         }
         return true
-      } else if (commandSelector == #selector(NSResponder.deleteBackward(_:)) || commandSelector == #selector(NSResponder.cancelOperation(_:))) {
+      } else if commandSelector == #selector(NSResponder.deleteBackward(_:)) {
         let selectedRange = textView.selectedRange()
         if let index = self.parent.tab.autoCompleteIndex,
            self.parent.tab.autoCompleteList.count > 0,
@@ -118,6 +118,23 @@ struct SearchNSTextField: NSViewRepresentable {
           return true
         }
         return false
+      } else if commandSelector == #selector(NSResponder.cancelOperation(_:)) {
+        let selectedRange = textView.selectedRange()
+        if let index = self.parent.tab.autoCompleteIndex,
+           self.parent.tab.autoCompleteList.count > 0,
+           self.parent.tab.autoCompleteList.count > index,
+           self.parent.tab.autoCompleteList[index].searchText != self.parent.tab.inputURL,
+           selectedRange.length == 0 {
+          DispatchQueue.main.async {
+            self.parent.tab.autoCompleteIndex = nil
+          }
+          return true
+        } else {
+          DispatchQueue.main.async {
+            self.parent.tab.isEditSearch = false
+          }
+          return true
+        }
       }
       return false
     }

@@ -9,8 +9,9 @@ import SwiftUI
 
 final class Service: ObservableObject {
   @Published var browsers: [Int:Browser] = [:]
-  @Published var blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue
-  @Published var isAdBlocking: Bool = true
+  @Published var blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue // Deprecated
+  @Published var isAdBlocking: Bool = true // Deprecated
+  @Published var isBlockingTracker: Bool = true
   var dragBrowserNumber: Int?
   var dragTabId: UUID?
   var dragBookmark: Bookmark?
