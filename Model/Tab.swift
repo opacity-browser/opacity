@@ -62,8 +62,8 @@ final class Tab: ObservableObject {
   // History
   @Published var updateWebHistory: Bool = false
   
-  // Blocking Tracker
-  var isBlockingTracker: Bool?
+  // Tracker Blocking
+  var isTrackerBlocking: Bool?
   
   // Search
   @Published var isEditSearch: Bool = false

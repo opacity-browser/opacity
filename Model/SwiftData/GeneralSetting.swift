@@ -44,14 +44,14 @@ class GeneralSetting {
   var retentionPeriod: String
   var blockingLevel: String // Deprecated
   var adBlocking: Bool = true // Deprecated
-  var isBlockingTracker: Bool = true
+  var isTrackerBlocking: Bool = true
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue, adBlocking: Bool = true, isBlockingTracker: Bool = true) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue, adBlocking: Bool = true, isTrackerBlocking: Bool = true) {
     self.searchEngine = searchEngine
     self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod
     self.blockingLevel = blockingLevel
     self.adBlocking = adBlocking
-    self.isBlockingTracker = isBlockingTracker
+    self.isTrackerBlocking = isTrackerBlocking
   }
 }

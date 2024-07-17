@@ -64,6 +64,19 @@ class SettingsManager {
     }
   }
   
+  @MainActor static func setIsTrackerBlocking(_ value: Bool) {
+    var descriptor = FetchDescriptor<GeneralSetting>()
+    descriptor.fetchLimit = 1
+    do {
+      if let browserSettings = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        browserSettings.isTrackerBlocking = value
+      }
+    } catch {
+      print("ModelContainerError isTrackerBlocking")
+    }
+  }
+  
+  // Deprecated
   @MainActor static func setBlockingTracker(_ value: String) {
     var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1
@@ -78,6 +91,7 @@ class SettingsManager {
     }
   }
   
+  // Deprecated
   @MainActor static func setAdBlocking(_ value: Bool) {
     var descriptor = FetchDescriptor<GeneralSetting>()
     descriptor.fetchLimit = 1

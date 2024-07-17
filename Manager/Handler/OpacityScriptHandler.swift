@@ -74,10 +74,13 @@ final class OpacityScriptHandler {
         case "setRetentionPeriod":
           script = setRetentionPeriod(value)
           break
-        case "setBlockingTracker":
+        case "setIsTrackerBlocking":
+          script = setIsTrackerBlocking(value)
+          break
+        case "setBlockingTracker": // Deprecated
           script = setBlockingTracker(value)
           break
-        case "setAdBlocking":
+        case "setAdBlocking": // Deprecated
           script = setAdBlocking(value)
           break
         case "getSearchHistoryList":
@@ -337,6 +340,24 @@ final class OpacityScriptHandler {
     """
   }
   
+  func setIsTrackerBlocking(_ value: String) -> String? {
+    guard let boolValue = Bool(value) else {
+      return """
+        window.opacityResponse.setIsTrackerBlocking({
+          data: "error"
+        })
+      """
+    }
+    SettingsManager.setIsTrackerBlocking(boolValue)
+    AppDelegate.shared.service.isTrackerBlocking = boolValue
+    return """
+    window.opacityResponse.setIsTrackerBlocking({
+      data: "success"
+    })
+  """
+  }
+  
+  // Deprecated
   func setBlockingTracker(_ value: String) -> String? {
     SettingsManager.setBlockingTracker(value)
     AppDelegate.shared.service.blockingLevel = value
@@ -516,7 +537,6 @@ final class OpacityScriptHandler {
     var searchEngineList: [SettingListItem] = []
     var screenModeList: [SettingListItem] = []
     var periodList: [SettingListItem] = []
-    var blockingList: [SettingListItem] = []
     
     for engine in SEARCH_ENGINE_LIST {
       searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
@@ -527,22 +547,17 @@ final class OpacityScriptHandler {
     for periodItem in RETENTION_PERIOD_LIST {
       periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
     }
-    for blockingItem in BLOCKING_TRACKER_LIST {
-      blockingList.append(SettingListItem(id: blockingItem, name: NSLocalizedString(blockingItem, comment: "")))
-    }
     
     do {
       let searchString = try encodeJSON(from: searchEngineList)
       let screenModeString = try encodeJSON(from: screenModeList)
       let periodString = try encodeJSON(from: periodList)
-      let blockingString = try encodeJSON(from: blockingList)
       return """
         window.opacityResponse.getGeneralSettingList({
           data: {
             searchEngine: \(searchString),
             screenMode: \(screenModeString),
-            retentionPeriod: \(periodString),
-            blockingLevel: \(blockingString)
+            retentionPeriod: \(periodString)
           }
         })
      """
@@ -600,12 +615,10 @@ final class OpacityScriptHandler {
               "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
               "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
               "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
-              "blocking-change-text": '\(NSLocalizedString("blocking-change-text", comment: ""))',
               "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
               "Clear All": '\(NSLocalizedString("Clear All", comment: ""))',
               "Library": '\(NSLocalizedString("Library", comment: ""))',
               "This is a library used in service development.": '\(NSLocalizedString("This is a library used in service development.", comment: ""))',
-              "Ad Blocking": '\(NSLocalizedString("Ad Blocking", comment: ""))',
               "version": "\(version)"
             }
           })
@@ -658,11 +671,7 @@ final class OpacityScriptHandler {
               id: "\(browserSettings.retentionPeriod)",
               name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
             },
-            blockingLevel: {
-              id: "\(browserSettings.blockingLevel)",
-              name: "\(NSLocalizedString(browserSettings.blockingLevel, comment: ""))"
-            },
-            adBlocking: \(browserSettings.adBlocking)
+            isTrackerBlocking: \(browserSettings.isTrackerBlocking)
           }
         })
       """

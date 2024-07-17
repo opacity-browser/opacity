@@ -195,7 +195,7 @@ struct MainWebView: NSViewRepresentable {
       }
       
       if let webviewURL = webView.url, let host = webviewURL.host, let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"), 
-          self.parent.service.isBlockingTracker == true, host.contains("youtube.com") == true {
+          self.parent.service.isTrackerBlocking == true, host.contains("youtube.com") == true {
         do {
           let scriptContent = try String(contentsOf: scriptURL)
           webView.evaluateJavaScript(scriptContent, completionHandler: nil)
@@ -782,10 +782,10 @@ struct MainWebView: NSViewRepresentable {
    */
   }
   
-  private func addAdBlockingRules(_ webView: WKWebView) {
+  private func addOtherBlockingRules(_ webView: WKWebView) {
     if let rulePath = Bundle.main.path(forResource: "blockingRules", ofType: "json"),
        let ruleString = try? String(contentsOfFile: rulePath) {
-      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleString) { result, error in
+      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "OtherBlockingRules", encodedContentRuleList: ruleString) { result, error in
         if let error = error {
           print("Error compiling content rule list: \(error)")
           return
@@ -793,47 +793,61 @@ struct MainWebView: NSViewRepresentable {
         
         if let result = result {
           webView.configuration.userContentController.add(result)
-          print("Add AD blocking tracker")
-          webView.reload()
+          print("Add other tracker blocking")
         }
       }
     }
   }
   
   private func addContentBlockingRules(_ webView: WKWebView) {
-    if let rulePath = Bundle.main.path(forResource: "duckduckgo-tracker-blocklists-tds", ofType: "json") {
-      do {
-        let ruleData = try Data(contentsOf: URL(fileURLWithPath: rulePath))
-        let tds = try JSONDecoder().decode(TrackerData.self, from: ruleData)
-        let builder = ContentBlockerRulesBuilder(trackerData: tds)
-        let rules = builder.buildRules(withExceptions: [], andTemporaryUnprotectedDomains: [], andTrackerAllowlist: [])
-        let data = try JSONEncoder().encode(rules)
-        let ruleList = String(data: data, encoding: .utf8)!
-        
-        WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleList) { result, error in
-          if let error = error {
-            print("Error compiling content rule list: \(error)")
-            return
-          }
-          
-          if let result = result {
-            webView.configuration.userContentController.add(result)
-            print("Add blocking tracker")
-            addAdBlockingRules(webView)
-          }
+    if let blockingRules = service.blockingRules {
+      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: blockingRules) { result, error in
+        if let error = error {
+          print("Error compiling content rule list: \(error)")
+          return
         }
-      } catch {
-        print("Error loading or decoding tracker data: \(error)")
+        
+        if let result = result {
+          webView.configuration.userContentController.add(result)
+          print("Add cache tracker blocking")
+        }
+      }
+    } else {
+      if let rulePath = Bundle.main.path(forResource: "duckduckgo-tracker-blocklists-tds", ofType: "json") {
+        do {
+          let ruleData = try Data(contentsOf: URL(fileURLWithPath: rulePath))
+          let tds = try JSONDecoder().decode(TrackerData.self, from: ruleData)
+          let builder = ContentBlockerRulesBuilder(trackerData: tds)
+          let rules = builder.buildRules(withExceptions: [], andTemporaryUnprotectedDomains: [], andTrackerAllowlist: [])
+          let data = try JSONEncoder().encode(rules)
+          let ruleList = String(data: data, encoding: .utf8)!
+          
+          service.blockingRules = ruleList
+          
+          WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleList) { result, error in
+            if let error = error {
+              print("Error compiling content rule list: \(error)")
+              return
+            }
+            
+            if let result = result {
+              webView.configuration.userContentController.add(result)
+              print("Add tracker blocking")
+            }
+          }
+        } catch {
+          print("Error loading or decoding tracker data: \(error)")
+        }
       }
     }
   }
   
   private func updateBlockingRules(_ webView: WKWebView) {
-    webView.configuration.userContentController.removeAllContentRuleLists()
-    if service.isBlockingTracker {
+    if service.isTrackerBlocking {
       addContentBlockingRules(webView)
+      addOtherBlockingRules(webView)
     } else {
-      webView.reload()
+      webView.configuration.userContentController.removeAllContentRuleLists()
     }
   }
       
@@ -849,13 +863,19 @@ struct MainWebView: NSViewRepresentable {
     webView.setValue(false, forKey: "drawsBackground")
     context.coordinator.setUserAgent(for: webView)
     
+    guard let _ = tab.isTrackerBlocking else {
+      tab.isTrackerBlocking = service.isTrackerBlocking
+      updateBlockingRules(webView)
+      return webView
+    }
+    
     return webView
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
     // Blocking Tracker
-    if tab.isBlockingTracker != service.isBlockingTracker {
-      tab.isBlockingTracker = service.isBlockingTracker
+    if let isTrackerBlocking = tab.isTrackerBlocking, isTrackerBlocking != service.isTrackerBlocking {
+      tab.isTrackerBlocking = service.isTrackerBlocking
       updateBlockingRules(webView)
     }
     
