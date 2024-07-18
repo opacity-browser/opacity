@@ -17,5 +17,4 @@ final class Service: ObservableObject {
   var dragBookmark: Bookmark?
   var dragBookmarkGroup: BookmarkGroup?
   var isMoveTab: Bool = false
-  var blockingRules: String?
 }
