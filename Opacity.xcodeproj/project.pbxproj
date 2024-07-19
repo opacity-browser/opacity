@@ -46,9 +46,6 @@
 		A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */; };
 		A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */; };
 		A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */; };
-		A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */; };
-		A127D49C2BDA57F80007D410 /* blockingLevel2Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */; };
-		A127D49D2BDA57F80007D410 /* blockingLevel3Rules.json in Resources */ = {isa = PBXBuildFile; fileRef = A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A139B1F62BBF86E50089C7D9 /* OpacityScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */; };
 		A139B1F82BBF94B70089C7D9 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */; };
@@ -105,7 +102,7 @@
 		A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9482B4ACECD00B39BC8 /* Navigation.swift */; };
 		A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9502B4D3D6000B39BC8 /* ExpandList.swift */; };
 		A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C95A2B4EBB8D00B39BC8 /* StringURL.swift */; };
-		A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C95C2B4EBBC700B39BC8 /* WebNSView.swift */; };
+		A188C95D2B4EBBC700B39BC8 /* MainWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */; };
 		A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9632B4EBE9800B39BC8 /* URL.swift */; };
 		A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9652B4ECBB800B39BC8 /* MainView.swift */; };
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
@@ -115,6 +112,9 @@
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
+		A1E9DCBB2C483B9C003DAFEF /* TrackerRadarKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */; };
+		A1E9DCBD2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json in Resources */ = {isa = PBXBuildFile; fileRef = A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */; };
+		A1E9DCC12C484D6D003DAFEF /* blockingRules.json in Resources */ = {isa = PBXBuildFile; fileRef = A1E9DCC02C484D6D003DAFEF /* blockingRules.json */; };
 		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
 		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
 		A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */; };
@@ -160,9 +160,6 @@
 		A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItem.swift; sourceTree = "<group>"; };
 		A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEditBox.swift; sourceTree = "<group>"; };
 		A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNSTextField.swift; sourceTree = "<group>"; };
-		A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel1Rules.json; sourceTree = "<group>"; };
-		A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel2Rules.json; sourceTree = "<group>"; };
-		A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingLevel3Rules.json; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityScriptHandler.swift; sourceTree = "<group>"; };
 		A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
@@ -222,7 +219,7 @@
 		A188C9482B4ACECD00B39BC8 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		A188C9502B4D3D6000B39BC8 /* ExpandList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandList.swift; sourceTree = "<group>"; };
 		A188C95A2B4EBB8D00B39BC8 /* StringURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringURL.swift; sourceTree = "<group>"; };
-		A188C95C2B4EBBC700B39BC8 /* WebNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebNSView.swift; sourceTree = "<group>"; };
+		A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWebView.swift; sourceTree = "<group>"; };
 		A188C9632B4EBE9800B39BC8 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		A188C9652B4ECBB800B39BC8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A188C9672B4ED3F600B39BC8 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
@@ -239,6 +236,8 @@
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
+		A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "duckduckgo-tracker-blocklists-tds.json"; sourceTree = "<group>"; };
+		A1E9DCC02C484D6D003DAFEF /* blockingRules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingRules.json; sourceTree = "<group>"; };
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -249,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */,
+				A1E9DCBB2C483B9C003DAFEF /* TrackerRadarKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,9 +299,8 @@
 		A127D4932BD9E25B0007D410 /* Rule */ = {
 			isa = PBXGroup;
 			children = (
-				A127D4982BDA57F80007D410 /* blockingLevel1Rules.json */,
-				A127D4992BDA57F80007D410 /* blockingLevel2Rules.json */,
-				A127D49A2BDA57F80007D410 /* blockingLevel3Rules.json */,
+				A1E9DCC02C484D6D003DAFEF /* blockingRules.json */,
+				A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */,
 			);
 			path = Rule;
 			sourceTree = "<group>";
@@ -364,7 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				A15D541A2B56B40F007020CA /* AppDelegate.swift */,
-				A188C95C2B4EBBC700B39BC8 /* WebNSView.swift */,
+				A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */,
 				A15D54222B590B4D007020CA /* VisualEffectNSView.swift */,
 				A14246172B71F1A80062C516 /* TabItemNSView.swift */,
 				A14246212B7C64FE0062C516 /* TabDragAreaNSView.swift */,
@@ -561,6 +560,7 @@
 			name = Opacity;
 			packageProductDependencies = (
 				A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */,
+				A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */,
 			);
 			productName = AhPuh;
 			productReference = A16920082B2FA82100F8B4C0 /* Opacity.app */;
@@ -599,6 +599,7 @@
 			mainGroup = A1691FFF2B2FA82100F8B4C0;
 			packageReferences = (
 				A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */,
+				A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */,
 			);
 			productRefGroup = A16920092B2FA82100F8B4C0 /* Products */;
 			projectDirPath = "";
@@ -617,16 +618,15 @@
 				A181F3CD2BE51DA200FA111B /* occurred-ssl-error in Resources */,
 				A16BCB092B944ECD004639F2 /* not-connect-internet in Resources */,
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
-				A127D49C2BDA57F80007D410 /* blockingLevel2Rules.json in Resources */,
-				A127D49B2BDA57F80007D410 /* blockingLevel1Rules.json in Resources */,
 				A16BCB082B944ECD004639F2 /* not-find-host in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */,
 				A181F3CF2BE59CB100FA111B /* blocked-content in Resources */,
+				A1E9DCBD2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json in Resources */,
+				A1E9DCC12C484D6D003DAFEF /* blockingRules.json in Resources */,
 				A16BCB002B93B38E004639F2 /* not-connect-host in Resources */,
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
-				A127D49D2BDA57F80007D410 /* blockingLevel3Rules.json in Resources */,
 				A16BCB0A2B944ECD004639F2 /* unknown in Resources */,
 				A10DA6722BB3952D0053913D /* settings in Resources */,
 			);
@@ -709,7 +709,7 @@
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */,
-				A188C95D2B4EBBC700B39BC8 /* WebNSView.swift in Sources */,
+				A188C95D2B4EBBC700B39BC8 /* MainWebView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
@@ -976,6 +976,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/duckduckgo/TrackerRadarKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.2;
+			};
+		};
 		A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/filom/ASN1Decoder";
@@ -987,6 +995,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */;
+			productName = TrackerRadarKit;
+		};
 		A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */;

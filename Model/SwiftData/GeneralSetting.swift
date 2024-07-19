@@ -29,6 +29,7 @@ enum DataRententionPeriodList: String {
   case indefinite = "Indefinite"
 }
 
+// Deprecated
 enum BlockingTrakerList: String {
   case blockingStrong = "blocking-strong"
   case blockingModerate = "blocking-moderate"
@@ -41,14 +42,16 @@ class GeneralSetting {
   var searchEngine: String
   var screenMode: String
   var retentionPeriod: String
-  var blockingLevel: String
-  var adBlocking: Bool = true
+  var blockingLevel: String // Deprecated
+  var adBlocking: Bool = true // Deprecated
+  var isTrackerBlocking: Bool = true
   
-  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue, adBlocking: Bool = true) {
+  init(searchEngine: String = SearchEngineList.google.rawValue, screenMode: String = ScreenModeList.system.rawValue, retentionPeriod: String = DataRententionPeriodList.oneWeek.rawValue, blockingLevel: String = BlockingTrakerList.blockingModerate.rawValue, adBlocking: Bool = true, isTrackerBlocking: Bool = true) {
     self.searchEngine = searchEngine
     self.screenMode = screenMode
     self.retentionPeriod = retentionPeriod
     self.blockingLevel = blockingLevel
     self.adBlocking = adBlocking
+    self.isTrackerBlocking = isTrackerBlocking
   }
 }

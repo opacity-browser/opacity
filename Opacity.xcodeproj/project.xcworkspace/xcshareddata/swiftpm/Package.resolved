@@ -1,5 +1,5 @@
 {
-  "originHash" : "4805b6dde2fc8601d0f773708adcf6f1b355eb88f74dd0414253fce4a645117f",
+  "originHash" : "988f7dcb8ab67aa08c87b0e6a547c1fe1a7d132b04ba18a47f04e44fe556975c",
   "pins" : [
     {
       "identity" : "asn1decoder",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "7e1523662c69d019a3299bbfb22fb824141dd1f6",
         "version" : "1.10.0"
+      }
+    },
+    {
+      "identity" : "trackerradarkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/duckduckgo/TrackerRadarKit",
+      "state" : {
+        "revision" : "1403e17eeeb8493b92fb9d11eb8c846bb9776581",
+        "version" : "2.1.2"
       }
     }
   ],

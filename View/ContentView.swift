@@ -39,9 +39,7 @@ struct ContentView: View {
     }
     .onAppear {
       if let generalSetting = generalSettings.first {
-        print(generalSetting)
-        service.blockingLevel = generalSetting.blockingLevel
-        service.isAdBlocking = generalSetting.adBlocking
+        service.isTrackerBlocking = generalSetting.isTrackerBlocking
         if generalSetting.screenMode == "Dark" {
           NSApp.appearance = NSAppearance(named: .darkAqua)
         }
