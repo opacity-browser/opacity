@@ -782,6 +782,22 @@ struct MainWebView: NSViewRepresentable {
    */
   }
   
+  private func getCacheOtherContentBlockingRules(_ webView: WKWebView) {
+    WKContentRuleListStore.default().lookUpContentRuleList(forIdentifier: "OtherBlockingRules") { result, error in
+      if let error = error {
+        print("Error lookUpContentRuleList : \(error)")
+        return
+      }
+      
+      if let result = result {
+        webView.configuration.userContentController.add(result)
+        print("Add tracker blocking - cache")
+      } else {
+        addOtherBlockingRules(webView)
+      }
+    }
+  }
+  
   private func addOtherBlockingRules(_ webView: WKWebView) {
     if let rulePath = Bundle.main.path(forResource: "blockingRules", ofType: "json"),
        let ruleString = try? String(contentsOfFile: rulePath) {
@@ -845,7 +861,7 @@ struct MainWebView: NSViewRepresentable {
   private func updateBlockingRules(_ webView: WKWebView) {
     if service.isTrackerBlocking {
       getCacheContentBlockingRules(webView)
-      addOtherBlockingRules(webView)
+      getCacheOtherContentBlockingRules(webView)
     } else {
       webView.configuration.userContentController.removeAllContentRuleLists()
     }
