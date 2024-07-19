@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HistoryForwardBtn: View {
+  @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
   @State private var isForwardDialog: Bool = false
@@ -16,9 +17,15 @@ struct HistoryForwardBtn: View {
     HistoryKeyNSView(
       tab: tab,
       isBack: false,
-      clickAction: {
+      clickAction: { isCommand in
         if let webview = tab.webview, tab.isForward {
-          webview.goForward()
+          if isCommand {
+            if let previousURL = webview.backForwardList.forwardItem?.url {
+              browser.newTab(previousURL)
+            }
+          } else {
+            webview.goForward()
+          }
         }
       },
       longPressAction: {

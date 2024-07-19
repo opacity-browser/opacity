@@ -33,11 +33,11 @@ struct Navigation: View {
       
       VStack(spacing: 0) { }.frame(width: 10)
       
-      HistoryBackBtn(tab: tab)
+      HistoryBackBtn(browser: browser, tab: tab)
       
       VStack(spacing: 0) { }.frame(width: 13)
       
-      HistoryForwardBtn(tab: tab)
+      HistoryForwardBtn(browser: browser, tab: tab)
       
       VStack(spacing: 0) { }.frame(width: 13)
       

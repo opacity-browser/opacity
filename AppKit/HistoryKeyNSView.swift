@@ -9,13 +9,34 @@ import SwiftUI
 struct HistoryKeyNSView: NSViewRepresentable {
   @ObservedObject var tab: Tab
   var isBack: Bool
-  var clickAction: () -> Void
+  var clickAction: (Bool) -> Void
   var longPressAction: () -> Void
+  
+  func makeCoordinator() -> Coordinator {
+    Coordinator(self)
+  }
+  
+  class Coordinator: NSObject {
+    var parent: HistoryKeyNSView
+
+    init(_ parent: HistoryKeyNSView) {
+      self.parent = parent
+    }
+
+    @objc func handleClick(_ sender: NSClickGestureRecognizer) {
+      let isCommandPressed = NSEvent.modifierFlags.contains(.command)
+      print(isCommandPressed ? "Command key is pressed!" : "Command key is not pressed.")
+      parent.clickAction(isCommandPressed)
+    }
+  }
   
   func makeNSView(context: Context) -> NSView {
     let containerView = HistoryKeyButtonNSView()
     containerView.clickAction = clickAction
     containerView.longPressAction = longPressAction
+    
+    let clickRecognizer = NSClickGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleClick(_:)))
+    containerView.addGestureRecognizer(clickRecognizer)
     
     let hostingView = NSHostingView(rootView: HistoryKeyButton(tab: tab, isBack: isBack))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +69,7 @@ struct HistoryKeyNSView: NSViewRepresentable {
 }
 
 class HistoryKeyButtonNSView: NSView {
-  var clickAction: (() -> Void)?
+  var clickAction: ((Bool) -> Void)?
   var longPressAction: (() -> Void)?
   private var longPressTimer: Timer?
   
@@ -66,7 +87,8 @@ class HistoryKeyButtonNSView: NSView {
     super.mouseUp(with: event)
     if longPressTimer != nil && longPressTimer!.isValid {
       longPressTimer?.invalidate()
-      clickAction?()
+      let isCommandPressed = event.modifierFlags.contains(.command)
+      clickAction?(isCommandPressed)
     }
   }
 }
