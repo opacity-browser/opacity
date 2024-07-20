@@ -9,7 +9,7 @@ import SwiftUI
 import WebKit
 import Security
 import CoreLocation
-import TrackerRadarKit
+import ContentBlockRuleList
 import ASN1Decoder
 
 struct MainWebView: NSViewRepresentable {
@@ -781,91 +781,6 @@ struct MainWebView: NSViewRepresentable {
    End Coordinator
    */
   }
-  
-  private func getCacheOtherContentBlockingRules(_ webView: WKWebView) {
-    WKContentRuleListStore.default().lookUpContentRuleList(forIdentifier: "OtherBlockingRules") { result, error in
-      if let error = error {
-        print("Error lookUpContentRuleList : \(error)")
-        return
-      }
-      
-      if let result = result {
-        webView.configuration.userContentController.add(result)
-        print("Add tracker blocking - cache")
-      } else {
-        addOtherBlockingRules(webView)
-      }
-    }
-  }
-  
-  private func addOtherBlockingRules(_ webView: WKWebView) {
-    if let rulePath = Bundle.main.path(forResource: "blockingRules", ofType: "json"),
-       let ruleString = try? String(contentsOfFile: rulePath) {
-      WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "OtherBlockingRules", encodedContentRuleList: ruleString) { result, error in
-        if let error = error {
-          print("Error compiling content rule list: \(error)")
-          return
-        }
-        
-        if let result = result {
-          webView.configuration.userContentController.add(result)
-          print("Add other tracker blocking")
-        }
-      }
-    }
-  }
-  
-  private func getCacheContentBlockingRules(_ webView: WKWebView) {
-    WKContentRuleListStore.default().lookUpContentRuleList(forIdentifier: "ContentBlockingRules") { result, error in
-      if let error = error {
-        print("Error lookUpContentRuleList : \(error)")
-        return
-      }
-      
-      if let result = result {
-        webView.configuration.userContentController.add(result)
-        print("Add tracker blocking - cache")
-      } else {
-        addContentBlockingRules(webView)
-      }
-    }
-  }
-  
-  private func addContentBlockingRules(_ webView: WKWebView) {
-    if let rulePath = Bundle.main.path(forResource: "duckduckgo-tracker-blocklists-tds", ofType: "json") {
-      do {
-        let ruleData = try Data(contentsOf: URL(fileURLWithPath: rulePath))
-        let tds = try JSONDecoder().decode(TrackerData.self, from: ruleData)
-        let builder = ContentBlockerRulesBuilder(trackerData: tds)
-        let rules = builder.buildRules(withExceptions: [], andTemporaryUnprotectedDomains: [], andTrackerAllowlist: [])
-        let data = try JSONEncoder().encode(rules)
-        let ruleList = String(data: data, encoding: .utf8)!
-        
-        WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "ContentBlockingRules", encodedContentRuleList: ruleList) { result, error in
-          if let error = error {
-            print("Error compiling content rule list: \(error)")
-            return
-          }
-          
-          if let result = result {
-            webView.configuration.userContentController.add(result)
-            print("Add tracker blocking")
-          }
-        }
-      } catch {
-        print("Error loading or decoding tracker data: \(error)")
-      }
-    }
-  }
-  
-  private func updateBlockingRules(_ webView: WKWebView) {
-    if service.isTrackerBlocking {
-      getCacheContentBlockingRules(webView)
-      getCacheOtherContentBlockingRules(webView)
-    } else {
-      webView.configuration.userContentController.removeAllContentRuleLists()
-    }
-  }
       
   func makeNSView(context: Context) -> WKWebView {
     guard let webView = tab.webview else {
@@ -879,20 +794,19 @@ struct MainWebView: NSViewRepresentable {
     webView.setValue(false, forKey: "drawsBackground")
     context.coordinator.setUserAgent(for: webView)
     
-    guard let _ = tab.isTrackerBlocking else {
+    if tab.isTrackerBlocking == nil {
       tab.isTrackerBlocking = service.isTrackerBlocking
-      updateBlockingRules(webView)
-      return webView
+      ContentBlockRuleList(webView: webView).updateRules(isBlocking: service.isTrackerBlocking)
     }
-    
+
     return webView
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-    // Blocking Tracker
+    // Tracker Blocking
     if let isTrackerBlocking = tab.isTrackerBlocking, isTrackerBlocking != service.isTrackerBlocking {
       tab.isTrackerBlocking = service.isTrackerBlocking
-      updateBlockingRules(webView)
+      ContentBlockRuleList(webView: webView).updateRules(isBlocking: service.isTrackerBlocking)
     }
     
     // Stop Process

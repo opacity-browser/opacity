@@ -107,15 +107,13 @@
 		A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9652B4ECBB800B39BC8 /* MainView.swift */; };
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
 		A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */; };
+		A18EFB022C4B9FCA00B9C3CB /* ContentBlockRuleList in Frameworks */ = {isa = PBXBuildFile; productRef = A18EFB012C4B9FCA00B9C3CB /* ContentBlockRuleList */; };
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
-		A1E9DCBB2C483B9C003DAFEF /* TrackerRadarKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */; };
-		A1E9DCBD2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json in Resources */ = {isa = PBXBuildFile; fileRef = A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */; };
-		A1E9DCC12C484D6D003DAFEF /* blockingRules.json in Resources */ = {isa = PBXBuildFile; fileRef = A1E9DCC02C484D6D003DAFEF /* blockingRules.json */; };
-		A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */; };
+		A1EB7F182C4B9D48006C9B90 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1EB7F172C4B9D48006C9B90 /* ASN1Decoder */; };
 		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
 		A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */; };
 /* End PBXBuildFile section */
@@ -236,8 +234,6 @@
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
-		A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "duckduckgo-tracker-blocklists-tds.json"; sourceTree = "<group>"; };
-		A1E9DCC02C484D6D003DAFEF /* blockingRules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blockingRules.json; sourceTree = "<group>"; };
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -247,8 +243,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1F4D4E52BE1022E00504BE7 /* ASN1Decoder in Frameworks */,
-				A1E9DCBB2C483B9C003DAFEF /* TrackerRadarKit in Frameworks */,
+				A18EFB022C4B9FCA00B9C3CB /* ContentBlockRuleList in Frameworks */,
+				A1EB7F182C4B9D48006C9B90 /* ASN1Decoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,15 +290,6 @@
 				A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */,
 			);
 			path = Search;
-			sourceTree = "<group>";
-		};
-		A127D4932BD9E25B0007D410 /* Rule */ = {
-			isa = PBXGroup;
-			children = (
-				A1E9DCC02C484D6D003DAFEF /* blockingRules.json */,
-				A1E9DCBC2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json */,
-			);
-			path = Rule;
 			sourceTree = "<group>";
 		};
 		A12D053C2B600C4C00CBC6B2 /* Scheme */ = {
@@ -417,7 +404,6 @@
 			isa = PBXGroup;
 			children = (
 				A1E1A71E2BFBCC4600F537E0 /* Library */,
-				A127D4932BD9E25B0007D410 /* Rule */,
 				A12D053C2B600C4C00CBC6B2 /* Scheme */,
 				A15D54192B56B3F4007020CA /* AppKit */,
 				A15D54122B561BCF007020CA /* Shape */,
@@ -559,8 +545,8 @@
 			);
 			name = Opacity;
 			packageProductDependencies = (
-				A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */,
-				A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */,
+				A1EB7F172C4B9D48006C9B90 /* ASN1Decoder */,
+				A18EFB012C4B9FCA00B9C3CB /* ContentBlockRuleList */,
 			);
 			productName = AhPuh;
 			productReference = A16920082B2FA82100F8B4C0 /* Opacity.app */;
@@ -598,8 +584,8 @@
 			);
 			mainGroup = A1691FFF2B2FA82100F8B4C0;
 			packageReferences = (
-				A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */,
-				A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */,
+				A1EB7F162C4B9D48006C9B90 /* XCRemoteSwiftPackageReference "ASN1Decoder" */,
+				A18EFB002C4B9FCA00B9C3CB /* XCRemoteSwiftPackageReference "ContentBlockRuleList" */,
 			);
 			productRefGroup = A16920092B2FA82100F8B4C0 /* Products */;
 			projectDirPath = "";
@@ -622,8 +608,6 @@
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */,
 				A181F3CF2BE59CB100FA111B /* blocked-content in Resources */,
-				A1E9DCBD2C483C93003DAFEF /* duckduckgo-tracker-blocklists-tds.json in Resources */,
-				A1E9DCC12C484D6D003DAFEF /* blockingRules.json in Resources */,
 				A16BCB002B93B38E004639F2 /* not-connect-host in Resources */,
 				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
@@ -908,7 +892,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -944,7 +928,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -976,15 +960,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */ = {
+		A18EFB002C4B9FCA00B9C3CB /* XCRemoteSwiftPackageReference "ContentBlockRuleList" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/duckduckgo/TrackerRadarKit";
+			repositoryURL = "https://github.com/opacity-browser/ContentBlockRuleList.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.2;
+				minimumVersion = 1.0.0;
 			};
 		};
-		A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */ = {
+		A1EB7F162C4B9D48006C9B90 /* XCRemoteSwiftPackageReference "ASN1Decoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/filom/ASN1Decoder";
 			requirement = {
@@ -995,14 +979,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A1E9DCBA2C483B9C003DAFEF /* TrackerRadarKit */ = {
+		A18EFB012C4B9FCA00B9C3CB /* ContentBlockRuleList */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1E9DCB92C483B9C003DAFEF /* XCRemoteSwiftPackageReference "TrackerRadarKit" */;
-			productName = TrackerRadarKit;
+			package = A18EFB002C4B9FCA00B9C3CB /* XCRemoteSwiftPackageReference "ContentBlockRuleList" */;
+			productName = ContentBlockRuleList;
 		};
-		A1F4D4E42BE1022E00504BE7 /* ASN1Decoder */ = {
+		A1EB7F172C4B9D48006C9B90 /* ASN1Decoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A1F4D4E32BE1022E00504BE7 /* XCRemoteSwiftPackageReference "ASN1Decoder" */;
+			package = A1EB7F162C4B9D48006C9B90 /* XCRemoteSwiftPackageReference "ASN1Decoder" */;
 			productName = ASN1Decoder;
 		};
 /* End XCSwiftPackageProductDependency section */
