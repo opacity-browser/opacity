@@ -110,7 +110,7 @@ struct SearchAutoCompleteBox: View {
           if !tab.isEditSearch {
             HStack(spacing: 0) {
               HStack {
-                SearchNSTextView(text: tab.printURL, opacity: 0.9)
+                SearchNSTextView(text: tab.printURL, opacity: 0.7)
                   .clipped()
               }
               .frame(height: 17)
