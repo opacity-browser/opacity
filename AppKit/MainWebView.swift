@@ -16,6 +16,7 @@ struct MainWebView: NSViewRepresentable {
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
+  @State private var isSinglePageUpdate: Bool = false
   
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
@@ -26,6 +27,7 @@ struct MainWebView: NSViewRepresentable {
     var locationManager: CLLocationManager?
     var cacheErrorURL: URL?
     var isCleanUpAction: Bool = false
+    private var urlObservation: NSKeyValueObservation?
     
     init(_ parent: MainWebView) {
       self.parent = parent
@@ -33,6 +35,32 @@ struct MainWebView: NSViewRepresentable {
       if let webview = self.parent.tab.webview {
         webview.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
         webview.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+        urlObservation = webview.observe(\.url, options: .new) { [weak self] webView, change in
+          if let newURL = change.newValue {
+            self?.handleURLChange(newURL)
+          }
+        }
+      }
+    }
+    
+    deinit {
+      if let webview = self.parent.tab.webview {
+        webview.removeObserver(self, forKeyPath: "canGoBack")
+        webview.removeObserver(self, forKeyPath: "canGoForward")
+      }
+      urlObservation?.invalidate()
+    }
+    
+    private func normalizeURL(_ url: String) -> String {
+      if url.hasSuffix("/") {
+        return String(url.dropLast())
+      }
+      return url
+    }
+    
+    private func handleURLChange(_ url: URL?) {
+      if let url = url, normalizeURL(url.absoluteString) != normalizeURL(self.parent.tab.originURL.absoluteString) {
+        self.parent.isSinglePageUpdate = true
       }
     }
     
@@ -42,13 +70,6 @@ struct MainWebView: NSViewRepresentable {
           self.parent.tab.isBack = webview.canGoBack
           self.parent.tab.isForward = webview.canGoForward
         }
-      }
-    }
-
-    deinit {
-      if let webview = self.parent.tab.webview {
-        webview.removeObserver(self, forKeyPath: "canGoBack")
-        webview.removeObserver(self, forKeyPath: "canGoForward")
       }
     }
     
@@ -141,6 +162,7 @@ struct MainWebView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//      print("decidePolicyFor")
 //      print("webView.url: \(webView.url)")
 //      print("request.url: \(navigationAction.request.url)")
 //      print("----")
@@ -162,9 +184,6 @@ struct MainWebView: NSViewRepresentable {
       
       decisionHandler(.allow)
     }
-    
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-//    }
     
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
       print("didReceiveServerRedirectForProvisionalNavigation")
@@ -408,6 +427,7 @@ struct MainWebView: NSViewRepresentable {
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+      print("createWebViewWith")
       if let customAction = (webView as? OpacityWebView)?.contextualMenuAction, let requestURL = navigationAction.request.url {
         if customAction == .downloadImage {
           downloadImage(from: requestURL) { data, error in
@@ -809,6 +829,14 @@ struct MainWebView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    if let url = webView.url, isSinglePageUpdate {
+      DispatchQueue.main.async {
+        isSinglePageUpdate = false
+        tab.redirectURLByBrowser(url: url)
+        return
+      }
+    }
+    
     // Tracker Blocking
     if let isTrackerBlocking = tab.isTrackerBlocking, isTrackerBlocking != service.isTrackerBlocking {
       tab.isTrackerBlocking = service.isTrackerBlocking
@@ -819,8 +847,8 @@ struct MainWebView: NSViewRepresentable {
     if tab.stopProcess && tab.pageProgress > 0 && tab.pageProgress < 1 {
       DispatchQueue.main.async {
         webView.stopLoading()
-        self.tab.stopProcess = false
-        self.tab.pageProgress = 1.0
+        tab.stopProcess = false
+        tab.pageProgress = 1.0
       }
       return
     }
