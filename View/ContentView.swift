@@ -18,6 +18,8 @@ struct ContentView: View {
   
   var body: some View {
     ZStack {
+      RemoveSoundRepresentable()
+        .frame(width: 0, height: 0)
       if let _ = browser.activeTabId, browser.tabs.count > 0 {
         GeometryReader { geometry in
           VStack(spacing: 0) {

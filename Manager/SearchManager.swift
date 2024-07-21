@@ -9,6 +9,27 @@ import SwiftUI
 import SwiftData
 
 class SearchManager {
+  @MainActor static func findSearchHistoryGroup(_ keyword: String) -> [SearchHistoryGroup]? {
+    let lowercaseKeyword = keyword.lowercased()
+    var descriptor = FetchDescriptor<SearchHistoryGroup>(
+      predicate: #Predicate<SearchHistoryGroup> { search in
+        search.searchText.starts(with: lowercaseKeyword)
+      },
+      sortBy: [SortDescriptor(\SearchHistoryGroup.updateDate, order: .reverse)]
+    )
+    descriptor.fetchLimit = 5
+    
+    do {
+      let searchHistoryGroupList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return searchHistoryGroupList
+    } catch {
+      print("ModelContainerError findSearchHistoryGroup")
+      print(error)
+    }
+    
+    return nil
+  }
+  
   @MainActor static func getSearchHistoryGroup(_ keyword: String) -> SearchHistoryGroup? {
     let descriptor = FetchDescriptor<SearchHistoryGroup>(
       predicate: #Predicate { $0.searchText == keyword }

@@ -108,6 +108,7 @@
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
 		A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */; };
 		A18EFB022C4B9FCA00B9C3CB /* ContentBlockRuleList in Frameworks */ = {isa = PBXBuildFile; productRef = A18EFB012C4B9FCA00B9C3CB /* ContentBlockRuleList */; };
+		A18EFB042C4D944B00B9C3CB /* RemoveKeySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18EFB032C4D944B00B9C3CB /* RemoveKeySound.swift */; };
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
@@ -222,6 +223,7 @@
 		A188C9652B4ECBB800B39BC8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A188C9672B4ED3F600B39BC8 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTabView.swift; sourceTree = "<group>"; };
+		A18EFB032C4D944B00B9C3CB /* RemoveKeySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveKeySound.swift; sourceTree = "<group>"; };
 		A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemeHandler.swift; sourceTree = "<group>"; };
 		A1A1D8D92B62B6BB008FD44F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1A1D8DB2B62B6BD008FD44F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				A10DDD882BCABE22003E159A /* BookmarkDragAreaNSView.swift */,
 				A10DDD8D2BCF5C13003E159A /* OpacityWebView.swift */,
 				A16163C02BF2D79800228BE3 /* SearchNSTextView.swift */,
+				A18EFB032C4D944B00B9C3CB /* RemoveKeySound.swift */,
 			);
 			path = AppKit;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				A10DA6782BB3ABD70053913D /* BrowserSettings.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */,
+				A18EFB042C4D944B00B9C3CB /* RemoveKeySound.swift in Sources */,
 				A15D54232B590B4D007020CA /* VisualEffectNSView.swift in Sources */,
 				A15FCB0E2B9980A000D64C05 /* BookmarkList.swift in Sources */,
 				A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */,
