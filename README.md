@@ -22,7 +22,7 @@ We operate as a non-profit organization, prioritizing privacy and focusing solel
        - changed to integrated management of advertisements and trackers  
        - tracker blocking based on [tracker-blocklists](https://github.com/duckduckgo/tracker-blocklists) provided by duckduckgo
 - [ ] Implementing the getUserMedia function.  
-       - We currently do not provide web camera and microphone features.
+       - we currently do not provide web camera and microphone features.
 - [ ] Add search function to search history and visit history
 - [ ] Add download history view
 

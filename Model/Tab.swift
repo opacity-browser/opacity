@@ -319,20 +319,26 @@ final class Tab: ObservableObject {
     }
   }
   
-  func loadFavicon(url: URL) {
-    URLSession.shared.dataTask(with: url) { data, response, error in
-      guard let data = data, let uiImage = NSImage(data: data) else {
+  func loadFavicon(url: URL?) {
+    if let url = url {
+      URLSession.shared.dataTask(with: url) { data, response, error in
+        guard let data = data, let uiImage = NSImage(data: data) else {
+          DispatchQueue.main.async {
+            self.favicon = nil
+          }
+          return
+        }
         DispatchQueue.main.async {
-          self.favicon = nil
+          self.faviconData = data
+          withAnimation {
+            self.favicon = Image(nsImage: uiImage)
+          }
         }
-        return
-      }
+      }.resume()
+    } else {
       DispatchQueue.main.async {
-        self.faviconData = data
-        withAnimation {
-          self.favicon = Image(nsImage: uiImage)
-        }
+        self.favicon = nil
       }
-    }.resume()
+    }
   }
 }

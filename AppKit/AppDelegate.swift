@@ -74,7 +74,7 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
 }
 
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   static var shared: AppDelegate!
   private var isTerminating = false
   
@@ -85,6 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let windowDelegate = OpacityWindowDelegate()
   
   var sidebarToggleMenuItem: NSMenuItem!
+  var reloadMenuItem: NSMenuItem!
   
   override init() {
     super.init()
@@ -191,6 +192,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     AppDelegate.shared = self
     createWindow()
     setMainMenu()
+    
+    NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { (event) -> NSEvent? in
+      self.updateMenuItem(for: event)
+      return event
+    }
   }
   
   func createNewWindow(tabId: UUID, frame: NSRect? = nil) {
@@ -199,7 +205,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func setMainMenu() {
-    DispatchQueue.main.async {
+//    DispatchQueue.main.async {
       let mainMenu = NSMenu()
       
       // Opacity
@@ -255,7 +261,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       // View
       let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
       let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
-      viewMenu.addItem(withTitle: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
+      viewMenu.delegate = self
+      
+      self.reloadMenuItem = NSMenuItem(title: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
+      viewMenu.addItem(self.reloadMenuItem)
+      
+      viewMenu.addItem(NSMenuItem.separator())
       
       self.sidebarToggleMenuItem = NSMenuItem(title: NSLocalizedString("Show Sidebar", comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
       viewMenu.addItem(self.sidebarToggleMenuItem)
@@ -294,7 +305,52 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //      mainMenu.addItem(menuItem3)
       
       NSApplication.shared.mainMenu = mainMenu
+//    }
+  }
+  
+  func menuDidClose(_ menu: NSMenu) {
+    reloadMenuItem.title = NSLocalizedString("Reload Page", comment: "")
+    reloadMenuItem.action = #selector(self.refreshTab)
+    reloadMenuItem.keyEquivalentModifierMask = [.command]
+  }
+  
+  func updateMenuItem(for event: NSEvent) {
+    if event.modifierFlags.contains([.command, .shift]) {
+      reloadMenuItem.title = NSLocalizedString("Refresh after clearing cache", comment: "")
+      reloadMenuItem.action = #selector(self.refreshTabAfterClearingCache)
+      reloadMenuItem.keyEquivalentModifierMask = [.command, .shift]
+    } else {
+      reloadMenuItem.title = NSLocalizedString("Reload Page", comment: "")
+      reloadMenuItem.action = #selector(self.refreshTab)
+      reloadMenuItem.keyEquivalentModifierMask = [.command]
     }
+  }
+  
+  @objc func refreshTab() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }), let webview = tab.webview {
+        webview.reload()
+        tab.clearPermission()
+      }
+    }
+  }
+  
+  @objc func refreshTabAfterClearingCache() {
+    if let keyWindow = NSApplication.shared.keyWindow {
+      let windowNumber = keyWindow.windowNumber
+      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }), let webview = tab.webview {
+        clearCache {
+          webview.reload()
+          tab.clearPermission()
+        }
+      }
+    }
+  }
+  
+  func clearCache(completion: @escaping () -> Void) {
+      URLCache.shared.removeAllCachedResponses()
+      completion()
   }
   
   @objc func zoomIn() {
@@ -451,16 +507,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           }
         }
         keyWindow.close()
-      }
-    }
-  }
-  
-  @objc func refreshTab() {
-    if let keyWindow = NSApplication.shared.keyWindow {
-      let windowNumber = keyWindow.windowNumber
-      if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }), let webview = tab.webview {
-        webview.reload()
-        tab.clearPermission()
       }
     }
   }

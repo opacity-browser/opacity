@@ -39,6 +39,10 @@ class StringURL {
       return true
     }
     
+    if urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://") {
+      return true
+    }
+    
     if urlString.contains(" ") || !urlString.contains(".") {
       return false
     }

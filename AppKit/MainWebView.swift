@@ -340,11 +340,11 @@ struct MainWebView: NSViewRepresentable {
       
       var cacheFaviconURL: URL?
       group.enter()
-      webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\").getAttribute(\"href\")") { (response, error) in
+      webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\")?.getAttribute(\"href\")") { (response, error) in
         let unwantedCharacters = CharacterSet(charactersIn: "\n\r\t")
         guard let href = response as? String, let currentURL = webView.url, href.components(separatedBy: unwantedCharacters).joined() != "" else {
           if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host  {
-            if webviewURL.scheme != "opacity" {
+            if webviewURL.scheme != "opacity" && host != "localhost" {
               let faviconURL = scheme + "://" + host + "/favicon.ico"
               DispatchQueue.main.async {
                 cacheFaviconURL = URL(string: faviconURL)!

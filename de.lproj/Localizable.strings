@@ -145,3 +145,5 @@
 "This is a library used in service development." = "Dies ist eine Library, die in der Serviceentwicklung verwendet wird.";
 
 "Ad Blocking" = "Werbeblocker";
+
+"Refresh after clearing cache" = "Nach dem Leeren des Caches aktualisieren";
