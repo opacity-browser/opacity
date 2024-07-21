@@ -156,8 +156,8 @@
 
 // Cookie
 "Cookie" = "Cookie";
-"No web storage data found on the website." = "No se encontraron datos de almacenamiento web en el sitio web.";
-"Web storage data is present on the website." = "Hay datos de almacenamiento web en el sitio web.";
+"The current web page uses web storage." = "La página web actual usa almacenamiento web.";
+"The current web page does not use web storage." = "La página web actual no usa almacenamiento web.";
 "Clear Cookies and Storage" = "Borrar cookies y almacenamiento";
 
 // Library

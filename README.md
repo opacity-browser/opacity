@@ -1,18 +1,15 @@
 # Opacity Browser
 
-Opacity Browser is a WebKit-based web browser application for macOS.
+Opacity Browser is a WebKit-based web browser application for macOS.  
+We operate as a non-profit organization, prioritizing privacy and focusing solely on providing a smooth and convenient web browsing experience.
 
-![screenshot](/Readme/screenshot.png)
+![screenshot](/_readme/screenshot.png)
 
 ## About
 
 - We do not collect any user information whatsoever.
-- By default, your browsing and browsing history is only kept for 7 days.
-- Trackers can be blocked at three levels.
-
-## Tracker Blocking
-
-Opacity Browser primarily uses the [tracker-blocklists](https://github.com/duckduckgo/tracker-blocklists) provided by DuckDuckGo, and additionally utilizes the rules from [tracker-blocking](https://github.com/opacity-browser/tracker-blocking).
+- Search and visit history is only kept for 7 days.
+- Blocks various ads and trackers.
 
 ## Download
 
@@ -23,8 +20,9 @@ Opacity Browser primarily uses the [tracker-blocklists](https://github.com/duckd
 - [x] ~~Add AD blocking~~
 - [x] Tracker blocking updates  
        - changed to integrated management of advertisements and trackers  
-       - change tracker blocking based on [tracker-blocklists](https://github.com/duckduckgo/tracker-blocklists)
-- [ ] Implementing the getUserMedia function. (We currently do not provide web camera and microphone features.)
+       - tracker blocking based on [tracker-blocklists](https://github.com/duckduckgo/tracker-blocklists) provided by duckduckgo
+- [ ] Implementing the getUserMedia function.  
+       - We currently do not provide web camera and microphone features.
 - [ ] Add search function to search history and visit history
 - [ ] Add download history view
 

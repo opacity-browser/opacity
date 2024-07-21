@@ -138,8 +138,8 @@
 "Zoom Out" = "축소";
 
 "Cookie" = "쿠키";
-"No web storage data found on the website." = "웹 저장소 데이터를 찾을 수 없습니다.";
-"Web storage data is present on the website." = "웹 저장소 데이터를 사용하고 있습니다.";
+"The current web page uses web storage." = "현재 웹 페이지는 웹 스토리지를 사용합니다.";
+"The current web page does not use web storage." = "현재 웹 페이지는 웹 스토리지를 사용하지 않습니다.";
 "Clear Cookies and Storage" = "쿠키 및 스토리지 정리";
 
 "Library" = "라이브러리";

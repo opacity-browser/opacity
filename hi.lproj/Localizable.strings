@@ -156,8 +156,8 @@
 
 // Cookie
 "Cookie" = "कुकी";
-"No web storage data found on the website." = "वेबसाइट पर कोई वेब स्टोरेज डेटा नहीं मिला।";
-"Web storage data is present on the website." = "वेबसाइट पर वेब स्टोरेज डेटा मौजूद है।";
+"The current web page uses web storage." = "वर्तमान वेब पेज वेब स्टोरेज का उपयोग करता है।";
+"The current web page does not use web storage." = "वर्तमान वेब पेज वेब स्टोरेज का उपयोग नहीं करता है।";
 "Clear Cookies and Storage" = "कुकीज़ और स्टोरेज साफ़ करें";
 
 // Library
