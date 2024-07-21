@@ -43,24 +43,20 @@ struct SearchNSTextField: NSViewRepresentable {
       let lowercaseKeyword = textField.stringValue.lowercased()
       
       DispatchQueue.main.async {
-        self.parent.tab.autoCompleteList = self.parent.searchHistoryGroups.filter {
-          $0.searchText.lowercased().hasPrefix(lowercaseKeyword)
-        }.sorted {
-          $0.searchHistories.count > $1.searchHistories.count
-        }.sorted {
-          $0.searchText.hasPrefix(textField.stringValue) && !$1.searchText.hasPrefix(textField.stringValue)
-        }
-        
-        self.parent.tab.autoCompleteVisitList = self.parent.visitHistoryGroups.filter {
-          $0.url.contains(lowercaseKeyword) || ($0.title != nil && $0.title!.contains(lowercaseKeyword))
-        }.sorted {
-          $0.visitHistories.count > $1.visitHistories.count
-        }
+        self.parent.tab.inputURL = textField.stringValue
         
         if !self.parent.tab.isChangeByKeyDown {
           self.parent.tab.autoCompleteIndex = nil
         } else {
           self.parent.tab.isChangeByKeyDown = false
+        }
+        
+        if let autoCompleteSearchList = SearchManager.findSearchHistoryGroup(lowercaseKeyword) {
+          self.parent.tab.autoCompleteList = autoCompleteSearchList
+        }
+        
+        if let autoCompleteVisitList = VisitManager.findVisitHistoryGroup(lowercaseKeyword) {
+          self.parent.tab.autoCompleteVisitList = autoCompleteVisitList
         }
         
         if self.allowedCharacters(string: lowercaseKeyword)
@@ -70,7 +66,6 @@ struct SearchNSTextField: NSViewRepresentable {
           self.parent.tab.autoCompleteIndex = 0
         }
         
-        self.parent.tab.inputURL = textField.stringValue
         self.checkScrollable(textField: textField)
       }
     }
