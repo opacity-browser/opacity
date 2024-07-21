@@ -137,8 +137,8 @@
 "Zoom Out" = "Verkleinern";
 
 "Cookie" = "Cookie";
-"No web storage data found on the website." = "Keine Webspeicherdaten auf der Website gefunden.";
-"Web storage data is present on the website." = "Webspeicherdaten sind auf der Website vorhanden.";
+"The current web page uses web storage." = "Die aktuelle Webseite verwendet Webspeicher.";
+"The current web page does not use web storage." = "Die aktuelle Webseite verwendet keinen Webspeicher.";
 "Clear Cookies and Storage" = "Cookies und Speicher löschen";
 
 "Library" = "Library";

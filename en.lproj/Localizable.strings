@@ -137,8 +137,8 @@
 "Zoom Out" = "Zoom Out";
 
 "Cookie" = "Cookie";
-"No web storage data found on the website." = "No web storage data found on the website.";
-"Web storage data is present on the website." = "Web storage data is present on the website.";
+"The current web page uses web storage." = "The current web page uses web storage.";
+"The current web page does not use web storage." = "The current web page does not use web storage.";
 "Clear Cookies and Storage" = "Clear Cookies and Storage";
 
 "Library" = "Library";

@@ -131,7 +131,7 @@ struct SiteOptionDialog: View {
       .padding(.bottom, 3)
       
       HStack(spacing: 0) {
-        Text("\(tab.localStorage == "{}" && tab.sessionStorage == "{}" ? NSLocalizedString("No web storage data found on the website.", comment: "") : NSLocalizedString("Web storage data is present on the website.", comment: ""))")
+        Text("\(tab.localStorage == "{}" && tab.sessionStorage == "{}" ? NSLocalizedString("The current web page does not use web storage.", comment: "") : NSLocalizedString("The current web page uses web storage.", comment: ""))")
           .font(.system(size: 11))
           .opacity(0.6)
           .lineLimit(nil)
@@ -151,7 +151,7 @@ struct SiteOptionDialog: View {
             Text(NSLocalizedString("Clear Cookies and Storage", comment: ""))
               .frame(maxWidth: .infinity)
           }
-          .buttonStyle(DialogButtonCancelStyle())
+          .buttonStyle(DialogButtonStyle())
         } else {
           Button {
             
@@ -166,7 +166,7 @@ struct SiteOptionDialog: View {
       
     }
     .frame(width: 220)
-    .padding(.horizontal, 20)
+    .padding(.horizontal, 15)
     .padding(.top, 20)
     .padding(.bottom, 15)
     .background(GeometryReader { geometry in

@@ -155,8 +155,8 @@
 
 // Cookie
 "Cookie" = "クッキー";
-"No web storage data found on the website." = "ウェブサイトにウェブストレージデータが見つかりません";
-"Web storage data is present on the website." = "ウェブサイトにウェブストレージデータがあります";
+"The current web page uses web storage." = "現在のウェブページはウェブストレージを使用しています。";
+"The current web page does not use web storage." = "現在のウェブページはウェブストレージを使用していません。";
 "Clear Cookies and Storage" = "クッキーとストレージをクリア";
 
 // Library

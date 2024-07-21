@@ -266,26 +266,32 @@ struct MainWebView: NSViewRepresentable {
         
         parent.tab.webviewIsError = false
       } else {// not error
+        
         // Fetch Cookie
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
           var cacheCookies: [HTTPCookie] = []
+          let currentURL = webView.url
           for cookie in cookies {
-            cacheCookies.append(cookie)
+            if let url = currentURL, let _ = cookie.domain.range(of: url.host ?? "") {
+              cacheCookies.append(cookie)
+            }
           }
           DispatchQueue.main.async {
             self.parent.tab.cookies = cacheCookies
           }
         }
+        
         // Fetch localStorage
-        webView.evaluateJavaScript("JSON.stringify(localStorage)") { (result, error) in
+        webView.evaluateJavaScript("JSON.stringify(window.localStorage)") { (result, error) in
           if let localStorage = result as? String {
             DispatchQueue.main.async {
               self.parent.tab.localStorage = localStorage
             }
           }
         }
+        
         // Fetch sessionStorage
-        webView.evaluateJavaScript("JSON.stringify(sessionStorage)") { (result, error) in
+        webView.evaluateJavaScript("JSON.stringify(window.sessionStorage)") { (result, error) in
           if let sessionStorage = result as? String {
             DispatchQueue.main.async {
               self.parent.tab.sessionStorage = sessionStorage
@@ -841,8 +847,8 @@ struct MainWebView: NSViewRepresentable {
           }
         }
         let jsString = """
-          localStorage.clear();
-          sessionStorage.clear();
+          window.localStorage.clear();
+          window.sessionStorage.clear();
         """
         webView.evaluateJavaScript(jsString, completionHandler: nil)
       }

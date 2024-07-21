@@ -156,8 +156,8 @@
 
 // Cookie
 "Cookie" = "Cookie";
-"No web storage data found on the website." = "网站上未找到网络存储数据。";
-"Web storage data is present on the website." = "网站上存在网络存储数据。";
+"The current web page uses web storage." = "当前网页使用了网络存储。";
+"The current web page does not use web storage." = "当前网页没有使用网络存储。";
 "Clear Cookies and Storage" = "清除Cookies和存储";
 
 // Library
