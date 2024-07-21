@@ -11,10 +11,6 @@ import SwiftData
 struct SearchEditBox: View {
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.modelContext) var modelContext
-  @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
-  var searchHistoryGroups: [SearchHistoryGroup]
-  @Query(sort: \VisitHistoryGroup.updateDate, order: .reverse)
-  var visitHistoryGroups: [VisitHistoryGroup]
 
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
@@ -27,7 +23,7 @@ struct SearchEditBox: View {
           HStack(spacing: 0) {
             HStack(spacing: 0) {
               VStack(spacing: 0) {
-                SearchAutoCompleteBox(service: service, browser: browser, tab: tab, searchHistoryGroups: searchHistoryGroups, visitHistoryGroups: visitHistoryGroups, tabWidth: CGFloat(searchBoxRect.width) + 4)
+                SearchAutoCompleteBox(service: service, browser: browser, tab: tab, tabWidth: CGFloat(searchBoxRect.width) + 4)
               }
               .frame(width: searchBoxRect.width + 4)
             }
