@@ -9,12 +9,11 @@ import SwiftUI
 import SwiftData
 
 class SearchManager {
-  
   @MainActor static func findSearchHistoryGroup(_ keyword: String) -> [SearchHistoryGroup]? {
     let lowercaseKeyword = keyword.lowercased()
     var descriptor = FetchDescriptor<SearchHistoryGroup>(
       predicate: #Predicate<SearchHistoryGroup> { search in
-        search.searchText.contains(lowercaseKeyword)
+        search.searchText.starts(with: lowercaseKeyword)
       },
       sortBy: [SortDescriptor(\SearchHistoryGroup.updateDate, order: .reverse)]
     )

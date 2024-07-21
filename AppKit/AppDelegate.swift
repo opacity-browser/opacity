@@ -341,6 +341,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber], let tab = target.tabs.first(where: { $0.id == target.activeTabId }), let webview = tab.webview {
         clearCache {
+          print("clearing cache")
           webview.reload()
           tab.clearPermission()
         }
