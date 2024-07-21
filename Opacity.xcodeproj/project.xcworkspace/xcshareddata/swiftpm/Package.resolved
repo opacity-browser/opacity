@@ -1,0 +1,33 @@
+{
+  "originHash" : "ef1a53e3287e4dce62011a6a9ba7bbfa3e6ed05ae18d07448b7a95368be55b73",
+  "pins" : [
+    {
+      "identity" : "asn1decoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/filom/ASN1Decoder",
+      "state" : {
+        "revision" : "7e1523662c69d019a3299bbfb22fb824141dd1f6",
+        "version" : "1.10.0"
+      }
+    },
+    {
+      "identity" : "contentblockrulelist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/opacity-browser/ContentBlockRuleList.git",
+      "state" : {
+        "revision" : "7fb53e2bcbff92599456a671a64793c89419e9a3",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "trackerradarkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/duckduckgo/TrackerRadarKit.git",
+      "state" : {
+        "revision" : "1403e17eeeb8493b92fb9d11eb8c846bb9776581",
+        "version" : "2.1.2"
+      }
+    }
+  ],
+  "version" : 3
+}
