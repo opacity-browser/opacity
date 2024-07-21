@@ -16,7 +16,9 @@ struct SearchAutoCompleteBox: View {
   @ObservedObject var browser: Browser
   @ObservedObject var tab: Tab
   
+  @Query(sort: \SearchHistoryGroup.updateDate, order: .reverse)
   var searchHistoryGroups: [SearchHistoryGroup]
+  @Query(sort: \VisitHistoryGroup.updateDate, order: .reverse)
   var visitHistoryGroups: [VisitHistoryGroup]
   
   var tabWidth: CGFloat

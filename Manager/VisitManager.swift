@@ -9,6 +9,32 @@ import SwiftUI
 import SwiftData
 
 class VisitManager {
+  
+  @MainActor static func findVisitHistoryGroup(_ keyword: String) -> [VisitHistoryGroup]? {
+    let lowercaseKeyword = keyword.lowercased()
+    var descriptor = FetchDescriptor<VisitHistoryGroup>(
+      predicate: #Predicate<VisitHistoryGroup> { visit in
+        if let title = visit.title {
+          return visit.url.contains(lowercaseKeyword) || title.contains(lowercaseKeyword)
+        } else {
+          return visit.url.contains(lowercaseKeyword)
+        }
+      },
+      sortBy: [SortDescriptor(\VisitHistoryGroup.updateDate, order: .reverse)]
+    )
+    descriptor.fetchLimit = 5
+    
+    do {
+      let visitHistoryGroupList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return visitHistoryGroupList
+    } catch {
+      print("ModelContainerError findVisitHistoryGroup")
+      print(error)
+    }
+    
+    return nil
+  }
+  
   @MainActor static func getVisitHistoryGroup(_ url: String) -> VisitHistoryGroup? {
     let descriptor = FetchDescriptor<VisitHistoryGroup>(
       predicate: #Predicate { $0.url == url }
