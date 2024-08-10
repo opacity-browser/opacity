@@ -25,7 +25,6 @@ struct HistoryKeyNSView: NSViewRepresentable {
 
     @objc func handleClick(_ sender: NSClickGestureRecognizer) {
       let isCommandPressed = NSEvent.modifierFlags.contains(.command)
-      print(isCommandPressed ? "Command key is pressed!" : "Command key is not pressed.")
       parent.clickAction(isCommandPressed)
     }
   }
