@@ -148,15 +148,99 @@ struct MainWebView: NSViewRepresentable {
       }
     }
     
+    private func getWebViewDocumentTitle(webView: WKWebView, group: DispatchGroup? = nil) {
+      group?.enter()
+      webView.evaluateJavaScript("document.title") { (response, error) in
+        DispatchQueue.main.async {
+          defer { group?.leave() }
+          
+          guard let title = response as? String else { return }
+          self.parent.tab.title = title
+          
+          if let webviewURL = webView.url,
+             let scheme = webviewURL.scheme,
+             let host = webviewURL.host {
+            switch (scheme, host) {
+              case ("opacity", "settings"):
+                self.parent.tab.title = NSLocalizedString("Settings", comment: "")
+              case ("opacity", "new-tab"):
+                self.parent.tab.title = NSLocalizedString("New Tab", comment: "")
+              default:
+                break
+            }
+          }
+        }
+      }
+    }
+    
+    private func handleDefaultFavicon(for url: URL?) {
+      guard let webviewURL = url, let scheme = webviewURL.scheme, let host = webviewURL.host else { return }
+      
+      if scheme != "opacity" && host != "localhost" {
+        let faviconURL = URL(string: "\(scheme)://\(host)/favicon.ico")!
+        DispatchQueue.main.async {
+          self.parent.tab.faviconURL = faviconURL
+          self.parent.tab.loadFavicon(url: faviconURL)
+        }
+      }
+    }
+
+    private func constructFaviconURL(from path: String, relativeTo currentURL: URL) -> URL {
+      var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
+      
+      let splitHref = path.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+      components.path = String(splitHref[0])
+      components.query = splitHref.count > 1 ? String(splitHref[1]) : nil
+      
+      return components.url!
+    }
+    
+    private func getWebViewDocumentFavicon(webView: WKWebView, group: DispatchGroup? = nil) {
+      group?.enter()
+      
+      webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\")?.getAttribute(\"href\")") { (response, error) in
+        let unwantedCharacters = CharacterSet(charactersIn: "\n\r\t")
+        let cleanedHref = (response as? String)?.components(separatedBy: unwantedCharacters).joined() ?? ""
+        
+        guard let currentURL = webView.url, !cleanedHref.isEmpty else {
+          self.handleDefaultFavicon(for: webView.url)
+          group?.leave()
+          return
+        }
+        
+        let faviconURL: URL
+        if cleanedHref.hasPrefix("http") {
+          faviconURL = URL(string: cleanedHref)!
+        } else if cleanedHref.hasPrefix("//") {
+          faviconURL = URL(string: "https:\(cleanedHref)")!
+        } else if cleanedHref.hasPrefix("/") {
+          faviconURL = self.constructFaviconURL(from: cleanedHref, relativeTo: currentURL)
+        } else {
+          faviconURL = URL(string: cleanedHref, relativeTo: currentURL)!
+        }
+        
+        DispatchQueue.main.async {
+          self.parent.tab.faviconURL = faviconURL
+          self.parent.tab.loadFavicon(url: faviconURL)
+        }
+        
+        group?.leave()
+      }
+    }
+    
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
       print("didCommit")
-      if let webviewURL = webView.url, webviewURL != self.parent.tab.originURL {
-        if let errorContnetURL = self.cacheErrorURL, self.parent.tab.webviewIsError {
-          self.checkedSSLCertificate(url: errorContnetURL)
-          self.parent.tab.redirectURLByBrowser(url: errorContnetURL)
+      if let webviewURL = webView.url {
+        if webviewURL != self.parent.tab.originURL {
+          if let errorContnetURL = self.cacheErrorURL, self.parent.tab.webviewIsError {
+            self.checkedSSLCertificate(url: errorContnetURL)
+            self.parent.tab.redirectURLByBrowser(url: errorContnetURL)
+          } else {
+            self.checkedSSLCertificate(url: webviewURL)
+            self.parent.tab.redirectURLByBrowser(url: webviewURL)
+          }
         } else {
           self.checkedSSLCertificate(url: webviewURL)
-          self.parent.tab.redirectURLByBrowser(url: webviewURL)
         }
       }
     }
@@ -333,85 +417,23 @@ struct MainWebView: NSViewRepresentable {
      """)
       
       let group = DispatchGroup()
-      var cacheTitle: String?
-      group.enter()
-      webView.evaluateJavaScript("document.title") { (response, error) in
-        if let title = response as? String {
-          DispatchQueue.main.async {
-            cacheTitle = title
-            self.parent.tab.title = title
-            if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host() {
-              if scheme == "opacity" {
-                if host == "settings" {
-                  self.parent.tab.title = NSLocalizedString("Settings", comment: "")
-                }
-                if host == "new-tab" {
-                  self.parent.tab.title = NSLocalizedString("New Tab", comment: "")
-                }
-              }
-            }
-            group.leave()
-          }
-        } else {
-          group.leave()
-        }
-      }
       
-      var cacheFaviconURL: URL?
-      group.enter()
-      webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\")?.getAttribute(\"href\")") { (response, error) in
-        let unwantedCharacters = CharacterSet(charactersIn: "\n\r\t")
-        guard let href = response as? String, let currentURL = webView.url, href.components(separatedBy: unwantedCharacters).joined() != "" else {
-          if let webviewURL = webView.url, let scheme = webviewURL.scheme, let host = webviewURL.host  {
-            if webviewURL.scheme != "opacity" && host != "localhost" {
-              let faviconURL = scheme + "://" + host + "/favicon.ico"
-              DispatchQueue.main.async {
-                cacheFaviconURL = URL(string: faviconURL)!
-                self.parent.tab.loadFavicon(url: URL(string: faviconURL)!)
-              }
-            }
-          }
-          group.leave()
-          return
-        }
+      // Webview Document Title
+      getWebViewDocumentTitle(webView: webView, group: group)
       
-        let cleanedHref = href.components(separatedBy: unwantedCharacters).joined()
-        
-        let faviconURL: URL
-        if cleanedHref.hasPrefix("http") {
-          faviconURL = URL(string: cleanedHref)!
-        } else if cleanedHref.hasPrefix("//") {
-          faviconURL = URL(string: "https:\(cleanedHref)")!
-        } else if cleanedHref.hasPrefix("/") {
-          var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
-          
-          let splitHref = cleanedHref.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
-          let pathPart = String(splitHref[0])
-          let queryPart = splitHref.count > 1 ? String(splitHref[1]) : nil
-          
-          components.path = pathPart
-          components.query = queryPart
-          
-          faviconURL = components.url!
-        } else {
-          faviconURL = URL(string: cleanedHref, relativeTo: currentURL)!
-        }
-        
-        DispatchQueue.main.async {
-          cacheFaviconURL = faviconURL
-          self.parent.tab.loadFavicon(url: faviconURL)
-          group.leave()
-        }
-      }
-      
+      // Webview Document Favicon
+      getWebViewDocumentFavicon(webView: webView, group: group)
+    
+    
       group.notify(queue: .main) {
-        if let title = cacheTitle, let currentURL = webView.url {
-          let historySite = HistorySite(title: title, url: self.parent.tab.originURL)
-          if let faviconURL = cacheFaviconURL {
+        if let currentURL = webView.url {
+          let historySite = HistorySite(title: self.parent.tab.title, url: self.parent.tab.originURL)
+          if let faviconURL = self.parent.tab.faviconURL {
             historySite.loadFavicon(url: faviconURL)
             Task {
               let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-              await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: title, faviconData: faviconData)
+              await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+              print("add visit OK")
             }
           }
           self.parent.tab.historySiteDataList.append(historySite)
@@ -481,6 +503,9 @@ struct MainWebView: NSViewRepresentable {
       print("didFail")
       parent.tab.pageProgress = 1.0
       if (error as NSError).code == NSURLErrorCancelled {
+        // 캐시된 페이지로 히스토리 이동 시 title 갱신을 위한 호출
+        getWebViewDocumentTitle(webView: webView)
+        getWebViewDocumentFavicon(webView: webView)
         return
       }
       
@@ -829,18 +854,30 @@ struct MainWebView: NSViewRepresentable {
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
-    if let url = webView.url, isSinglePageUpdate {
-      DispatchQueue.main.async {
-        isSinglePageUpdate = false
-        tab.redirectURLByBrowser(url: url)
-        return
-      }
-    }
-    
     // Tracker Blocking
     if let isTrackerBlocking = tab.isTrackerBlocking, isTrackerBlocking != service.isTrackerBlocking {
       tab.isTrackerBlocking = service.isTrackerBlocking
       ContentBlockRuleList(webView: webView).updateRules(isBlocking: service.isTrackerBlocking)
+    }
+    
+    // Geo Location Permission
+    if tab.isRequestGeoLocation {
+      DispatchQueue.main.async {
+        print("request geo location")
+        tab.isRequestGeoLocation = false
+        tab.isLocationDialogIcon = true
+        tab.isLocationDialog = true
+        context.coordinator.requestGeoLocationPermission()
+      }
+    }
+    
+    // SPA Update
+    if let url = webView.url, isSinglePageUpdate {
+      DispatchQueue.main.async {
+        isSinglePageUpdate = false
+        tab.redirectURLByBrowser(url: url)
+      }
+      return
     }
     
     // Stop Process
@@ -881,17 +918,6 @@ struct MainWebView: NSViewRepresentable {
         webView.evaluateJavaScript(jsString, completionHandler: nil)
       }
       return
-    }
-    
-    // Geo Location Permission
-    if tab.isRequestGeoLocation {
-      DispatchQueue.main.async {
-        print("request geo location")
-        tab.isRequestGeoLocation = false
-        tab.isLocationDialogIcon = true
-        tab.isLocationDialog = true
-        context.coordinator.requestGeoLocationPermission()
-      }
     }
     
     

@@ -39,6 +39,7 @@ final class Tab: ObservableObject {
   @Published var title: String = ""
   @Published var favicon: Image? = nil
   var faviconData: Data? = nil
+  var faviconURL: URL? = nil
   
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
