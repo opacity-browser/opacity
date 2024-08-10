@@ -889,7 +889,6 @@
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -925,7 +924,6 @@
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

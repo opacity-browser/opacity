@@ -807,10 +807,11 @@ struct MainWebView: NSViewRepresentable {
               latitude: \(location.coordinate.latitude),
               longitude: \(location.coordinate.longitude)
             }
-          })
-        }
+          });
+        };
+        navigator.geolocation.updatePosition(\(location.coordinate.latitude), \(location.coordinate.longitude));
       """
-  
+
       webview.evaluateJavaScript(script, completionHandler: nil)
       locationManager.stopUpdatingLocation()
     }

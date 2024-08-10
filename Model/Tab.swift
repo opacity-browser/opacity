@@ -124,6 +124,26 @@ final class Tab: ObservableObject {
         get: () => originalNotification.permission
       });
       window.Notification = OpacityNotification;
+    
+      // geolocation
+      navigator.geolocation.updatePosition = function(lat, lon) {
+        if (navigator.geolocation.watchPositionCallback) {
+          navigator.geolocation.watchPositionCallback({
+            coords: {
+              latitude: lat,
+              longitude: lon
+            }
+          });
+        }
+      };
+
+      navigator.geolocation.watchPosition = function(successCallback, errorCallback, options) {
+        navigator.geolocation.watchPositionCallback = successCallback;
+      };
+    
+      navigator.geolocation.clearWatch = function(watchID) {
+        navigator.geolocation.watchPositionCallback = null;
+      };
     """
     let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
     config.userContentController.addUserScript(userScript)
