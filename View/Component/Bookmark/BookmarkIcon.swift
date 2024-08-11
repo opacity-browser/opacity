@@ -12,8 +12,8 @@ struct BookmarkIcon: View {
   @Query var bookmarks: [Bookmark]
   
   @ObservedObject var tab: Tab
-  @Binding var isBookmarkHover: Bool
   
+  @State private var isBookmarkHover: Bool = false
   @State private var isBookmarkDialog: Bool = false
   
   var body: some View {

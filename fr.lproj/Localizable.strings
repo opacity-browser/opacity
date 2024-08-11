@@ -52,7 +52,10 @@
 "Allow" = "Autoriser";
 "Deny" = "Refuser";
 
+"Allow '%@' to use your location?" = "Autoriser '%@' à utiliser votre position ?";
+
 "Notification" = "Notification";
+"Location" = "Localisation";
 
 "New Folder" = "Nouveau dossier";
 "Bookmark" = "Marque-page";
@@ -89,7 +92,7 @@
 "Notification" = "Notification";
 "allowed" = "autorisé";
 "denied" = "refusé";
-"There are no domains with notification permissions set." = "Il n\\'y a pas de domaines avec des autorisations de notification définies.";
+"There is no domain with permissions set." = "Il n'y a pas de domaine avec des autorisations définies.";
 "There is no search history." = "Il n\\'y a pas d\\'historique de recherche.";
 "There is no visit history." = "Il n\\'y a pas d\\'historique de visites.";
 

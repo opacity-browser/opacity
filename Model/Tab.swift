@@ -51,9 +51,12 @@ final class Tab: ObservableObject {
   @Published var pageProgress: Double = 0.0
   
   // GeoLocation
+  @Published var isUpdateLocation: Bool = false
   @Published var isRequestGeoLocation: Bool = false
   @Published var isLocationDialog: Bool = true
   @Published var isLocationDialogIcon: Bool = false
+  @Published var isLocationDialogByHost: Bool = true
+  @Published var isLocationDialogIconByHost: Bool = false
   
   // Notification
   @Published var isNotificationDialogIcon: Bool = false
@@ -215,22 +218,6 @@ final class Tab: ObservableObject {
   }
   
   @Published var isClearWebview: Bool = false
-  
-//  func clearWebview() {
-//    if let webview = self.webview {
-//      print("c")
-//      DispatchQueue.main.async {
-//        webview.stopLoading()
-//        self.isClearWebview = true
-//        webview.load(URLRequest(url: URL(string: "about:blank")!))
-//        webview.navigationDelegate = nil
-//        webview.uiDelegate = nil
-//        webview.configuration.userContentController.removeAllScriptMessageHandlers()
-//        print("d")
-//      }
-//    }
-////    self.webview = nil
-//  }
   
   var complateCleanUpWebview: (() -> Void)?
   

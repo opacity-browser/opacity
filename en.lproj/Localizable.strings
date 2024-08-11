@@ -52,7 +52,10 @@
 "Allow" = "Allow";
 "Deny" = "Deny";
 
+"Allow '%@' to use your location?" = "Allow '%@' to use your location?";
+
 "Notification" = "Notification";
+"Location" = "Loaciton";
 
 "New Folder" = "New Folder";
 "Bookmark" = "Bookmark";
@@ -89,7 +92,7 @@
 "Notification" = "Notification";
 "allowed" = "allowed";
 "denied" = "denied";
-"There are no domains with notification permissions set." = "There are no domains with notification permissions set.";
+"There is no domain with permissions set." = "There is no domain with permissions set.";
 "There is no search history." = "There is no search history.";
 "There is no visit history." = "There is no visit history.";
 

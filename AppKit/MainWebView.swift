@@ -279,7 +279,7 @@ struct MainWebView: NSViewRepresentable {
       }
     }
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
       print("didFinish")
       if let complateCleanUpWebview = self.parent.tab.complateCleanUpWebview, isCleanUpAction {
         DispatchQueue.main.async {
@@ -432,7 +432,7 @@ struct MainWebView: NSViewRepresentable {
             historySite.loadFavicon(url: faviconURL)
             Task {
               let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-              await VisitManager.addVisitHistory(url: currentURL.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+              VisitManager.addVisitHistory(url: currentURL.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
               print("add visit OK")
             }
           }
@@ -743,29 +743,7 @@ struct MainWebView: NSViewRepresentable {
       }
     }
     
-    /*
-     Geo Locaiton
-     */
-    private func initGeoPositions() {
-      locationManager = CLLocationManager()
-      locationManager!.delegate = self
-
-      switch locationManager!.authorizationStatus {
-        case .authorizedWhenInUse, .authorizedAlways:
-          locationManager!.startUpdatingLocation()
-          break
-        case .denied, .restricted, .notDetermined:
-          deniedGeolocation()
-          break
-        @unknown default: break
-      }
-    }
-    
-    func requestGeoLocationPermission() {
-      guard let locationManager = locationManager else { return }
-      locationManager.requestWhenInUseAuthorization()
-    }
-    
+    // Geo Locaiton
     private func deniedGeolocation() {
       guard let webview = self.parent.tab.webview else { return }
       let script = """
@@ -780,40 +758,120 @@ struct MainWebView: NSViewRepresentable {
       webview.evaluateJavaScript(script, completionHandler: nil)
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-      guard let locationManager = locationManager else { return }
-      switch status {
+    private func deniedGeolocationByHost() {
+      print("deniedGeolocationByHost")
+      guard let locationManager = locationManager, let webview = self.parent.tab.webview else { return }
+      
+      switch locationManager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
-          locationManager.startUpdatingLocation()
-          DispatchQueue.main.async {
-            self.parent.tab.isLocationDialogIcon = false
+          let script = """
+            navigator.geolocation.getCurrentPosition = function(success, error, options) {
+              error({
+                code: 1,
+                message: 'User Denied Geolocation'
+              });
+              window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "true"});
+            }
+          """
+          webview.evaluateJavaScript(script, completionHandler: nil)
+          break
+        case .denied, .restricted, .notDetermined:
+          deniedGeolocation()
+          break
+        @unknown default: break
+      }
+    }
+    
+    @MainActor private func initGeoPositions() {
+      guard let webview = self.parent.tab.webview else { return }
+      locationManager = CLLocationManager()
+      locationManager!.desiredAccuracy = kCLLocationAccuracyBest
+      locationManager!.distanceFilter = kCLDistanceFilterNone
+      locationManager!.delegate = self
+
+      switch locationManager!.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+          if let url = webview.url {
+            if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+              if locationPermition.isDenied == false {
+                locationManager!.startUpdatingLocation()
+              }
+            }
           }
           break
+        case .denied, .restricted, .notDetermined:
+          deniedGeolocation()
+          break
+        @unknown default: break
+      }
+    }
+    
+    func requestGeoLocationPermission() {
+      guard let locationManager = locationManager else { return }
+      locationManager.requestWhenInUseAuthorization()
+    }
+    
+    @MainActor func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+      print("didChangeAuthorization")
+      DispatchQueue.main.async {
+        self.parent.tab.isLocationDialogIconByHost = false
+      }
+      guard let locationManager = locationManager, let webview = self.parent.tab.webview, let url = webview.url else { return }
+      
+      switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+          if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+            if locationPermition.isDenied == false {
+              locationManager.startUpdatingLocation()
+              DispatchQueue.main.async {
+                self.parent.tab.isLocationDialogIcon = false
+              }
+              break
+            }
+          }
+          deniedGeolocationByHost()
+          break
         case .denied, .restricted:
+          print("denied")
           deniedGeolocation()
           break
         default:
           break
       }
     }
-  
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-      guard let location = locations.first, let webview = self.parent.tab.webview, let locationManager = locationManager else { return }
-  
-      let script = """
-        navigator.geolocation.getCurrentPosition = function(success, error, options) {
-          success({
-            coords: {
-              latitude: \(location.coordinate.latitude),
-              longitude: \(location.coordinate.longitude)
-            }
-          });
-        };
-        navigator.geolocation.updatePosition(\(location.coordinate.latitude), \(location.coordinate.longitude));
-      """
-
-      webview.evaluateJavaScript(script, completionHandler: nil)
+    
+    @MainActor func requestLocation() {
+      guard let locationManager = locationManager else { return }
+      print("requestLocation")
       locationManager.stopUpdatingLocation()
+      locationManager.startUpdatingLocation()
+    }
+  
+    @MainActor func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+      print("didUpdateLocations")
+      guard let location = locations.first, let webview = self.parent.tab.webview, let url = webview.url, let locationManager = locationManager else { return }
+      if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+        if locationPermition.isDenied == false {
+          print("allow geo location")
+          let script = """
+            navigator.geolocation.getCurrentPosition = function(success, error, options) {
+              success({
+                coords: {
+                  latitude: \(location.coordinate.latitude),
+                  longitude: \(location.coordinate.longitude)
+                }
+              });
+            };
+            navigator.geolocation.updatePosition(\(location.coordinate.latitude), \(location.coordinate.longitude));
+            window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "false" });
+          """
+
+          webview.evaluateJavaScript(script, completionHandler: nil)
+          locationManager.stopUpdatingLocation()
+          return
+        }
+      }
+      deniedGeolocationByHost()
     }
   
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -861,7 +919,7 @@ struct MainWebView: NSViewRepresentable {
       ContentBlockRuleList(webView: webView).updateRules(isBlocking: service.isTrackerBlocking)
     }
     
-    // Geo Location Permission
+    // Geo Location Global Permission
     if tab.isRequestGeoLocation {
       DispatchQueue.main.async {
         print("request geo location")
@@ -869,6 +927,14 @@ struct MainWebView: NSViewRepresentable {
         tab.isLocationDialogIcon = true
         tab.isLocationDialog = true
         context.coordinator.requestGeoLocationPermission()
+      }
+    }
+    
+    // Geo Location Update
+    if tab.isUpdateLocation {
+      DispatchQueue.main.async {
+        tab.isUpdateLocation = false
+        context.coordinator.requestLocation()
       }
     }
     
@@ -940,7 +1006,7 @@ struct MainWebView: NSViewRepresentable {
       return
     }
     
-    // Word Search
+    // Find Word
     if !tab.findKeyword.isEmpty && tab.isFindAction {
       DispatchQueue.main.async {
         tab.isFindAction = false
@@ -956,11 +1022,14 @@ struct MainWebView: NSViewRepresentable {
     
     // Load new requested webview URL
     if webView.url == nil || tab.isUpdateBySearch {
-      tab.isUpdateBySearch = false
-      tab.webviewIsError = false
-      webView.stopLoading()
-      context.coordinator.checkedSSLCertificate(url: tab.originURL)
-      webView.load(URLRequest(url: tab.originURL))
+//      DispatchQueue.main.async {
+//        tab.isLocationDialogIconByHost = false
+        tab.isUpdateBySearch = false
+        tab.webviewIsError = false
+        webView.stopLoading()
+        context.coordinator.checkedSSLCertificate(url: tab.originURL)
+        webView.load(URLRequest(url: tab.originURL))
+//      }
       return
     }
   }

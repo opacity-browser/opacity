@@ -30,7 +30,6 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String] {
-      
       let scriptName = messageBody["name"] ?? ""
       if let webView = message.webView, let currentURL = webView.url, currentURL.scheme == "opacity" {
         opacityScriptHandler.messages(name: scriptName, value: messageBody["value"])
@@ -47,6 +46,9 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
         switch scriptName {
           case "hashChange":
             hashChange(scriptValue)
+            break
+          case "showGeoLocaitonHostPermissionIcon":
+            showGeoLocaitonHostPermissionIcon(scriptValue)
             break
           default: break
         }
@@ -118,6 +120,13 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
     }
   }
   
+  func showGeoLocaitonHostPermissionIcon(_ value: String) {
+    guard let boolValue = Bool(value) else { return }
+    DispatchQueue.main.async {
+      self.tab.isLocationDialogIconByHost = true
+      self.tab.isLocationDialogByHost = boolValue
+    }
+  }
   
   // Notification
   func requestNotificationPermission() {

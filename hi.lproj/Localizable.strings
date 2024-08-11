@@ -57,7 +57,10 @@
 "Allow" = "अनुमति दें";
 "Deny" = "अस्वीकार करें";
 
+"Allow '%@' to use your location?" = "क्या आप '%@' को अपनी स्थान का उपयोग करने की अनुमति देते हैं?";
+
 "Notification" = "सूचना";
+"Location" = "स्थान";
 
 // New Folder and Bookmark
 "New Folder" = "नया फ़ोल्डर";
@@ -99,7 +102,7 @@
 "Notification" = "सूचना";
 "allowed" = "अनुमत";
 "denied" = "अस्वीकृत";
-"There are no domains with notification permissions set." = "कोई डोमेन अधिसूचना अनुमतियों के सेट के साथ नहीं हैं।";
+"There is no domain with permissions set." = "कोई भी डोमेन अनुमति सेट के साथ नहीं है।";
 "There is no search history." = "कोई खोज इतिहास नहीं है।";
 "There is no visit history." = "कोई भ्रमण इतिहास नहीं है।";
 

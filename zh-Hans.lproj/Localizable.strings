@@ -57,7 +57,10 @@
 "Allow" = "允许";
 "Deny" = "拒绝";
 
+"Allow '%@' to use your location?" = "允许'%@'使用您的位置吗？";
+
 "Notification" = "通知";
+"Location" = "位置";
 
 // New Folder and Bookmark
 "New Folder" = "新建文件夹";
@@ -99,7 +102,7 @@
 "Notification" = "通知";
 "allowed" = "已允许";
 "denied" = "已拒绝";
-"There are no domains with notification permissions set." = "没有设置通知权限的域。";
+"There is no domain with permissions set." = "没有设置权限的域名。";
 "There is no search history." = "没有搜索历史。";
 "There is no visit history." = "没有访问历史。";
 

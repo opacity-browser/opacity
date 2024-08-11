@@ -95,8 +95,8 @@ final class OpacityScriptHandler {
         case "deleteVisitHistory":
           script = deleteVisitHistory(value)
           break
-        case "deleteNotificationPermissions":
-          script = deleteNotificationPermissions(value)
+        case "deletePermissions":
+          script = deletePermissions(value)
           break
         case "updateNotificationPermissions":
           script = updateNotificationPermissions(value)
@@ -109,6 +109,9 @@ final class OpacityScriptHandler {
           break
         case "getGeneralSettingList":
           script = getGeneralSettingList()
+          break
+        case "getLocationPermisions":
+          script = getLocationPermisions()
           break
         case "getNotificationPermisions":
           script = getNotificationPermisions()
@@ -156,7 +159,7 @@ final class OpacityScriptHandler {
     do {
       let params = try decodeJSON(from: updateParmas, to: UpdatePermissionParams.self)
       if let uuid = UUID(uuidString: params.id) {
-        PermissionManager.updateNotificationPermisionById(id: uuid, isDenied: params.isDenied)
+        PermissionManager.updatePermisionById(id: uuid, isDenied: params.isDenied)
       }
       return """
         window.opacityResponse.updateNotificationPermissions({
@@ -173,24 +176,24 @@ final class OpacityScriptHandler {
     """
   }
   
-  func deleteNotificationPermissions(_ permissionIds: String) -> String? {
+  func deletePermissions(_ permissionIds: String) -> String? {
     do {
       let deletePermissionIds = try decodeJSON(from: permissionIds, to: [String].self)
       for id in deletePermissionIds {
         if let uuid = UUID(uuidString: id) {
-          PermissionManager.deleteNotificationPermisionById(uuid)
+          PermissionManager.deletePermisionById(uuid)
         }
       }
       return """
-        window.opacityResponse.deleteNotificationPermissions({
+        window.opacityResponse.deletePermissions({
           data: "success"
         })
       """
     } catch {
-      print("JSONDecodeError deleteNotificationPermissions")
+      print("JSONDecodeError deletePermissions")
     }
     return """
-      window.opacityResponse.deleteNotificationPermissions({
+      window.opacityResponse.deletePermissions({
         data: "error"
       })
     """
@@ -508,6 +511,31 @@ final class OpacityScriptHandler {
     """
   }
   
+  func getLocationPermisions() -> String? {
+    if let locaitonPermitions = PermissionManager.getLocationPermisions() {
+      var jsonDataList: [PermissionItem] = []
+      for noti in locaitonPermitions {
+        jsonDataList.append(PermissionItem(id: noti.id, domain: noti.domain, permission: noti.permission, isDenied: noti.isDenied))
+      }
+      do {
+        let jsonString = try encodeJSON(from: jsonDataList)
+        return """
+          window.opacityResponse.getLocationPermisions({
+            data: \(jsonString)
+          })
+        """
+      } catch {
+        print("JSONEncodeError getLocationPermisions")
+      }
+    }
+
+    return """
+      window.opacityResponse.getLocationPermisions({
+        data: "error"
+      })
+    """
+  }
+  
   func getNotificationPermisions() -> String? {
     if let notificationPermitions = PermissionManager.getNotificationPermisions() {
       var jsonDataList: [PermissionItem] = []
@@ -609,9 +637,10 @@ final class OpacityScriptHandler {
               "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
               "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
               "Notification": '\(NSLocalizedString("Notification", comment: ""))',
+              "Location": '\(NSLocalizedString("Location", comment: ""))',
               "allowed": '\(NSLocalizedString("allowed", comment: ""))',
               "denied": '\(NSLocalizedString("denied", comment: ""))',
-              "There are no domains with notification permissions set.": '\(NSLocalizedString("There are no domains with notification permissions set.", comment: ""))',
+              "There is no domain with permissions set.": '\(NSLocalizedString("There is no domain with permissions set.", comment: ""))',
               "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
               "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
               "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
