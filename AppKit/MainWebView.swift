@@ -820,12 +820,12 @@ struct MainWebView: NSViewRepresentable {
       
       switch status {
         case .authorizedWhenInUse, .authorizedAlways:
+          DispatchQueue.main.async {
+            self.parent.tab.isLocationDialogIcon = false
+          }
           if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
             if locationPermition.isDenied == false {
               locationManager.startUpdatingLocation()
-              DispatchQueue.main.async {
-                self.parent.tab.isLocationDialogIcon = false
-              }
               break
             }
           }
