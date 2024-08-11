@@ -75,14 +75,14 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
         )
         do {
           if let domainNotification = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-            if !domainNotification.isDenied {
+            if domainNotification.isDenied == false {
               let scriptValue = value ?? ""
               guard let jsonData = scriptValue.data(using: .utf8) else { return }
               do {
                 let data = try JSONDecoder().decode(NotificationValue.self, from: jsonData)
                 let title = data.title
                 let body = data.options?.body
-                self.showNotification(title: title, body: body)
+                self.actionNotification(title: title, body: body)
               } catch {
                 print("JSON Parsing Error : \(error)")
               }
@@ -131,18 +131,24 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
   // Notification
   func requestNotificationPermission() {
     self.checkNotificationAuthorization { enabled in
+      guard let webview = self.tab.webview else { return }
+      
       if let host = self.tab.originURL.host, enabled == true {
         let rawType = DomainPermissionType.notification.rawValue
         let descriptor = FetchDescriptor<DomainPermission>(
           predicate: #Predicate { $0.domain == host && $0.permission == rawType }
         )
-
         do {
-          guard let _ = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first else {
-            withAnimation {
-              self.tab.isNotificationDialogIcon = true
+          if let notiPer = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+            if notiPer.isDenied == false {
+              DispatchQueue.main.async {
+                webview.evaluateJavaScript("window.resolveNotificationPermission('granted');")
+              }
+              return
             }
-            return
+          }
+          withAnimation {
+            self.tab.isNotificationDialogIcon = true
           }
         } catch {
           print("Model Container Error")
@@ -150,11 +156,12 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
       } else {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
           if granted {
+            withAnimation {
+              self.tab.isNotificationDialogIcon = true
+            }
+          } else {
             DispatchQueue.main.async {
-              self.showNotification(
-                title: NSLocalizedString("Notification Permissions", comment: ""),
-                body: NSLocalizedString("Notification permission granted.", comment: "")
-              )
+              webview.evaluateJavaScript("window.resolveNotificationPermission('denied');")
             }
           }
         }
@@ -179,7 +186,7 @@ class ScriptHandler: NSObject, WKScriptMessageHandler {
     }
   }
   
-  func showNotification(title: String, body: String? = nil) {
+  func actionNotification(title: String, body: String? = nil) {
     let content = UNMutableNotificationContent()
     content.title = title
     

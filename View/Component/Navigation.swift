@@ -142,6 +142,9 @@ struct Navigation: View {
           }
         }
         .padding(.trailing, 13)
+        .onAppear {
+          isNotificationDetailDialog = true
+        }
       }
       
       if tab.isLocationDialogIcon {

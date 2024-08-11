@@ -110,7 +110,7 @@ struct SiteOptionDialog: View {
           .font(.system(size: 11))
           .opacity(0.6)
           .onTapGesture {
-            browser.newTab(URL(string: "https://github.com/opacity-browser/tracker-blocking")!)
+            browser.newTab(URL(string: "https://github.com/opacity-browser/ContentBlockRuleList")!)
             self.isSiteDialog = false
           }
         Spacer()
@@ -151,7 +151,7 @@ struct SiteOptionDialog: View {
             Text(NSLocalizedString("Clear Cookies and Storage", comment: ""))
               .frame(maxWidth: .infinity)
           }
-          .buttonStyle(DialogButtonStyle())
+          .buttonStyle(DialogPermissonStyle())
         } else {
           Button {
             
@@ -159,7 +159,7 @@ struct SiteOptionDialog: View {
             Text(NSLocalizedString("Clear Cookies and Storage", comment: ""))
               .frame(maxWidth: .infinity)
           }
-          .buttonStyle(DialogButtonCancelStyle())
+          .buttonStyle(DialogPermissonStyle())
         }
       }
       .padding(.top, 10)

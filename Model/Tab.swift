@@ -117,7 +117,15 @@ final class Tab: ObservableObject {
       // notification
       const originalNotification = Notification;
       class OpacityNotification {
-        static requestPermission = () => window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
+        static requestPermission = () => {
+          return new Promise((resolve) => {
+            window.resolveNotificationPermission = (permission) => {
+              window.resolveNotificationPermission = null;
+              resolve(permission);
+            };
+            window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "notificationRequest" });
+          });
+        };
         constructor(title, options) {
           window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showNotification", value: JSON.stringify({ title: title, options: options })});
           return new originalNotification(title, options);
