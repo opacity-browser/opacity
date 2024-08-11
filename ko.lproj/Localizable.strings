@@ -53,7 +53,10 @@
 "Allow" = "허용";
 "Deny" = "거부";
 
+"Allow '%@' to use your location?" = "'%@'이(가) 위치 정보를 사용하는 것을 허용하시겠습니까?";
+
 "Notification" = "알림";
+"Location" = "위치";
 
 "New Folder" = "새 폴더";
 "Bookmark" = "북마크";
@@ -90,7 +93,7 @@
 "Notification" = "알림";
 "allowed" = "허용됨";
 "denied" = "거부됨";
-"There are no domains with notification permissions set." = "알림 권한이 설정된 도메인이 없습니다.";
+"There is no domain with permissions set." = "권한이 설정된 도메인이 없습니다.";
 "There is no search history." = "검색기록이 없습니다.";
 "There is no visit history." = "방문기록이 없습니다.";
 

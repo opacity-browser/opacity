@@ -57,7 +57,10 @@
 "Allow" = "Permitir";
 "Deny" = "Denegar";
 
+"Allow '%@' to use your location?" = "¿Permitir que '%@' use tu ubicación?";
+
 "Notification" = "Notificación";
+"Location" = "Localización";
 
 // New Folder and Bookmark
 "New Folder" = "Nueva carpeta";
@@ -99,7 +102,7 @@
 "Notification" = "Notificación";
 "allowed" = "permitido";
 "denied" = "denegado";
-"There are no domains with notification permissions set." = "No hay dominios con permisos de notificación configurados.";
+"There is no domain with permissions set." = "No hay un dominio con permisos establecidos.";
 "There is no search history." = "No hay historial de búsqueda.";
 "There is no visit history." = "No hay historial de visitas";
 

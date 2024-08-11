@@ -24,7 +24,6 @@ struct SearchAutoCompleteBox: View {
   var tabWidth: CGFloat
   
   @State private var isSiteDialog: Bool = false
-  @State var isBookmarkHover: Bool = false
   @State var isScrollable: Bool = false
   
   func decodeBase64ToNSImage(base64: String) -> NSImage? {
@@ -205,7 +204,12 @@ struct SearchAutoCompleteBox: View {
             }
         }
         
-        BookmarkIcon(tab: tab, isBookmarkHover: $isBookmarkHover)
+        if tab.isLocationDialogIconByHost {
+          LocationPermissionIcon(tab: tab)
+            .padding(.horizontal, 5)
+        }
+        
+        BookmarkIcon(tab: tab)
           .padding(.leading, 5)
           .padding(.trailing, 10)
       }

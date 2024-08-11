@@ -46,6 +46,8 @@
 		A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */; };
 		A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */; };
 		A11EDAF02BA9A457000D07CB /* SearchNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */; };
+		A132149B2C68BDCC008A06C9 /* LocationPermissionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A132149A2C68BDCC008A06C9 /* LocationPermissionIcon.swift */; };
+		A132149D2C68C1D5008A06C9 /* LocationHostDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A132149C2C68C1D5008A06C9 /* LocationHostDialog.swift */; };
 		A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134711D2B43F00800A3AE59 /* OpacityApp.swift */; };
 		A139B1F62BBF86E50089C7D9 /* OpacityScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */; };
 		A139B1F82BBF94B70089C7D9 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */; };
@@ -93,6 +95,7 @@
 		A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16BCB192B985F9F004639F2 /* Bookmark.swift */; };
 		A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */; };
 		A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */; };
+		A17C3AFA2C68ECC5007DA3ED /* DialogButtonPermissonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C3AF92C68ECC5007DA3ED /* DialogButtonPermissonStyle.swift */; };
 		A17C97702BD32A19009240B9 /* FindDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C976F2BD32A19009240B9 /* FindDialog.swift */; };
 		A17C97722BD33D0F009240B9 /* FindNSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C97712BD33D0F009240B9 /* FindNSTextField.swift */; };
 		A181F3CD2BE51DA200FA111B /* occurred-ssl-error in Resources */ = {isa = PBXBuildFile; fileRef = A181F3CC2BE51DA200FA111B /* occurred-ssl-error */; };
@@ -159,6 +162,8 @@
 		A11EDAE72BA6BD42000D07CB /* SearchAutoCompleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItem.swift; sourceTree = "<group>"; };
 		A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEditBox.swift; sourceTree = "<group>"; };
 		A11EDAEF2BA9A457000D07CB /* SearchNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNSTextField.swift; sourceTree = "<group>"; };
+		A132149A2C68BDCC008A06C9 /* LocationPermissionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionIcon.swift; sourceTree = "<group>"; };
+		A132149C2C68C1D5008A06C9 /* LocationHostDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHostDialog.swift; sourceTree = "<group>"; };
 		A134711D2B43F00800A3AE59 /* OpacityApp.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; name = OpacityApp.swift; path = Opacity/OpacityApp.swift; sourceTree = "<group>"; tabWidth = 2; };
 		A139B1F52BBF86E50089C7D9 /* OpacityScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityScriptHandler.swift; sourceTree = "<group>"; };
 		A139B1F72BBF94B70089C7D9 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
@@ -208,6 +213,7 @@
 		A16BCB192B985F9F004639F2 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDialog.swift; sourceTree = "<group>"; };
 		A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonStyle.swift; sourceTree = "<group>"; };
+		A17C3AF92C68ECC5007DA3ED /* DialogButtonPermissonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogButtonPermissonStyle.swift; sourceTree = "<group>"; };
 		A17C97632BD293C7009240B9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		A17C976F2BD32A19009240B9 /* FindDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDialog.swift; sourceTree = "<group>"; };
 		A17C97712BD33D0F009240B9 /* FindNSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindNSTextField.swift; sourceTree = "<group>"; };
@@ -278,6 +284,7 @@
 				A17C976F2BD32A19009240B9 /* FindDialog.swift */,
 				A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */,
 				A158DD072BF5DA7400BE9A48 /* About.swift */,
+				A132149C2C68C1D5008A06C9 /* LocationHostDialog.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -344,6 +351,7 @@
 				A15D54132B561BEC007020CA /* BrowserTabShape.swift */,
 				A17245E32B8CCCE70049F58D /* DialogButtonStyle.swift */,
 				A16BCAF12B8FC9DE004639F2 /* DialogButtonCancelStyle.swift */,
+				A17C3AF92C68ECC5007DA3ED /* DialogButtonPermissonStyle.swift */,
 			);
 			path = Shape;
 			sourceTree = "<group>";
@@ -487,6 +495,7 @@
 				A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
 				A10DDD802BC73976003E159A /* WebviewArea.swift */,
+				A132149A2C68BDCC008A06C9 /* LocationPermissionIcon.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -650,6 +659,7 @@
 				A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */,
 				A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */,
 				A16BCAFC2B907878004639F2 /* ToggleSwitch.swift in Sources */,
+				A132149D2C68C1D5008A06C9 /* LocationHostDialog.swift in Sources */,
 				A16BCAF62B8FFBFD004639F2 /* HistoryForwardBtn.swift in Sources */,
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
@@ -693,6 +703,7 @@
 				A10DDD852BC9A67A003E159A /* BookmarkTitleNSView.swift in Sources */,
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A16BCAF42B8FFBEB004639F2 /* HistoryBackBtn.swift in Sources */,
+				A132149B2C68BDCC008A06C9 /* LocationPermissionIcon.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
@@ -707,6 +718,7 @@
 				A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */,
 				A10DA67E2BB81B9D0053913D /* SettingListItem.swift in Sources */,
 				A14246242B7E51450062C516 /* TabDialog.swift in Sources */,
+				A17C3AFA2C68ECC5007DA3ED /* DialogButtonPermissonStyle.swift in Sources */,
 				A11EDACA2B9EE774000D07CB /* BookmarkDialog.swift in Sources */,
 				A11EDAE32BA5EC3A000D07CB /* SearchAutoComplete.swift in Sources */,
 				A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */,
@@ -889,7 +901,6 @@
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -925,7 +936,6 @@
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

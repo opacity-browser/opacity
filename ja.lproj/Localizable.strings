@@ -57,7 +57,10 @@
 "Allow" = "許可";
 "Deny" = "拒否";
 
+"Allow '%@' to use your location?" = "'%@'があなたの位置情報を使用することを許可しますか？";
+
 "Notification" = "通知";
+"Location" = "場所";
 
 // New Folder and Bookmark
 "New Folder" = "新しいフォルダー";
@@ -99,7 +102,7 @@
 "Notification" = "通知";
 "allowed" = "許可されました";
 "denied" = "拒否されました";
-"There are no domains with notification permissions set." = "通知許可が設定されているドメインはありません";
+"There is no domain with permissions set." = "権限が設定されたドメインがありません。";
 "There is no search history." = "検索履歴がありません";
 "There is no visit history." = "閲覧履歴がありません";
 

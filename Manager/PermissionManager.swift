@@ -9,6 +9,38 @@ import SwiftUI
 import SwiftData
 
 class PermissionManager {
+  
+  @MainActor static func getLocationPermisionByURL(url: URL) -> DomainPermission? {
+    if let host = url.host {
+      let rawType = DomainPermissionType.geoLocation.rawValue
+      let descriptor = FetchDescriptor<DomainPermission>(
+        predicate: #Predicate { $0.permission == rawType && $0.domain == host }
+      )
+      do {
+        if let locaitonPermision = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          return locaitonPermision
+        }
+      } catch {
+        print("getLocationPermisions error")
+      }
+    }
+    return nil
+  }
+  
+  @MainActor static func getLocationPermisions() -> [DomainPermission]? {
+    let rawType = DomainPermissionType.geoLocation.rawValue
+    let descriptor = FetchDescriptor<DomainPermission>(
+      predicate: #Predicate { $0.permission == rawType }
+    )
+    do {
+      let notificationPermisions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return notificationPermisions
+    } catch {
+      print("getLocationPermisions error")
+    }
+    return nil
+  }
+  
   @MainActor static func getNotificationPermisions() -> [DomainPermission]? {
     let rawType = DomainPermissionType.notification.rawValue
     let descriptor = FetchDescriptor<DomainPermission>(
@@ -18,12 +50,12 @@ class PermissionManager {
       let notificationPermisions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
       return notificationPermisions
     } catch {
-      print("get visit history group error")
+      print("getNotificationPermisions error")
     }
     return nil
   }
   
-  @MainActor static func deleteNotificationPermisionById(_ id: UUID) {
+  @MainActor static func deletePermisionById(_ id: UUID) {
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.id == id }
     )
@@ -33,11 +65,11 @@ class PermissionManager {
         try AppDelegate.shared.opacityModelContainer.mainContext.save()
       }
     } catch {
-      print("delete notification permission by id error")
+      print("delete permission by id error")
     }
   }
   
-  @MainActor static func updateNotificationPermisionById(id: UUID, isDenied: Bool) {
+  @MainActor static func updatePermisionById(id: UUID, isDenied: Bool) {
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.id == id }
     )
@@ -46,7 +78,7 @@ class PermissionManager {
         target.isDenied = isDenied
       }
     } catch {
-      print("update notification permission by id error")
+      print("update permission by id error")
     }
   }
 }

@@ -58,7 +58,7 @@ struct NotificationDialog: View {
         .buttonStyle(DialogButtonCancelStyle())
       }
     }
-    .frame(width: 200)
+    .frame(width: 220)
     .padding(.horizontal, 10)
     .padding(.top, 15)
     .padding(.bottom, 10)

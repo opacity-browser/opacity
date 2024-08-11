@@ -69,7 +69,7 @@ struct BookmarkDialog: View {
         }
         .frame(width: 153)
       }
-      .padding(.bottom, 10)
+      .padding(.bottom, 15)
       HStack(spacing: 0) {
         Button {
           if !bookmarkTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -80,28 +80,34 @@ struct BookmarkDialog: View {
               BookmarkManager.addBookmark(bookmarkGroup: bookmarkGroup, title: bookmarkTitle, url: tab.originURL.absoluteString, favicon: tab.faviconData)
               bookmarkGroup.isOpen = true
             }
-            self.onClose()
+            onClose()
           }
         } label: {
           Text(NSLocalizedString("Save", comment: ""))
+            .frame(maxWidth: .infinity)
         }
-        .buttonStyle(DialogButtonStyle())
+        .buttonStyle(DialogPermissonStyle())
+        .frame(maxWidth: .infinity)
         
         if let bookmark = bookmarks.first(where: { $0.url == tab.originURL.absoluteString }) {
+          HStack(spacing: 0) { }
+            .frame(width: 12)
+          
           Button {
             BookmarkManager.deleteBookmark(bookmark: bookmark)
-            self.onClose()
+            onClose()
           } label: {
             Text(NSLocalizedString("Delete", comment: ""))
+              .frame(maxWidth: .infinity)
           }
-          .buttonStyle(DialogButtonCancelStyle())
-          .padding(.leading, 8)
+          .buttonStyle(DialogPermissonStyle())
+          .frame(maxWidth: .infinity)
         }
       }
     }
     .padding(.top, 20)
     .padding(.horizontal, 20)
-    .padding(.bottom, 10)
+    .padding(.bottom, 15)
     .frame(width: 260)
     .background(GeometryReader { geometry in
       Color("DialogBG")
