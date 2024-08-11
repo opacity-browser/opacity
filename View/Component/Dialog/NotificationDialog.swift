@@ -17,51 +17,76 @@ struct NotificationDialog: View {
   var body: some View {
     let host = tab.originURL.host ?? ""
     VStack(spacing: 0) {
-      
+
       Text(String(format: NSLocalizedString("Do you want to allow notifications from '%@'?", comment: ""), host))
         .font(.system(size: 12))
+        .fontWeight(.semibold)
         .padding(.bottom, 15)
+        .foregroundColor(Color("UIText").opacity(0.7))
+        .multilineTextAlignment(.center)
+        .lineSpacing(2)
+        .padding(.horizontal, 20)
       
       HStack(spacing: 0) {
-        Button(NSLocalizedString("Allow", comment: "")) {
-          guard let domainNotification = self.domainPermission.first(where: {
+        Button {
+          if let domainNotification = self.domainPermission.first(where: {
             $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
-          }) else {
-            modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: false))
-            withAnimation {
+          }) {
+            DispatchQueue.main.async {
+              domainNotification.isDenied = false
               tab.isNotificationDialogIcon = false
             }
-            return
-          }
-          withAnimation {
-            domainNotification.isDenied = false
-            tab.isNotificationDialogIcon = false
-          }
-        }
-        .buttonStyle(DialogButtonStyle())
-        VStack(spacing: 0) { }.frame(width: 10)
-        Button(NSLocalizedString("Deny", comment: "")) {
-          guard let domainNotification = self.domainPermission.first(where: {
-            $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
-          }) else {
-            modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: true))
-            withAnimation {
+          } else {
+            DispatchQueue.main.async {
+              modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: false))
               tab.isNotificationDialogIcon = false
             }
-            return
           }
-          withAnimation {
-            domainNotification.isDenied = true
-            tab.isNotificationDialogIcon = false
+          if let webview = tab.webview {
+            DispatchQueue.main.async {
+              webview.evaluateJavaScript("if (window.resolveNotificationPermission) window.resolveNotificationPermission('granted');")
+            }
           }
+        } label: {
+          Text(NSLocalizedString("Allow", comment: ""))
+            .frame(maxWidth: .infinity)
         }
-        .buttonStyle(DialogButtonCancelStyle())
+        .buttonStyle(DialogPermissonStyle())
+        .frame(maxWidth: .infinity)
+        
+        VStack(spacing: 0) { }.frame(width: 12)
+        
+        Button {
+          if let domainNotification = self.domainPermission.first(where: {
+            $0.domain == host && $0.permission == DomainPermissionType.notification.rawValue
+          }) {
+            DispatchQueue.main.async {
+              domainNotification.isDenied = true
+              tab.isNotificationDialogIcon = false
+            }
+          } else {
+            DispatchQueue.main.async {
+              modelContext.insert(DomainPermission(domain: host, permission: DomainPermissionType.notification.rawValue, isDenied: true))
+              tab.isNotificationDialogIcon = false
+            }
+          }
+          if let webview = tab.webview {
+            DispatchQueue.main.async {
+              webview.evaluateJavaScript("if (window.resolveNotificationPermission) window.resolveNotificationPermission('denied');")
+            }
+          }
+        } label: {
+          Text(NSLocalizedString("Deny", comment: ""))
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(DialogPermissonStyle())
+        .frame(maxWidth: .infinity)
       }
     }
     .frame(width: 220)
-    .padding(.horizontal, 10)
-    .padding(.top, 15)
-    .padding(.bottom, 10)
+    .padding(.horizontal, 20)
+    .padding(.top, 20)
+    .padding(.bottom, 15)
     .background(GeometryReader { geometry in
       Color("DialogBG")
           .frame(width: geometry.size.width,
@@ -70,5 +95,13 @@ struct NotificationDialog: View {
                   height: geometry.size.height,
                   alignment: .bottom)
     })
+    .onDisappear {
+      if let webview = tab.webview {
+        DispatchQueue.main.async {
+          tab.isNotificationDialogIcon = false
+          webview.evaluateJavaScript("if (window.resolveNotificationPermission) window.resolveNotificationPermission('default');")
+        }
+      }
+    }
   }
 }

@@ -12,9 +12,10 @@ struct DialogButtonStyle: ButtonStyle {
     configuration.label
       .foregroundColor(.white)
       .font(.system(size: 12))
-      .padding(.horizontal, 15)
-      .padding(.vertical, 5)
+      .padding(.horizontal, 20)
+      .padding(.vertical, 4)
       .background(configuration.isPressed ? Color("ButtonBGHover") : Color("ButtonBG"))
       .cornerRadius(5)
+      .frame(maxWidth: .infinity)
   }
 }

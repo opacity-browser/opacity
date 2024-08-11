@@ -13,7 +13,7 @@ struct DialogPermissonStyle: ButtonStyle {
       .foregroundColor(Color("UIText"))
       .font(.system(size: 12))
       .padding(.horizontal, 20)
-      .padding(.vertical, 3)
+      .padding(.vertical, 4)
       .background(configuration.isPressed ? Color("DialogPermissionButton").opacity(1) : Color("DialogPermissionButton").opacity(0.8))
       .cornerRadius(5)
       .frame(maxWidth: .infinity)
