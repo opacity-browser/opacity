@@ -749,11 +749,11 @@ struct MainWebView: NSViewRepresentable {
       guard let webview = self.parent.tab.webview else { return }
       let script = """
         navigator.geolocation.getCurrentPosition = function(success, error, options) {
+          window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "requestWhenInUseAuthorization" });
           error({
             code: 1,
             message: 'User Denied Geolocation'
           });
-          window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "requestWhenInUseAuthorization" });
         }
       """
       webview.evaluateJavaScript(script, completionHandler: nil)
