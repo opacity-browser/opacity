@@ -745,6 +745,7 @@ struct MainWebView: NSViewRepresentable {
     
     // Geo Locaiton
     private func deniedGeolocation() {
+      print("deniedGeolocation")
       guard let webview = self.parent.tab.webview else { return }
       let script = """
         navigator.geolocation.getCurrentPosition = function(success, error, options) {
@@ -766,11 +767,11 @@ struct MainWebView: NSViewRepresentable {
         case .authorizedWhenInUse, .authorizedAlways:
           let script = """
             navigator.geolocation.getCurrentPosition = function(success, error, options) {
+              window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "true" });
               error({
                 code: 1,
                 message: 'User Denied Geolocation'
               });
-              window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "true"});
             }
           """
           webview.evaluateJavaScript(script, completionHandler: nil)
@@ -855,6 +856,7 @@ struct MainWebView: NSViewRepresentable {
           print("allow geo location")
           let script = """
             navigator.geolocation.getCurrentPosition = function(success, error, options) {
+              window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "false" });
               success({
                 coords: {
                   latitude: \(location.coordinate.latitude),
@@ -863,7 +865,6 @@ struct MainWebView: NSViewRepresentable {
               });
             };
             navigator.geolocation.updatePosition(\(location.coordinate.latitude), \(location.coordinate.longitude));
-            window.webkit.messageHandlers.opacityBrowser.postMessage({ name: "showGeoLocaitonHostPermissionIcon", value: "false" });
           """
 
           webview.evaluateJavaScript(script, completionHandler: nil)
@@ -875,6 +876,7 @@ struct MainWebView: NSViewRepresentable {
     }
   
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+      print("didFailWithError")
       guard let webview = self.parent.tab.webview else { return }
       let script = """
         navigator.geolocation.getCurrentPosition = function(success, error, options) {

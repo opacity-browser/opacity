@@ -206,7 +206,7 @@ struct SearchAutoCompleteBox: View {
         
         if tab.isLocationDialogIconByHost {
           LocationPermissionIcon(tab: tab)
-            .padding(.horizontal, 5)
+            .padding(.horizontal, 2)
         }
         
         BookmarkIcon(tab: tab)
