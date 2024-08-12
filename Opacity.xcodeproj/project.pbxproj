@@ -888,7 +888,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -900,8 +900,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "This permission is required to provide services using cameras such as web cams in web services.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or map services for your current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -923,7 +922,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -935,8 +934,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "This permission is required to provide services using cameras such as web cams in web services.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This permission is required to save the user's downloaded files.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This permission is required to provide weather or location information based on the user's current location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This permission is required to provide weather or map services for your current location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
