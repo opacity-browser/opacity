@@ -176,7 +176,12 @@ struct MainWebView: NSViewRepresentable {
     private func handleDefaultFavicon(for url: URL?) {
       guard let webviewURL = url, let scheme = webviewURL.scheme, let host = webviewURL.host else { return }
       
-      if scheme != "opacity" && host != "localhost" {
+      if scheme == "opacity" {
+        DispatchQueue.main.async {
+          self.parent.tab.faviconURL = nil
+          self.parent.tab.loadFavicon(url: nil)
+        }
+      } else {
         let faviconURL = URL(string: "\(scheme)://\(host)/favicon.ico")!
         DispatchQueue.main.async {
           self.parent.tab.faviconURL = faviconURL
@@ -185,24 +190,33 @@ struct MainWebView: NSViewRepresentable {
       }
     }
 
-    private func constructFaviconURL(from path: String, relativeTo currentURL: URL) -> URL {
-      var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
-      
-      let splitHref = path.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
-      components.path = String(splitHref[0])
-      components.query = splitHref.count > 1 ? String(splitHref[1]) : nil
-      
-      return components.url!
-    }
+//    private func constructFaviconURL(from path: String, relativeTo currentURL: URL) -> URL {
+//      var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
+//      
+//      let splitHref = path.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+//      components.path = String(splitHref[0])
+//      components.query = splitHref.count > 1 ? String(splitHref[1]) : nil
+//      
+//      return components.url!
+//    }
     
     private func getWebViewDocumentFavicon(webView: WKWebView, group: DispatchGroup? = nil) {
       group?.enter()
       
-      webView.evaluateJavaScript("document.querySelector(\"link[rel*='icon']\")?.getAttribute(\"href\")") { (response, error) in
-        let unwantedCharacters = CharacterSet(charactersIn: "\n\r\t")
-        let cleanedHref = (response as? String)?.components(separatedBy: unwantedCharacters).joined() ?? ""
-        
-        guard let currentURL = webView.url, !cleanedHref.isEmpty else {
+      webView.evaluateJavaScript("""
+        (function() {
+          var link = document.querySelector("link[rel*='icon']");
+          var baseURI = document.baseURI;
+          var href = link ? link.getAttribute("href") : "";
+          return { baseURI: baseURI, href: href };
+        })()
+     """) { (response, error) in
+        guard let result = response as? [String: String],
+              let baseURI = result["baseURI"],
+              let href = result["href"],
+              let cleanedHref = href.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let base = URL(string: baseURI),
+              !cleanedHref.isEmpty else {
           self.handleDefaultFavicon(for: webView.url)
           group?.leave()
           return
@@ -213,10 +227,10 @@ struct MainWebView: NSViewRepresentable {
           faviconURL = URL(string: cleanedHref)!
         } else if cleanedHref.hasPrefix("//") {
           faviconURL = URL(string: "https:\(cleanedHref)")!
-        } else if cleanedHref.hasPrefix("/") {
-          faviconURL = self.constructFaviconURL(from: cleanedHref, relativeTo: currentURL)
+//        } else if cleanedHref.hasPrefix("/") {
+//          faviconURL = self.constructFaviconURL(from: cleanedHref, relativeTo: currentURL)
         } else {
-          faviconURL = URL(string: cleanedHref, relativeTo: currentURL)!
+          faviconURL = URL(string: cleanedHref, relativeTo: base)!
         }
         
         DispatchQueue.main.async {
