@@ -539,6 +539,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
     if !flag {
       createWindow()
+      return false
     }
     return true
   }
