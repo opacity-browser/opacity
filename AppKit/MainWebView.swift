@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import WebKit
+@preconcurrency import WebKit
 import Security
 import CoreLocation
 import ContentBlockRuleList
@@ -718,7 +718,11 @@ struct MainWebView: NSViewRepresentable {
       task.resume()
     }
     
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    func urlSession(
+      _ session: URLSession,
+      didReceive challenge: URLAuthenticationChallenge,
+      completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
       if let serverTrust = challenge.protectionSpace.serverTrust {
         var error: CFError?
         let isValid = SecTrustEvaluateWithError(serverTrust, &error)
@@ -826,7 +830,7 @@ struct MainWebView: NSViewRepresentable {
       locationManager.requestWhenInUseAuthorization()
     }
     
-    @MainActor func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
       print("didChangeAuthorization")
       DispatchQueue.main.async {
         self.parent.tab.isLocationDialogIconByHost = false
@@ -862,7 +866,7 @@ struct MainWebView: NSViewRepresentable {
       locationManager.startUpdatingLocation()
     }
   
-    @MainActor func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
       print("didUpdateLocations")
       guard let location = locations.first, let webview = self.parent.tab.webview, let url = webview.url, let locationManager = locationManager else { return }
       if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
