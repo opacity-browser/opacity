@@ -20,6 +20,7 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   }
   
   func windowDidEnterFullScreen(_ notification: Notification) {
+    AppDelegate.shared.setMainMenu()
   }
   
   func windowWillExitFullScreen(_ notification: Notification) {
@@ -29,6 +30,7 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   }
 
   func windowDidExitFullScreen(_ notification: Notification) {
+    AppDelegate.shared.setMainMenu()
   }
   
   func windowDidBecomeMain(_ notification: Notification) {
@@ -86,6 +88,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   
   var sidebarToggleMenuItem: NSMenuItem!
   var reloadMenuItem: NSMenuItem!
+  
+//  var currentWindow: NSWindow?
   
   override init() {
     super.init()
@@ -187,12 +191,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     windowController.showWindow(self)
     
     NSApplication.shared.activate(ignoringOtherApps: true)
+    
+//    currentWindow = newWindow
+    
+    // NSToolbar 설정
+//    let toolbar = NSToolbar(identifier: "CustomToolbar")
+//    toolbar.delegate = self
+//    toolbar.displayMode = .default
+//    toolbar.allowsExtensionItems = false
+//    newWindow.toolbar = toolbar
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     AppDelegate.shared = self
-    createWindow()
     setMainMenu()
+    createWindow()
     
     NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { (event) -> NSEvent? in
       self.updateMenuItem(for: event)
@@ -645,3 +658,53 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
   }
 }
+
+//
+//// NSToolbarDelegate 구현
+//extension AppDelegate: NSToolbarDelegate {
+//    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+//        return [.customItem]
+//    }
+//    
+//    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+//        return [.customItem]
+//    }
+//    
+//    func toolbar(
+//          _ toolbar: NSToolbar,
+//          itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
+//          willBeInsertedIntoToolbar flag: Bool
+//      ) -> NSToolbarItem? {
+//          switch itemIdentifier {
+//          case .customItem:
+//              let item = NSToolbarItem(itemIdentifier: .customItem)
+//              item.label = "Custom"
+//              if let windowNo = currentWindow?.windowNumber, let browser = service.browsers[windowNo] {
+//                let windowTitleBarView = WindowTitleBarView(
+//                  width: currentWindow?.frame.size.width ?? 0,
+//                  service: service,
+//                  browser: browser,
+//                  tabs: Binding(
+//                      get: { browser.tabs },
+//                      set: { browser.tabs = $0 }
+//                  ),
+//                  activeTabId: Binding(
+//                      get: { browser.activeTabId },
+//                      set: { browser.activeTabId = $0 }
+//                  ),
+//                  isFullScreen: windowDelegate.isFullScreen
+//                )
+//                item.view = NSHostingView(rootView: windowTitleBarView)
+//              }
+//              // 확장 메뉴로 이동하지 않도록 설정
+//              item.isNavigational = true
+//              return item
+//          default:
+//              return nil
+//          }
+//      }
+//  }
+//
+//  extension NSToolbarItem.Identifier {
+//      static let customItem = NSToolbarItem.Identifier("CustomItem")
+//  }
