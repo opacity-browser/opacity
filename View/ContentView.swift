@@ -11,7 +11,7 @@ struct ContentView: View {
   var tabId: UUID?
   var width: CGFloat
   
-  @State private var windowWidth: CGFloat?
+  @State private var windowWidth: CGFloat = 0
   @State private var isMoreTabDialog = false
   @State private var isAddHover: Bool = false
   @FocusState private var isTextFieldFocused: Bool
@@ -65,9 +65,9 @@ struct ContentView: View {
       }
     }
     .toolbar {
-      if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
-        WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
-      }
+        if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
+          WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
+        }
     }
   }
 }
