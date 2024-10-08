@@ -192,9 +192,7 @@ struct Navigation: View {
           }
         }
         .onTapGesture {
-          DispatchQueue.main.async {
-            browser.isSideBar.toggle()
-          }
+          AppDelegate.shared.isSidebar()
         }
         .offset(y: -1)
       }

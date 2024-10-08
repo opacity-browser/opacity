@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A106D2042CB5DE2D009A01EA /* MainCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A106D2032CB5DE28009A01EA /* MainCommands.swift */; };
 		A10DA66A2BAE62860053913D /* SearchAutoCompleteItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */; };
 		A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66B2BB0785C0053913D /* VisitManager.swift */; };
 		A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */; };
@@ -123,6 +124,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A106D2032CB5DE28009A01EA /* MainCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCommands.swift; sourceTree = "<group>"; };
 		A10DA6692BAE62860053913D /* SearchAutoCompleteItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteItemNSView.swift; sourceTree = "<group>"; };
 		A10DA66B2BB0785C0053913D /* VisitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitManager.swift; sourceTree = "<group>"; };
 		A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItemNSView.swift; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A106D2032CB5DE28009A01EA /* MainCommands.swift */,
 				A15FCB102B999D5100D64C05 /* Bookmark */,
 				A11EDAE42BA62C9E000D07CB /* Search */,
 				A10DDD8C2BCEDECC003E159A /* Dialog */,
@@ -678,6 +681,7 @@
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */,
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,
+				A106D2042CB5DE2D009A01EA /* MainCommands.swift in Sources */,
 				A139B1FA2BC013130089C7D9 /* FavoriteManager.swift in Sources */,
 				A11EDAD52BA2D5F1000D07CB /* BookmarkSearchList.swift in Sources */,
 				A10DDD8E2BCF5C13003E159A /* OpacityWebView.swift in Sources */,
@@ -888,7 +892,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -906,7 +910,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -922,7 +926,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -940,7 +944,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
