@@ -14,23 +14,23 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
   var lastActivationTime: Date?
   
   func windowWillEnterFullScreen(_ notification: Notification) {
+    AppDelegate.shared.isFullScreenMode = true
     DispatchQueue.main.async {
       self.isFullScreen = true
     }
   }
   
   func windowDidEnterFullScreen(_ notification: Notification) {
-    AppDelegate.shared.setMainMenu()
   }
   
   func windowWillExitFullScreen(_ notification: Notification) {
+    AppDelegate.shared.isFullScreenMode = false
     DispatchQueue.main.async {
       self.isFullScreen = false
     }
   }
 
   func windowDidExitFullScreen(_ notification: Notification) {
-    AppDelegate.shared.setMainMenu()
   }
   
   func windowDidBecomeMain(_ notification: Notification) {
@@ -76,7 +76,7 @@ class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
 }
 
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableObject {
   static var shared: AppDelegate!
   private var isTerminating = false
   
@@ -88,6 +88,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   
   var sidebarToggleMenuItem: NSMenuItem!
   var reloadMenuItem: NSMenuItem!
+  
+  @Published var isFullScreenMode: Bool = false
+  @Published var isOpenSidebar: Bool = false
   
 //  var currentWindow: NSWindow?
   
@@ -204,145 +207,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
   func applicationDidFinishLaunching(_ notification: Notification) {
     AppDelegate.shared = self
-    setMainMenu()
     createWindow()
-    
-    NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { (event) -> NSEvent? in
-      self.updateMenuItem(for: event)
-      return event
-    }
   }
   
   func createNewWindow(tabId: UUID, frame: NSRect? = nil) {
     createWindow(tabId: tabId, frame: frame)
-    setMainMenu()
   }
-
   
   func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {
     let dockMenu = NSMenu()
     dockMenu.addItem(NSMenuItem(title: NSLocalizedString("New Window", comment: ""), action: #selector(self.newWindow), keyEquivalent: ""))
     return dockMenu
-  }
-  
-  func setMainMenu() {
-    let mainMenu = NSMenu()
-    
-    // Opacity
-    let opacityItem = NSMenuItem(title: NSLocalizedString("Opacity", comment: ""), action: nil, keyEquivalent: "")
-    let opacityMenu = NSMenu(title: NSLocalizedString("Opacity", comment: ""))
-    opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("About Opacity", comment: ""), action: #selector(self.openAboutWindow), keyEquivalent: ""))
-    opacityMenu.addItem(NSMenuItem.separator())
-    opacityMenu.addItem(NSMenuItem(title: NSLocalizedString("Settings", comment: ""), action: #selector(self.openSettings), keyEquivalent: ","))
-    opacityMenu.addItem(NSMenuItem.separator())
-    opacityMenu.addItem(withTitle: NSLocalizedString("Quit Opacity", comment: ""), action: #selector(self.exitApplication), keyEquivalent: "q")
-    opacityItem.submenu = opacityMenu
-    
-    mainMenu.addItem(opacityItem)
-    
-    // File
-    let fileItem = NSMenuItem(title: NSLocalizedString("File", comment: ""), action: nil, keyEquivalent: "")
-    let fileMenu = NSMenu(title: NSLocalizedString("File", comment: ""))
-    fileMenu.addItem(withTitle: NSLocalizedString("New Window", comment: ""), action: #selector(self.newWindow), keyEquivalent: "n")
-    fileMenu.addItem(withTitle: NSLocalizedString("New Tab", comment: ""), action: #selector(self.newTab), keyEquivalent: "t")
-    fileMenu.addItem(NSMenuItem.separator())
-    fileMenu.addItem(withTitle: NSLocalizedString("Close Window", comment: ""), action: #selector(self.closeWindow), keyEquivalent: "W")
-    fileMenu.addItem(withTitle: NSLocalizedString("Close Tab", comment: ""), action: #selector(self.closeTab), keyEquivalent: "w")
-    fileItem.submenu = fileMenu
-    
-    mainMenu.addItem(fileItem)
-    
-    // Edit
-    let editItem = NSMenuItem(title: NSLocalizedString("Edit", comment: ""), action: nil, keyEquivalent: "")
-    let editMenu = NSMenu(title: NSLocalizedString("Edit", comment: ""))
-    editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
-    editMenu.addItem(withTitle: "Redo", action: Selector(("redo:")), keyEquivalent: "Z")
-    editMenu.addItem(NSMenuItem.separator())
-    editMenu.addItem(withTitle: NSLocalizedString("Cut", comment: ""), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-    editMenu.addItem(withTitle: NSLocalizedString("Copy", comment: ""), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-    editMenu.addItem(withTitle: NSLocalizedString("Paste", comment: ""), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-    editMenu.addItem(withTitle: NSLocalizedString("Select All", comment: ""), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
-    editMenu.addItem(NSMenuItem.separator())
-    
-    let findMenu = NSMenuItem(title: NSLocalizedString("Find", comment: ""), action: nil, keyEquivalent: "")
-    let findSubMenu = NSMenu(title: NSLocalizedString("Find", comment: ""))
-    findMenu.submenu = findSubMenu
-    editMenu.addItem(findMenu)
-    
-    findSubMenu.addItem(withTitle: NSLocalizedString("Find in Page...", comment: ""), action: #selector(self.findKeyword), keyEquivalent: "f")
-    findSubMenu.addItem(withTitle: NSLocalizedString("Find Next", comment: ""), action: #selector(self.findKeywordNext), keyEquivalent: "g")
-    let findPrevMenu = NSMenuItem(title: NSLocalizedString("Find Previous", comment: ""), action: #selector(self.findKeywordPrev), keyEquivalent: "g")
-    findPrevMenu.keyEquivalentModifierMask = [.command, .shift]
-    findSubMenu.addItem(findPrevMenu)
-    
-    editItem.submenu = editMenu
-    mainMenu.addItem(editItem)
-    
-    // View
-    let viewItem = NSMenuItem(title: NSLocalizedString("View", comment: ""), action: nil, keyEquivalent: "")
-    let viewMenu = NSMenu(title: NSLocalizedString("View", comment: ""))
-    viewMenu.delegate = self
-    
-    self.reloadMenuItem = NSMenuItem(title: NSLocalizedString("Reload Page", comment: ""), action: #selector(self.refreshTab), keyEquivalent: "r")
-    viewMenu.addItem(self.reloadMenuItem)
-    
-    viewMenu.addItem(NSMenuItem.separator())
-    
-    self.sidebarToggleMenuItem = NSMenuItem(title: NSLocalizedString("Show Sidebar", comment: ""), action: #selector(self.isSidebar), keyEquivalent: "s")
-    viewMenu.addItem(self.sidebarToggleMenuItem)
-
-    let fullScreenMenuItem = NSMenuItem(title: "Enter Full Screen", action: #selector(self.toggleFullScreen), keyEquivalent: "f")
-    fullScreenMenuItem.keyEquivalentModifierMask = [.command, .control]
-    viewMenu.addItem(fullScreenMenuItem)
-    
-    viewMenu.addItem(NSMenuItem.separator())
-    
-    viewMenu.addItem(withTitle: NSLocalizedString("Zoom In", comment: ""), action: #selector(self.zoomIn), keyEquivalent: "+")
-    viewMenu.addItem(withTitle: NSLocalizedString("Zoom Out", comment: ""), action: #selector(self.zoomOut), keyEquivalent: "-")
-    
-    viewMenu.addItem(NSMenuItem.separator())
-    
-    viewItem.submenu = viewMenu
-    mainMenu.addItem(viewItem)
-    
-    // Window Menu
-    let windowMenuItem = NSMenuItem(title: NSLocalizedString("Window", comment: ""), action: nil, keyEquivalent: "")
-    let windowMenu = NSMenu(title: NSLocalizedString("Window", comment: ""))
-
-    windowMenu.addItem(withTitle: NSLocalizedString("Minimize", comment: ""), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
-    windowMenu.addItem(withTitle: NSLocalizedString("Zoom", comment: ""), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
-    
-    windowMenuItem.submenu = windowMenu
-    mainMenu.addItem(windowMenuItem)
-    
-//      // 단축키에 파라미터 전송 예시
-//      let menuItem3 = NSMenuItem(title: "File2", action: nil, keyEquivalent: "")
-//      let myMenu = NSMenu()
-//      let menuItem2 = NSMenuItem(title: "Click Me", action: #selector(self.menuItemAction(sender:)), keyEquivalent: "")
-//      menuItem2.representedObject = "test"
-//      myMenu.addItem(menuItem2)
-//      menuItem3.submenu = myMenu
-//      mainMenu.addItem(menuItem3)
-    
-    NSApplication.shared.mainMenu = mainMenu
-  }
-  
-  func menuDidClose(_ menu: NSMenu) {
-    reloadMenuItem.title = NSLocalizedString("Reload Page", comment: "")
-    reloadMenuItem.action = #selector(self.refreshTab)
-    reloadMenuItem.keyEquivalentModifierMask = [.command]
-  }
-  
-  func updateMenuItem(for event: NSEvent) {
-    if event.modifierFlags.contains([.command, .shift]) {
-      reloadMenuItem.title = NSLocalizedString("Refresh after clearing cache", comment: "")
-      reloadMenuItem.action = #selector(self.refreshTabAfterClearingCache)
-      reloadMenuItem.keyEquivalentModifierMask = [.command, .shift]
-    } else {
-      reloadMenuItem.title = NSLocalizedString("Reload Page", comment: "")
-      reloadMenuItem.action = #selector(self.refreshTab)
-      reloadMenuItem.keyEquivalentModifierMask = [.command]
-    }
   }
   
   @objc func refreshTab() {
@@ -442,7 +317,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
   }
   
-  @objc func toggleFullScreen(_ sender: AnyObject?) {
+  @objc func toggleFullScreen() {
     if let keyWindow = NSApplication.shared.keyWindow {
       keyWindow.toggleFullScreen(nil)
     }
@@ -536,14 +411,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
       let windowNumber = keyWindow.windowNumber
       if let target = self.service.browsers[windowNumber] {
         target.isSideBar = !target.isSideBar
-        sidebarToggleMenuItem.title = target.isSideBar ? NSLocalizedString("Hide Sidebar", comment: "") : NSLocalizedString("Show Sidebar", comment: "")
+        isOpenSidebar = !isOpenSidebar
       }
     }
   }
   
   @objc func openAboutWindow() {
     aboutWindow()
-    setMainMenu()
   }
   
   @objc func openSettings() {
