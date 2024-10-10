@@ -15,6 +15,10 @@ struct MainCommands: Commands {
     }
 
     var body: some Commands {
+      CommandGroup(replacing: .appSettings) {
+      
+      }
+      
       CommandGroup(replacing: .appInfo) {
         Button(NSLocalizedString("About Opacity", comment: "")) {
           AppDelegate.shared.openAboutWindow()

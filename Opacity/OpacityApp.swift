@@ -13,7 +13,7 @@ struct OpacityApp: App {
   @State private var isSidebarOpen: Bool = false
   
   var body: some Scene {
-    WindowGroup {
+    Settings {
       EmptyView()
     }
     .commands {
