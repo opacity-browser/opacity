@@ -10,7 +10,6 @@ import SwiftUI
 @main
 struct OpacityApp: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-  @State private var isSidebarOpen: Bool = false
   
   var body: some Scene {
     Settings {

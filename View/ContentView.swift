@@ -12,9 +12,6 @@ struct ContentView: View {
   var width: CGFloat
   
   @State private var windowWidth: CGFloat = 0
-  @State private var isMoreTabDialog = false
-  @State private var isAddHover: Bool = false
-  @FocusState private var isTextFieldFocused: Bool
   
   var body: some View {
     ZStack {
@@ -24,14 +21,14 @@ struct ContentView: View {
         GeometryReader { geometry in
           VStack(spacing: 0) {
             if windowDelegate.isFullScreen {
-              WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
+              WindowTitleBarView(service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: true)
             }
             NavigationSearchView(service: service, browser: browser, activeTabId: $browser.activeTabId, isFullScreen: $windowDelegate.isFullScreen)
             MainView(service: service, browser: browser)
-              .onChange(of: geometry.size) { _, newValue in
+              .onAppear {
                 windowWidth = geometry.size.width
               }
-              .onAppear {
+              .onChange(of: geometry.size) { _, newValue in
                 windowWidth = geometry.size.width
               }
           }
@@ -63,11 +60,6 @@ struct ContentView: View {
       if newValue == "System" {
         NSApp.appearance = nil
       }
-    }
-    .toolbar {
-        if let _ = browser.activeTabId, browser.tabs.count > 0, !windowDelegate.isFullScreen {
-          WindowTitleBarView(windowWidth: $windowWidth, service: service, browser: browser, tabs: $browser.tabs, activeTabId: $browser.activeTabId, isFullScreen: windowDelegate.isFullScreen)
-        }
     }
   }
 }
