@@ -118,6 +118,10 @@
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
 		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
+		A1E7A6A42CB8EB7900799ADD /* TitlebarTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */; };
+		A1E7A6A62CB8EBB800799ADD /* TitlebarTabProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A52CB8EBB700799ADD /* TitlebarTabProvider.swift */; };
+		A1E7A6A82CB8ED7900799ADD /* TitlebarTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */; };
+		A1E7A6AA2CB8EDEA00799ADD /* OpacityWindowDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A92CB8EDE900799ADD /* OpacityWindowDelegate.swift */; };
 		A1EB7F182C4B9D48006C9B90 /* ASN1Decoder in Frameworks */ = {isa = PBXBuildFile; productRef = A1EB7F172C4B9D48006C9B90 /* ASN1Decoder */; };
 		A1F814C72BEBCA7B009F30B4 /* HistoryStopBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */; };
 		A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */; };
@@ -244,6 +248,10 @@
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
+		A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabView.swift; sourceTree = "<group>"; };
+		A1E7A6A52CB8EBB700799ADD /* TitlebarTabProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabProvider.swift; sourceTree = "<group>"; };
+		A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabViewController.swift; sourceTree = "<group>"; };
+		A1E7A6A92CB8EDE900799ADD /* OpacityWindowDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpacityWindowDelegate.swift; sourceTree = "<group>"; };
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -361,6 +369,8 @@
 		A15D54192B56B3F4007020CA /* AppKit */ = {
 			isa = PBXGroup;
 			children = (
+				A1E7A6A92CB8EDE900799ADD /* OpacityWindowDelegate.swift */,
+				A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */,
 				A15D541A2B56B40F007020CA /* AppDelegate.swift */,
 				A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */,
 				A15D54222B590B4D007020CA /* VisualEffectNSView.swift */,
@@ -457,7 +467,6 @@
 				A188C94F2B4D3D3900B39BC8 /* Component */,
 				A188C93D2B4A551B00B39BC8 /* ContentView.swift */,
 				A188C9652B4ECBB800B39BC8 /* MainView.swift */,
-				A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */,
 				A16BCB0D2B96D147004639F2 /* WindowTitleBarView.swift */,
 				A16BCB0F2B96D30F004639F2 /* NavigationSearchView.swift */,
 				A16BCB112B9849FF004639F2 /* SideBarView.swift */,
@@ -481,11 +490,12 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				A106D2032CB5DE28009A01EA /* MainCommands.swift */,
+				A1E7A6A22CB8EAC900799ADD /* Titlebar */,
 				A15FCB102B999D5100D64C05 /* Bookmark */,
 				A11EDAE42BA62C9E000D07CB /* Search */,
 				A10DDD8C2BCEDECC003E159A /* Dialog */,
 				A16BCAFB2B907878004639F2 /* ToggleSwitch.swift */,
+				A106D2032CB5DE28009A01EA /* MainCommands.swift */,
 				A14246152B71EF190062C516 /* TabItem.swift */,
 				A188C9502B4D3D6000B39BC8 /* ExpandList.swift */,
 				A14246352B813A5B0062C516 /* HistoryKeyButton.swift */,
@@ -494,7 +504,6 @@
 				A16BCAF72B8FFC11004639F2 /* HistoryRefreshBtn.swift */,
 				A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */,
 				A188C9482B4ACECD00B39BC8 /* Navigation.swift */,
-				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
 				A16BCB132B9852B7004639F2 /* SearchBoxArea.swift */,
 				A11EDAE02BA4D234000D07CB /* SearchBoxDialog.swift */,
 				A10DDD802BC73976003E159A /* WebviewArea.swift */,
@@ -541,6 +550,17 @@
 				A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */,
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		A1E7A6A22CB8EAC900799ADD /* Titlebar */ = {
+			isa = PBXGroup;
+			children = (
+				A1E7A6A52CB8EBB700799ADD /* TitlebarTabProvider.swift */,
+				A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */,
+				A15D54102B5574B9007020CA /* WindowTitlebar.swift */,
+				A188C96C2B50080F00B39BC8 /* BrowserTabView.swift */,
+			);
+			path = Titlebar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -681,12 +701,14 @@
 				A188C9452B4A948C00B39BC8 /* Tab.swift in Sources */,
 				A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */,
 				A11EDADF2BA45BAE000D07CB /* SearchManager.swift in Sources */,
+				A1E7A6A42CB8EB7900799ADD /* TitlebarTabView.swift in Sources */,
 				A106D2042CB5DE2D009A01EA /* MainCommands.swift in Sources */,
 				A139B1FA2BC013130089C7D9 /* FavoriteManager.swift in Sources */,
 				A11EDAD52BA2D5F1000D07CB /* BookmarkSearchList.swift in Sources */,
 				A10DDD8E2BCF5C13003E159A /* OpacityWebView.swift in Sources */,
 				A14246262B7E7DA30062C516 /* TabDialogItemNSView.swift in Sources */,
 				A16BCAF02B8F7BF3004639F2 /* NotificationDialog.swift in Sources */,
+				A1E7A6AA2CB8EDEA00799ADD /* OpacityWindowDelegate.swift in Sources */,
 				A17C97722BD33D0F009240B9 /* FindNSTextField.swift in Sources */,
 				A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */,
 				A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */,
@@ -709,6 +731,7 @@
 				A16BCAF42B8FFBEB004639F2 /* HistoryBackBtn.swift in Sources */,
 				A132149B2C68BDCC008A06C9 /* LocationPermissionIcon.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
+				A1E7A6A82CB8ED7900799ADD /* TitlebarTabViewController.swift in Sources */,
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */,
@@ -716,6 +739,7 @@
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
+				A1E7A6A62CB8EBB800799ADD /* TitlebarTabProvider.swift in Sources */,
 				A1F814C92BED59FB009F30B4 /* ZoomDialog.swift in Sources */,
 				A10DA6882BB928460053913D /* PermissionItem.swift in Sources */,
 				A14246362B813A5B0062C516 /* HistoryKeyButton.swift in Sources */,
@@ -892,7 +916,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -910,7 +934,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -926,7 +950,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				DEVELOPMENT_TEAM = Z843W2W7MB;
@@ -944,7 +968,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -8,74 +8,6 @@
 import SwiftUI
 import SwiftData
 
-class OpacityWindowDelegate: NSObject, NSWindowDelegate, ObservableObject {
-  var windowMap: [UUID:NSWindow] = [:]
-  @Published var isFullScreen: Bool = false
-  var lastActivationTime: Date?
-  
-  func windowWillEnterFullScreen(_ notification: Notification) {
-    AppDelegate.shared.isFullScreenMode = true
-    DispatchQueue.main.async {
-      self.isFullScreen = true
-    }
-  }
-  
-  func windowDidEnterFullScreen(_ notification: Notification) {
-  }
-  
-  func windowWillExitFullScreen(_ notification: Notification) {
-    AppDelegate.shared.isFullScreenMode = false
-    DispatchQueue.main.async {
-      self.isFullScreen = false
-    }
-  }
-
-  func windowDidExitFullScreen(_ notification: Notification) {
-  }
-  
-  func windowDidBecomeMain(_ notification: Notification) {
-    print("windowDidBecomeMain")
-    let currentTime = Date()
-    if let lastTime = lastActivationTime {
-      let elapsedTime = currentTime.timeIntervalSince(lastTime)
-      if elapsedTime >= 3600 {
-        AppDelegate.shared.deleteExpiredData()
-        lastActivationTime = currentTime
-      }
-    } else {
-      AppDelegate.shared.deleteExpiredData()
-      lastActivationTime = currentTime
-    }
-  }
-  
-  func windowWillClose(_ notification: Notification) {
-    print("windowWillClose")
-    guard let window = notification.object as? NSWindow else { return }
-    let frameString = NSStringFromRect(window.frame)
-    UserDefaults.standard.set(frameString, forKey: "lastWindowFrame")
-  }
-  
-  func windowShouldClose(_ sender: NSWindow) -> Bool {
-    print("windowShouldClose")
-    let windowNumber = sender.windowNumber
-    if let browser = AppDelegate.shared.service.browsers[windowNumber] {
-      let tabs = browser.tabs
-      for tab in tabs {
-        AppDelegate.shared.closeInspector(tab.id)
-      }
-      browser.closeAllTab {
-        browser.tabs = []
-        AppDelegate.shared.service.browsers[windowNumber] = nil
-        sender.close()
-      }
-      return false
-    } else {
-      return true
-    }
-  }
-}
-
-
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableObject {
   static var shared: AppDelegate!
   private var isTerminating = false
@@ -92,7 +24,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
   @Published var isFullScreenMode: Bool = false
   @Published var isOpenSidebar: Bool = false
   
-//  var currentWindow: NSWindow?
   
   override init() {
     super.init()
@@ -176,6 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
       .background(VisualEffectNSView())
       .frame(minWidth: 500, maxWidth: .infinity, minHeight: 350, maxHeight: .infinity)
       .modelContainer(opacityModelContainer)
+      
     
     newWindow.contentView = NSHostingController(rootView: contentView).view
     
@@ -192,17 +124,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
     
     let windowController = NSWindowController(window: newWindow)
     windowController.showWindow(self)
+     
+    newWindow.toolbar = NSToolbar()
+    
+    let accessoryVC = TitlebarTabViewController(service: self.service, browser: self.service.browsers[newWindowNo]!)
+    accessoryVC.layoutAttribute = .top
+    newWindow.addTitlebarAccessoryViewController(accessoryVC)
     
     NSApplication.shared.activate(ignoringOtherApps: true)
-    
-//    currentWindow = newWindow
-    
-    // NSToolbar 설정
-//    let toolbar = NSToolbar(identifier: "CustomToolbar")
-//    toolbar.delegate = self
-//    toolbar.displayMode = .default
-//    toolbar.allowsExtensionItems = false
-//    newWindow.toolbar = toolbar
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
@@ -532,53 +461,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
     }
   }
 }
-
-//
-//// NSToolbarDelegate 구현
-//extension AppDelegate: NSToolbarDelegate {
-//    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-//        return [.customItem]
-//    }
-//    
-//    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-//        return [.customItem]
-//    }
-//    
-//    func toolbar(
-//          _ toolbar: NSToolbar,
-//          itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
-//          willBeInsertedIntoToolbar flag: Bool
-//      ) -> NSToolbarItem? {
-//          switch itemIdentifier {
-//          case .customItem:
-//              let item = NSToolbarItem(itemIdentifier: .customItem)
-//              item.label = "Custom"
-//              if let windowNo = currentWindow?.windowNumber, let browser = service.browsers[windowNo] {
-//                let windowTitleBarView = WindowTitleBarView(
-//                  width: currentWindow?.frame.size.width ?? 0,
-//                  service: service,
-//                  browser: browser,
-//                  tabs: Binding(
-//                      get: { browser.tabs },
-//                      set: { browser.tabs = $0 }
-//                  ),
-//                  activeTabId: Binding(
-//                      get: { browser.activeTabId },
-//                      set: { browser.activeTabId = $0 }
-//                  ),
-//                  isFullScreen: windowDelegate.isFullScreen
-//                )
-//                item.view = NSHostingView(rootView: windowTitleBarView)
-//              }
-//              // 확장 메뉴로 이동하지 않도록 설정
-//              item.isNavigational = true
-//              return item
-//          default:
-//              return nil
-//          }
-//      }
-//  }
-//
-//  extension NSToolbarItem.Identifier {
-//      static let customItem = NSToolbarItem.Identifier("CustomItem")
-//  }
