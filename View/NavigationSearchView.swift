@@ -20,6 +20,7 @@ struct NavigationSearchView: View {
         .foregroundColor(Color("SearchBarBG"))
       if let activeTab = browser.tabs.first(where: { $0.id == activeTabId }) {
         Navigation(service: service, browser: browser, tab: activeTab)
+          .id(activeTab.id)
           .frame(maxWidth: .infinity,  maxHeight: 41)
           .background(Color("SearchBarBG"))
         Rectangle()
