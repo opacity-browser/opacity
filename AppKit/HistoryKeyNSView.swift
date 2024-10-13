@@ -75,10 +75,8 @@ class HistoryKeyButtonNSView: NSView {
   override func mouseDown(with event: NSEvent) {
     super.mouseDown(with: event)
     longPressTimer?.invalidate()
-    longPressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
-      DispatchQueue.main.async {
-        self?.longPressAction?()
-      }
+    longPressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { [weak self] _ in
+      self?.longPressAction?()
     }
   }
   
