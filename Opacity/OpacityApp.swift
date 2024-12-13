@@ -17,6 +17,7 @@ struct OpacityApp: App {
     }
     .commands {
       MainCommands(appDelegate: appDelegate)
+      CleanCommands(appDelegate: appDelegate)
     }
   }
 }
