@@ -468,8 +468,6 @@ struct MainWebView: NSViewRepresentable {
         self.reloadAttemptCount = 1
         
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        let errorURLBase64: Data = failingURL.absoluteString.data(using: .utf8)!
-        
         parent.tab.inputURL = failingURL.absoluteString
         parent.tab.printURL = failingURL.absoluteString
         
