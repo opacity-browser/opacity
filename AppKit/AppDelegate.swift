@@ -428,10 +428,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
         if generalSetting.retentionPeriod != DataRententionPeriodList.indefinite.rawValue {
           let calendar = Calendar.current
           let today = Date()
+          
           let searchHistory = FetchDescriptor<SearchHistory>()
-          let visitHistory = FetchDescriptor<VisitHistory>()
           let searchHistories = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(searchHistory)
-          let visitHIstories = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(visitHistory)
                     
           for searchData in searchHistories {
             let components = calendar.dateComponents([.day], from: searchData.createDate, to: today)
@@ -443,7 +442,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
               }
             }
           }
+          
+          let searchHistoryGroupDescriptor = FetchDescriptor<SearchHistoryGroup>()
+          let searchHistoryGroups = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(searchHistoryGroupDescriptor)
+          
+          for group in searchHistoryGroups {
+            if group.searchHistories.isEmpty {
+              AppDelegate.shared.opacityModelContainer.mainContext.delete(group)
+            }
+          }
 
+          let visitHistory = FetchDescriptor<VisitHistory>()
+          let visitHIstories = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(visitHistory)
+          
           for visitData in visitHIstories {
             let components = calendar.dateComponents([.day], from: visitData.createDate, to: today)
             if let days = components.day {
@@ -454,6 +465,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
               }
             }
           }
+          
+          let visitHistoryGroupDescriptor = FetchDescriptor<VisitHistoryGroup>()
+          let visitHistoryGroups = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(visitHistoryGroupDescriptor)
+          
+          for group in visitHistoryGroups {
+            if group.visitHistories.isEmpty {
+              AppDelegate.shared.opacityModelContainer.mainContext.delete(group)
+            }
+          }
+          
+          try AppDelegate.shared.opacityModelContainer.mainContext.save()
         }
       }
     } catch {

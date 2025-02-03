@@ -115,10 +115,12 @@ class SearchManager {
     )
     do {
       if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-        if emptySearchHistoryGroup.searchHistories.count == 0 {
+        if emptySearchHistoryGroup.searchHistories.isEmpty {
           self.deleteSearchHistoryGroup(emptySearchHistoryGroup)
         }
       }
+      
+      
     } catch {
       print("ModelContainerError deleteSearchHistoryGroupById")
     }

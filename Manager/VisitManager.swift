@@ -126,7 +126,7 @@ class VisitManager {
     )
     do {
       if let emptySearchHistoryGroup = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-        if emptySearchHistoryGroup.visitHistories.count == 0 {
+        if emptySearchHistoryGroup.visitHistories.isEmpty {
           self.deleteVisitHistoryGroup(emptySearchHistoryGroup)
         }
       }
