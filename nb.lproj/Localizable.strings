@@ -1,0 +1,144 @@
+"lang" = "no";
+"to quit, press ⌘Q again" = "For å avslutte, trykk ⌘Q igjen.";
+
+"Opacity" = "Opacity";
+"About Opacity" = "Om Opacity";
+"Quit Opacity" = "Avslutt Opacity";
+"File" = "Fil";
+"New Window" = "Nytt vindu";
+"New Tab" = "Ny fane";
+"Close Window" = "Lukk vindu";
+"Close Tab" = "Lukk fane";
+"Edit" = "Rediger";
+"Cut" = "Klipp ut";
+"Copy" = "Kopier";
+"Paste" = "Lim inn";
+"Select All" = "Velg alt";
+"Find" = "Finn";
+"Find in Page..." = "Finn på siden...";
+"Find Next" = "Finn neste";
+"Find Previous" = "Finn forrige";
+"View" = "Visning";
+"Reload Page" = "Last inn siden på nytt";
+"Show Sidebar" = "Vis sidepanel";
+"Hide Sidebar" = "Skjul sidepanel";
+"Window" = "Vindu";
+"Minimize" = "Minimer";
+"Zoom" = "Zoom";
+
+"Page not found" = "Siden ble ikke funnet";
+"The server IP address for \\'%@\\' could not be found." = "Serverens IP-adresse for \\'%@\\' ble ikke funnet.";
+"Unable to connect to site" = "Kan ikke koble til nettstedet";
+"Connection has been reset." = "Tilkoblingen har blitt tilbakestilt.";
+"No internet connection" = "Ingen internettforbindelse";
+"There is no internet connection." = "Det er ingen internettforbindelse.";
+"Unknown error" = "Ukjent feil";
+"An unknown error occurred." = "En ukjent feil oppstod.";
+
+"Refresh" = "Oppdater";
+
+"Search.." = "Søk..";
+
+"Location services are disabled in your Mac system settings" = "Posisjonstjenester er deaktivert i Mac-systeminnstillingene dine.";
+"Open Settings" = "Åpne innstillinger";
+
+"Notification Permissions" = "Varslingstillatelser";
+"Notification permission granted." = "Varslingstillatelse gitt.";
+
+"Do you want to allow notifications from '%@'?" = "Vil du tillate varsler fra '%@'?";
+"Allow" = "Tillat";
+"Deny" = "Avslå";
+
+"Allow '%@' to use your location?" = "Vil du tillate at '%@' bruker posisjonen din?";
+
+"Notification" = "Varsling";
+"Location" = "Posisjon";
+
+"New Folder" = "Ny mappe";
+"Bookmark" = "Bokmerke";
+
+"Change Name" = "Endre navn";
+"Delete" = "Slett";
+"Add Folder" = "Legg til mappe";
+"Folder" = "Mappe";
+"Name" = "Navn";
+"Save" = "Lagre";
+
+"System" = "System";
+"Light" = "Lys";
+"Dark" = "Mørk";
+
+"1 Day" = "1 dag";
+"1 Week" = "1 uke";
+"1 Month" = "1 måned";
+"Indefinite" = "Ubestemt";
+
+"Settings" = "Innstillinger";
+"General" = "Generelt";
+"Language" = "Språk";
+"Search History" = "Søkehistorikk";
+"Visit History" = "Besøkshistorikk";
+"Permission" = "Tillatelse";
+"Permissions" = "Tillatelser";
+"Search Engine" = "Søkemotor";
+"Screen Mode" = "Skjermmodus";
+"Retention Period" = "Lagringsperiode";
+"Show More" = "Vis mer";
+"Cancel" = "Avbryt";
+"Notification" = "Varsling";
+"allowed" = "tillatt";
+"denied" = "avslått";
+"There is no domain with permissions set." = "Ingen domener har angitte tillatelser.";
+"There is no search history." = "Ingen søkehistorikk.";
+"There is no visit history." = "Ingen besøkshistorikk.";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Blokkerer unødvendige annonser og sporere ved hjelp av DuckDuckGos sporingsbeskyttelsesliste sammen med ekstra regler.";
+"English" = "Engelsk";
+"Norwegian" = "Norsk";
+"Hindi" = "Hindi";
+"Korean" = "Koreansk";
+"Chinese" = "Kinesisk";
+"German" = "Tysk";
+"Japanese" = "Japansk";
+"Spanish" = "Spansk";
+"French" = "Fransk";
+"The changes will take effect after restarting the app." = "Endringene trer i kraft etter at du har startet appen på nytt.";
+
+"Add Favorite" = "Legg til favoritt";
+"Edit Favorite" = "Rediger favoritt";
+"Title" = "Tittel";
+"Address" = "Adresse";
+"Add" = "Legg til";
+
+"Save Image As.." = "Lagre bilde som..";
+"Save As:" = "Lagre som:";
+
+"Tracker Blocking" = "Sporingsblokkering";
+"Learn More" = "Lær mer";
+
+"This connection is secure." = "Denne tilkoblingen er sikker.";
+"This is a page provided inside the app." = "Dette er en side levert inne i appen.";
+"Certificate:" = "Sertifikat:";
+"This connection is not secure." = "Denne tilkoblingen er ikke sikker.";
+
+"SSL/TLS certificate error" = "SSL/TLS-sertifikatfeil";
+"A secure connection cannot be made because the certificate is not valid." = "En sikker tilkobling kan ikke opprettes fordi sertifikatet er ugyldig.";
+
+"Blocked content" = "Blokkert innhold";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Dette innholdet er blokkert. For å bruke tjenesten, vennligst juster nivået for sporingsblokkering.";
+
+"Clear All" = "Tøm alt";
+
+"Contact Us" = "Kontakt oss";
+"Zoom In" = "Zoom inn";
+"Zoom Out" = "Zoom ut";
+
+"Cookie" = "Informasjonskapsel";
+"The current web page uses web storage." = "Den nåværende nettsiden bruker nettlagring.";
+"The current web page does not use web storage." = "Den nåværende nettsiden bruker ikke nettlagring.";
+"Clear Cookies and Storage" = "Slett informasjonskapsler og lagring";
+
+"Library" = "Bibliotek";
+
+"Ad Blocking" = "Annonseblokkering";
+
+"Refresh after clearing cache" = "Oppdater etter tømming av buffer";

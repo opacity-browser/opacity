@@ -50,32 +50,32 @@ final class OpacityScriptHandler {
     
     if let value = value {
       switch name {
-        case "replacePage":
-          script = replacePage(value)
-          break
         case "goPage":
           script = goPage(value)
           break
         case "getPageStrings":
           script = getPageStrings(value)
           break
-        case "addFavorite":
-          script = addFavorite(value)
+        case "cratedFavorite":
+          script = cratedFavorite(value)
           break
         case "deleteFavorite":
           script = deleteFavorite(value)
           break
-        case "setSearchEngine":
-          script = setSearchEngine(value)
+        case "updateFavorite":
+          script = updateFavorite(value)
           break
-        case "setScreenMode":
-          script = setScreenMode(value)
+        case "updateSearchEngine":
+          script = updateSearchEngine(value)
           break
-        case "setRetentionPeriod":
-          script = setRetentionPeriod(value)
+        case "updateScreenMode":
+          script = updateScreenMode(value)
           break
-        case "setIsTrackerBlocking":
-          script = setIsTrackerBlocking(value)
+        case "updateRetentionPeriod":
+          script = updateRetentionPeriod(value)
+          break
+        case "updateTrackerBlocking":
+          script = updateTrackerBlocking(value)
           break
         case "setBlockingTracker": // Deprecated
           script = setBlockingTracker(value)
@@ -98,29 +98,45 @@ final class OpacityScriptHandler {
         case "deletePermissions":
           script = deletePermissions(value)
           break
-        case "updateNotificationPermissions":
-          script = updateNotificationPermissions(value)
+        case "updateLanguage":
+          script = updateLanguage(value)
+          break
         default: break
       }
     } else {
       switch name {
-        case "getGeneralSettings":
-          script = getGeneralSettings()
+        case "getLanguage":
+          script = getLanguage()
           break
-        case "getGeneralSettingList":
-          script = getGeneralSettingList()
+        case "getScreenMode":
+          script = getScreenMode()
           break
-        case "getLocationPermisions":
-          script = getLocationPermisions()
+        case "getScreenModeList":
+          script = getScreenModeList()
           break
-        case "getNotificationPermisions":
-          script = getNotificationPermisions()
+        case "getSearchEngine":
+          script = getSearchEngine()
+          break
+        case "getSearchEngineList":
+          script = getSearchEngineList()
+          break
+        case "getRetentionPeriod":
+          script = getRetentionPeriod()
+          break
+        case "getRetentionPeriodList":
+          script = getRetentionPeriodList()
+          break
+        case "getTrackerBlocking":
+          script = getTrackerBlocking()
+          break
+        case "getLocationPermissions":
+          script = getLocationPermissions()
+          break
+        case "getNotificationPermissions":
+          script = getNotificationPermissions()
           break
         case "getFavoriteList":
           script = getFavoriteList()
-          break
-        case "getFrequentList":
-          script = getFrequentList()
           break
         case "deleteAllSearchHistory":
           script = deleteAllSearchHistory()
@@ -155,92 +171,37 @@ final class OpacityScriptHandler {
     """
   }
   
-  func updateNotificationPermissions(_ updateParmas: String) -> String {
-    do {
-      let params = try decodeJSON(from: updateParmas, to: UpdatePermissionParams.self)
-      if let uuid = UUID(uuidString: params.id) {
-        PermissionManager.updatePermisionById(id: uuid, isDenied: params.isDenied)
-      }
-      return """
-        window.opacityResponse.updateNotificationPermissions({
-          data: "success"
-        })
-      """
-    } catch {
-      print("JSONDecodeError updateNotificationPermissions")
-    }
-    return """
-      window.opacityResponse.updateNotificationPermissions({
-        data: "error"
-      })
-    """
-  }
-  
-  func deletePermissions(_ permissionIds: String) -> String? {
-    do {
-      let deletePermissionIds = try decodeJSON(from: permissionIds, to: [String].self)
-      for id in deletePermissionIds {
-        if let uuid = UUID(uuidString: id) {
-          PermissionManager.deletePermisionById(uuid)
-        }
-      }
-      return """
-        window.opacityResponse.deletePermissions({
-          data: "success"
-        })
-      """
-    } catch {
-      print("JSONDecodeError deletePermissions")
+  func deletePermissions(_ permissionId: String) -> String? {
+    if let uuid = UUID(uuidString: permissionId) {
+      PermissionManager.deletePermisionById(uuid)
     }
     return """
       window.opacityResponse.deletePermissions({
-        data: "error"
+        data: "success"
       })
     """
   }
   
-  func deleteVisitHistory(_ historyIds: String) -> String? {
-    do {
-      let deleteHistoryIds = try decodeJSON(from: historyIds, to: [String].self)
-      for id in deleteHistoryIds {
-        if let uuid = UUID(uuidString: id) {
-          VisitManager.deleteVisitHistoryById(uuid)
-        }
-      }
-      return """
-        window.opacityResponse.deleteVisitHistory({
-          data: "success"
-        })
-      """
-    } catch {
-      print("JSONDecodeError deleteVisitHistory")
+  func deleteVisitHistory(_ historyId: String) -> String? {
+    if let uuid = UUID(uuidString: historyId) {
+      VisitManager.deleteVisitHistoryById(uuid)
     }
+    
     return """
       window.opacityResponse.deleteVisitHistory({
-        data: "error"
+        data: "success"
       })
     """
   }
   
-  func deleteSearchHistory(_ historyIds: String) -> String? {
-    do {
-      let deleteHistoryIds = try decodeJSON(from: historyIds, to: [String].self)
-      for id in deleteHistoryIds {
-        if let uuid = UUID(uuidString: id) {
-          SearchManager.deleteSearchHistoryById(uuid)
-        }
-      }
-      return """
-        window.opacityResponse.deleteSearchHistory({
-          data: "success"
-        })
-      """
-    } catch {
-      print("JSONDecodeError deleteSearchHistory")
+  func deleteSearchHistory(_ historyId: String) -> String? {
+    if let uuid = UUID(uuidString: historyId) {
+      SearchManager.deleteSearchHistoryById(uuid)
     }
+    
     return """
       window.opacityResponse.deleteSearchHistory({
-        data: "error"
+        data: "success"
       })
     """
   }
@@ -319,7 +280,7 @@ final class OpacityScriptHandler {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         var searchHistories: [SearchHistorySettings] = []
         for sh in filterHistoryList {
-          searchHistories.append(SearchHistorySettings(id: sh.id, searchText: sh.searchHistoryGroup!.searchText, createDate: dateFormatter.string(from: sh.createDate)))
+          searchHistories.append(SearchHistorySettings(id: sh.id, title: sh.searchHistoryGroup!.searchText, createDate: dateFormatter.string(from: sh.createDate)))
         }
         
         let jsonString = try encodeJSON(from: searchHistories)
@@ -343,10 +304,10 @@ final class OpacityScriptHandler {
     """
   }
   
-  func setIsTrackerBlocking(_ value: String) -> String? {
+  func updateTrackerBlocking(_ value: String) -> String? {
     guard let boolValue = Bool(value) else {
       return """
-        window.opacityResponse.setIsTrackerBlocking({
+        window.opacityResponse.updateTrackerBlocking({
           data: "error"
         })
       """
@@ -354,7 +315,7 @@ final class OpacityScriptHandler {
     SettingsManager.setIsTrackerBlocking(boolValue)
     AppDelegate.shared.service.isTrackerBlocking = boolValue
     return """
-    window.opacityResponse.setIsTrackerBlocking({
+    window.opacityResponse.updateTrackerBlocking({
       data: "success"
     })
   """
@@ -390,28 +351,28 @@ final class OpacityScriptHandler {
     """
   }
   
-  func setRetentionPeriod(_ value: String) -> String? {
+  func updateRetentionPeriod(_ value: String) -> String? {
     SettingsManager.setRetentionPeriod(value)
     return """
-      window.opacityResponse.setRetentionPeriod({
+      window.opacityResponse.updateRetentionPeriod({
         data: "success"
       })
     """
   }
   
-  func setScreenMode(_ value: String) -> String? {
+  func updateScreenMode(_ value: String) -> String? {
     SettingsManager.setScreenMode(value)
     return """
-      window.opacityResponse.setScreenMode({
+      window.opacityResponse.updateScreenMode({
         data: "success"
       })
     """
   }
   
-  func setSearchEngine(_ value: String) -> String? {
+  func updateSearchEngine(_ value: String) -> String? {
     SettingsManager.setSearchEngine(value)
     return """
-      window.opacityResponse.setSearchEngine({
+      window.opacityResponse.updateSearchEngine({
         data: "success"
       })
     """
@@ -435,7 +396,7 @@ final class OpacityScriptHandler {
     """
   }
   
-  func addFavorite(_ favoriteData: String) -> String? {
+  func cratedFavorite(_ favoriteData: String) -> String? {
     do {
       let favoriteItem = try decodeJSON(from: favoriteData, to: FavoriteItemParams.self)
       let favorite = Favorite(title: favoriteItem.title, address: favoriteItem.address)
@@ -443,44 +404,53 @@ final class OpacityScriptHandler {
       
       if isSuccess {
         return """
-        window.opacityResponse.addFavorite({
+        window.opacityResponse.cratedFavorite({
           data: "success"
         })
       """
       }
     } catch {
-      print("JSONDecodeError addFavorite")
+      print("JSONDecodeError cratedFavorite")
     }
     
     return """
-      window.opacityResponse.addFavorite({
+      window.opacityResponse.cratedFavorite({
         data: "error"
       })
     """
   }
   
-  func getFrequentList() -> String? {
+  func updateFavorite(_ favoriteData: String) -> String? {
     do {
-      if let visitHistoryGroupList = VisitManager.getFrequentList() {
-        var jsonDataList: [FavoriteItem] = []
-        for visitHistoryGroup in visitHistoryGroupList {
-          jsonDataList.append(FavoriteItem(id: visitHistoryGroup.id, title: visitHistoryGroup.title ?? "", address: visitHistoryGroup.url))
-        }
-        
-        let jsonString = try encodeJSON(from: jsonDataList)
+      let favoriteItem = try decodeJSON(from: favoriteData, to: FavoriteItem.self)
+      print(favoriteData)
+      let isSuccess = FavoriteManager.editFavoriteById(favoriteItem.id, newTitle: favoriteItem.title, newAddress: favoriteItem.address)
+      print(isSuccess)
+      if isSuccess {
         return """
-          window.opacityResponse.getFrequentList({
-            data: \(jsonString)
-          })
-        """
+        window.opacityResponse.updateFavorite({
+          data: "success"
+        })
+      """
       }
     } catch {
-      print("JSONEncodeError getFrequentList")
+      print("JSONDecodeError updateFavorite")
     }
     
     return """
-      window.opacityResponse.getFrequentList({
+      window.opacityResponse.updateFavorite({
         data: "error"
+      })
+    """
+  }
+  
+  func updateLanguage(_ language: String) -> String? {
+    UserDefaults.standard.set([language], forKey: "AppleLanguages")
+    UserDefaults.standard.synchronize()
+
+    return """
+      window.opacityResponse.updateLanguage({
+        data: "success"
       })
     """
   }
@@ -511,7 +481,7 @@ final class OpacityScriptHandler {
     """
   }
   
-  func getLocationPermisions() -> String? {
+  func getLocationPermissions() -> String? {
     if let locaitonPermitions = PermissionManager.getLocationPermisions() {
       var jsonDataList: [PermissionItem] = []
       for noti in locaitonPermitions {
@@ -536,7 +506,7 @@ final class OpacityScriptHandler {
     """
   }
   
-  func getNotificationPermisions() -> String? {
+  func getNotificationPermissions() -> String? {
     if let notificationPermitions = PermissionManager.getNotificationPermisions() {
       var jsonDataList: [PermissionItem] = []
       for noti in notificationPermitions {
@@ -561,114 +531,146 @@ final class OpacityScriptHandler {
     """
   }
   
-  func getGeneralSettingList() -> String? {
-    var searchEngineList: [SettingListItem] = []
-    var screenModeList: [SettingListItem] = []
-    var periodList: [SettingListItem] = []
-    
-    for engine in SEARCH_ENGINE_LIST {
-      searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
+  func getScreenMode() -> String? {
+    if let browserSettings = SettingsManager.getGeneralSettings() {
+      return """
+        window.opacityResponse.getScreenMode({
+          data: {
+            id: "\(browserSettings.screenMode)",
+            name: "\(NSLocalizedString(browserSettings.screenMode, comment: ""))"
+          }
+        })
+      """
     }
+    
+    return """
+      window.opacityResponse.getScreenMode({
+        data: "error"
+      })
+    """
+  }
+  
+  func getScreenModeList() -> String? {
+    var screenModeList: [SettingListItem] = []
     for screenModeItem in SCREEN_MODE_LIST {
       screenModeList.append(SettingListItem(id: screenModeItem, name: NSLocalizedString(screenModeItem, comment: "")))
     }
+    do {
+      let screenModeString = try encodeJSON(from: screenModeList)
+      return """
+        window.opacityResponse.getScreenModeList({
+          data: \(screenModeString)
+        })
+     """
+    } catch {
+      print("JSONEncodeError getScreenModeList")
+    }
+    
+    return """
+      window.opacityResponse.getScreenModeList({
+        data: "error"
+      })
+    """
+  }
+  
+  func getSearchEngine() -> String? {
+    if let browserSettings = SettingsManager.getGeneralSettings() {
+      return """
+        window.opacityResponse.getSearchEngine({
+          data: {
+            id: "\(browserSettings.searchEngine)",
+            name: "\(NSLocalizedString(browserSettings.searchEngine, comment: ""))"
+          }
+        })
+      """
+    }
+    
+    return """
+      window.opacityResponse.getSearchEngine({
+        data: "error"
+      })
+    """
+  }
+  
+  func getSearchEngineList() -> String? {
+    var searchEngineList: [SettingListItem] = []
+    for engine in SEARCH_ENGINE_LIST {
+      searchEngineList.append(SettingListItem(id: engine.name, name: engine.name))
+    }
+    do {
+      let searchString = try encodeJSON(from: searchEngineList)
+      return """
+        window.opacityResponse.getSearchEngineList({
+          data: \(searchString)
+        })
+     """
+    } catch {
+      print("JSONEncodeError getSearchEngineList")
+    }
+    
+    return """
+      window.opacityResponse.getSearchEngineList({
+        data: "error"
+      })
+    """
+  }
+  
+  func getRetentionPeriod() -> String {
+    if let browserSettings = SettingsManager.getGeneralSettings() {
+      return """
+        window.opacityResponse.getRetentionPeriod({
+          data: {
+            id: "\(browserSettings.retentionPeriod)",
+            name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
+          }
+        })
+      """
+    }
+    
+    return """
+      window.opacityResponse.getRetentionPeriod({
+        data: "error"
+      })
+    """
+  }
+  
+  func getRetentionPeriodList() -> String {
+    var periodList: [SettingListItem] = []
     for periodItem in RETENTION_PERIOD_LIST {
       periodList.append(SettingListItem(id: periodItem, name: NSLocalizedString(periodItem, comment: "")))
     }
     
     do {
-      let searchString = try encodeJSON(from: searchEngineList)
-      let screenModeString = try encodeJSON(from: screenModeList)
       let periodString = try encodeJSON(from: periodList)
       return """
-        window.opacityResponse.getGeneralSettingList({
-          data: {
-            searchEngine: \(searchString),
-            screenMode: \(screenModeString),
-            retentionPeriod: \(periodString)
-          }
+        window.opacityResponse.getRetentionPeriodList({
+          data: \(periodString)
         })
      """
     } catch {
-      print("JSONEncodeError getGeneralSettingList")
+      print("JSONEncodeError getRetentionPeriodList")
     }
     
     return """
-      window.opacityResponse.getGeneralSettingList({
+      window.opacityResponse.getRetentionPeriodList({
         data: "error"
       })
     """
   }
   
-  func getPageStrings(_ pageName: String) -> String? {
-    switch pageName {
-      case "new-tab":
-        return """
-        window.opacityResponse.getPageStrings({
-          data: {
-            "Favorite": '\(NSLocalizedString("Favorite", comment: ""))',
-            "Frequent": '\(NSLocalizedString("Frequent", comment: ""))',
-            "Add Favorite": '\(NSLocalizedString("Add Favorite", comment: ""))',
-            "Title": '\(NSLocalizedString("Title", comment: ""))',
-            "Address": '\(NSLocalizedString("Address", comment: ""))',
-            "Add": '\(NSLocalizedString("Add", comment: ""))',
-            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
-            "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
-            "Please enter title or address": '\(NSLocalizedString("Please enter title or address", comment: ""))',
-          }
+  func getTrackerBlocking() -> String? {
+    if let browserSettings = SettingsManager.getGeneralSettings() {
+      return """
+        window.opacityResponse.getTrackerBlocking({
+          data: \(browserSettings.isTrackerBlocking)
         })
       """
-      case "settings":
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-          return """
-          window.opacityResponse.getPageStrings({
-            data: {
-              "Settings": '\(NSLocalizedString("Settings", comment: ""))',
-              "General": '\(NSLocalizedString("General", comment: ""))',
-              "Search History": '\(NSLocalizedString("Search History", comment: ""))',
-              "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
-              "Permission": '\(NSLocalizedString("Permission", comment: ""))',
-              "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
-              "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
-              "History Data Retention Period": '\(NSLocalizedString("History Data Retention Period", comment: ""))',
-              "View More": '\(NSLocalizedString("View More", comment: ""))',
-              "$n were selected.": '\(NSLocalizedString("$n were selected.", comment: ""))',
-              "Delete": '\(NSLocalizedString("Delete", comment: ""))',
-              "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
-              "An error occurred": '\(NSLocalizedString("An error occurred", comment: ""))',
-              "Notification": '\(NSLocalizedString("Notification", comment: ""))',
-              "Location": '\(NSLocalizedString("Location", comment: ""))',
-              "allowed": '\(NSLocalizedString("allowed", comment: ""))',
-              "denied": '\(NSLocalizedString("denied", comment: ""))',
-              "There is no domain with permissions set.": '\(NSLocalizedString("There is no domain with permissions set.", comment: ""))',
-              "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
-              "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
-              "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
-              "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
-              "Clear All": '\(NSLocalizedString("Clear All", comment: ""))',
-              "Library": '\(NSLocalizedString("Library", comment: ""))',
-              "This is a library used in service development.": '\(NSLocalizedString("This is a library used in service development.", comment: ""))',
-              "version": "\(version)"
-            }
-          })
-        """
-        }
-      default:
-        print("ParameterError getPageStrings")
     }
     
     return """
-      window.opacityResponse.getPageStrings({
+      window.opacityResponse.getTrackerBlocking({
         data: "error"
       })
-    """
-  }
-  
-  func replacePage(_ address: String) -> String? {
-    
-    tab.webviewIsError = false
-    return """
-      window.location.replace("\(address)")
     """
   }
   
@@ -683,34 +685,160 @@ final class OpacityScriptHandler {
     """
   }
   
-  func getGeneralSettings() -> String? {
-    if let browserSettings = SettingsManager.getGeneralSettings() {
-      return """
-        window.opacityResponse.getGeneralSettings({
+  func getLanguage() -> String? {
+    guard let currentLanguage = Locale.preferredLanguages.first else { return nil }
+    let languageCode = currentLanguage.components(separatedBy: "-").first ?? currentLanguage
+    
+    return """
+      window.opacityResponse.getLanguage({
+        data: "\(languageCode)"
+      })
+    """
+  }
+
+  func getPageStrings(_ pageName: String) -> String? {
+    let lang = Locale.current.language.languageCode?.identifier ?? "en"
+    switch pageName {
+      case "new-tab":
+        return """
+        window.opacityResponse.getPageStrings({
           data: {
-            searchEngine: {
-              id: "\(browserSettings.searchEngine)",
-              name: "\(NSLocalizedString(browserSettings.searchEngine, comment: ""))"
-            },
-            screenMode: {
-              id: "\(browserSettings.screenMode)",
-              name: "\(NSLocalizedString(browserSettings.screenMode, comment: ""))"
-            },
-            retentionPeriod: {
-              id: "\(browserSettings.retentionPeriod)",
-              name: "\(NSLocalizedString(browserSettings.retentionPeriod, comment: ""))"
-            },
-            isTrackerBlocking: \(browserSettings.isTrackerBlocking)
+            "Add Favorite": '\(NSLocalizedString("Add Favorite", comment: ""))',
+            "Edit Favorite": '\(NSLocalizedString("Edit Favorite", comment: ""))',
+            "Title": '\(NSLocalizedString("Title", comment: ""))',
+            "Address": '\(NSLocalizedString("Address", comment: ""))',
+            "Edit": '\(NSLocalizedString("Edit", comment: ""))',
+            "Delete": '\(NSLocalizedString("Delete", comment: ""))',
+            "Save": '\(NSLocalizedString("Save", comment: ""))',
+            "Cancel": '\(NSLocalizedString("Cancel", comment: ""))'
           }
         })
       """
+      case "settings":
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+          return """
+          window.opacityResponse.getPageStrings({
+            data: {
+              "lang": '\(lang)',
+              "Settings": '\(NSLocalizedString("Settings", comment: ""))',
+              "General": '\(NSLocalizedString("General", comment: ""))',
+              "Search History": '\(NSLocalizedString("Search History", comment: ""))',
+              "Visit History": '\(NSLocalizedString("Visit History", comment: ""))',
+              "Permissions": '\(NSLocalizedString("Permissions", comment: ""))',
+              "Language": '\(NSLocalizedString("Language", comment: ""))',
+              "Search Engine": '\(NSLocalizedString("Search Engine", comment: ""))',
+              "Screen Mode": '\(NSLocalizedString("Screen Mode", comment: ""))',
+              "Retention Period": '\(NSLocalizedString("Retention Period", comment: ""))',
+              "Show More": '\(NSLocalizedString("Show More", comment: ""))',
+              "Delete": '\(NSLocalizedString("Delete", comment: ""))',
+              "Cancel": '\(NSLocalizedString("Cancel", comment: ""))',
+              "Notification": '\(NSLocalizedString("Notification", comment: ""))',
+              "Location": '\(NSLocalizedString("Location", comment: ""))',
+              "allowed": '\(NSLocalizedString("allowed", comment: ""))',
+              "denied": '\(NSLocalizedString("denied", comment: ""))',
+              "There is no domain with permissions set.": '\(NSLocalizedString("There is no domain with permissions set.", comment: ""))',
+              "There is no search history.": '\(NSLocalizedString("There is no search history.", comment: ""))',
+              "There is no visit history.": '\(NSLocalizedString("There is no visit history.", comment: ""))',
+              "Tracker Blocking": '\(NSLocalizedString("Tracker Blocking", comment: ""))',
+              "Learn More": '\(NSLocalizedString("Learn More", comment: ""))',
+              "Clear All": '\(NSLocalizedString("Clear All", comment: ""))',
+              "Library": '\(NSLocalizedString("Library", comment: ""))',
+              "version": "\(version)",
+              "Korean": '\(NSLocalizedString("Korean", comment: ""))',
+              "English": '\(NSLocalizedString("English", comment: ""))',
+              "German": '\(NSLocalizedString("German", comment: ""))',
+              "Spanish": '\(NSLocalizedString("Spanish", comment: ""))',
+              "Japanese": '\(NSLocalizedString("Japanese", comment: ""))',
+              "Chinese": '\(NSLocalizedString("Chinese", comment: ""))',
+              "French": '\(NSLocalizedString("French", comment: ""))',
+              "Hindi": '\(NSLocalizedString("Hindi", comment: ""))',
+              "Norwegian": '\(NSLocalizedString("Norwegian", comment: ""))',
+              "Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.": '\(NSLocalizedString("Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.", comment: ""))',
+              "The changes will take effect after restarting the app.": '\(NSLocalizedString("The changes will take effect after restarting the app.", comment: ""))',
+            }
+          })
+        """
+        }
+      case "notFindHost":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("Page not found", comment: ""))',
+            "title": '\(NSLocalizedString("Page not found", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), tab.printURL))'
+          }
+        })
+      """
+      case "notConnectHost":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("Unable to connect to site", comment: ""))',
+            "title": '\(NSLocalizedString("Unable to connect to site", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(NSLocalizedString("Connection has been reset.", comment: ""))'
+          }
+        })
+      """
+      case "notConnectInternet":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("No internet connection", comment: ""))',
+            "title": '\(NSLocalizedString("No internet connection", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(NSLocalizedString("There is no internet connection.", comment: ""))'
+          }
+        })
+      """
+      case "occurredSSLError":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("SSL/TLS certificate error", comment: ""))',
+            "title": '\(NSLocalizedString("SSL/TLS certificate error", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(NSLocalizedString("A secure connection cannot be made because the certificate is not valid.", comment: ""))'
+          }
+        })
+      """
+      case "blockedContent":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("Blocked content", comment: ""))',
+            "title": '\(NSLocalizedString("Blocked content", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(NSLocalizedString("This content is blocked. To use the service, you must lower or turn off tracker blocking.", comment: ""))'
+          }
+        })
+      """
+      case "unknown":
+        return """
+        window.opacityResponse.getPageStrings({
+          data: {
+            "lang": '\(lang)',
+            "headTitle": '\(NSLocalizedString("Unknown error", comment: ""))',
+            "title": '\(NSLocalizedString("Unknown error", comment: ""))',
+            "buttonText": '\(NSLocalizedString("Refresh", comment: ""))',
+            "message": '\(NSLocalizedString("An unknown error occurred.", comment: ""))'
+          }
+        })
+      """
+      default:
+        print("ParameterError getPageStrings")
     }
     
     return """
-      window.opacityResponse.getGeneralSettings({
+      window.opacityResponse.getPageStrings({
         data: "error"
       })
     """
   }
-  
 }

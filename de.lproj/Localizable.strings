@@ -1,8 +1,6 @@
-// App
 "lang" = "de";
 "to quit, press ⌘Q again" = "Zum Beenden drücken Sie ⌘Q erneut";
 
-// Menu
 "Opacity" = "Opacity";
 "About Opacity" = "Über Opacity";
 "Quit Opacity" = "Opacity beenden";
@@ -17,7 +15,7 @@
 "Paste" = "Einfügen";
 "Select All" = "Alles auswählen";
 "Find" = "Suchen";
-"Find in Page..." = "Auf der Seite suchen...";
+"Find in Page..." = "Auf Seite suchen...";
 "Find Next" = "Weitersuchen";
 "Find Previous" = "Vorheriges suchen";
 "View" = "Ansicht";
@@ -26,12 +24,11 @@
 "Hide Sidebar" = "Seitenleiste ausblenden";
 "Window" = "Fenster";
 "Minimize" = "Minimieren";
-"Zoom" = "Vergrößern";
+"Zoom" = "Zoomen";
 
-// Error Page
 "Page not found" = "Seite nicht gefunden";
-"The server IP address for \\'%@\\' could not be found." = "Die IP-Adresse des Servers für \\'%@\\' konnte nicht gefunden werden.";
-"Unable to connect to site" = "Verbindung zur Seite konnte nicht hergestellt werden";
+"The server IP address for \\'%@\\' could not be found." = "Die Server-IP-Adresse für \\'%@\\' konnte nicht gefunden werden.";
+"Unable to connect to site" = "Verbindung zur Website nicht möglich";
 "Connection has been reset." = "Die Verbindung wurde zurückgesetzt.";
 "No internet connection" = "Keine Internetverbindung";
 "There is no internet connection." = "Es besteht keine Internetverbindung.";
@@ -40,12 +37,12 @@
 
 "Refresh" = "Aktualisieren";
 
-"Search.." = "Suchen...";
+"Search.." = "Suchen..";
 
-"Location services are disabled in your Mac system settings" = "Ortungsdienste sind in Ihren Mac-Systemeinstellungen deaktiviert";
+"Location services are disabled in your Mac system settings" = "Standortdienste sind in den Mac-Systemeinstellungen deaktiviert.";
 "Open Settings" = "Einstellungen öffnen";
 
-"Notification Permissions" = "Benachrichtigungserlaubnisse";
+"Notification Permissions" = "Benachrichtigungsberechtigungen";
 "Notification permission granted." = "Benachrichtigungserlaubnis erteilt.";
 
 "Do you want to allow notifications from '%@'?" = "Möchten Sie Benachrichtigungen von '%@' zulassen?";
@@ -60,7 +57,7 @@
 "New Folder" = "Neuer Ordner";
 "Bookmark" = "Lesezeichen";
 
-"Change Name" = "Namen ändern";
+"Change Name" = "Name ändern";
 "Delete" = "Löschen";
 "Add Folder" = "Ordner hinzufügen";
 "Folder" = "Ordner";
@@ -78,48 +75,44 @@
 
 "Settings" = "Einstellungen";
 "General" = "Allgemein";
+"Language" = "Sprache";
 "Search History" = "Suchverlauf";
 "Visit History" = "Besuchsverlauf";
 "Permission" = "Berechtigung";
+"Permissions" = "Berechtigungen";
 "Search Engine" = "Suchmaschine";
 "Screen Mode" = "Bildschirmmodus";
-"History Data Retention Period" = "Aufbewahrungsfrist für Verlaufsdaten";
-"View More" = "Mehr anzeigen";
-"$n were selected." = "$n wurden ausgewählt.";
-"Delete" = "Löschen";
+"Retention Period" = "Aufbewahrungszeitraum";
+"Show More" = "Mehr anzeigen";
 "Cancel" = "Abbrechen";
-"An error occurred" = "Ein Fehler ist aufgetreten";
 "Notification" = "Benachrichtigung";
 "allowed" = "erlaubt";
-"denied" = "abgelehnt";
-"There is no domain with permissions set." = "Es gibt keine Domain mit gesetzten Berechtigungen.";
+"denied" = "verweigert";
+"There is no domain with permissions set." = "Es gibt keine Domains mit festgelegten Berechtigungen.";
 "There is no search history." = "Es gibt keinen Suchverlauf.";
 "There is no visit history." = "Es gibt keinen Besuchsverlauf.";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Blockiert unnötige Werbung und Tracker mithilfe der Tracking-Schutzliste von DuckDuckGo sowie zusätzlicher Regeln.";
+"English" = "Englisch";
+"Norwegian" = "Norwegisch";
+"Hindi" = "Hindi";
+"Korean" = "Koreanisch";
+"Chinese" = "Chinesisch";
+"German" = "Deutsch";
+"Japanese" = "Japanisch";
+"Spanish" = "Spanisch";
+"French" = "Französisch";
+"The changes will take effect after restarting the app." = "Die Änderungen werden nach einem Neustart der App wirksam.";
 
-"Favorite" = "Favorit";
-"Frequent" = "Häufig";
-"Add Favorite" = "Zu Favoriten hinzufügen";
+"Add Favorite" = "Favoriten hinzufügen";
+"Edit Favorite" = "Favoriten bearbeiten";
 "Title" = "Titel";
 "Address" = "Adresse";
 "Add" = "Hinzufügen";
-"Please enter title or address" = "Bitte Titel oder Adresse eingeben";
 
-"Save Image As.." = "Bild speichern unter...";
+"Save Image As.." = "Bild speichern unter..";
 "Save As:" = "Speichern unter:";
 
 "Tracker Blocking" = "Tracker-Blockierung";
-
-"blocking-strong" = "Stark";
-"blocking-moderate" = "Mäßig";
-"blocking-light" = "Leicht";
-"blocking-none" = "Keine";
-
-"blocking-strong-exp" = "Bietet maximalen Schutz für Benutzerdaten und Interaktionen.";
-"blocking-moderate-exp" = "Es bietet ein angemessenes Schutzniveau und erlaubt bei Bedarf dennoch ein gewisses Tracking.";
-"blocking-light-exp" = "Es bietet grundlegenden Tracking-Schutz, ohne das Benutzererlebnis erheblich zu beeinträchtigen.";
-"blocking-none-exp" = "Es blockiert nichts.";
-
-"blocking-change-text" = "Änderungen werden ab neuen Tabs wirksam.";
 "Learn More" = "Mehr erfahren";
 
 "This connection is secure." = "Diese Verbindung ist sicher.";
@@ -131,7 +124,7 @@
 "A secure connection cannot be made because the certificate is not valid." = "Eine sichere Verbindung kann nicht hergestellt werden, da das Zertifikat ungültig ist.";
 
 "Blocked content" = "Blockierter Inhalt";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Dieser Inhalt wurde blockiert. Um den Dienst zu nutzen, passen Sie bitte die Stufe der Tracker-Blockierung an.";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Dieser Inhalt wurde blockiert. Um den Dienst zu nutzen, passen Sie bitte die Tracker-Blockierungsstufe an.";
 
 "Clear All" = "Alles löschen";
 
@@ -144,9 +137,8 @@
 "The current web page does not use web storage." = "Die aktuelle Webseite verwendet keinen Webspeicher.";
 "Clear Cookies and Storage" = "Cookies und Speicher löschen";
 
-"Library" = "Library";
-"This is a library used in service development." = "Dies ist eine Library, die in der Serviceentwicklung verwendet wird.";
+"Library" = "Bibliothek";
 
-"Ad Blocking" = "Werbeblocker";
+"Ad Blocking" = "Werbeblockierung";
 
-"Refresh after clearing cache" = "Nach dem Leeren des Caches aktualisieren";
+"Refresh after clearing cache" = "Nach dem Löschen des Caches aktualisieren";

@@ -1,8 +1,6 @@
-// App
 "lang" = "ja";
 "to quit, press ⌘Q again" = "終了するには、⌘Qをもう一度押してください";
 
-// Menu
 "Opacity" = "Opacity";
 "About Opacity" = "Opacityについて";
 "Quit Opacity" = "Opacity 終了";
@@ -17,7 +15,7 @@
 "Paste" = "貼り付け";
 "Select All" = "すべて選択";
 "Find" = "検索";
-"Find in Page..." = "ページ内を検索...";
+"Find in Page..." = "ページ内検索...";
 "Find Next" = "次を検索";
 "Find Previous" = "前を検索";
 "View" = "表示";
@@ -28,144 +26,119 @@
 "Minimize" = "最小化";
 "Zoom" = "ズーム";
 
-// Error Page
 "Page not found" = "ページが見つかりません";
-"The server IP address for \\'%@\\' could not be found." = "サーバーのIPアドレスが見つかりませんでした: \\'%@\\'";
+"The server IP address for \\'%@\\' could not be found." = "'%@' のサーバーIPアドレスが見つかりませんでした。";
 "Unable to connect to site" = "サイトに接続できません";
-"Connection has been reset." = "接続がリセットされました";
-"No internet connection" = "インターネット接続がありません";
-"There is no internet connection." = "インターネット接続がありません";
+"Connection has been reset." = "接続がリセットされました。";
+"No internet connection" = "インターネット接続なし";
+"There is no internet connection." = "インターネットに接続されていません。";
 "Unknown error" = "不明なエラー";
-"An unknown error occurred." = "不明なエラーが発生しました";
+"An unknown error occurred." = "不明なエラーが発生しました。";
 
-// Refresh
 "Refresh" = "更新";
 
-// Search
-"Search.." = "検索...";
+"Search.." = "検索..";
 
-// Location services
-"Location services are disabled in your Mac system settings" = "位置情報サービスがMacのシステム設定で無効になっています";
+"Location services are disabled in your Mac system settings" = "Macのシステム設定で位置情報サービスが無効になっています。";
 "Open Settings" = "設定を開く";
 
-// Notification Permissions
-"Notification Permissions" = "通知の許可";
-"Notification permission granted." = "通知の許可が与えられました";
+"Notification Permissions" = "通知の権限";
+"Notification permission granted." = "通知の許可がされました。";
 
-// Notifications
-"Do you want to allow notifications from '%@'?" = "'%@'からの通知を許可しますか？";
+"Do you want to allow notifications from '%@'?" = "'%@' からの通知を許可しますか？";
 "Allow" = "許可";
 "Deny" = "拒否";
 
-"Allow '%@' to use your location?" = "'%@'があなたの位置情報を使用することを許可しますか？";
+"Allow '%@' to use your location?" = "'%@' に位置情報の使用を許可しますか？";
 
 "Notification" = "通知";
-"Location" = "場所";
+"Location" = "位置情報";
 
-// New Folder and Bookmark
-"New Folder" = "新しいフォルダー";
+"New Folder" = "新しいフォルダ";
 "Bookmark" = "ブックマーク";
 
-// Change Name, Delete, Add Folder
 "Change Name" = "名前を変更";
 "Delete" = "削除";
-"Add Folder" = "フォルダーを追加";
-"Folder" = "フォルダー";
+"Add Folder" = "フォルダを追加";
+"Folder" = "フォルダ";
 "Name" = "名前";
 "Save" = "保存";
 
-// System, Light, Dark
 "System" = "システム";
 "Light" = "ライト";
 "Dark" = "ダーク";
 
-// Time Periods
 "1 Day" = "1日";
 "1 Week" = "1週間";
 "1 Month" = "1ヶ月";
 "Indefinite" = "無期限";
 
-// Settings, General, Search History
 "Settings" = "設定";
 "General" = "一般";
+"Language" = "言語";
 "Search History" = "検索履歴";
 "Visit History" = "閲覧履歴";
-"Permission" = "許可";
+"Permission" = "権限";
+"Permissions" = "権限設定";
 "Search Engine" = "検索エンジン";
-"Screen Mode" = "スクリーンモード";
-"History Data Retention Period" = "履歴データの保存期間";
-"View More" = "もっと見る";
-"$n were selected." = "$nが選択されました";
-"Delete" = "削除";
+"Screen Mode" = "画面モード";
+"Retention Period" = "保存期間";
+"Show More" = "さらに表示";
 "Cancel" = "キャンセル";
-"An error occurred" = "エラーが発生しました";
 "Notification" = "通知";
-"allowed" = "許可されました";
-"denied" = "拒否されました";
-"There is no domain with permissions set." = "権限が設定されたドメインがありません。";
-"There is no search history." = "検索履歴がありません";
-"There is no visit history." = "閲覧履歴がありません";
+"allowed" = "許可";
+"denied" = "拒否";
+"There is no domain with permissions set." = "権限が設定されているドメインはありません。";
+"There is no search history." = "検索履歴はありません。";
+"There is no visit history." = "閲覧履歴はありません。";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "DuckDuckGoの追跡保護リストと追加ルールを使用して不要な広告やトラッカーをブロックします。";
+"English" = "英語";
+"Norwegian" = "ノルウェー語";
+"Hindi" = "ヒンディー語";
+"Korean" = "韓国語";
+"Chinese" = "中国語";
+"German" = "ドイツ語";
+"Japanese" = "日本語";
+"Spanish" = "スペイン語";
+"French" = "フランス語";
+"The changes will take effect after restarting the app." = "変更を適用するには、アプリを再起動してください。";
 
-// Favorites, Frequent, Add Favorite
-"Favorite" = "お気に入り";
-"Frequent" = "頻繁";
 "Add Favorite" = "お気に入りに追加";
+"Edit Favorite" = "お気に入りを編集";
 "Title" = "タイトル";
 "Address" = "アドレス";
 "Add" = "追加";
-"Please enter title or address" = "タイトルまたはアドレスを入力してください";
 
-// Save Image As
-"Save Image As.." = "画像を名前を付けて保存...";
+"Save Image As.." = "画像を別名で保存..";
 "Save As:" = "名前を付けて保存:";
 
-// Tracker Blocking
-"Tracker Blocking" = "トラッカーのブロック";
+"Tracker Blocking" = "トラッカーブロック";
+"Learn More" = "詳細を見る";
 
-"blocking-strong" = "強い";
-"blocking-moderate" = "中";
-"blocking-light" = "弱い";
-"blocking-none" = "なし";
-
-"blocking-strong-exp" = "ユーザーデータとやり取りに最大限の保護を提供します";
-"blocking-moderate-exp" = "必要に応じてトラッキングを許可しながら、合理的なレベルの保護を提供します";
-"blocking-light-exp" = "ユーザー体験を大きく損なうことなく、基本的なトラッキング保護を提供します";
-"blocking-none-exp" = "何もブロックしません";
-
-"blocking-change-text" = "変更は新しいタブから有効になります";
-"Learn More" = "詳細";
-
-"This connection is secure." = "この接続は安全です";
-"This is a page provided inside the app." = "これはアプリ内で提供されるページです";
+"This connection is secure." = "この接続は安全です。";
+"This is a page provided inside the app." = "これはアプリ内で提供されるページです。";
 "Certificate:" = "証明書:";
-"This connection is not secure." = "この接続は安全ではありません";
+"This connection is not secure." = "この接続は安全ではありません。";
 
-// SSL/TLS certificate error
 "SSL/TLS certificate error" = "SSL/TLS証明書エラー";
-"A secure connection cannot be made because the certificate is not valid." = "証明書が無効のため、安全な接続を確立できません";
+"A secure connection cannot be made because the certificate is not valid." = "証明書が無効なため、安全な接続を確立できません。";
 
-// Blocked content
 "Blocked content" = "ブロックされたコンテンツ";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "このコンテンツはブロックされました。サービスを使用するには、トラッカーブロックレベルを調整してください";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "このコンテンツはブロックされました。サービスを利用するには、トラッカーブロッカーのレベルを調整してください。";
 
-// Clear All
-"Clear All" = "すべてクリア";
+"Clear All" = "すべて削除";
 
-// Contact Us
 "Contact Us" = "お問い合わせ";
 "Zoom In" = "ズームイン";
 "Zoom Out" = "ズームアウト";
 
-// Cookie
 "Cookie" = "クッキー";
-"The current web page uses web storage." = "現在のウェブページはウェブストレージを使用しています。";
-"The current web page does not use web storage." = "現在のウェブページはウェブストレージを使用していません。";
-"Clear Cookies and Storage" = "クッキーとストレージをクリア";
+"The current web page uses web storage." = "現在のウェブページはWebストレージを使用しています。";
+"The current web page does not use web storage." = "現在のウェブページはWebストレージを使用していません。";
+"Clear Cookies and Storage" = "クッキーとストレージを削除";
 
-// Library
 "Library" = "ライブラリ";
-"This is a library used in service development." = "これはサービス開発に使用されるライブラリです";
 
 "Ad Blocking" = "広告ブロック";
 
-"Refresh after clearing cache" = "キャッシュをクリアした後にリフレッシュ";
+"Refresh after clearing cache" = "キャッシュをクリアした後に更新";

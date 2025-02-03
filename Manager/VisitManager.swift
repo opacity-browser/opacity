@@ -134,23 +134,4 @@ class VisitManager {
       print("ModelContainerError deleteVisitHistoryGroupById")
     }
   }
-  
-  @MainActor static func getFrequentList() -> ArraySlice<VisitHistoryGroup>? {
-    let descriptor = FetchDescriptor<VisitHistoryGroup>(
-      predicate: #Predicate { $0.title != "" }
-    )
-    do {
-      let visitHistoryGroupList = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
-        .sorted {
-          $0.visitHistories.count > $1.visitHistories.count
-        }
-        .prefix(5)
-      
-      return visitHistoryGroupList
-    } catch {
-      print("ModelContainerError getFrequentList")
-    }
-    
-    return nil
-  }
 }

@@ -1,6 +1,6 @@
 // App
 "lang" = "en";
-"to quit, press ⌘Q agin" = "to quit, press ⌘Q agin";
+"to quit, press ⌘Q again" = "to quit, press ⌘Q again";
 
 // Menu
 "Opacity" = "Opacity";
@@ -78,48 +78,44 @@
 
 "Settings" = "Settings";
 "General" = "General";
+"Language" = "Language";
 "Search History" = "Search History";
 "Visit History" = "Visit History";
 "Permission" = "Permission";
+"Permissions" = "Permissions";
 "Search Engine" = "Search Engine";
 "Screen Mode" = "Screen Mode";
-"History Data Retention Period" = "History Data Retention Period";
-"View More" = "View More";
-"$n were selected." = "$n were selected.";
-"Delete" = "Delete";
+"Retention Period" = "Retention Period";
+"Show More" = "Show More";
 "Cancel" = "Cancel";
-"An error occurred" = "An error occurred";
 "Notification" = "Notification";
 "allowed" = "allowed";
 "denied" = "denied";
 "There is no domain with permissions set." = "There is no domain with permissions set.";
 "There is no search history." = "There is no search history.";
 "There is no visit history." = "There is no visit history.";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.";
+"English" = "English";
+"Norwegian" = "Norwegian";
+"Hindi" = "Hindi";
+"Korean" = "Korean";
+"Chinese" = "Chinese";
+"German" = "German";
+"Japanese" = "Japanese";
+"Spanish" = "Spanish";
+"French" = "French";
+"The changes will take effect after restarting the app." = "The changes will take effect after restarting the app.";
 
-"Favorite" = "Favorite";
-"Frequent" = "Frequent";
 "Add Favorite" = "Add Favorite";
+"Edit Favorite" = "Edit Favorite";
 "Title" = "Title";
 "Address" = "Address";
 "Add" = "Add";
-"Please enter title or address" = "Please enter title or address";
 
 "Save Image As.." = "Save Image As..";
 "Save As:" = "Save As:";
 
 "Tracker Blocking" = "Tracker Blocking";
-
-"blocking-strong" = "Strong";
-"blocking-moderate" = "Moderate";
-"blocking-light" = "Light";
-"blocking-none" = "None";
-
-"blocking-strong-exp" = "Provide maximum protection for user data and interactions.";
-"blocking-moderate-exp" = "It provides a reasonable level of protection while still allowing some tracking if necessary.";
-"blocking-light-exp" = "It provides basic tracking protection without significantly disrupting the user experience.";
-"blocking-none-exp" = "It doesn't block anything.";
-
-"blocking-change-text" = "Changes will take effect starting from new tabs.";
 "Learn More" = "Learn More";
 
 "This connection is secure." = "This connection is secure.";
@@ -145,7 +141,6 @@
 "Clear Cookies and Storage" = "Clear Cookies and Storage";
 
 "Library" = "Library";
-"This is a library used in service development." = "This is a library used in service development.";
 
 "Ad Blocking" = "Ad Blocking";
 

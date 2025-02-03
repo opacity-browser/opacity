@@ -34,7 +34,6 @@ final class Tab: ObservableObject {
   var isUpdateBySearch: Bool = false
   
   var webviewIsError: Bool = false
-  var webviewErrorType: WebViewErrorType = .noError
   
   @Published var title: String = ""
   @Published var favicon: Image? = nil

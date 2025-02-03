@@ -49,4 +49,23 @@ class FavoriteManager {
     }
     return false
   }
+  
+  @MainActor static func editFavoriteById(_ id: UUID, newTitle: String, newAddress: String) -> Bool {
+    var descriptor = FetchDescriptor<Favorite>(
+      predicate: #Predicate { $0.id == id }
+    )
+    descriptor.fetchLimit = 1
+    do {
+      if let target = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+        target.title = newTitle
+        target.address = newAddress
+        try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        return true
+      }
+    } catch {
+      print("ModelContainerError editFavoriteById")
+    }
+    
+    return false
+  }
 }

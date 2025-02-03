@@ -1,72 +1,62 @@
-// App
 "lang" = "hi";
 "to quit, press ⌘Q again" = "बंद करने के लिए, ⌘Q फिर से दबाएँ";
 
-// Menu
 "Opacity" = "Opacity";
 "About Opacity" = "Opacity के बारे में";
-"Quit Opacity" = "Opacity छोड़ें";
+"Quit Opacity" = "Opacity बंद करें";
 "File" = "फ़ाइल";
 "New Window" = "नई विंडो";
-"New Tab" = "नई टैब";
+"New Tab" = "नया टैब";
 "Close Window" = "विंडो बंद करें";
 "Close Tab" = "टैब बंद करें";
 "Edit" = "संपादित करें";
 "Cut" = "काटें";
-"Copy" = "प्रतिलिपि";
+"Copy" = "कॉपी करें";
 "Paste" = "पेस्ट करें";
 "Select All" = "सभी चुनें";
 "Find" = "खोजें";
-"Find in Page..." = "पृष्ठ में खोजें...";
+"Find in Page..." = "पेज में खोजें...";
 "Find Next" = "अगला खोजें";
 "Find Previous" = "पिछला खोजें";
-"View" = "देखें";
-"Reload Page" = "पृष्ठ पुनः लोड करें";
-"Show Sidebar" = "साइडबार दिखाएँ";
-"Hide Sidebar" = "साइडबार छिपाएँ";
+"View" = "दृश्य";
+"Reload Page" = "पृष्ठ को पुनः लोड करें";
+"Show Sidebar" = "साइडबार दिखाएं";
+"Hide Sidebar" = "साइडबार छिपाएं";
 "Window" = "विंडो";
 "Minimize" = "छोटा करें";
 "Zoom" = "ज़ूम";
 
-// Error Page
 "Page not found" = "पृष्ठ नहीं मिला";
-"The server IP address for \\'%@\\' could not be found." = "सर्वर आईपी पता \\'%@\\' के लिए नहीं मिल सका।";
-"Unable to connect to site" = "साइट से कनेक्ट नहीं हो पा रहा है";
-"Connection has been reset." = "कनेक्शन को रीसेट कर दिया गया है।";
-"No internet connection" = "कोई इंटरनेट कनेक्शन नहीं है";
-"There is no internet connection." = "कोई इंटरनेट कनेक्शन नहीं है।";
+"The server IP address for \\'%@\\' could not be found." = "'%@' के लिए सर्वर IP पता नहीं मिल सका।";
+"Unable to connect to site" = "साइट से कनेक्ट नहीं हो सका";
+"Connection has been reset." = "कनेक्शन रीसेट कर दिया गया है।";
+"No internet connection" = "कोई इंटरनेट कनेक्शन नहीं";
+"There is no internet connection." = "कोई इंटरनेट कनेक्शन उपलब्ध नहीं है।";
 "Unknown error" = "अज्ञात त्रुटि";
-"An unknown error occurred." = "एक अज्ञात त्रुटि हुई।";
+"An unknown error occurred." = "एक अज्ञात त्रुटि उत्पन्न हुई।";
 
-// Refresh
-"Refresh" = "ताज़ा करें";
+"Refresh" = "रीफ्रेश करें";
 
-// Search
-"Search.." = "खोजें...";
+"Search.." = "खोजें..";
 
-// Location services
-"Location services are disabled in your Mac system settings" = "स्थान सेवाएँ आपके मैक सिस्टम सेटिंग्स में अक्षम हैं";
+"Location services are disabled in your Mac system settings" = "आपकी Mac सिस्टम सेटिंग्स में लोकेशन सेवाएं अक्षम हैं।";
 "Open Settings" = "सेटिंग्स खोलें";
 
-// Notification Permissions
 "Notification Permissions" = "सूचना अनुमतियाँ";
-"Notification permission granted." = "सूचना अनुमति दी गई है।";
+"Notification permission granted." = "सूचना की अनुमति दी गई।";
 
-// Notifications
-"Do you want to allow notifications from '%@'?" = "क्या आप '%@' से सूचनाओं की अनुमति देना चाहते हैं?";
+"Do you want to allow notifications from '%@'?" = "क्या आप '%@' से सूचनाएँ प्राप्त करना चाहते हैं?";
 "Allow" = "अनुमति दें";
 "Deny" = "अस्वीकार करें";
 
-"Allow '%@' to use your location?" = "क्या आप '%@' को अपनी स्थान का उपयोग करने की अनुमति देते हैं?";
+"Allow '%@' to use your location?" = "क्या आप '%@' को आपका स्थान उपयोग करने की अनुमति देना चाहते हैं?";
 
 "Notification" = "सूचना";
 "Location" = "स्थान";
 
-// New Folder and Bookmark
 "New Folder" = "नया फ़ोल्डर";
 "Bookmark" = "बुकमार्क";
 
-// Change Name, Delete, Add Folder
 "Change Name" = "नाम बदलें";
 "Delete" = "हटाएं";
 "Add Folder" = "फ़ोल्डर जोड़ें";
@@ -74,99 +64,81 @@
 "Name" = "नाम";
 "Save" = "सहेजें";
 
-// System, Light, Dark
 "System" = "सिस्टम";
 "Light" = "हल्का";
 "Dark" = "गहरा";
 
-// Time Periods
 "1 Day" = "1 दिन";
 "1 Week" = "1 सप्ताह";
-"1 Month" = "1 माह";
-"Indefinite" = "अनिश्चितकालीन";
+"1 Month" = "1 महीना";
+"Indefinite" = "अनिश्चित";
 
-// Settings, General, Search History
 "Settings" = "सेटिंग्स";
 "General" = "सामान्य";
+"Language" = "भाषा";
 "Search History" = "खोज इतिहास";
-"Visit History" = "भ्रमण इतिहास";
+"Visit History" = "यात्रा इतिहास";
 "Permission" = "अनुमति";
+"Permissions" = "अनुमतियाँ";
 "Search Engine" = "सर्च इंजन";
 "Screen Mode" = "स्क्रीन मोड";
-"History Data Retention Period" = "इतिहास डेटा प्रतिधारण अवधि";
-"View More" = "और देखें";
-"$n were selected." = "$n का चयन किया गया था।";
-"Delete" = "हटाएं";
+"Retention Period" = "संग्रहण अवधि";
+"Show More" = "और दिखाएँ";
 "Cancel" = "रद्द करें";
-"An error occurred" = "एक त्रुटि हुई";
 "Notification" = "सूचना";
 "allowed" = "अनुमत";
 "denied" = "अस्वीकृत";
-"There is no domain with permissions set." = "कोई भी डोमेन अनुमति सेट के साथ नहीं है।";
+"There is no domain with permissions set." = "कोई डोमेन अनुमतियों के साथ सेट नहीं है।";
 "There is no search history." = "कोई खोज इतिहास नहीं है।";
-"There is no visit history." = "कोई भ्रमण इतिहास नहीं है।";
+"There is no visit history." = "कोई यात्रा इतिहास नहीं है।";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "DuckDuckGo की ट्रैकिंग सुरक्षा सूची और अतिरिक्त नियमों का उपयोग करके अनावश्यक विज्ञापनों और ट्रैकर्स को रोकता है।";
+"English" = "अंग्रेज़ी";
+"Norwegian" = "नॉर्वेजियन";
+"Hindi" = "हिंदी";
+"Korean" = "कोरियाई";
+"Chinese" = "चीनी";
+"German" = "जर्मन";
+"Japanese" = "जापानी";
+"Spanish" = "स्पेनिश";
+"French" = "फ्रेंच";
+"The changes will take effect after restarting the app." = "परिवर्तन ऐप को पुनः प्रारंभ करने के बाद प्रभावी होंगे।";
 
-// Favorites, Frequent, Add Favorite
-"Favorite" = "पसंदीदा";
-"Frequent" = "बार-बार";
-"Add Favorite" = "पसंदीदा में जोड़ें";
+"Add Favorite" = "पसंदीदा जोड़ें";
+"Edit Favorite" = "पसंदीदा संपादित करें";
 "Title" = "शीर्षक";
 "Address" = "पता";
 "Add" = "जोड़ें";
-"Please enter title or address" = "कृपया शीर्षक या पता दर्ज करें";
 
-// Save Image As
-"Save Image As.." = "छवि को इस रूप में सहेजें...";
+"Save Image As.." = "छवि इस रूप में सहेजें..";
 "Save As:" = "इस रूप में सहेजें:";
 
-// Tracker Blocking
-"Tracker Blocking" = "ट्रैकर ब्लॉकिंग";
+"Tracker Blocking" = "ट्रैकर अवरोधन";
+"Learn More" = "अधिक जानें";
 
-"blocking-strong" = "मजबूत";
-"blocking-moderate" = "मध्यम";
-"blocking-light" = "हल्का";
-"blocking-none" = "कोई नहीं";
-
-"blocking-strong-exp" = "उपयोगकर्ता डेटा और इंटरैक्शन के लिए अधिकतम सुरक्षा प्रदान करता है।";
-"blocking-moderate-exp" = "यह कुछ आवश्यक ट्रैकिंग की अनुमति देते हुए उचित स्तर की सुरक्षा प्रदान करता है।";
-"blocking-light-exp" = "यह उपयोगकर्ता अनुभव को महत्वपूर्ण रूप से बाधित किए बिना बुनियादी ट्रैकिंग सुरक्षा प्रदान करता है।";
-"blocking-none-exp" = "यह कुछ भी ब्लॉक नहीं करता है।";
-
-"blocking-change-text" = "परिवर्तन नए टैब से प्रभावी होंगे।";
-"Learn More" = "और जानें";
-
-// Connection status
 "This connection is secure." = "यह कनेक्शन सुरक्षित है।";
-"This is a page provided inside the app." = "यह ऐप के अंदर प्रदान किया गया पृष्ठ है।";
+"This is a page provided inside the app." = "यह ऐप के अंदर प्रदान किया गया एक पृष्ठ है।";
 "Certificate:" = "प्रमाणपत्र:";
-"This connection is not secure." = "यह कनेक्शन सुरक्षित नहीं है";
+"This connection is not secure." = "यह कनेक्शन सुरक्षित नहीं है।";
 
-// SSL/TLS certificate error
 "SSL/TLS certificate error" = "SSL/TLS प्रमाणपत्र त्रुटि";
-"A secure connection cannot be made because the certificate is not valid." = "सुरक्षित कनेक्शन नहीं बनाया जा सकता क्योंकि प्रमाणपत्र मान्य नहीं है।";
+"A secure connection cannot be made because the certificate is not valid." = "एक सुरक्षित कनेक्शन स्थापित नहीं किया जा सकता क्योंकि प्रमाणपत्र अमान्य है।";
 
-// Blocked content
 "Blocked content" = "अवरुद्ध सामग्री";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "इस सामग्री को अवरुद्ध कर दिया गया है। सेवा का उपयोग करने के लिए, कृपया ट्रैकर ब्लॉकर स्तर को समायोजित करें।";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "इस सामग्री को अवरुद्ध कर दिया गया है। सेवा का उपयोग करने के लिए कृपया ट्रैकर अवरोधक स्तर समायोजित करें।";
 
-// Clear All
 "Clear All" = "सभी साफ़ करें";
 
-// Contact Us
 "Contact Us" = "हमसे संपर्क करें";
-"Zoom In" = "ज़ूम इन";
-"Zoom Out" = "ज़ूम आउट";
+"Zoom In" = "ज़ूम इन करें";
+"Zoom Out" = "ज़ूम आउट करें";
 
-// Cookie
 "Cookie" = "कुकी";
-"The current web page uses web storage." = "वर्तमान वेब पेज वेब स्टोरेज का उपयोग करता है।";
-"The current web page does not use web storage." = "वर्तमान वेब पेज वेब स्टोरेज का उपयोग नहीं करता है।";
+"The current web page uses web storage." = "वर्तमान वेब पृष्ठ वेब स्टोरेज का उपयोग करता है।";
+"The current web page does not use web storage." = "वर्तमान वेब पृष्ठ वेब स्टोरेज का उपयोग नहीं करता है।";
 "Clear Cookies and Storage" = "कुकीज़ और स्टोरेज साफ़ करें";
 
-// Library
 "Library" = "लाइब्रेरी";
-"This is a library used in service development." = "यह सेवा विकास में उपयोग की जाने वाली लाइब्रेरी है।";
 
 "Ad Blocking" = "विज्ञापन अवरोधन";
 
-"Refresh after clearing cache" = "कैश साफ़ करने के बाद रीफ़्रेश करें";
+"Refresh after clearing cache" = "कैश साफ़ करने के बाद रीफ्रेश करें";
