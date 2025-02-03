@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchHistorySettings: Codable {
   var id: UUID
-  var searchText: String
+  var title: String
   var createDate: String
 }
 

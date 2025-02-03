@@ -26,6 +26,7 @@ struct MainWebView: NSViewRepresentable {
     var parent: MainWebView
     var locationManager: CLLocationManager?
     var cacheErrorURL: URL?
+    var reloadAttemptCount = 0
     var isCleanUpAction: Bool = false
     private var urlObservation: NSKeyValueObservation?
     
@@ -123,28 +124,6 @@ struct MainWebView: NSViewRepresentable {
         DispatchQueue.main.async {
           self.parent.tab.pageProgress = webView.estimatedProgress
         }
-        let errorHosts = ["blocked-content", "not-find-host", "not-connect-host", "occurred-ssl-error", "not-connect-internet", "unknown"]
-        if let webviewURL = webView.url, let host = webviewURL.host, webviewURL.scheme == "opacity", parent.tab.webviewIsError == false, errorHosts.contains(host) {
-          self.parent.tab.webviewIsError = true
-          if host == "blocked-content" {
-            self.parent.tab.webviewErrorType = .blockedContent
-          }
-          if host == "not-find-host" {
-            self.parent.tab.webviewErrorType = .notFindHost
-          }
-          if host == "not-connect-host" {
-            self.parent.tab.webviewErrorType = .notConnectHost
-          }
-          if host == "occurred-ssl-error" {
-            self.parent.tab.webviewErrorType = .occurredSSLError
-          }
-          if host == "not-connect-internet" {
-            self.parent.tab.webviewErrorType = .notConnectInternet
-          }
-          if host == "unknown" {
-            self.parent.tab.webviewErrorType = .unknown
-          }
-        }
       }
     }
     
@@ -189,16 +168,6 @@ struct MainWebView: NSViewRepresentable {
         }
       }
     }
-
-//    private func constructFaviconURL(from path: String, relativeTo currentURL: URL) -> URL {
-//      var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: true)!
-//      
-//      let splitHref = path.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
-//      components.path = String(splitHref[0])
-//      components.query = splitHref.count > 1 ? String(splitHref[1]) : nil
-//      
-//      return components.url!
-//    }
     
     private func getWebViewDocumentFavicon(webView: WKWebView, group: DispatchGroup? = nil) {
       group?.enter()
@@ -227,8 +196,6 @@ struct MainWebView: NSViewRepresentable {
           faviconURL = URL(string: cleanedHref)!
         } else if cleanedHref.hasPrefix("//") {
           faviconURL = URL(string: "https:\(cleanedHref)")!
-//        } else if cleanedHref.hasPrefix("/") {
-//          faviconURL = self.constructFaviconURL(from: cleanedHref, relativeTo: currentURL)
         } else {
           faviconURL = URL(string: cleanedHref, relativeTo: base)!
         }
@@ -264,6 +231,16 @@ struct MainWebView: NSViewRepresentable {
 //      print("webView.url: \(webView.url)")
 //      print("request.url: \(navigationAction.request.url)")
 //      print("----")
+      
+      if let url = navigationAction.request.url, let errorURL = self.cacheErrorURL, url.scheme == "opacity", url.host == "errors", self.reloadAttemptCount == 0 {
+        self.cacheErrorURL = nil
+        self.reloadAttemptCount = 1
+        print("error reload: \(errorURL)")
+        webView.load(URLRequest(url: errorURL))
+        decisionHandler(.cancel)
+        return
+      }
+      
       guard let requestURL = navigationAction.request.url else {
         decisionHandler(.cancel)
         return
@@ -332,58 +309,10 @@ struct MainWebView: NSViewRepresentable {
         historyUrlList.contains(item.url)
       }
       
-      if parent.tab.webviewIsError {
+      if parent.tab.webviewIsError { // error
         print("error page init script")
-        let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        let headTitle = parent.tab.printURL
-        let refreshBtn = NSLocalizedString("Refresh", comment: "")
-        var title = ""
-        var message = ""
-        
-        switch parent.tab.webviewErrorType {
-          case .notFindHost:
-            title = NSLocalizedString("Page not found", comment: "")
-            message = String(format: NSLocalizedString("The server IP address for \\'%@\\' could not be found.", comment: ""), parent.tab.printURL)
-            break
-          case .notConnectHost:
-            title = NSLocalizedString("Unable to connect to site", comment: "")
-            message = NSLocalizedString("Connection has been reset.", comment: "")
-            break
-          case .notConnectInternet:
-            title = NSLocalizedString("No internet connection", comment: "")
-            message = NSLocalizedString("There is no internet connection.", comment: "")
-            break
-          case .occurredSSLError:
-            title = NSLocalizedString("SSL/TLS certificate error", comment: "")
-            message = NSLocalizedString("A secure connection cannot be made because the certificate is not valid.", comment: "")
-            break
-          case .blockedContent:
-            title = NSLocalizedString("Blocked content", comment: "")
-            message = NSLocalizedString("This content is blocked. To use the service, you must lower or turn off tracker blocking.", comment: "")
-            break
-          case .unknown:
-            title = NSLocalizedString("Unknown error", comment: "")
-            message = NSLocalizedString("An unknown error occurred.", comment: "")
-            break
-          case .noError:
-            break
-        }
-        
-        if parent.tab.webviewErrorType != .noError {
-          webView.evaluateJavaScript("""
-          window.opacityPage.initPageData({
-            lang: '\(lang)',
-            headTitle: '\(headTitle)',
-            title: '\(title)',
-            refreshBtn: '\(refreshBtn)',
-            message: '\(message)'
-          })
-         """)
-        }
-        
-        parent.tab.webviewIsError = false
+        parent.isSinglePageUpdate = false
       } else {// not error
-        
         // Fetch Cookie
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
           var cacheCookies: [HTTPCookie] = []
@@ -415,7 +344,6 @@ struct MainWebView: NSViewRepresentable {
             }
           }
         }
-        
       }
       
       // Initial Geo Location
@@ -453,6 +381,9 @@ struct MainWebView: NSViewRepresentable {
           self.parent.tab.historySiteDataList.append(historySite)
         }
       }
+      
+      // 오류 페이지 리로드 무한 루프 방지
+      self.reloadAttemptCount = 0
     }
     
     private func downloadImage(from url: URL, completion: @escaping (Data?, Error?) -> Void) {
@@ -534,7 +465,13 @@ struct MainWebView: NSViewRepresentable {
       parent.tab.webviewIsError = true
       if let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL {
         self.cacheErrorURL = failingURL
+        self.reloadAttemptCount = 1
+        
+        let lang = Locale.current.language.languageCode?.identifier ?? "en"
         let errorURLBase64: Data = failingURL.absoluteString.data(using: .utf8)!
+        
+        parent.tab.inputURL = failingURL.absoluteString
+        parent.tab.printURL = failingURL.absoluteString
         
         switch nsError.code {
             //          case NSFileNoSuchFileError:
@@ -544,8 +481,7 @@ struct MainWebView: NSViewRepresentable {
             //          case NSFileReadCorruptFileError:
             //            // 손상된 파일
           case 104:
-            parent.tab.webviewErrorType = .blockedContent
-            if let schemeURL = URL(string:"opacity://blocked-content?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=blockedContent&lang=\(lang)&title=\(NSLocalizedString("Blocked content", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
@@ -553,38 +489,32 @@ struct MainWebView: NSViewRepresentable {
             print("Frame load interrupted by policy change: \(error.localizedDescription)")
             break
           case NSURLErrorCannotFindHost:
-            parent.tab.webviewErrorType = .notFindHost
-            if let schemeURL = URL(string:"opacity://not-find-host?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=notFindHost&lang=\(lang)&title=\(NSLocalizedString("Page not found", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
           case NSURLErrorCannotConnectToHost:
-            parent.tab.webviewErrorType = .notConnectHost
-            if let schemeURL = URL(string:"opacity://not-connect-host?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=notConnectHost&lang=\(lang)&title=\(NSLocalizedString("Unable to connect to site", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
           case NSURLErrorSecureConnectionFailed:
-            parent.tab.webviewErrorType = .occurredSSLError
-            if let schemeURL = URL(string:"opacity://occurred-ssl-error?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=occurredSSLError&lang=\(lang)&title=\(NSLocalizedString("SSL/TLS certificate error", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
           case NSURLErrorServerCertificateHasBadDate:
-            parent.tab.webviewErrorType = .occurredSSLError
-            if let schemeURL = URL(string:"opacity://occurred-ssl-error?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=occurredSSLError&lang=\(lang)&title=\(NSLocalizedString("SSL/TLS certificate error", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
           case NSURLErrorNotConnectedToInternet:
-            parent.tab.webviewErrorType = .notConnectInternet
-            if let schemeURL = URL(string:"opacity://not-connect-internet?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=notConnectInternet&lang=\(lang)&title=\(NSLocalizedString("No internet connection", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
             break
           default:
-            parent.tab.webviewErrorType = .unknown
-            if let schemeURL = URL(string:"opacity://unknown?url=\(errorURLBase64.base64EncodedString())") {
+            if let schemeURL = URL(string:"opacity://errors?type=unknown&lang=\(lang)&title=\(NSLocalizedString("Unknown error", comment: ""))") {
               webView.load(URLRequest(url: schemeURL))
             }
         }
@@ -959,7 +889,7 @@ struct MainWebView: NSViewRepresentable {
     }
     
     // SPA Update
-    if let url = webView.url, isSinglePageUpdate {
+    if let url = webView.url, !tab.webviewIsError, isSinglePageUpdate {
       DispatchQueue.main.async {
         isSinglePageUpdate = false
         tab.redirectURLByBrowser(url: url)
@@ -1007,7 +937,6 @@ struct MainWebView: NSViewRepresentable {
       return
     }
     
-    
     // Zoom In-Out
     if tab.isZoomDialog && tab.zoomLevel != tab.cacheZoomLevel {
       let jsString = "document.body.style.zoom = '\(tab.zoomLevel)'"
@@ -1042,14 +971,11 @@ struct MainWebView: NSViewRepresentable {
     
     // Load new requested webview URL
     if webView.url == nil || tab.isUpdateBySearch {
-//      DispatchQueue.main.async {
-//        tab.isLocationDialogIconByHost = false
-        tab.isUpdateBySearch = false
-        tab.webviewIsError = false
-        webView.stopLoading()
-        context.coordinator.checkedSSLCertificate(url: tab.originURL)
-        webView.load(URLRequest(url: tab.originURL))
-//      }
+      tab.isUpdateBySearch = false
+      tab.webviewIsError = false
+      webView.stopLoading()
+      context.coordinator.checkedSSLCertificate(url: tab.originURL)
+      webView.load(URLRequest(url: tab.originURL))
       return
     }
   }

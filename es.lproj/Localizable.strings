@@ -1,8 +1,6 @@
-// App
 "lang" = "es";
 "to quit, press ⌘Q again" = "para salir, presione ⌘Q nuevamente";
 
-// Menu
 "Opacity" = "Opacity";
 "About Opacity" = "Acerca de Opacity";
 "Quit Opacity" = "Salir de Opacity";
@@ -28,145 +26,119 @@
 "Minimize" = "Minimizar";
 "Zoom" = "Zoom";
 
-// Error Page
 "Page not found" = "Página no encontrada";
-"The server IP address for \\'%@\\' could not be found." = "No se pudo encontrar la dirección IP del servidor para \\'%@\\'";
+"The server IP address for \\'%@\\' could not be found." = "No se pudo encontrar la dirección IP del servidor de \\'%@\\'.";
 "Unable to connect to site" = "No se puede conectar al sitio";
-"Connection has been reset." = "La conexión se ha restablecido";
-"No internet connection" = "No hay conexión a internet";
-"There is no internet connection." = "No hay conexión a internet";
+"Connection has been reset." = "La conexión se ha restablecido.";
+"No internet connection" = "Sin conexión a Internet";
+"There is no internet connection." = "No hay conexión a Internet.";
 "Unknown error" = "Error desconocido";
-"An unknown error occurred." = "Ocurrió un error desconocido";
+"An unknown error occurred." = "Ocurrió un error desconocido.";
 
-// Refresh
 "Refresh" = "Actualizar";
 
-// Search
-"Search.." = "Buscar...";
+"Search.." = "Buscar..";
 
-// Location services
-"Location services are disabled in your Mac system settings" = "Los servicios de ubicación están desactivados en la configuración del sistema de su Mac";
+"Location services are disabled in your Mac system settings" = "Los servicios de ubicación están desactivados en la configuración del sistema de tu Mac.";
 "Open Settings" = "Abrir configuración";
 
-// Notification Permissions
 "Notification Permissions" = "Permisos de notificación";
-"Notification permission granted." = "Permiso de notificación concedido";
+"Notification permission granted." = "Permiso de notificación concedido.";
 
-// Notifications
-"Do you want to allow notifications from '%@'?" = "¿Desea permitir notificaciones de '%@'?";
+"Do you want to allow notifications from '%@'?" = "¿Quieres permitir notificaciones de '%@'?";
 "Allow" = "Permitir";
 "Deny" = "Denegar";
 
 "Allow '%@' to use your location?" = "¿Permitir que '%@' use tu ubicación?";
 
 "Notification" = "Notificación";
-"Location" = "Localización";
+"Location" = "Ubicación";
 
-// New Folder and Bookmark
 "New Folder" = "Nueva carpeta";
 "Bookmark" = "Marcador";
 
-// Change Name, Delete, Add Folder
 "Change Name" = "Cambiar nombre";
 "Delete" = "Eliminar";
-"Add Folder" = "Añadir carpeta";
+"Add Folder" = "Agregar carpeta";
 "Folder" = "Carpeta";
 "Name" = "Nombre";
 "Save" = "Guardar";
 
-// System, Light, Dark
 "System" = "Sistema";
 "Light" = "Claro";
 "Dark" = "Oscuro";
 
-// Time Periods
 "1 Day" = "1 día";
 "1 Week" = "1 semana";
 "1 Month" = "1 mes";
 "Indefinite" = "Indefinido";
 
-// Settings, General, Search History
 "Settings" = "Configuración";
 "General" = "General";
+"Language" = "Idioma";
 "Search History" = "Historial de búsqueda";
 "Visit History" = "Historial de visitas";
 "Permission" = "Permiso";
+"Permissions" = "Permisos";
 "Search Engine" = "Motor de búsqueda";
 "Screen Mode" = "Modo de pantalla";
-"History Data Retention Period" = "Periodo de retención de datos del historial";
-"View More" = "Ver más";
-"$n were selected." = "$n fueron seleccionados.";
-"Delete" = "Eliminar";
+"Retention Period" = "Período de retención";
+"Show More" = "Mostrar más";
 "Cancel" = "Cancelar";
-"An error occurred" = "Ocurrió un error";
 "Notification" = "Notificación";
 "allowed" = "permitido";
 "denied" = "denegado";
-"There is no domain with permissions set." = "No hay un dominio con permisos establecidos.";
+"There is no domain with permissions set." = "No hay dominios con permisos establecidos.";
 "There is no search history." = "No hay historial de búsqueda.";
-"There is no visit history." = "No hay historial de visitas";
+"There is no visit history." = "No hay historial de visitas.";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Bloquea anuncios y rastreadores innecesarios utilizando la lista de protección de rastreo de DuckDuckGo junto con reglas adicionales.";
+"English" = "Inglés";
+"Norwegian" = "Noruego";
+"Hindi" = "Hindi";
+"Korean" = "Coreano";
+"Chinese" = "Chino";
+"German" = "Alemán";
+"Japanese" = "Japonés";
+"Spanish" = "Español";
+"French" = "Francés";
+"The changes will take effect after restarting the app." = "Los cambios se aplicarán después de reiniciar la aplicación.";
 
-// Favorites, Frequent, Add Favorite
-"Favorite" = "Favorito";
-"Frequent" = "Frecuente";
-"Add Favorite" = "Añadir a favoritos";
+"Add Favorite" = "Agregar a favoritos";
+"Edit Favorite" = "Editar favorito";
 "Title" = "Título";
 "Address" = "Dirección";
-"Add" = "Añadir";
-"Please enter title or address" = "Por favor, introduzca el título o la dirección";
+"Add" = "Agregar";
 
-// Save Image As
-"Save Image As.." = "Guardar imagen como...";
+"Save Image As.." = "Guardar imagen como..";
 "Save As:" = "Guardar como:";
 
-// Tracker Blocking
 "Tracker Blocking" = "Bloqueo de rastreadores";
-
-"blocking-strong" = "Fuerte";
-"blocking-moderate" = "Moderado";
-"blocking-light" = "Ligero";
-"blocking-none" = "Ninguno";
-
-"blocking-strong-exp" = "Proporciona la máxima protección para los datos y las interacciones del usuario.";
-"blocking-moderate-exp" = "Proporciona un nivel razonable de protección mientras permite algo de rastreo si es necesario.";
-"blocking-light-exp" = "Proporciona una protección básica contra el rastreo sin interrumpir significativamente la experiencia del usuario.";
-"blocking-none-exp" = "No bloquea nada.";
-
-"blocking-change-text" = "Los cambios surtirán efecto a partir de las nuevas pestañas.";
 "Learn More" = "Más información";
 
-// Connection status
 "This connection is secure." = "Esta conexión es segura.";
 "This is a page provided inside the app." = "Esta es una página proporcionada dentro de la aplicación.";
 "Certificate:" = "Certificado:";
-"This connection is not secure." = "Esta conexión no es segura";
+"This connection is not secure." = "Esta conexión no es segura.";
 
-// SSL/TLS certificate error
 "SSL/TLS certificate error" = "Error de certificado SSL/TLS";
-"A secure connection cannot be made because the certificate is not valid." = "No se puede establecer una conexión segura porque el certificado no es válido";
+"A secure connection cannot be made because the certificate is not valid." = "No se puede establecer una conexión segura porque el certificado no es válido.";
 
-// Blocked content
 "Blocked content" = "Contenido bloqueado";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Este contenido ha sido bloqueado. Para utilizar el servicio, ajuste el nivel de bloqueo de rastreadores.";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "Este contenido ha sido bloqueado. Para utilizar el servicio, ajusta el nivel de bloqueo de rastreadores.";
 
-// Clear All
-"Clear All" = "Limpiar todo";
+"Clear All" = "Borrar todo";
 
-// Contact Us
-"Contact Us" = "Contáctenos";
+"Contact Us" = "Contáctanos";
 "Zoom In" = "Acercar";
 "Zoom Out" = "Alejar";
 
-// Cookie
 "Cookie" = "Cookie";
 "The current web page uses web storage." = "La página web actual usa almacenamiento web.";
 "The current web page does not use web storage." = "La página web actual no usa almacenamiento web.";
 "Clear Cookies and Storage" = "Borrar cookies y almacenamiento";
 
-// Library
-"Library" = "Library";
-"This is a library used in service development." = "Esta es una Library utilizada en el desarrollo del servicio.";
+"Library" = "Biblioteca";
 
 "Ad Blocking" = "Bloqueo de anuncios";
 
-"Refresh after clearing cache" = "Actualizar después de borrar la caché";
+"Refresh after clearing cache" = "Actualizar después de limpiar la caché";

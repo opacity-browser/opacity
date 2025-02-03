@@ -15,6 +15,8 @@ class SchemeHandler: NSObject, WKURLSchemeHandler {
     switch pathExtension.lowercased() {
     case "html":
       return "text/html"
+    case "css":
+      return "text/css"
     case "js":
       return "application/javascript"
     case "png":

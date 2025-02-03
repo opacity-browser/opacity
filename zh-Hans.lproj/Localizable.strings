@@ -1,11 +1,9 @@
-// App
 "lang" = "zh";
 "to quit, press ⌘Q again" = "要退出，请再次按⌘Q";
 
-// Menu
 "Opacity" = "Opacity";
-"About Opacity" = "Opacity 信息";
-"Quit Opacity" = "Opacity 结尾";
+"About Opacity" = "关于 Opacity";
+"Quit Opacity" = "退出 Opacity";
 "File" = "文件";
 "New Window" = "新建窗口";
 "New Tab" = "新建标签页";
@@ -28,45 +26,37 @@
 "Minimize" = "最小化";
 "Zoom" = "缩放";
 
-// Error Page
 "Page not found" = "页面未找到";
-"The server IP address for \\'%@\\' could not be found." = "无法找到\\'%@\\'的服务器IP地址。";
+"The server IP address for \\'%@\\' could not be found." = "无法找到 '%@' 的服务器 IP 地址。";
 "Unable to connect to site" = "无法连接到网站";
 "Connection has been reset." = "连接已重置。";
-"No internet connection" = "没有互联网连接";
-"There is no internet connection." = "没有互联网连接。";
+"No internet connection" = "无网络连接";
+"There is no internet connection." = "没有网络连接。";
 "Unknown error" = "未知错误";
 "An unknown error occurred." = "发生未知错误。";
 
-// Refresh
 "Refresh" = "刷新";
 
-// Search
-"Search.." = "搜索...";
+"Search.." = "搜索..";
 
-// Location services
-"Location services are disabled in your Mac system settings" = "在Mac系统设置中禁用了定位服务";
+"Location services are disabled in your Mac system settings" = "您的 Mac 系统设置中已禁用位置服务。";
 "Open Settings" = "打开设置";
 
-// Notification Permissions
 "Notification Permissions" = "通知权限";
 "Notification permission granted." = "已授予通知权限。";
 
-// Notifications
-"Do you want to allow notifications from '%@'?" = "您要允许'%@'的通知吗？";
+"Do you want to allow notifications from '%@'?" = "是否允许 '%@' 发送通知？";
 "Allow" = "允许";
 "Deny" = "拒绝";
 
-"Allow '%@' to use your location?" = "允许'%@'使用您的位置吗？";
+"Allow '%@' to use your location?" = "是否允许 '%@' 访问您的位置？";
 
 "Notification" = "通知";
 "Location" = "位置";
 
-// New Folder and Bookmark
 "New Folder" = "新建文件夹";
 "Bookmark" = "书签";
 
-// Change Name, Delete, Add Folder
 "Change Name" = "更改名称";
 "Delete" = "删除";
 "Add Folder" = "添加文件夹";
@@ -74,98 +64,80 @@
 "Name" = "名称";
 "Save" = "保存";
 
-// System, Light, Dark
 "System" = "系统";
 "Light" = "浅色";
 "Dark" = "深色";
 
-// Time Periods
-"1 Day" = "1天";
-"1 Week" = "1周";
-"1 Month" = "1个月";
+"1 Day" = "1 天";
+"1 Week" = "1 周";
+"1 Month" = "1 个月";
 "Indefinite" = "无限期";
 
-// Settings, General, Search History
 "Settings" = "设置";
 "General" = "通用";
+"Language" = "语言";
 "Search History" = "搜索历史";
 "Visit History" = "访问历史";
 "Permission" = "权限";
+"Permissions" = "权限管理";
 "Search Engine" = "搜索引擎";
 "Screen Mode" = "屏幕模式";
-"History Data Retention Period" = "历史数据保留期";
-"View More" = "查看更多";
-"$n were selected." = "已选择$n。";
-"Delete" = "删除";
+"Retention Period" = "保留期限";
+"Show More" = "显示更多";
 "Cancel" = "取消";
-"An error occurred" = "发生错误";
 "Notification" = "通知";
 "allowed" = "已允许";
 "denied" = "已拒绝";
 "There is no domain with permissions set." = "没有设置权限的域名。";
 "There is no search history." = "没有搜索历史。";
 "There is no visit history." = "没有访问历史。";
+"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "使用 DuckDuckGo 的追踪保护列表和附加规则阻止不必要的广告和追踪器。";
+"English" = "英语";
+"Norwegian" = "挪威语";
+"Hindi" = "印地语";
+"Korean" = "韩语";
+"Chinese" = "中文";
+"German" = "德语";
+"Japanese" = "日语";
+"Spanish" = "西班牙语";
+"French" = "法语";
+"The changes will take effect after restarting the app." = "更改将在重新启动应用后生效。";
 
-// Favorites, Frequent, Add Favorite
-"Favorite" = "收藏";
-"Frequent" = "常用";
-"Add Favorite" = "添加到收藏";
+"Add Favorite" = "添加收藏";
+"Edit Favorite" = "编辑收藏";
 "Title" = "标题";
 "Address" = "地址";
 "Add" = "添加";
-"Please enter title or address" = "请输入标题或地址";
 
-// Save Image As
-"Save Image As.." = "图片另存为...";
-"Save As:" = "另存为：";
+"Save Image As.." = "图片另存为..";
+"Save As:" = "另存为:";
 
-// Tracker Blocking
-"Tracker Blocking" = "跟踪器阻止";
-
-"blocking-strong" = "强";
-"blocking-moderate" = "中";
-"blocking-light" = "弱";
-"blocking-none" = "无";
-
-"blocking-strong-exp" = "为用户数据和互动提供最大保护。";
-"blocking-moderate-exp" = "在必要时允许某些跟踪的同时提供合理的保护级别。";
-"blocking-light-exp" = "在不显著影响用户体验的情况下提供基本的跟踪保护。";
-"blocking-none-exp" = "它不阻止任何内容。";
-
-"blocking-change-text" = "更改将在新标签页中生效。";
+"Tracker Blocking" = "追踪拦截";
 "Learn More" = "了解更多";
 
-// Connection status
 "This connection is secure." = "此连接是安全的。";
-"This is a page provided inside the app." = "这是应用内提供的页面。";
-"Certificate:" = "证书证书:";
-"This connection is not secure." = "此连接不安全";
+"This is a page provided inside the app." = "此页面由应用程序提供。";
+"Certificate:" = "证书:";
+"This connection is not secure." = "此连接不安全。";
 
-// SSL/TLS certificate error
-"SSL/TLS certificate error" = "SSL/TLS证书错误";
-"A secure connection cannot be made because the certificate is not valid." = "由于证书无效，无法建立安全连接。";
+"SSL/TLS certificate error" = "SSL/TLS 证书错误";
+"A secure connection cannot be made because the certificate is not valid." = "无法建立安全连接，因为证书无效。";
 
-// Blocked content
-"Blocked content" = "被阻止的内容";
-"This content has been blocked. To use the service, please adjust the tracker blocker level." = "此内容已被阻止。要使用此服务，请调整跟踪器阻止级别。";
+"Blocked content" = "被拦截的内容";
+"This content has been blocked. To use the service, please adjust the tracker blocker level." = "此内容已被拦截。要使用此服务，请调整追踪拦截级别。";
 
-// Clear All
 "Clear All" = "清除所有";
 
-// Contact Us
 "Contact Us" = "联系我们";
 "Zoom In" = "放大";
 "Zoom Out" = "缩小";
 
-// Cookie
 "Cookie" = "Cookie";
-"The current web page uses web storage." = "当前网页使用了网络存储。";
-"The current web page does not use web storage." = "当前网页没有使用网络存储。";
-"Clear Cookies and Storage" = "清除Cookies和存储";
+"The current web page uses web storage." = "当前网页使用了 Web 存储。";
+"The current web page does not use web storage." = "当前网页未使用 Web 存储。";
+"Clear Cookies and Storage" = "清除 Cookie 和存储";
 
-// Library
 "Library" = "库";
-"This is a library used in service development." = "这是用于服务开发的库。";
 
 "Ad Blocking" = "广告拦截";
 

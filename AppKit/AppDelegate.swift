@@ -370,7 +370,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
     let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
 
     let contentView = HStack(spacing: 0) {
-      Text(NSLocalizedString("to quit, press ⌘Q agin", comment: ""))
+      Text(NSLocalizedString("to quit, press ⌘Q again", comment: ""))
         .font(.system(size: 30))
         .bold()
         .foregroundStyle(.white)
