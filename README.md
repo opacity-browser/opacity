@@ -4,7 +4,6 @@ Opacity Browser is a WebKit-based web browser application for macOS.
 We operate as a non-profit organization, prioritizing privacy and focusing solely on providing a smooth and convenient web browsing experience.
 
 ![screenshot](/.github/images/screenshot.png)
-![screenshot](/.github/images/screenshot-2.png)
 
 ## About
 
