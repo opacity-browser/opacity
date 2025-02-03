@@ -202,6 +202,21 @@ struct SearchAutoCompleteBox: View {
               }
               return .ignored
             }
+            .onKeyPress(.tab) {
+              if let choiceIndex = tab.autoCompleteIndex, (tab.autoCompleteList.count + tab.autoCompleteVisitList.count) > 0 {
+                let targetString = choiceIndex + 1 > tab.autoCompleteList.count
+                ? tab.autoCompleteVisitList[choiceIndex - tab.autoCompleteList.count].url
+                : tab.autoCompleteList[choiceIndex].searchText
+                
+                if targetString != tab.inputURL {
+                  DispatchQueue.main.async {
+                    tab.inputURL = targetString
+                  }
+                  return .handled
+                }
+              }
+              return .ignored
+            }
         }
         
         if tab.isLocationDialogIconByHost {
