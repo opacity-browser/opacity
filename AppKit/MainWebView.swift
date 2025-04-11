@@ -739,7 +739,7 @@ struct MainWebView: NSViewRepresentable {
       switch locationManager!.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
           if let url = webview.url {
-            if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+            if let locationPermition = PermissionManager.getLocationPermissionByURL(url: url) {
               if locationPermition.isDenied == false {
                 locationManager!.startUpdatingLocation()
               }
@@ -770,7 +770,7 @@ struct MainWebView: NSViewRepresentable {
           DispatchQueue.main.async {
             self.parent.tab.isLocationDialogIcon = false
           }
-          if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+          if let locationPermition = PermissionManager.getLocationPermissionByURL(url: url) {
             if locationPermition.isDenied == false {
               locationManager.startUpdatingLocation()
               break
@@ -797,7 +797,7 @@ struct MainWebView: NSViewRepresentable {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
       print("didUpdateLocations")
       guard let location = locations.first, let webview = self.parent.tab.webview, let url = webview.url, let locationManager = locationManager else { return }
-      if let locationPermition = PermissionManager.getLocationPermisionByURL(url: url) {
+      if let locationPermition = PermissionManager.getLocationPermissionByURL(url: url) {
         if locationPermition.isDenied == false {
           print("allow geo location")
           let script = """

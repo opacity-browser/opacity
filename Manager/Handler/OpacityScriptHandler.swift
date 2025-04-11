@@ -173,7 +173,7 @@ final class OpacityScriptHandler {
   
   func deletePermissions(_ permissionId: String) -> String? {
     if let uuid = UUID(uuidString: permissionId) {
-      PermissionManager.deletePermisionById(uuid)
+      PermissionManager.deletePermissionById(uuid)
     }
     return """
       window.opacityResponse.deletePermissions({
@@ -482,7 +482,7 @@ final class OpacityScriptHandler {
   }
   
   func getLocationPermissions() -> String? {
-    if let locaitonPermitions = PermissionManager.getLocationPermisions() {
+    if let locaitonPermitions = PermissionManager.getLocationPermissions() {
       var jsonDataList: [PermissionItem] = []
       for noti in locaitonPermitions {
         jsonDataList.append(PermissionItem(id: noti.id, domain: noti.domain, permission: noti.permission, isDenied: noti.isDenied))
@@ -490,24 +490,24 @@ final class OpacityScriptHandler {
       do {
         let jsonString = try encodeJSON(from: jsonDataList)
         return """
-          window.opacityResponse.getLocationPermisions({
+          window.opacityResponse.getLocationPermissions({
             data: \(jsonString)
           })
         """
       } catch {
-        print("JSONEncodeError getLocationPermisions")
+        print("JSONEncodeError getLocationPermissions")
       }
     }
 
     return """
-      window.opacityResponse.getLocationPermisions({
+      window.opacityResponse.getLocationPermissions({
         data: "error"
       })
     """
   }
   
   func getNotificationPermissions() -> String? {
-    if let notificationPermitions = PermissionManager.getNotificationPermisions() {
+    if let notificationPermitions = PermissionManager.getNotificationPermissions() {
       var jsonDataList: [PermissionItem] = []
       for noti in notificationPermitions {
         jsonDataList.append(PermissionItem(id: noti.id, domain: noti.domain, permission: noti.permission, isDenied: noti.isDenied))
@@ -515,17 +515,17 @@ final class OpacityScriptHandler {
       do {
         let jsonString = try encodeJSON(from: jsonDataList)
         return """
-          window.opacityResponse.getNotificationPermisions({
+          window.opacityResponse.getNotificationPermissions({
             data: \(jsonString)
           })
         """
       } catch {
-        print("JSONEncodeError getNotificationPermisions")
+        print("JSONEncodeError getNotificationPermissions")
       }
     }
 
     return """
-      window.opacityResponse.getNotificationPermisions({
+      window.opacityResponse.getNotificationPermissions({
         data: "error"
       })
     """

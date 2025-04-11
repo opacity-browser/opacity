@@ -10,52 +10,52 @@ import SwiftData
 
 class PermissionManager {
   
-  @MainActor static func getLocationPermisionByURL(url: URL) -> DomainPermission? {
+  @MainActor static func getLocationPermissionByURL(url: URL) -> DomainPermission? {
     if let host = url.host {
       let rawType = DomainPermissionType.geoLocation.rawValue
       let descriptor = FetchDescriptor<DomainPermission>(
         predicate: #Predicate { $0.permission == rawType && $0.domain == host }
       )
       do {
-        if let locaitonPermision = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
-          return locaitonPermision
+        if let locaitonPermission = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor).first {
+          return locaitonPermission
         }
       } catch {
-        print("getLocationPermisions error")
+        print("getLocationPermissions error")
       }
     }
     return nil
   }
   
-  @MainActor static func getLocationPermisions() -> [DomainPermission]? {
+  @MainActor static func getLocationPermissions() -> [DomainPermission]? {
     let rawType = DomainPermissionType.geoLocation.rawValue
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.permission == rawType }
     )
     do {
-      let notificationPermisions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
-      return notificationPermisions
+      let notificationPermissions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return notificationPermissions
     } catch {
-      print("getLocationPermisions error")
+      print("getLocationPermissions error")
     }
     return nil
   }
   
-  @MainActor static func getNotificationPermisions() -> [DomainPermission]? {
+  @MainActor static func getNotificationPermissions() -> [DomainPermission]? {
     let rawType = DomainPermissionType.notification.rawValue
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.permission == rawType }
     )
     do {
-      let notificationPermisions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
-      return notificationPermisions
+      let notificationPermissions = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return notificationPermissions
     } catch {
-      print("getNotificationPermisions error")
+      print("getNotificationPermissions error")
     }
     return nil
   }
   
-  @MainActor static func deletePermisionById(_ id: UUID) {
+  @MainActor static func deletePermissionById(_ id: UUID) {
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.id == id }
     )
@@ -69,7 +69,7 @@ class PermissionManager {
     }
   }
   
-  @MainActor static func updatePermisionById(id: UUID, isDenied: Bool) {
+  @MainActor static func updatePermissionById(id: UUID, isDenied: Bool) {
     let descriptor = FetchDescriptor<DomainPermission>(
       predicate: #Predicate { $0.id == id }
     )
