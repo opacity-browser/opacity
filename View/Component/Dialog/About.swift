@@ -22,7 +22,7 @@ struct About: View {
         Text("version \(version)")
           .font(.system(size: 11))
       }
-      Text("© 2024 Opacity Browser.")
+      Text("© 2025 Opacity Browser.")
         .font(.system(size: 11))
         .padding(.top, 7)
     }

@@ -686,12 +686,11 @@ final class OpacityScriptHandler {
   }
   
   func getLanguage() -> String? {
-    guard let currentLanguage = Locale.preferredLanguages.first else { return nil }
-    let languageCode = currentLanguage.components(separatedBy: "-").first ?? currentLanguage
+    let lang = Locale.current.language.languageCode?.identifier ?? "en"
     
     return """
       window.opacityResponse.getLanguage({
-        data: "\(languageCode)"
+        data: "\(lang)"
       })
     """
   }
