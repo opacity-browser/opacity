@@ -10,7 +10,6 @@ import SwiftData
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableObject {
   static var shared: AppDelegate!
-  private var isTerminating = false
   
   var prevWindow: NSWindow?
   var windowMap: [UUID:NSWindow] = [:]
@@ -253,12 +252,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
   }
   
   @objc func exitApplication() {
-    if self.isTerminating {
-      NSApplication.shared.terminate(self)
-    } else {
-      exitWindow()
-      self.isTerminating = true
-    }
+    NSApplication.shared.terminate(self)
   }
   
   @objc func newWindow() {
@@ -363,44 +357,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
       createWindow()
     }
     return false
-  }
-  
-  private func exitWindow() {
-    let windowRect = NSRect(x: 0, y: 0, width: 380, height: 60)
-    let exitWindow = NSWindow(contentRect: windowRect, styleMask: [], backing: .buffered, defer: false)
-
-    let contentView = HStack(spacing: 0) {
-      Text(NSLocalizedString("to quit, press ⌘Q again", comment: ""))
-        .font(.system(size: 30))
-        .bold()
-        .foregroundStyle(.white)
-    }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .padding(.vertical, 10)
-      .padding(.horizontal, 20)
-      .background(.black.opacity(0.4))
-      .clipShape(RoundedRectangle(cornerRadius: 10))
-    
-    let newContentSize = NSHostingController(rootView: contentView).view.fittingSize
-    exitWindow.setContentSize(newContentSize)
-    
-    exitWindow.contentView = NSHostingController(rootView: contentView).view
-    exitWindow.center()
-    exitWindow.isOpaque = false
-    exitWindow.backgroundColor = NSColor.black.withAlphaComponent(0)
-    exitWindow.titlebarAppearsTransparent = true
-    exitWindow.titleVisibility = .hidden
-    exitWindow.styleMask.insert(.fullSizeContentView)
-
-    exitWindow.makeKeyAndOrderFront(nil)
-    
-    let windowController = NSWindowController(window: exitWindow)
-    windowController.showWindow(self)
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-      exitWindow.close()
-      self.isTerminating = false
-    }
   }
   
   private func aboutWindow() {
