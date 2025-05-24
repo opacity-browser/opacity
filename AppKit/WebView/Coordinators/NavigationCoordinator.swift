@@ -51,16 +51,22 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
       parent.tab.title = title
       
       if let webviewURL = webView.url,
-         let scheme = webviewURL.scheme,
-         let host = webviewURL.host,
-         scheme == "opacity" {
-        switch host {
-        case "settings":
-          parent.tab.title = NSLocalizedString("Settings", comment: "")
-        case "new-tab":
-          parent.tab.title = NSLocalizedString("New Tab", comment: "")
-        default:
-          break
+       let scheme = webviewURL.scheme,
+       let host = webviewURL.host {
+        
+        if let historySite = parent.tab.historySiteList.first(where: { $0.url == webviewURL }) {
+          historySite.title = title
+        }
+        
+        if scheme == "opacity" {
+          switch host {
+            case "settings":
+              parent.tab.title = NSLocalizedString("Settings", comment: "")
+            case "new-tab":
+              parent.tab.title = NSLocalizedString("New Tab", comment: "")
+            default:
+              break
+          }
         }
       }
     }
@@ -116,6 +122,18 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     
     // SPA 업데이트 처리
     if let url = webView.url, !parent.tab.webviewIsError, shouldTriggerSinglePageUpdate {
+      self.getWebViewDocumentTitle(webView: webView)
+      self.getWebViewFavicon(webView: webView) { faviconURL in
+        let historySite = HistorySite(title: self.parent.tab.title, url: url)
+        if let faviconURL = faviconURL {
+          historySite.loadFavicon(url: faviconURL)
+        }
+        self.parent.tab.historySiteList = self.parent.tab.historySiteList.filter { item in
+          item.url != url
+        }
+        self.parent.tab.historySiteList.append(historySite)
+      }
+      
       DispatchQueue.main.async {
         self.parent.tab.redirectURLByBrowser(url: url)
       }
@@ -312,6 +330,9 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     parent.tab.historySiteDataList = parent.tab.historySiteDataList.filter { item in
       historyUrlList.contains(item.url)
     }
+    parent.tab.historySiteList = parent.tab.historySiteList.filter { item in
+      historyUrlList.contains(item.url)
+    }
   }
   
   private func collectPageData(webView: WKWebView) {
@@ -380,6 +401,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
           }
         }
         self.parent.tab.historySiteDataList.append(historySite)
+        self.parent.tab.historySiteList.append(historySite)
       }
     }
   }
@@ -409,9 +431,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     }
   }
   
-  private func getWebViewDocumentFavicon(webView: WKWebView, group: DispatchGroup? = nil) {
-    group?.enter()
-    
+  private func getWebViewFavicon(webView: WKWebView, completion: @escaping (URL?) -> Void) {
     webView.evaluateJavaScript("""
       (function() {
         var link = document.querySelector("link[rel*='icon']");
@@ -419,32 +439,49 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         var href = link ? link.getAttribute("href") : "";
         return { baseURI: baseURI, href: href };
       })()
-   """) { (response, error) in
+    """) { (response, error) in
       guard let result = response as? [String: String],
-            let baseURI = result["baseURI"],
-            let href = result["href"],
-            let cleanedHref = href.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-            let base = URL(string: baseURI),
-            !cleanedHref.isEmpty else {
-        self.handleDefaultFavicon(for: webView.url)
-        group?.leave()
+          let baseURI = result["baseURI"],
+          let href = result["href"],
+          let base = URL(string: baseURI),
+          !href.isEmpty else {
+        completion(self.getDefaultFaviconURL(from: webView))
         return
       }
       
-      let faviconURL: URL
-      if cleanedHref.hasPrefix("http") {
-        faviconURL = URL(string: cleanedHref)!
-      } else if cleanedHref.hasPrefix("//") {
-        faviconURL = URL(string: "https:\(cleanedHref)")!
-      } else {
-        faviconURL = URL(string: cleanedHref, relativeTo: base)!
-      }
+      let faviconURL = self.constructFaviconURL(href: href, baseURL: base)
+      completion(faviconURL)
+    }
+  }
+
+  private func getDefaultFaviconURL(from webView: WKWebView) -> URL? {
+      guard let webViewURL = webView.url,
+        let scheme = webViewURL.scheme,
+        let host = webViewURL.host else { return nil }
       
+    return URL(string: "\(scheme)://\(host)/favicon.ico")
+  }
+
+  private func constructFaviconURL(href: String, baseURL: URL) -> URL? {
+    let cleanedHref = href.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    if cleanedHref.hasPrefix("http://") || cleanedHref.hasPrefix("https://") {
+      return URL(string: cleanedHref)
+    } else if cleanedHref.hasPrefix("//") {
+      return URL(string: "https:\(cleanedHref)")
+    } else {
+      return URL(string: cleanedHref, relativeTo: baseURL)
+    }
+  }
+  
+  private func getWebViewDocumentFavicon(webView: WKWebView, group: DispatchGroup? = nil) {
+    group?.enter()
+    
+    self.getWebViewFavicon(webView: webView) { faviconURL in
       DispatchQueue.main.async {
         self.parent.tab.faviconURL = faviconURL
         self.parent.tab.loadFavicon(url: faviconURL)
       }
-      
       group?.leave()
     }
   }

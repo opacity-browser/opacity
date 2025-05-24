@@ -43,6 +43,7 @@ final class Tab: ObservableObject {
   @Published var isBack: Bool = false
   @Published var isForward: Bool = false
   
+  @Published var historySiteList: [HistorySite] = []
   @Published var historySiteDataList: [HistorySite] = []
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
