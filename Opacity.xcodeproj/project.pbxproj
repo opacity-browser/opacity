@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -101,7 +101,6 @@
 		A188C9492B4ACECD00B39BC8 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9482B4ACECD00B39BC8 /* Navigation.swift */; };
 		A188C9512B4D3D6000B39BC8 /* ExpandList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9502B4D3D6000B39BC8 /* ExpandList.swift */; };
 		A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C95A2B4EBB8D00B39BC8 /* StringURL.swift */; };
-		A188C95D2B4EBBC700B39BC8 /* MainWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */; };
 		A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9632B4EBE9800B39BC8 /* URL.swift */; };
 		A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9652B4ECBB800B39BC8 /* MainView.swift */; };
 		A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A188C9672B4ED3F600B39BC8 /* Browser.swift */; };
@@ -221,7 +220,6 @@
 		A188C9482B4ACECD00B39BC8 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		A188C9502B4D3D6000B39BC8 /* ExpandList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandList.swift; sourceTree = "<group>"; };
 		A188C95A2B4EBB8D00B39BC8 /* StringURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringURL.swift; sourceTree = "<group>"; };
-		A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWebView.swift; sourceTree = "<group>"; };
 		A188C9632B4EBE9800B39BC8 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		A188C9652B4ECBB800B39BC8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A188C9672B4ED3F600B39BC8 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
@@ -248,6 +246,10 @@
 		A1F814C62BEBCA7B009F30B4 /* HistoryStopBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStopBtn.swift; sourceTree = "<group>"; };
 		A1F814C82BED59FB009F30B4 /* ZoomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A198912E2DE1E6DB00DD07DA /* WebView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WebView; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A16920052B2FA82100F8B4C0 /* Frameworks */ = {
@@ -357,10 +359,10 @@
 		A15D54192B56B3F4007020CA /* AppKit */ = {
 			isa = PBXGroup;
 			children = (
+				A198912E2DE1E6DB00DD07DA /* WebView */,
 				A1E7A6A92CB8EDE900799ADD /* OpacityWindowDelegate.swift */,
 				A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */,
 				A15D541A2B56B40F007020CA /* AppDelegate.swift */,
-				A188C95C2B4EBBC700B39BC8 /* MainWebView.swift */,
 				A15D54222B590B4D007020CA /* VisualEffectNSView.swift */,
 				A14246172B71F1A80062C516 /* TabItemNSView.swift */,
 				A14246212B7C64FE0062C516 /* TabDragAreaNSView.swift */,
@@ -567,6 +569,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				A198912E2DE1E6DB00DD07DA /* WebView */,
+			);
 			name = Opacity;
 			packageProductDependencies = (
 				A1EB7F172C4B9D48006C9B90 /* ASN1Decoder */,
@@ -721,7 +726,6 @@
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */,
-				A188C95D2B4EBBC700B39BC8 /* MainWebView.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
