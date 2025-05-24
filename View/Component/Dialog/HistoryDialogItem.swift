@@ -18,7 +18,7 @@ struct HistoryDialogItem: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 0) {
-        if let siteData = tab.historySiteDataList.first(where: { $0.url == item.url }) {
+        if let siteData = tab.historySiteDataList.first(where: { $0.url.mainDomain == item.url.mainDomain }) {
           if let favicon = siteData.favicon {
             HStack(spacing: 0) {
               VStack(spacing: 0) {

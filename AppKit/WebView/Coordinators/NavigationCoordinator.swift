@@ -17,6 +17,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   var reloadAttemptCount = 0
   var isCleanUpAction: Bool = false
   private var urlObservation: NSKeyValueObservation?
+  private var titleObservation: NSKeyValueObservation?
   
   // isSinglePageUpdate 상태를 내부에서 관리
   private var shouldTriggerSinglePageUpdate: Bool = false
@@ -36,7 +37,33 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         self?.handleURLChange(newURL)
       }
     }
+    titleObservation = webview.observe(\.title, options: .new) { [weak self] webView, change in
+      if let newTitle = change.newValue, let title = newTitle, !title.isEmpty {
+        DispatchQueue.main.async {
+          print("Title changed via KVO: \(title)")
+          self?.updateTabTitle(webView: webView, title: title)
+        }
+      }
+    }
   }
+  
+  private func updateTabTitle(webView: WKWebView, title: String) {
+      parent.tab.title = title
+      
+      if let webviewURL = webView.url,
+         let scheme = webviewURL.scheme,
+         let host = webviewURL.host,
+         scheme == "opacity" {
+        switch host {
+        case "settings":
+          parent.tab.title = NSLocalizedString("Settings", comment: "")
+        case "new-tab":
+          parent.tab.title = NSLocalizedString("New Tab", comment: "")
+        default:
+          break
+        }
+      }
+    }
   
   func cleanup() {
     guard let webview = parent.tab.webview else { return }
