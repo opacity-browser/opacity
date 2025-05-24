@@ -94,7 +94,6 @@ class JavaScriptCoordinator: NSObject, WKUIDelegate {
     if let customAction = (webView as? OpacityWebView)?.contextualMenuAction,
        let requestURL = navigationAction.request.url {
       if customAction == .downloadImage {
-        print("A")
         downloadImage(from: requestURL)
         return nil
       }
@@ -110,17 +109,15 @@ class JavaScriptCoordinator: NSObject, WKUIDelegate {
   }
   
   private func downloadImage(from url: URL) {
-    let task = URLSession.shared.dataTask(with: url) { data, error, arg  in
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, error == nil else { return }
-      print("B")
       DispatchQueue.main.async {
         let savePanel = NSSavePanel()
-        savePanel.allowedContentTypes = [.png, .jpeg, .bmp, .gif]
+        savePanel.allowedContentTypes = [.png, .jpeg, .bmp, .gif, .tiff, .webP]
         savePanel.canCreateDirectories = true
         savePanel.isExtensionHidden = false
         savePanel.title = "Save As"
         savePanel.nameFieldLabel = NSLocalizedString("Save As:", comment: "")
-        print("C")
         if url.lastPathComponent != "" {
           savePanel.nameFieldStringValue = url.lastPathComponent
         }
