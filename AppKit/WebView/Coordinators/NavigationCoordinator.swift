@@ -432,33 +432,148 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   }
   
   private func getWebViewFavicon(webView: WKWebView, completion: @escaping (URL?) -> Void) {
-    webView.evaluateJavaScript("""
-      (function() {
-        var link = document.querySelector("link[rel*='icon']");
-        var baseURI = document.baseURI;
-        var href = link ? link.getAttribute("href") : "";
-        return { baseURI: baseURI, href: href };
-      })()
-    """) { (response, error) in
-      guard let result = response as? [String: String],
-          let baseURI = result["baseURI"],
-          let href = result["href"],
-          let base = URL(string: baseURI),
-          !href.isEmpty else {
-        completion(self.getDefaultFaviconURL(from: webView))
-        return
+      webView.evaluateJavaScript("""
+        (function() {
+          var baseURI = document.baseURI;
+          var icons = [];
+          
+          // 다양한 favicon 링크 태그들 수집
+          var linkTags = document.querySelectorAll('link[rel*="icon"]');
+          for (var i = 0; i < linkTags.length; i++) {
+            var href = linkTags[i].getAttribute('href');
+            var sizes = linkTags[i].getAttribute('sizes');
+            var type = linkTags[i].getAttribute('type');
+            var rel = linkTags[i].getAttribute('rel');
+            
+            if (href) {
+              icons.push({
+                href: href,
+                sizes: sizes || '',
+                type: type || '',
+                rel: rel || ''
+              });
+            }
+          }
+          
+          return {
+            baseURI: baseURI,
+            icons: icons
+          };
+        })()
+      """) { (response, error) in
+        guard let result = response as? [String: Any],
+              let baseURI = result["baseURI"] as? String,
+              let icons = result["icons"] as? [[String: String]],
+              let base = URL(string: baseURI) else {
+          completion(self.getDefaultFaviconURL(from: webView))
+          return
+        }
+        
+        // 최적의 favicon 선택
+        let bestIconHref = self.selectBestFavicon(from: icons)
+        
+        if let href = bestIconHref {
+          let faviconURL = self.constructFaviconURL(href: href, baseURL: base)
+          completion(faviconURL)
+        } else {
+          completion(self.getDefaultFaviconURL(from: webView))
+        }
+      }
+  }
+
+  private func selectBestFavicon(from icons: [[String: String]]) -> String? {
+    guard !icons.isEmpty else { return nil }
+    
+    // apple-touch-icon이 아닌 아이콘들만 필터링
+    let nonAppleIcons = icons.filter { icon in
+      let rel = icon["rel"] ?? ""
+      return !rel.contains("apple-touch-icon")
+    }
+    
+    // 1순위: 32x32 크기 (apple-touch-icon 제외)
+    if let icon32 = nonAppleIcons.first(where: { icon in
+      let sizes = icon["sizes"] ?? ""
+      return sizes.contains("32x32") || sizes.contains("32")
+    }) {
+      return icon32["href"]
+    }
+    
+    // 2순위: 크기가 명시된 것 중 32에 가장 가까운 것 (apple-touch-icon 제외)
+    let iconsWithSize = nonAppleIcons.compactMap { icon -> (String, Int)? in
+      guard let href = icon["href"],
+            let size = extractLargestIconSize(icon["sizes"] ?? "") else {
+        return nil
+      }
+      return (href, size)
+    }
+    
+    if !iconsWithSize.isEmpty {
+      // 32보다 크거나 같은 것 중 가장 작은 것
+      let preferredIcons = iconsWithSize.filter { $0.1 >= 32 }
+      if let closest = preferredIcons.min(by: { $0.1 < $1.1 }) {
+        return closest.0
       }
       
-      let faviconURL = self.constructFaviconURL(href: href, baseURL: base)
-      completion(faviconURL)
+      // 32보다 작은 것 중 가장 큰 것
+      if let largest = iconsWithSize.max(by: { $0.1 < $1.1 }) {
+        return largest.0
+      }
     }
+    
+    // 3순위: PNG 타입 (apple-touch-icon 제외)
+    if let pngIcon = nonAppleIcons.first(where: { icon in
+      let type = icon["type"] ?? ""
+      return type.contains("png")
+    }) {
+      return pngIcon["href"]
+    }
+    
+    // 4순위: SVG 타입 (apple-touch-icon 제외)
+    if let svgIcon = nonAppleIcons.first(where: { icon in
+      let type = icon["type"] ?? ""
+      return type.contains("svg")
+    }) {
+      return svgIcon["href"]
+    }
+    
+    // 5순위: 일반 아이콘 (apple-touch-icon 제외)
+    if let normalIcon = nonAppleIcons.first {
+      return normalIcon["href"]
+    }
+    
+    // 6순위: apple-touch-icon (마지막 순위)
+    if let appleIcon = icons.first(where: { icon in
+      let rel = icon["rel"] ?? ""
+      return rel.contains("apple-touch-icon")
+    }) {
+      return appleIcon["href"]
+    }
+    
+    return nil
+  }
+
+  private func extractLargestIconSize(_ sizeString: String) -> Int? {
+    // "16x16", "32x32", "16x16 32x32" 등의 형태에서 가장 큰 크기 추출
+    let pattern = #"(\d+)x\d+"#
+    let regex = try? NSRegularExpression(pattern: pattern)
+    let matches = regex?.matches(in: sizeString, range: NSRange(sizeString.startIndex..., in: sizeString)) ?? []
+    
+    var sizes: [Int] = []
+    for match in matches {
+      if let range = Range(match.range(at: 1), in: sizeString),
+         let size = Int(sizeString[range]) {
+        sizes.append(size)
+      }
+    }
+    
+    return sizes.max()
   }
 
   private func getDefaultFaviconURL(from webView: WKWebView) -> URL? {
-      guard let webViewURL = webView.url,
-        let scheme = webViewURL.scheme,
-        let host = webViewURL.host else { return nil }
-      
+    guard let webViewURL = webView.url,
+          let scheme = webViewURL.scheme,
+          let host = webViewURL.host else { return nil }
+    
     return URL(string: "\(scheme)://\(host)/favicon.ico")
   }
 
@@ -479,6 +594,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     
     self.getWebViewFavicon(webView: webView) { faviconURL in
       DispatchQueue.main.async {
+        print(faviconURL)
         self.parent.tab.faviconURL = faviconURL
         self.parent.tab.loadFavicon(url: faviconURL)
       }
