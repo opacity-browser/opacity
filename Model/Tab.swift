@@ -169,13 +169,21 @@ final class Tab: ObservableObject {
   }()
   
   init(url: URL = DEFAULT_URL) {
-    let stringURL = String(describing: url)
-    let shortStringURL = StringURL.shortURL(url: stringURL)
+    if url == INIT_URL {
+      self.originURL = url
+      self.inputURL = ""
+      self.printURL = ""
+      self.title = NSLocalizedString("New Tab", comment: "")
+    } else {
+      let stringURL = String(describing: url)
+      let shortStringURL = StringURL.shortURL(url: stringURL)
+      
+      self.originURL = url
+      self.inputURL = stringURL
+      self.printURL = shortStringURL
+      self.title = shortStringURL
+    }
     
-    self.originURL = url
-    self.inputURL = stringURL
-    self.printURL = shortStringURL
-    self.title = shortStringURL
     DispatchQueue.main.async {
       self.setDomainPermission(url)
     }
@@ -232,6 +240,12 @@ final class Tab: ObservableObject {
   func closeTab(completion: @escaping () -> Void) {
     DispatchQueue.main.async {
       self.complateCleanUpWebview = completion
+      
+      if self.isInit {
+        completion()
+        return
+      }
+      
       self.isClearWebview = true
     }
   }

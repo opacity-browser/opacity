@@ -305,7 +305,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, ObservableOb
       let windowNumber = keyWindow.windowNumber
       if let browser = self.service.browsers[windowNumber], let activeId = browser.activeTabId {
         if let targetRemoveIndex = browser.tabs.firstIndex(where: { $0.id == activeId }) {
-          print("close tab clean up webview")
+          print("close tab clean up webview shortkey")
           let targetTab = browser.tabs[targetRemoveIndex]
           targetTab.closeTab {
             browser.tabs.remove(at: targetRemoveIndex)

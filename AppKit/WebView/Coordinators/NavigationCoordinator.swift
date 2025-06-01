@@ -176,11 +176,15 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   }
   
   private func handleNewURLLoad(webView: WKWebView) {
-    parent.tab.isUpdateBySearch = false
-    parent.tab.webviewIsError = false
-    webView.stopLoading()
-    sslCertificateCoordinator.checkedSSLCertificate(url: parent.tab.originURL)
-    webView.load(URLRequest(url: parent.tab.originURL))
+    if parent.tab.isInit {
+        return
+      }
+      
+      parent.tab.isUpdateBySearch = false
+      parent.tab.webviewIsError = false
+      webView.stopLoading()
+      sslCertificateCoordinator.checkedSSLCertificate(url: parent.tab.originURL)
+      webView.load(URLRequest(url: parent.tab.originURL))
   }
   
   // MARK: - WKNavigationDelegate 메서드들
@@ -594,7 +598,6 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     
     self.getWebViewFavicon(webView: webView) { faviconURL in
       DispatchQueue.main.async {
-        print(faviconURL)
         self.parent.tab.faviconURL = faviconURL
         self.parent.tab.loadFavicon(url: faviconURL)
       }

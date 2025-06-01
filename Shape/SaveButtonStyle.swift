@@ -1,21 +1,20 @@
 //
-//  ButtonStyle.swift
+//  SaveButtonStyle.swift
 //  Opacity
 //
-//  Created by Falsy on 2/26/24.
+//  Created by Falsy on 6/1/25.
 //
 
 import SwiftUI
 
-struct DialogButtonStyle: ButtonStyle {
+struct SaveButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
-      .foregroundColor(.white)
+      .foregroundColor(Color("ButtonText"))
       .font(.system(size: 12))
-      .padding(.horizontal, 20)
-      .padding(.vertical, 6)
+      .padding(.horizontal, 16)
+      .padding(.vertical, 8)
       .background(configuration.isPressed ? Color("ButtonBGHover") : Color("ButtonBG"))
       .cornerRadius(5)
-      .frame(maxWidth: .infinity)
   }
 }

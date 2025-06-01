@@ -67,11 +67,11 @@ struct BrowserTabView: View {
                       Rectangle()
                         .frame(width: 16, height: 16)
                         .foregroundColor(.gray.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     Image(systemName: "xmark")
                       .frame(width: 18, height: 18)
-                      .font(.system(size: 9))
+                      .font(.system(size: 11))
                       .fontWeight(.medium)
                       .opacity(isCloseHover ? 1 : 0.8)
                   }

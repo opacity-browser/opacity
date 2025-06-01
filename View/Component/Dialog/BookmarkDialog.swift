@@ -51,9 +51,9 @@ struct BookmarkDialog: View {
             .textFieldStyle(PlainTextFieldStyle())
             .padding(.horizontal, 5)
             .font(.system(size: 12))
-            .frame(height: 20)
+            .frame(height: 24)
         }
-        .frame(width: 145, height: 20)
+        .frame(width: 145, height: 24)
       }
       .padding(.bottom, 7)
       HStack(spacing: 0) {
