@@ -20,8 +20,8 @@ struct FavoriteGrid: View {
   
   // 윈도우 크기에 따라 레이아웃 결정
   private var shouldUseDoubleRow: Bool {
-    // 윈도우 너비가 800px 미만이면 2행 3열로 변경
-    containerWidth < 800
+    // 윈도우 너비가 900px 미만이면 2행 3열로 변경
+    containerWidth < 900
   }
   
   private var columns: Int {

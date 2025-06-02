@@ -29,7 +29,7 @@ struct SiteOptionDialog: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      if tab.originURL.scheme == "opacity" {
+      if tab.originURL.absoluteString == "about:blank" {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
             Image(systemName: "lock.circle.fill")

@@ -71,7 +71,7 @@ struct BrowserTabView: View {
                     }
                     Image(systemName: "xmark")
                       .frame(width: 18, height: 18)
-                      .font(.system(size: 11))
+                      .font(.system(size: 10))
                       .fontWeight(.medium)
                       .opacity(isCloseHover ? 1 : 0.8)
                   }
