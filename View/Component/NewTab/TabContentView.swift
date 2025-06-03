@@ -19,6 +19,8 @@ struct TabContentView: View {
     Group {
       if tab.isInit {
         NewTabView(browser: browser, tab: tab)
+      } else if tab.isSetting {
+        SettingsView()
       } else {
         WebviewArea(service: service, browser: browser, tab: tab)
       }

@@ -57,17 +57,6 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         if let historySite = parent.tab.historySiteList.first(where: { $0.url == webviewURL }) {
           historySite.title = title
         }
-        
-        if scheme == "opacity" {
-          switch host {
-            case "settings":
-              parent.tab.title = NSLocalizedString("Settings", comment: "")
-            case "new-tab":
-              parent.tab.title = NSLocalizedString("New Tab", comment: "")
-            default:
-              break
-          }
-        }
       }
     }
   

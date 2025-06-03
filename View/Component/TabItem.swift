@@ -20,13 +20,17 @@ struct TabItem: View {
     return tab.id == activeTabId
   }
   
+  var isFavicon: Bool {
+    return tab.isInit || tab.isSetting || (!tab.isInit && !tab.isSetting && (tab.pageProgress > 0 || tab.favicon != nil))
+  }
+  
   var body: some View {
     ZStack {
       ZStack {
         HStack(spacing: 0) {
-          if tab.isInit || (!tab.isInit && (tab.pageProgress > 0 || tab.favicon != nil)) {
+          if isFavicon  {
             HStack(spacing: 0) {
-              if tab.isInit {
+              if tab.isInit || tab.isSetting {
                 VStack(spacing: 0) {
                   Image("MainLogo")
                     .resizable()
@@ -68,7 +72,7 @@ struct TabItem: View {
               .frame(maxWidth: 200, maxHeight: 29, alignment: .leading)
               .foregroundColor(Color("UIText").opacity(isActive || isTabHover ? 1 : 0.8))
               .font(.system(size: 12))
-              .padding(.leading, (tab.isInit || (!tab.isInit && (tab.favicon != nil || tab.pageProgress > 0))) ? 5 : 10)
+              .padding(.leading, isFavicon ? 5 : 10)
               .padding(.trailing, 25)
               .lineLimit(1)
               .truncationMode(.tail)

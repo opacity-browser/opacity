@@ -12,7 +12,6 @@
 		A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66B2BB0785C0053913D /* VisitManager.swift */; };
 		A10DA66E2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */; };
 		A10DA6702BB12EF20053913D /* SearchAutoCompleteVisitItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */; };
-		A10DA6722BB3952D0053913D /* settings in Resources */ = {isa = PBXBuildFile; fileRef = A10DA6712BB3952D0053913D /* settings */; };
 		A10DA6742BB395B60053913D /* MoreMenuDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6732BB395B60053913D /* MoreMenuDialog.swift */; };
 		A10DA6782BB3ABD70053913D /* BrowserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6772BB3ABD70053913D /* BrowserSettings.swift */; };
 		A10DA67A2BB3B64A0053913D /* GeneralSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10DA6792BB3B64A0053913D /* GeneralSetting.swift */; };
@@ -125,10 +124,22 @@
 		A198915B2DEB71E100DD07DA /* FavoriteContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198915A2DEB71E000DD07DA /* FavoriteContextMenu.swift */; };
 		A198915D2DEC144D00DD07DA /* AddFavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198915C2DEC144C00DD07DA /* AddFavoriteButton.swift */; };
 		A198915F2DEC14E800DD07DA /* EmptyFavoriteSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198915E2DEC14E700DD07DA /* EmptyFavoriteSlot.swift */; };
+		A19891622DEDFEAE00DD07DA /* SettingsSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891612DEDFEAD00DD07DA /* SettingsSidebar.swift */; };
+		A19891642DEDFED500DD07DA /* SettingsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891632DEDFED400DD07DA /* SettingsContent.swift */; };
+		A19891662DEDFEF900DD07DA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891652DEDFEF800DD07DA /* SettingsView.swift */; };
+		A19891682DEE003A00DD07DA /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891672DEE003900DD07DA /* GeneralSettingsView.swift */; };
+		A198916A2DEE006600DD07DA /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891692DEE006600DD07DA /* SettingsRow.swift */; };
+		A198916C2DEE007D00DD07DA /* SettingsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198916B2DEE007C00DD07DA /* SettingsDropdown.swift */; };
+		A198916E2DEE009300DD07DA /* SearchHistorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198916D2DEE009000DD07DA /* SearchHistorySettingsView.swift */; };
+		A19891702DEE00BD00DD07DA /* VisitHistorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A198916F2DEE00BC00DD07DA /* VisitHistorySettingsView.swift */; };
+		A19891722DEE00D600DD07DA /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891712DEE00D500DD07DA /* PermissionsSettingsView.swift */; };
+		A19891742DEE00FA00DD07DA /* LibrarySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891732DEE00FA00DD07DA /* LibrarySettingsView.swift */; };
+		A19891762DEE011600DD07DA /* SettingsActionButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891752DEE011500DD07DA /* SettingsActionButtonStyle.swift */; };
+		A19891782DEE144D00DD07DA /* BookmarkFolderDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891772DEE144C00DD07DA /* BookmarkFolderDropdown.swift */; };
+		A198917A2DEEC2CB00DD07DA /* PlainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19891792DEEC2CA00DD07DA /* PlainButtonStyle.swift */; };
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
-		A1B1A6F32B860023006B665E /* new-tab in Resources */ = {isa = PBXBuildFile; fileRef = A1B1A6F22B860023006B665E /* new-tab */; };
 		A1E0E7F62D503B5D000ED6BB /* errors in Resources */ = {isa = PBXBuildFile; fileRef = A1E0E7F52D503B5D000ED6BB /* errors */; };
 		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
 		A1E7A6A42CB8EB7900799ADD /* TitlebarTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */; };
@@ -146,7 +157,6 @@
 		A10DA66B2BB0785C0053913D /* VisitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitManager.swift; sourceTree = "<group>"; };
 		A10DA66D2BB12EA20053913D /* SearchAutoCompleteVisitItemNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItemNSView.swift; sourceTree = "<group>"; };
 		A10DA66F2BB12EF20053913D /* SearchAutoCompleteVisitItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteVisitItem.swift; sourceTree = "<group>"; };
-		A10DA6712BB3952D0053913D /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		A10DA6732BB395B60053913D /* MoreMenuDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreMenuDialog.swift; sourceTree = "<group>"; };
 		A10DA6772BB3ABD70053913D /* BrowserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSettings.swift; sourceTree = "<group>"; };
 		A10DA6792BB3B64A0053913D /* GeneralSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSetting.swift; sourceTree = "<group>"; };
@@ -261,6 +271,19 @@
 		A198915A2DEB71E000DD07DA /* FavoriteContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteContextMenu.swift; sourceTree = "<group>"; };
 		A198915C2DEC144C00DD07DA /* AddFavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFavoriteButton.swift; sourceTree = "<group>"; };
 		A198915E2DEC14E700DD07DA /* EmptyFavoriteSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyFavoriteSlot.swift; sourceTree = "<group>"; };
+		A19891612DEDFEAD00DD07DA /* SettingsSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSidebar.swift; sourceTree = "<group>"; };
+		A19891632DEDFED400DD07DA /* SettingsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContent.swift; sourceTree = "<group>"; };
+		A19891652DEDFEF800DD07DA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A19891672DEE003900DD07DA /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		A19891692DEE006600DD07DA /* SettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRow.swift; sourceTree = "<group>"; };
+		A198916B2DEE007C00DD07DA /* SettingsDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDropdown.swift; sourceTree = "<group>"; };
+		A198916D2DEE009000DD07DA /* SearchHistorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistorySettingsView.swift; sourceTree = "<group>"; };
+		A198916F2DEE00BC00DD07DA /* VisitHistorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitHistorySettingsView.swift; sourceTree = "<group>"; };
+		A19891712DEE00D500DD07DA /* PermissionsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsSettingsView.swift; sourceTree = "<group>"; };
+		A19891732DEE00FA00DD07DA /* LibrarySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySettingsView.swift; sourceTree = "<group>"; };
+		A19891752DEE011500DD07DA /* SettingsActionButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsActionButtonStyle.swift; sourceTree = "<group>"; };
+		A19891772DEE144C00DD07DA /* BookmarkFolderDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkFolderDropdown.swift; sourceTree = "<group>"; };
+		A19891792DEEC2CA00DD07DA /* PlainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainButtonStyle.swift; sourceTree = "<group>"; };
 		A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemeHandler.swift; sourceTree = "<group>"; };
 		A1A1D8D92B62B6BB008FD44F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1A1D8DB2B62B6BD008FD44F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -271,7 +294,6 @@
 		A1A1D8E02B62BB4F008FD44F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
-		A1B1A6F22B860023006B665E /* new-tab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "new-tab"; sourceTree = "<group>"; };
 		A1E0E7DF2D4F9767000ED6BB /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1E0E7F52D503B5D000ED6BB /* errors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = errors; sourceTree = "<group>"; };
 		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
@@ -309,6 +331,7 @@
 		A10DDD8C2BCEDECC003E159A /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
+				A19891772DEE144C00DD07DA /* BookmarkFolderDropdown.swift */,
 				A14246232B7E51450062C516 /* TabDialog.swift */,
 				A14246272B7E7E010062C516 /* TabDialogItem.swift */,
 				A142462F2B80E3CD0062C516 /* HistoryDialog.swift */,
@@ -342,8 +365,6 @@
 			isa = PBXGroup;
 			children = (
 				A1E0E7F52D503B5D000ED6BB /* errors */,
-				A10DA6712BB3952D0053913D /* settings */,
-				A1B1A6F22B860023006B665E /* new-tab */,
 			);
 			path = Scheme;
 			sourceTree = "<group>";
@@ -380,6 +401,8 @@
 		A15D54122B561BCF007020CA /* Shape */ = {
 			isa = PBXGroup;
 			children = (
+				A19891792DEEC2CA00DD07DA /* PlainButtonStyle.swift */,
+				A19891752DEE011500DD07DA /* SettingsActionButtonStyle.swift */,
 				A19891522DEB52D200DD07DA /* CancelButtonStyle.swift */,
 				A19891502DEB528B00DD07DA /* SaveButtonStyle.swift */,
 				A15D54132B561BEC007020CA /* BrowserTabShape.swift */,
@@ -517,6 +540,7 @@
 		A188C94F2B4D3D3900B39BC8 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A19891602DEDFE8600DD07DA /* Setting */,
 				A198914C2DEB51AB00DD07DA /* NewTab */,
 				A1E7A6A22CB8EAC900799ADD /* Titlebar */,
 				A15FCB102B999D5100D64C05 /* Bookmark */,
@@ -616,6 +640,23 @@
 			path = NewTab;
 			sourceTree = "<group>";
 		};
+		A19891602DEDFE8600DD07DA /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				A19891732DEE00FA00DD07DA /* LibrarySettingsView.swift */,
+				A19891712DEE00D500DD07DA /* PermissionsSettingsView.swift */,
+				A198916F2DEE00BC00DD07DA /* VisitHistorySettingsView.swift */,
+				A198916D2DEE009000DD07DA /* SearchHistorySettingsView.swift */,
+				A198916B2DEE007C00DD07DA /* SettingsDropdown.swift */,
+				A19891692DEE006600DD07DA /* SettingsRow.swift */,
+				A19891672DEE003900DD07DA /* GeneralSettingsView.swift */,
+				A19891652DEDFEF800DD07DA /* SettingsView.swift */,
+				A19891632DEDFED400DD07DA /* SettingsContent.swift */,
+				A19891612DEDFEAD00DD07DA /* SettingsSidebar.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
 		A1E1A71E2BFBCC4600F537E0 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -713,9 +754,7 @@
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
 				A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */,
-				A1B1A6F32B860023006B665E /* new-tab in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
-				A10DA6722BB3952D0053913D /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -738,9 +777,12 @@
 				A19891572DEB53DE00DD07DA /* NewTabView.swift in Sources */,
 				A188C95B2B4EBB8D00B39BC8 /* StringURL.swift in Sources */,
 				A11EDAD92BA42E2F000D07CB /* VisitHistory.swift in Sources */,
+				A19891782DEE144D00DD07DA /* BookmarkFolderDropdown.swift in Sources */,
 				A16BCB142B9852B7004639F2 /* SearchBoxArea.swift in Sources */,
 				A11EDADB2BA430FA000D07CB /* SearchHistoryGroup.swift in Sources */,
 				A10DA6782BB3ABD70053913D /* BrowserSettings.swift in Sources */,
+				A198916C2DEE007D00DD07DA /* SettingsDropdown.swift in Sources */,
+				A19891722DEE00D600DD07DA /* PermissionsSettingsView.swift in Sources */,
 				A188C93E2B4A551B00B39BC8 /* ContentView.swift in Sources */,
 				A11EDACC2B9F0250000D07CB /* BookmarkTitle.swift in Sources */,
 				A18EFB042C4D944B00B9C3CB /* RemoveKeySound.swift in Sources */,
@@ -755,21 +797,25 @@
 				A19891382DE1E74100DD07DA /* NavigationCoordinator.swift in Sources */,
 				A11EDAEC2BA6EE06000D07CB /* SearchEditBox.swift in Sources */,
 				A16BCAFC2B907878004639F2 /* ToggleSwitch.swift in Sources */,
+				A19891702DEE00BD00DD07DA /* VisitHistorySettingsView.swift in Sources */,
 				A132149D2C68C1D5008A06C9 /* LocationHostDialog.swift in Sources */,
 				A19891512DEB528C00DD07DA /* SaveButtonStyle.swift in Sources */,
 				A16BCAF62B8FFBFD004639F2 /* HistoryForwardBtn.swift in Sources */,
 				A14246282B7E7E010062C516 /* TabDialogItem.swift in Sources */,
 				A15D541B2B56B40F007020CA /* AppDelegate.swift in Sources */,
+				A19891762DEE011600DD07DA /* SettingsActionButtonStyle.swift in Sources */,
 				A19891312DE1E6F600DD07DA /* MainWebView.swift in Sources */,
 				A10DA66A2BAE62860053913D /* SearchAutoCompleteItemNSView.swift in Sources */,
 				A14246222B7C64FE0062C516 /* TabDragAreaNSView.swift in Sources */,
 				A142461A2B735E5F0062C516 /* Service.swift in Sources */,
+				A19891682DEE003A00DD07DA /* GeneralSettingsView.swift in Sources */,
 				A134711E2B43F00800A3AE59 /* OpacityApp.swift in Sources */,
 				A10DA67A2BB3B64A0053913D /* GeneralSetting.swift in Sources */,
 				A188C9642B4EBE9800B39BC8 /* URL.swift in Sources */,
 				A15FCB122B999D7700D64C05 /* BookmarkGroupTitle.swift in Sources */,
 				A16BCB1A2B985F9F004639F2 /* Bookmark.swift in Sources */,
 				A14246322B810D100062C516 /* HistorySite.swift in Sources */,
+				A19891622DEDFEAE00DD07DA /* SettingsSidebar.swift in Sources */,
 				A158DD082BF5DA7400BE9A48 /* About.swift in Sources */,
 				A17245E42B8CCCE70049F58D /* DialogButtonStyle.swift in Sources */,
 				A19891532DEB52D300DD07DA /* CancelButtonStyle.swift in Sources */,
@@ -790,6 +836,7 @@
 				A17C97722BD33D0F009240B9 /* FindNSTextField.swift in Sources */,
 				A198915B2DEB71E100DD07DA /* FavoriteContextMenu.swift in Sources */,
 				A10DA66C2BB0785C0053913D /* VisitManager.swift in Sources */,
+				A19891742DEE00FA00DD07DA /* LibrarySettingsView.swift in Sources */,
 				A11EDAD02BA09329000D07CB /* BookmarkManager.swift in Sources */,
 				A16BCB182B985A57004639F2 /* BookmarkIcon.swift in Sources */,
 				A10DDD812BC73976003E159A /* WebviewArea.swift in Sources */,
@@ -805,6 +852,7 @@
 				A14E5C7C2D0BC2A9001E87AE /* CleanCommands.swift in Sources */,
 				A188C9682B4ED3F600B39BC8 /* Browser.swift in Sources */,
 				A16BCAFA2B8FFFC0004639F2 /* SiteOptionDialog.swift in Sources */,
+				A198916A2DEE006600DD07DA /* SettingsRow.swift in Sources */,
 				A10DA6702BB12EF20053913D /* SearchAutoCompleteVisitItem.swift in Sources */,
 				A16BCAF82B8FFC11004639F2 /* HistoryRefreshBtn.swift in Sources */,
 				A19891592DEB673400DD07DA /* FavoriteGrid.swift in Sources */,
@@ -812,15 +860,18 @@
 				A10DDD7E2BC48402003E159A /* BookmarkGroup.swift in Sources */,
 				A188C9662B4ECBB800B39BC8 /* MainView.swift in Sources */,
 				A10DDD852BC9A67A003E159A /* BookmarkTitleNSView.swift in Sources */,
+				A198916E2DEE009300DD07DA /* SearchHistorySettingsView.swift in Sources */,
 				A142462C2B7FB5490062C516 /* HistoryKeyNSView.swift in Sources */,
 				A16BCAF42B8FFBEB004639F2 /* HistoryBackBtn.swift in Sources */,
 				A132149B2C68BDCC008A06C9 /* LocationPermissionIcon.swift in Sources */,
+				A198917A2DEEC2CB00DD07DA /* PlainButtonStyle.swift in Sources */,
 				A188C96D2B50080F00B39BC8 /* BrowserTabView.swift in Sources */,
 				A19891552DEB52F300DD07DA /* FavoriteItemView.swift in Sources */,
 				A1E7A6A82CB8ED7900799ADD /* TitlebarTabViewController.swift in Sources */,
 				A11EDAE82BA6BD42000D07CB /* SearchAutoCompleteItem.swift in Sources */,
 				A16BCAF22B8FC9DE004639F2 /* DialogButtonCancelStyle.swift in Sources */,
 				A10DA6842BB8A1850053913D /* VisitHistorySettings.swift in Sources */,
+				A19891642DEDFED500DD07DA /* SettingsContent.swift in Sources */,
 				A15D54272B5BA457007020CA /* ImageLoader.swift in Sources */,
 				A11EDAE12BA4D234000D07CB /* SearchBoxDialog.swift in Sources */,
 				A11EDADD2BA431A7000D07CB /* VisitHistoryGroup.swift in Sources */,
@@ -839,6 +890,7 @@
 				A10DA6742BB395B60053913D /* MoreMenuDialog.swift in Sources */,
 				A15D54112B5574B9007020CA /* WindowTitlebar.swift in Sources */,
 				A17245E22B8CBE230049F58D /* GeoLocationDialog.swift in Sources */,
+				A19891662DEDFEF900DD07DA /* SettingsView.swift in Sources */,
 				A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */,
 				A11EDAE62BA62CAA000D07CB /* SearchAutoCompleteBox.swift in Sources */,
 				A10DA68E2BBDA0050053913D /* FavoriteItem.swift in Sources */,

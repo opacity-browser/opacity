@@ -23,10 +23,15 @@ enum WebViewErrorType {
 final class Tab: ObservableObject {
   var id = UUID()
   
+  // Init
   @Published var isInit: Bool = false
   @Published var isInitFocus: Bool = false
   @Published var stopProcess: Bool = false
   
+  // Settings
+  @Published var isSetting: Bool = false
+  
+  // URL
   @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
@@ -168,8 +173,13 @@ final class Tab: ObservableObject {
     return webView
   }()
   
-  init(url: URL = DEFAULT_URL) {
-    if url == INIT_URL {
+  init(url: URL = DEFAULT_URL, type: String = "normal") {
+    if type == "Settings" {
+      self.originURL = url
+      self.inputURL = ""
+      self.printURL = ""
+      self.title = NSLocalizedString("Settings", comment: "")
+    } else if url == EMPTY_URL {
       self.originURL = url
       self.inputURL = ""
       self.printURL = ""
@@ -241,7 +251,7 @@ final class Tab: ObservableObject {
     DispatchQueue.main.async {
       self.complateCleanUpWebview = completion
       
-      if self.isInit {
+      if self.isInit || self.isSetting {
         completion()
         return
       }

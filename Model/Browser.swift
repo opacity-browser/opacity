@@ -27,7 +27,7 @@ final class Browser: ObservableObject, Identifiable {
   }
   
   func initTab() {
-    let newTab = Tab(url: INIT_URL)
+    let newTab = Tab(url: EMPTY_URL)
     newTab.isInit = true
     newTab.isInitFocus = true
     DispatchQueue.main.async {
@@ -79,7 +79,8 @@ final class Browser: ObservableObject, Identifiable {
   }
   
   func openSettings() {
-    let newTab = Tab(url: URL(string:"opacity://settings")!)
+    let newTab = Tab(url: EMPTY_URL, type: "Settings")
+    newTab.isSetting = true
     DispatchQueue.main.async {
       self.clearSearchEditMode()
       self.tabs.append(newTab)
