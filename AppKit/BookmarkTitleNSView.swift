@@ -141,7 +141,7 @@ class BookmarkDragSource: NSView {
   override func mouseDragged(with event: NSEvent) {
     // 드래그가 비활성화된 경우 처리하지 않음
     guard let enabledDrag = enabledDrag, enabledDrag else { return }
-    guard let dragDelegate = dragDelegate else { return }
+    guard let _ = dragDelegate else { return }
     
     let currentTime = event.timestamp
     let currentLocation = event.locationInWindow

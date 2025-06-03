@@ -10,16 +10,6 @@ import WebKit
 import SwiftData
 import UserNotifications
 
-enum WebViewErrorType {
-  case notFindHost
-  case notConnectHost
-  case notConnectInternet
-  case occurredSSLError
-  case blockedContent
-  case unknown
-  case noError
-}
-
 final class Tab: ObservableObject {
   var id = UUID()
   
@@ -30,6 +20,11 @@ final class Tab: ObservableObject {
   
   // Settings
   @Published var isSetting: Bool = false
+  
+  // Error
+  @Published var errorPageType: ErrorPageType?
+  @Published var errorFailingURL: String = ""
+  @Published var showErrorPage: Bool = false
   
   // URL
   @Published var originURL: URL

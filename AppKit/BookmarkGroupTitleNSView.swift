@@ -118,7 +118,7 @@ class BookmarkGroupDragSource: NSView {
   }
   
   override func mouseDragged(with event: NSEvent) {
-    guard let dragDelegate = dragDelegate else { return }
+    guard let _ = dragDelegate else { return }
     
     let currentTime = event.timestamp
     let currentLocation = event.locationInWindow

@@ -21,19 +21,14 @@ struct NotificationValue: Codable {
 
 class ScriptHandler: NSObject, WKScriptMessageHandler {
   @ObservedObject var tab: Tab
-  var opacityScriptHandler: OpacityScriptHandler
   
   init(tab: Tab) {
     self.tab = tab
-    self.opacityScriptHandler = OpacityScriptHandler(tab: tab)
   }
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     if message.name == "opacityBrowser", let messageBody = message.body as? [String: String] {
       let scriptName = messageBody["name"] ?? ""
-      if let webView = message.webView, let currentURL = webView.url, currentURL.scheme == "opacity" {
-        opacityScriptHandler.messages(name: scriptName, value: messageBody["value"])
-      }
       
       switch scriptName {
         case "showNotification":

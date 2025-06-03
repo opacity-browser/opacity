@@ -21,6 +21,22 @@ struct TabContentView: View {
         NewTabView(browser: browser, tab: tab)
       } else if tab.isSetting {
         SettingsView()
+      } else if tab.showErrorPage, let errorType = tab.errorPageType {
+        // 오류 페이지 표시
+        ErrorPageView(
+          errorType: errorType,
+          failingURL: tab.errorFailingURL
+        ) {
+          // 새로고침 액션
+          if let url = URL(string: tab.errorFailingURL) {
+            DispatchQueue.main.async {
+              tab.showErrorPage = false
+              tab.errorPageType = nil
+              tab.errorFailingURL = ""
+              tab.updateURLBySearch(url: url)
+            }
+          }
+        }
       } else {
         WebviewArea(service: service, browser: browser, tab: tab)
       }

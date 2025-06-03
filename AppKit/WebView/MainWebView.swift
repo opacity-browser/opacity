@@ -15,6 +15,22 @@ struct MainWebView: NSViewRepresentable {
   @ObservedObject var tab: Tab
   @State private var isSinglePageUpdate: Bool = false
   
+  @ViewBuilder
+  private func errorPageView(for errorType: ErrorPageType, failingURL: String) -> some View {
+    ErrorPageView(
+      errorType: errorType,
+      failingURL: failingURL
+    ) {
+      // 새로고침 액션
+      guard let _ = tab.webview else { return }
+      if let url = URL(string: failingURL) {
+        DispatchQueue.main.async {
+          self.tab.updateURLBySearch(url: url)
+        }
+      }
+    }
+  }
+  
   func makeCoordinator() -> MainWebViewCoordinator {
     MainWebViewCoordinator(self)
   }
