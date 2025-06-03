@@ -5,6 +5,13 @@
 //  Created by Falsy on 2/16/24.
 //
 
+//
+//  TabDialogItem.swift
+//  Opacity
+//
+//  Created by Falsy on 2/16/24.
+//
+
 import SwiftUI
 
 struct TabDialogItem: View {
@@ -19,7 +26,22 @@ struct TabDialogItem: View {
       VStack(spacing: 0) {
         VStack(spacing: 0) {
           HStack(spacing: 0) {
-            if let favicon = tab.favicon {
+            // New Tab, Settings, Error 페이지인 경우 MainLogo 표시
+            if tab.isInit || tab.isSetting || tab.showErrorPage {
+              HStack(spacing: 0) {
+                VStack(spacing: 0) {
+                  Image("MainLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: 14, maxHeight: 14)
+                    .opacity(0.6)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .clipped()
+                }
+              }
+              .frame(maxWidth: 14, maxHeight: 20, alignment: .center)
+              .padding(.leading, 6)
+            } else if let favicon = tab.favicon {
               HStack(spacing: 0) {
                 VStack(spacing: 0) {
                   favicon
@@ -37,7 +59,7 @@ struct TabDialogItem: View {
               .frame(height: 22, alignment: .leading)
               .foregroundColor(Color("UIText"))
               .font(.system(size: 12))
-              .padding(.leading, tab.favicon == nil ? 7 : 4)
+              .padding(.leading, (tab.isInit || tab.isSetting || tab.showErrorPage || tab.favicon != nil) ? 4 : 7)
               .padding(.trailing, 7)
               .lineLimit(1)
               .truncationMode(.tail)
