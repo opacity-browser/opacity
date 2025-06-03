@@ -37,6 +37,14 @@ struct TabContentView: View {
             }
           }
         }
+        .onAppear {
+          // 오류 페이지일 때 MainLogo 파비콘 설정
+          DispatchQueue.main.async {
+            if let mainLogoImage = NSImage(named: "MainLogo") {
+              tab.favicon = Image(nsImage: mainLogoImage)
+            }
+          }
+        }
       } else {
         WebviewArea(service: service, browser: browser, tab: tab)
       }
