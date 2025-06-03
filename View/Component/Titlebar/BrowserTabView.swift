@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-struct StaticColorButtonStyle: ButtonStyle {
-  func makeBody(configuration: Self.Configuration) -> some View {
-    configuration.label
-      .opacity(1) // 클릭 시 투명도 변화 없음
-  }
-}
-
 struct BrowserTabView: View {
   @ObservedObject var service: Service
   @ObservedObject var browser: Browser
@@ -49,7 +42,7 @@ struct BrowserTabView: View {
               TabItemNSView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth)
                 .frame(maxWidth: 218)
             }
-            .buttonStyle(StaticColorButtonStyle())
+            .buttonStyle(PlainButtonStyle())
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .offset(y: 1)
             

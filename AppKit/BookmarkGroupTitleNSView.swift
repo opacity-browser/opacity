@@ -14,6 +14,7 @@ struct BookmarkGroupTitleNSView: NSViewRepresentable {
   func moveBookmark() {
     if let startBookmark = service.dragBookmark {
       bookmarkGroup.isOpen = true
+      // 파비콘 데이터도 함께 전달
       BookmarkManager.addBookmark(bookmarkGroup: bookmarkGroup, title: startBookmark.title, url: startBookmark.url, favicon: startBookmark.favicon)
       BookmarkManager.deleteBookmark(bookmark: startBookmark)
     }
@@ -31,6 +32,11 @@ struct BookmarkGroupTitleNSView: NSViewRepresentable {
     let containerView = BookmarkGroupDragSource()
     containerView.dragDelegate = context.coordinator
     containerView.moveBookmark = moveBookmark
+    
+    // 그룹 클릭 핸들러 추가 (폴더 열기/닫기)
+    containerView.groupClickHandler = {
+      bookmarkGroup.isOpen.toggle()
+    }
     
     let hostingView = NSHostingView(rootView: BookmarkGroupTitle(bookmarkGroup: bookmarkGroup))
     hostingView.translatesAutoresizingMaskIntoConstraints = false
@@ -88,6 +94,13 @@ struct BookmarkGroupTitleNSView: NSViewRepresentable {
 class BookmarkGroupDragSource: NSView {
   var dragDelegate: NSDraggingSource?
   var moveBookmark: (() -> Void)?
+  var groupClickHandler: (() -> Void)?  // 그룹 클릭 핸들러 추가
+  
+  // 드래그 감지를 위한 프로퍼티들
+  private var mouseDownTime: TimeInterval = 0
+  private var mouseDownLocation: NSPoint = .zero
+  private var dragMinimumTime: TimeInterval = 0.1 // 최소 드래그 시간 (100ms)
+  private var dragMinimumDistance: CGFloat = 3.0  // 최소 드래그 거리 (3pt)
   
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
@@ -99,14 +112,54 @@ class BookmarkGroupDragSource: NSView {
   }
   
   override func mouseDown(with event: NSEvent) {
+    // 마우스 다운 시점과 위치 기록
+    mouseDownTime = event.timestamp
+    mouseDownLocation = event.locationInWindow
+  }
+  
+  override func mouseDragged(with event: NSEvent) {
     guard let dragDelegate = dragDelegate else { return }
+    
+    let currentTime = event.timestamp
+    let currentLocation = event.locationInWindow
+    let timeDiff = currentTime - mouseDownTime
+    let distance = sqrt(pow(currentLocation.x - mouseDownLocation.x, 2) +
+                       pow(currentLocation.y - mouseDownLocation.y, 2))
+    
+    // 시간과 거리 조건을 모두 만족할 때만 드래그 시작
+    if timeDiff >= dragMinimumTime || distance >= dragMinimumDistance {
+      startDragSession(with: event)
+    }
+  }
+  
+  override func mouseUp(with event: NSEvent) {
+    let currentTime = event.timestamp
+    let currentLocation = event.locationInWindow
+    let timeDiff = currentTime - mouseDownTime
+    let distance = sqrt(pow(currentLocation.x - mouseDownLocation.x, 2) +
+                       pow(currentLocation.y - mouseDownLocation.y, 2))
+    
+    // 짧은 클릭이고 움직임이 적으면 일반 클릭으로 처리
+    if timeDiff < dragMinimumTime && distance < dragMinimumDistance {
+      handleGroupClick()
+    }
+  }
+  
+  private func startDragSession(with event: NSEvent) {
+    guard let dragDelegate = dragDelegate else { return }
+    
     let draggedImage = self.snapshot()
     
     let draggingItem = NSDraggingItem(pasteboardWriter: NSString(string: "Drag Content"))
-    draggingItem.setDraggingFrame(self.bounds, contents: draggedImage) // Content
+    draggingItem.setDraggingFrame(self.bounds, contents: draggedImage)
     
     let session = self.beginDraggingSession(with: [draggingItem], event: event, source: dragDelegate)
     session.animatesToStartingPositionsOnCancelOrFail = true
+  }
+  
+  private func handleGroupClick() {
+    // 그룹 클릭 핸들러 실행 (폴더 열기/닫기 등)
+    groupClickHandler?()
   }
   
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -117,7 +170,6 @@ class BookmarkGroupDragSource: NSView {
   }
   
   override func draggingExited(_ sender: NSDraggingInfo?) {
-//    print("dargExited")
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
@@ -131,13 +183,12 @@ class BookmarkGroupDragSource: NSView {
   }
   
   func snapshot() -> NSImage {
-      let image = NSImage(size: self.bounds.size)
-      image.lockFocus()
-      defer { image.unlockFocus() }
-      if let context = NSGraphicsContext.current?.cgContext {
-          self.layer?.render(in: context)
-      }
-      return image
+    let image = NSImage(size: self.bounds.size)
+    image.lockFocus()
+    defer { image.unlockFocus() }
+    if let context = NSGraphicsContext.current?.cgContext {
+      self.layer?.render(in: context)
+    }
+    return image
   }
 }
-
