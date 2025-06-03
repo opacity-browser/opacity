@@ -49,27 +49,27 @@ struct BookmarkDialog: View {
             .padding(0)
           TextField(NSLocalizedString("Name", comment: ""), text: $bookmarkTitle)
             .textFieldStyle(PlainTextFieldStyle())
-            .padding(.horizontal, 5)
+            .padding(.horizontal, 8)
             .font(.system(size: 12))
-            .frame(height: 20)
+            .frame(height: 26)
         }
-        .frame(width: 145, height: 20)
+        .frame(width: 145, height: 26)
       }
       .padding(.bottom, 7)
+      
       HStack(spacing: 0) {
         Text(NSLocalizedString("Folder", comment: ""))
           .font(.system(size: 12))
         Spacer()
-        Picker("", selection: $selectId) {
-          ForEach(bookmarkGroups
-              .sorted { $0.index < $1.index }
-              .sorted { $0.depth < $1.depth }, id: \.id) { target in
-            Text(target.name).tag(target.id as UUID?)
-          }
-        }
-        .frame(width: 153)
+        
+        BookmarkFolderDropdown(
+          selectedId: $selectId,
+          bookmarkGroups: bookmarkGroups
+        )
+        .frame(width: 145)
       }
       .padding(.bottom, 15)
+      
       HStack(spacing: 0) {
         Button {
           if !bookmarkTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

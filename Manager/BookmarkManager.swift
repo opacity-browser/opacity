@@ -50,7 +50,8 @@ class BookmarkManager {
   
   @MainActor static func moveBookmark(from: Bookmark, to: Bookmark) {
     let endIndex = to.index
-    let newMoveBookmark = Bookmark(index: endIndex, title: from.title, url: from.url)
+    // 파비콘 데이터도 함께 복사
+    let newMoveBookmark = Bookmark(index: endIndex, title: from.title, url: from.url, favicon: from.favicon)
     
     if let toParentGroup = to.bookmarkGroup {
       self.deleteBookmark(bookmark: from)

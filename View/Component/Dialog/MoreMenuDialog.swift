@@ -242,7 +242,7 @@ struct MoreMenuDialog: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .onTapGesture {
           DispatchQueue.main.async {
-            browser.newTab(URL(string:"opacity://settings")!)
+            browser.openSettings()
             isMoreMenuDialog = false
           }
         }

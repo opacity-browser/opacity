@@ -35,7 +35,7 @@ struct WindowTitlebar: View {
                 BrowserTabView(service: service, browser: browser, tabs: $tabs, tab: tab, activeTabId: $activeTabId, index: index, tabWidth: $tabWidth) {
                   DispatchQueue.main.async {
                     let removeTabId = tabs[index].id
-                    print("close tab clean up webview")
+                    print("close tab clean up webview icon")
                     tabs[index].closeTab {
                       tabs.remove(at: index)
                       if tabs.count == 0 {
@@ -61,7 +61,7 @@ struct WindowTitlebar: View {
               }
             }) {
               Image(systemName: "plus")
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .frame(maxWidth: 24, maxHeight: 24)
                 .background(isAddHover ? .gray.opacity(0.2) : .gray.opacity(0))
                 .clipShape(RoundedRectangle(cornerRadius: 6))

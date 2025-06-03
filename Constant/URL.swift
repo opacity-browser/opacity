@@ -8,4 +8,4 @@
 import SwiftUI
 
 let DEFAULT_URL: URL = URL(string: "https://google.com")!
-let INIT_URL: URL = URL(string:"opacity://new-tab")!
+let EMPTY_URL: URL = URL(string: "about:blank")!

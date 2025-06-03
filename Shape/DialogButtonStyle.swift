@@ -13,7 +13,7 @@ struct DialogButtonStyle: ButtonStyle {
       .foregroundColor(.white)
       .font(.system(size: 12))
       .padding(.horizontal, 20)
-      .padding(.vertical, 4)
+      .padding(.vertical, 6)
       .background(configuration.isPressed ? Color("ButtonBGHover") : Color("ButtonBG"))
       .cornerRadius(5)
       .frame(maxWidth: .infinity)

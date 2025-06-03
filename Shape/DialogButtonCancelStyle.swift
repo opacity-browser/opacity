@@ -13,7 +13,7 @@ struct DialogButtonCancelStyle: ButtonStyle {
       .foregroundColor(.white)
       .font(.system(size: 12))
       .padding(.horizontal, 15)
-      .padding(.vertical, 5)
+      .padding(.vertical, 6)
       .background(configuration.isPressed ? Color("ButtonCancelBGHover") : Color("ButtonCancelBG"))
       .cornerRadius(5)
   }

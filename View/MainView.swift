@@ -19,11 +19,20 @@ struct MainView: View {
           if browser.tabs.count > 0 {
             ForEach(Array(browser.tabs.enumerated()), id: \.element.id) { index, tab in
               if let activeId = browser.activeTabId {
-                VStack(spacing: 0) {
-                  WebviewArea(service: service, browser: browser, tab: browser.tabs[index])
+                TabContentView(
+                  service: service,
+                  browser: browser,
+                  tab: tab,
+                  isActive: tab.id == activeId,
+                  geometryHeight: geometry.size.height
+                ).onTapGesture {
+                  // 활성 탭의 검색 상태를 해제
+                  if let activeTab = browser.tabs.first(where: { $0.id == activeId }) {
+                    DispatchQueue.main.async {
+                      activeTab.isEditSearch = false
+                    }
+                  }
                 }
-                .offset(y: tab.id == activeId ? 0 : geometry.size.height + 1)
-                .frame(height: geometry.size.height + 1)
               }
             }
           }

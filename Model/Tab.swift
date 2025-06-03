@@ -10,23 +10,23 @@ import WebKit
 import SwiftData
 import UserNotifications
 
-enum WebViewErrorType {
-  case notFindHost
-  case notConnectHost
-  case notConnectInternet
-  case occurredSSLError
-  case blockedContent
-  case unknown
-  case noError
-}
-
 final class Tab: ObservableObject {
   var id = UUID()
   
+  // Init
   @Published var isInit: Bool = false
   @Published var isInitFocus: Bool = false
   @Published var stopProcess: Bool = false
   
+  // Settings
+  @Published var isSetting: Bool = false
+  
+  // Error
+  @Published var errorPageType: ErrorPageType?
+  @Published var errorFailingURL: String = ""
+  @Published var showErrorPage: Bool = false
+  
+  // URL
   @Published var originURL: URL
   @Published var printURL: String
   @Published var inputURL: String
@@ -168,14 +168,27 @@ final class Tab: ObservableObject {
     return webView
   }()
   
-  init(url: URL = DEFAULT_URL) {
-    let stringURL = String(describing: url)
-    let shortStringURL = StringURL.shortURL(url: stringURL)
+  init(url: URL = DEFAULT_URL, type: String = "normal") {
+    if type == "Settings" {
+      self.originURL = url
+      self.inputURL = ""
+      self.printURL = ""
+      self.title = NSLocalizedString("Settings", comment: "")
+    } else if url == EMPTY_URL {
+      self.originURL = url
+      self.inputURL = ""
+      self.printURL = ""
+      self.title = NSLocalizedString("New Tab", comment: "")
+    } else {
+      let stringURL = String(describing: url)
+      let shortStringURL = StringURL.shortURL(url: stringURL)
+      
+      self.originURL = url
+      self.inputURL = stringURL
+      self.printURL = shortStringURL
+      self.title = shortStringURL
+    }
     
-    self.originURL = url
-    self.inputURL = stringURL
-    self.printURL = shortStringURL
-    self.title = shortStringURL
     DispatchQueue.main.async {
       self.setDomainPermission(url)
     }
@@ -232,6 +245,12 @@ final class Tab: ObservableObject {
   func closeTab(completion: @escaping () -> Void) {
     DispatchQueue.main.async {
       self.complateCleanUpWebview = completion
+      
+      if self.isInit || self.isSetting {
+        completion()
+        return
+      }
+      
       self.isClearWebview = true
     }
   }
