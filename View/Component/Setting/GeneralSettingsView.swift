@@ -19,13 +19,24 @@ struct GeneralSettingsView: View {
     self.generalSettings = generalSettings
   }
   
-  @State private var selectedLanguage: String = "Korean"
+  @State private var selectedLanguage: String = "English"
   @State private var selectedScreenMode: String = "System"
   @State private var selectedSearchEngine: String = "Google"
   @State private var selectedRetentionPeriod: String = "1 Week"
   @State private var isTrackerBlocking: Bool = true
   
-  private let languages = ["Korean", "English", "German", "Spanish", "Japanese", "Chinese", "French", "Hindi", "Norwegian"]
+  // 각 언어를 해당 언어로 표시
+  private let languageOptions = [
+    ("English", "English"),
+    ("Norwegian", "Norsk"),
+    ("Hindi", "हिन्दी"),
+    ("Korean", "한국어"),
+    ("Chinese", "中文"),
+    ("German", "Deutsch"),
+    ("Japanese", "日本語"),
+    ("Spanish", "Español"),
+    ("French", "Français")
+  ]
   private let screenModes = ["System", "Light", "Dark"]
   private let searchEngines = ["Google", "Bing", "Yahoo", "DuckDuckGo"]
   private let retentionPeriods = ["1 Day", "1 Week", "1 Month", "Indefinite"]
@@ -36,7 +47,7 @@ struct GeneralSettingsView: View {
         SettingsRow(title: NSLocalizedString("Language", comment: "")) {
           SettingsDropdown(
             selection: $selectedLanguage,
-            options: languages.map { NSLocalizedString($0, comment: "") }
+            options: languageOptions.map { $0.1 }  // 각 언어의 네이티브 이름 사용
           )
         }
         
@@ -78,7 +89,7 @@ struct GeneralSettingsView: View {
                   .foregroundColor(Color("UIText"))
               }
               
-              Text(NSLocalizedString("Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.", comment: ""))
+              Text(NSLocalizedString("Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules.", comment: ""))
                 .font(.system(size: 13))
                 .foregroundColor(Color("UIText").opacity(0.7))
                 .lineLimit(nil)
@@ -162,31 +173,31 @@ struct GeneralSettingsView: View {
   
   private func mapLanguageCode(_ code: String) -> String {
     switch code {
-    case "ko": return NSLocalizedString("Korean", comment: "")
-    case "en": return NSLocalizedString("English", comment: "")
-    case "de": return NSLocalizedString("German", comment: "")
-    case "es": return NSLocalizedString("Spanish", comment: "")
-    case "ja": return NSLocalizedString("Japanese", comment: "")
-    case "zh": return NSLocalizedString("Chinese", comment: "")
-    case "fr": return NSLocalizedString("French", comment: "")
-    case "hi": return NSLocalizedString("Hindi", comment: "")
-    case "no": return NSLocalizedString("Norwegian", comment: "")
-    default: return NSLocalizedString("Korean", comment: "")
+    case "ko": return "한국어"
+    case "en": return "English"
+    case "de": return "Deutsch"
+    case "es": return "Español"
+    case "ja": return "日本語"
+    case "zh": return "中文"
+    case "fr": return "Français"
+    case "hi": return "हिन्दी"
+    case "no": return "Norsk"
+    default: return "한국어"
     }
   }
   
   private func updateLanguage(_ language: String) {
     let languageCode: String
     switch language {
-    case NSLocalizedString("Korean", comment: ""): languageCode = "ko"
-    case NSLocalizedString("English", comment: ""): languageCode = "en"
-    case NSLocalizedString("German", comment: ""): languageCode = "de"
-    case NSLocalizedString("Spanish", comment: ""): languageCode = "es"
-    case NSLocalizedString("Japanese", comment: ""): languageCode = "ja"
-    case NSLocalizedString("Chinese", comment: ""): languageCode = "zh"
-    case NSLocalizedString("French", comment: ""): languageCode = "fr"
-    case NSLocalizedString("Hindi", comment: ""): languageCode = "hi"
-    case NSLocalizedString("Norwegian", comment: ""): languageCode = "no"
+    case "한국어": languageCode = "ko"
+    case "English": languageCode = "en"
+    case "Deutsch": languageCode = "de"
+    case "Español": languageCode = "es"
+    case "日本語": languageCode = "ja"
+    case "中文": languageCode = "zh"
+    case "Français": languageCode = "fr"
+    case "हिन्दी": languageCode = "hi"
+    case "Norsk": languageCode = "no"
     default: languageCode = "ko"
     }
     
