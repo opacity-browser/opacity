@@ -26,7 +26,7 @@
 "Zoom" = "ज़ूम";
 
 "Page not found" = "पृष्ठ नहीं मिला";
-"The server IP address for \\'%@\\' could not be found." = "'%@' के लिए सर्वर IP पता नहीं मिल सका।";
+"The server IP address for '%@' could not be found." = "'%@' के लिए सर्वर IP पता नहीं मिल सका।";
 "Unable to connect to site" = "साइट से कनेक्ट नहीं हो सका";
 "Connection has been reset." = "कनेक्शन रीसेट कर दिया गया है।";
 "No internet connection" = "कोई इंटरनेट कनेक्शन नहीं";

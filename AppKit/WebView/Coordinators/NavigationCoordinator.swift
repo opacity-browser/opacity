@@ -200,20 +200,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     }
   }
   
-  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-    // 에러 페이지 리로드 처리
-    if let url = navigationAction.request.url,
-       let errorURL = cacheErrorURL,
-       url.scheme == "opacity", url.host == "errors",
-       reloadAttemptCount == 0 {
-      cacheErrorURL = nil
-      reloadAttemptCount = 1
-      print("error reload: \(errorURL)")
-      webView.load(URLRequest(url: errorURL))
-      decisionHandler(.cancel)
-      return
-    }
-    
+  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {    
     guard let requestURL = navigationAction.request.url else {
       decisionHandler(.cancel)
       return
@@ -594,18 +581,11 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   private func handleDefaultFavicon(for url: URL?) {
     guard let webviewURL = url, let scheme = webviewURL.scheme, let host = webviewURL.host else { return }
     
-//    if scheme == "opacity" {
-//      DispatchQueue.main.async {
-//        self.parent.tab.faviconURL = nil
-//        self.parent.tab.loadFavicon(url: nil)
-//      }
-//    } else {
-      let faviconURL = URL(string: "\(scheme)://\(host)/favicon.ico")!
-      DispatchQueue.main.async {
-        self.parent.tab.faviconURL = faviconURL
-        self.parent.tab.loadFavicon(url: faviconURL)
-      }
-//    }
+    let faviconURL = URL(string: "\(scheme)://\(host)/favicon.ico")!
+    DispatchQueue.main.async {
+      self.parent.tab.faviconURL = faviconURL
+      self.parent.tab.loadFavicon(url: faviconURL)
+    }
   }
   
   // MARK: - 에러 처리 메서드들
@@ -615,7 +595,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     if (error as NSError).code == NSURLErrorCancelled {
       return
     }
-//    handleWebViewError(webView: webView, error: error)
+    handleWebViewErrorWithSwiftUI(webView: webView, error: error)
   }
   
   func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -626,78 +606,46 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
       getWebViewDocumentFavicon(webView: webView)
       return
     }
-//    handleWebViewError(webView: webView, error: error)
+    handleWebViewErrorWithSwiftUI(webView: webView, error: error)
   }
-  
-//  private func handleWebViewError(webView: WKWebView, error: Error) {
-//    let nsError = error as NSError
-//    print("handleWebViewError")
-//    print("Load failed with error: \(error.localizedDescription)")
-//
-//    parent.tab.webviewIsError = true
-//    guard let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL else { return }
-//    
-//    cacheErrorURL = failingURL
-//    reloadAttemptCount = 1
-//    
-//    let lang = Locale.current.language.languageCode?.identifier ?? "en"
-//    parent.tab.inputURL = failingURL.absoluteString
-//    parent.tab.printURL = failingURL.absoluteString
-//    
-//    let errorSchemeURL: URL?
-//    
-//    switch nsError.code {
-//    case 104:
-//      errorSchemeURL = URL(string:"opacity://errors?type=blockedContent&lang=\(lang)&title=\(NSLocalizedString("Blocked content", comment: ""))")
-//    case WebKitErrorFrameLoadInterruptedByPolicyChange:
-//      print("Frame load interrupted by policy change: \(error.localizedDescription)")
-//      return
-//    case NSURLErrorCannotFindHost:
-//      errorSchemeURL = URL(string:"opacity://errors?type=notFindHost&lang=\(lang)&title=\(NSLocalizedString("Page not found", comment: ""))")
-//    case NSURLErrorCannotConnectToHost:
-//      errorSchemeURL = URL(string:"opacity://errors?type=notConnectHost&lang=\(lang)&title=\(NSLocalizedString("Unable to connect to site", comment: ""))")
-//    case NSURLErrorSecureConnectionFailed, NSURLErrorServerCertificateHasBadDate:
-//      errorSchemeURL = URL(string:"opacity://errors?type=occurredSSLError&lang=\(lang)&title=\(NSLocalizedString("SSL/TLS certificate error", comment: ""))")
-//    case NSURLErrorNotConnectedToInternet:
-//      errorSchemeURL = URL(string:"opacity://errors?type=notConnectInternet&lang=\(lang)&title=\(NSLocalizedString("No internet connection", comment: ""))")
-//    default:
-//      errorSchemeURL = URL(string:"opacity://errors?type=unknown&lang=\(lang)&title=\(NSLocalizedString("Unknown error", comment: ""))")
-//    }
-//    
-//    if let schemeURL = errorSchemeURL {
-//      webView.load(URLRequest(url: schemeURL))
-//    }
-//  }
   
   private func handleWebViewErrorWithSwiftUI(webView: WKWebView, error: Error) {
     let nsError = error as NSError
     print("handleWebViewError with SwiftUI")
     print("Load failed with error: \(error.localizedDescription)")
-
+    
     parent.tab.webviewIsError = true
     guard let failingURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL else { return }
+    
+    // 이미 에러 페이지를 표시 중이면 리턴
+    if parent.tab.showErrorPage {
+      return
+    }
     
     let errorType: ErrorPageType
     
     switch nsError.code {
-    case 104:
-      errorType = .blockedContent
-    case WebKitErrorFrameLoadInterruptedByPolicyChange:
-      print("Frame load interrupted by policy change: \(error.localizedDescription)")
-      return
-    case NSURLErrorCannotFindHost:
-      errorType = .notFindHost
-    case NSURLErrorCannotConnectToHost:
-      errorType = .notConnectHost
-    case NSURLErrorSecureConnectionFailed, NSURLErrorServerCertificateHasBadDate:
-      errorType = .occurredSSLError
-    case NSURLErrorNotConnectedToInternet:
-      errorType = .notConnectInternet
-    default:
-      errorType = .unknown
+      case 104:
+        errorType = .blockedContent
+      case WebKitErrorFrameLoadInterruptedByPolicyChange:
+        print("Frame load interrupted by policy change: \(error.localizedDescription)")
+        return
+      case NSURLErrorCannotFindHost:
+        errorType = .notFindHost
+      case NSURLErrorCannotConnectToHost:
+        errorType = .notConnectHost
+      case NSURLErrorSecureConnectionFailed, NSURLErrorServerCertificateHasBadDate:
+        errorType = .occurredSSLError
+      case NSURLErrorNotConnectedToInternet:
+        errorType = .notConnectInternet
+      default:
+        errorType = .unknown
     }
     
     DispatchQueue.main.async {
+      // WebView 로딩 중지
+      webView.stopLoading()
+      
       self.parent.tab.inputURL = failingURL.absoluteString
       self.parent.tab.printURL = failingURL.absoluteString
       self.parent.tab.errorPageType = errorType

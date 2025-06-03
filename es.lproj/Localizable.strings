@@ -26,7 +26,7 @@
 "Zoom" = "Zoom";
 
 "Page not found" = "Página no encontrada";
-"The server IP address for \\'%@\\' could not be found." = "No se pudo encontrar la dirección IP del servidor de \\'%@\\'.";
+"The server IP address for '%@' could not be found." = "No se pudo encontrar la dirección IP del servidor de '%@'.";
 "Unable to connect to site" = "No se puede conectar al sitio";
 "Connection has been reset." = "La conexión se ha restablecido.";
 "No internet connection" = "Sin conexión a Internet";

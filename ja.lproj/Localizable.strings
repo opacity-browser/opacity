@@ -26,7 +26,7 @@
 "Zoom" = "ズーム";
 
 "Page not found" = "ページが見つかりません";
-"The server IP address for \\'%@\\' could not be found." = "'%@' のサーバーIPアドレスが見つかりませんでした。";
+"The server IP address for '%@' could not be found." = "'%@' のサーバーIPアドレスが見つかりませんでした。";
 "Unable to connect to site" = "サイトに接続できません";
 "Connection has been reset." = "接続がリセットされました。";
 "No internet connection" = "インターネット接続なし";

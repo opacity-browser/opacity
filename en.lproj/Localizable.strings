@@ -29,7 +29,7 @@
 
 // Error Page
 "Page not found" = "Page not found";
-"The server IP address for \\'%@\\' could not be found." = "The server IP address for \\'%@\\' could not be found.";
+"The server IP address for '%@' could not be found." = "The server IP address for '%@' could not be found.";
 "Unable to connect to site" = "Unable to connect to site";
 "Connection has been reset." = "Connection has been reset.";
 "No internet connection" = "No internet connection";

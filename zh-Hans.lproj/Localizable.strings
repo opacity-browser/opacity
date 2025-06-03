@@ -26,7 +26,7 @@
 "Zoom" = "缩放";
 
 "Page not found" = "页面未找到";
-"The server IP address for \\'%@\\' could not be found." = "无法找到 '%@' 的服务器 IP 地址。";
+"The server IP address for '%@' could not be found." = "无法找到 '%@' 的服务器 IP 地址。";
 "Unable to connect to site" = "无法连接到网站";
 "Connection has been reset." = "连接已重置。";
 "No internet connection" = "无网络连接";

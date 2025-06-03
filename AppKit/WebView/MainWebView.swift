@@ -55,11 +55,16 @@ struct MainWebView: NSViewRepresentable {
       tab.isTrackerBlocking = service.isTrackerBlocking
       ContentBlockRuleList(webView: webView).updateRules(isBlocking: service.isTrackerBlocking)
     }
-
+    
     return webView
   }
   
   func updateNSView(_ webView: WKWebView, context: Context) {
+    // 에러 페이지가 표시 중이면 WebView 업데이트 중지
+    if tab.showErrorPage {
+      return
+    }
+    
     // Tracker Blocking 업데이트
     if let isTrackerBlocking = tab.isTrackerBlocking, isTrackerBlocking != service.isTrackerBlocking {
       tab.isTrackerBlocking = service.isTrackerBlocking

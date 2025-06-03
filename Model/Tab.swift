@@ -332,6 +332,12 @@ final class Tab: ObservableObject {
       self.clearAutoComplete()
       self.clearPermission()
       self.setDomainPermission(url)
+      
+      // 에러 페이지 상태 초기화
+      self.showErrorPage = false
+      self.errorPageType = nil
+      self.errorFailingURL = ""
+      self.webviewIsError = false
     }
   }
   

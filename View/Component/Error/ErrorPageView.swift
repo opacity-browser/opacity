@@ -27,7 +27,7 @@ struct ErrorPageView: View {
       return (
         title: NSLocalizedString("Page not found", comment: ""),
         message: String(format: NSLocalizedString("The server IP address for '%@' could not be found.", comment: ""), failingURL),
-        icon: "magnifyingglass.circle"
+        icon: "exclamationmark.triangle"
       )
     case .notConnectHost:
       return (
@@ -69,20 +69,20 @@ struct ErrorPageView: View {
       VStack(spacing: 24) {
         // 오류 아이콘
         Image(systemName: errorInfo.icon)
-          .font(.system(size: 60, weight: .light))
-          .foregroundColor(Color("Icon").opacity(0.6))
+          .font(.system(size: 56, weight: .light))
+          .foregroundColor(Color("Icon").opacity(1))
         
         VStack(spacing: 12) {
           // 오류 제목
           Text(errorInfo.title)
-            .font(.system(size: 24, weight: .semibold))
+            .font(.system(size: 36, weight: .semibold))
             .foregroundColor(Color("UIText"))
             .multilineTextAlignment(.center)
           
           // 오류 메시지
           Text(errorInfo.message)
             .font(.system(size: 14))
-            .foregroundColor(Color("UIText").opacity(0.7))
+            .foregroundColor(Color("UIText").opacity(0.6))
             .multilineTextAlignment(.center)
             .lineSpacing(4)
             .padding(.horizontal, 40)
@@ -106,12 +106,13 @@ struct ErrorPageView: View {
         .onHover { isHover in
           // 호버 효과를 원한다면 여기에 추가
         }
+        .padding(.top, 12)
         
         // URL 정보 (선택사항)
         if !failingURL.isEmpty {
           Text(failingURL)
             .font(.custom("SF Mono", size: 12))
-            .foregroundColor(Color("UIText").opacity(0.5))
+            .foregroundColor(Color("UIText").opacity(0.3))
             .padding(.horizontal, 40)
             .multilineTextAlignment(.center)
             .lineLimit(2)
