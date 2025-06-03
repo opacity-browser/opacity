@@ -20,7 +20,7 @@ struct TabContentView: View {
       if tab.isInit {
         NewTabView(browser: browser, tab: tab)
       } else if tab.isSetting {
-        SettingsView()
+        SettingsView(browser: browser)  // browser 전달
       } else if tab.showErrorPage, let errorType = tab.errorPageType {
         // 오류 페이지 표시
         ErrorPageView(

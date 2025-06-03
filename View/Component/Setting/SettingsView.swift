@@ -11,6 +11,11 @@ import SwiftData
 struct SettingsView: View {
   @Query var generalSettings: [GeneralSetting]
   @State private var selectedCategory: SettingsCategory = .general
+  @ObservedObject var browser: Browser
+  
+  init(browser: Browser) {
+    self.browser = browser
+  }
   
   var body: some View {
     HStack(spacing: 0) {
@@ -22,7 +27,7 @@ struct SettingsView: View {
           .foregroundColor(Color("UIBorder"))
       }
       
-      SettingsContent(selectedCategory: selectedCategory, generalSettings: generalSettings)
+      SettingsContent(selectedCategory: selectedCategory, generalSettings: generalSettings, browser: browser)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color("SearchBarBG"))

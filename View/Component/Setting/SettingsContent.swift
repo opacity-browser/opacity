@@ -11,21 +11,28 @@ import SwiftData
 struct SettingsContent: View {
   let selectedCategory: SettingsCategory
   let generalSettings: [GeneralSetting]
+  @ObservedObject var browser: Browser
+  
+  init(selectedCategory: SettingsCategory, generalSettings: [GeneralSetting], browser: Browser) {
+    self.selectedCategory = selectedCategory
+    self.generalSettings = generalSettings
+    self.browser = browser
+  }
   
   var body: some View {
-    ScrollView {
+      ScrollView {
       VStack(spacing: 0) {
         switch selectedCategory {
         case .general:
-          GeneralSettingsView(generalSettings: generalSettings)
+          GeneralSettingsView(browser: browser, generalSettings: generalSettings)
         case .searchHistory:
           SearchHistorySettingsView()
         case .visitHistory:
           VisitHistorySettingsView()
         case .permissions:
-          PermissionsSettingsView()
+          PermissionsSettingsView(browser: browser)
         case .library:
-          LibrarySettingsView()
+          LibrarySettingsView(browser: browser)
         }
       }
       .padding(.horizontal, 40)

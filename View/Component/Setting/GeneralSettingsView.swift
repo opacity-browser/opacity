@@ -11,7 +11,13 @@ import SwiftData
 
 struct GeneralSettingsView: View {
   @Environment(\.modelContext) var modelContext
+  @ObservedObject var browser: Browser
   let generalSettings: [GeneralSetting]
+  
+  init(browser: Browser, generalSettings: [GeneralSetting]) {
+    self.browser = browser
+    self.generalSettings = generalSettings
+  }
   
   @State private var selectedLanguage: String = "Korean"
   @State private var selectedScreenMode: String = "System"
@@ -72,12 +78,25 @@ struct GeneralSettingsView: View {
                   .foregroundColor(Color("UIText"))
               }
               
-              Text(NSLocalizedString("Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules.", comment: ""))
+              Text(NSLocalizedString("Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.", comment: ""))
                 .font(.system(size: 13))
                 .foregroundColor(Color("UIText").opacity(0.7))
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.leading, 2)
+              
+              // Learn More 링크 추가
+              Button(action: {
+                browser.newTab(URL(string: "https://github.com/opacity-browser/ContentBlockRuleList")!)
+              }) {
+                Text(NSLocalizedString("Learn More", comment: ""))
+                  .font(.system(size: 12))
+                  .foregroundColor(Color("Point"))
+                  .underline()
+              }
+              .buttonStyle(.plain)
+              .padding(.leading, 2)
+              .padding(.top, 4)
             }
             
             Spacer()

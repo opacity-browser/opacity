@@ -10,6 +10,11 @@ import SwiftData
 
 struct PermissionsSettingsView: View {
   @Query var domainPermissions: [DomainPermission]
+  @ObservedObject var browser: Browser  // browser 추가
+  
+  init(browser: Browser) {
+    self.browser = browser
+  }
   
   private var notificationPermissions: [DomainPermission] {
     domainPermissions.filter { $0.permission == DomainPermissionType.notification.rawValue }

@@ -308,12 +308,18 @@ final class Tab: ObservableObject {
     SearchManager.addSearchHistory(keyword)
     
     let newURL = self.changeKeywordToURL(keyword)
+    
+    if self.isSetting {
+      self.isSetting = false
+    }
+    
     self.updateURLBySearch(url: URL(string: newURL)!)
   }
   
   func updateURLBySearch(url: URL) {
     DispatchQueue.main.async {
       self.isInit = false
+      self.isSetting = false
       self.isUpdateBySearch = true
       self.originURL = url
       self.inputURL = StringURL.setInputURL(url)
