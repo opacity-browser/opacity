@@ -190,7 +190,7 @@ class TabDragSource: NSView {
                        pow(currentLocation.y - mouseDownLocation.y, 2))
     
     // 시간과 거리 조건을 모두 만족할 때만 드래그 시작
-    if timeDiff >= dragMinimumTime || distance >= dragMinimumDistance {
+    if timeDiff >= dragMinimumTime && distance >= dragMinimumDistance {
       startDragSession(with: event)
     }
   }
@@ -203,7 +203,7 @@ class TabDragSource: NSView {
                        pow(currentLocation.y - mouseDownLocation.y, 2))
     
     // 짧은 클릭이고 움직임이 적으면 일반 클릭으로 처리
-    if timeDiff < dragMinimumTime && distance < dragMinimumDistance {
+    if !(timeDiff >= dragMinimumTime && distance >= dragMinimumDistance) {
       // 일반 클릭 이벤트 처리 (탭 활성화 등)
       handleTabClick()
     }
