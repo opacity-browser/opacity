@@ -113,6 +113,11 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         let historySite = HistorySite(title: self.parent.tab.title, url: url)
         if let faviconURL = faviconURL {
           historySite.loadFavicon(url: faviconURL)
+          // SPA 업데이트도 방문 기록에 추가
+          Task {
+            let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+            VisitManager.addVisitHistory(url: url.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+          }
         }
         self.parent.tab.historySiteList = self.parent.tab.historySiteList.filter { item in
           item.url != url
@@ -391,19 +396,6 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         
         guard let title = response as? String else { return }
         self.parent.tab.title = title
-        
-        if let webviewURL = webView.url,
-           let scheme = webviewURL.scheme,
-           let host = webviewURL.host {
-          switch (scheme, host) {
-          case ("opacity", "settings"):
-            self.parent.tab.title = NSLocalizedString("Settings", comment: "")
-          case ("opacity", "new-tab"):
-            self.parent.tab.title = NSLocalizedString("New Tab", comment: "")
-          default:
-            break
-          }
-        }
       }
     }
   }
@@ -579,7 +571,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
           Task {
             let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
             if let faviconData = faviconData {
-              await VisitManager.updateVisitHistoryGroupFavicon(url: currentURL.absoluteString, faviconData: faviconData)
+              VisitManager.updateVisitHistoryGroupFavicon(url: currentURL.absoluteString, faviconData: faviconData)
             }
           }
         }
@@ -601,7 +593,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
       Task {
         let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
         if let faviconData = faviconData {
-          await VisitManager.updateVisitHistoryGroupFavicon(url: webviewURL.absoluteString, faviconData: faviconData)
+          VisitManager.updateVisitHistoryGroupFavicon(url: webviewURL.absoluteString, faviconData: faviconData)
         }
       }
     }
