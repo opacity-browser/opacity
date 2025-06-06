@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/opacity-browser/ContentBlockRuleList.git",
       "state" : {
-        "revision" : "a911dbf6d98b29368c59804e3dbd70ae555aac24",
-        "version" : "1.0.7"
+        "revision" : "bace4f5b516ba3157dad97700f37fc72e58c8e26",
+        "version" : "1.0.8"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/duckduckgo/TrackerRadarKit.git",
       "state" : {
-        "revision" : "1403e17eeeb8493b92fb9d11eb8c846bb9776581",
-        "version" : "2.1.2"
+        "revision" : "a3f0ade39904602aa45874a7d71db4fafa10f7d9",
+        "version" : "3.0.1"
       }
     }
   ],
