@@ -60,6 +60,15 @@ class VisitManager {
           visitGroup.title = title
         }
       }
+      // 파비콘 데이터가 없거나 새로운 파비콘 데이터가 있으면 업데이트
+      if visitGroup.faviconData == nil, let faviconData = faviconData {
+        visitGroup.faviconData = faviconData
+        do {
+          try AppDelegate.shared.opacityModelContainer.mainContext.save()
+        } catch {
+          print("ModelContainerError updating favicon")
+        }
+      }
     } else {
       do {
         let newVisitHistoryGroup = VisitHistoryGroup(url: url, title: title, faviconData: faviconData)
@@ -68,6 +77,17 @@ class VisitManager {
         self.addVisitHistory(url: url)
       } catch {
         print("ModelContainerError addVisitHistory")
+      }
+    }
+  }
+  
+  @MainActor static func updateVisitHistoryGroupFavicon(url: String, faviconData: Data) {
+    if let visitGroup = self.getVisitHistoryGroup(url) {
+      visitGroup.faviconData = faviconData
+      do {
+        try AppDelegate.shared.opacityModelContainer.mainContext.save()
+      } catch {
+        print("ModelContainerError updateVisitHistoryGroupFavicon")
       }
     }
   }

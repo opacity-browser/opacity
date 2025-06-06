@@ -200,7 +200,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     }
   }
   
-  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {    
+  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
     guard let requestURL = navigationAction.request.url else {
       decisionHandler(.cancel)
       return
@@ -573,8 +573,19 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
       DispatchQueue.main.async {
         self.parent.tab.faviconURL = faviconURL
         self.parent.tab.loadFavicon(url: faviconURL)
+        
+        // VisitHistoryGroup의 파비콘도 업데이트
+        if let faviconURL = faviconURL, let currentURL = webView.url {
+          Task {
+            let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+            if let faviconData = faviconData {
+              await VisitManager.updateVisitHistoryGroupFavicon(url: currentURL.absoluteString, faviconData: faviconData)
+            }
+          }
+        }
+        
+        group?.leave()
       }
-      group?.leave()
     }
   }
   
@@ -585,6 +596,14 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     DispatchQueue.main.async {
       self.parent.tab.faviconURL = faviconURL
       self.parent.tab.loadFavicon(url: faviconURL)
+      
+      // VisitHistoryGroup의 파비콘도 업데이트
+      Task {
+        let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+        if let faviconData = faviconData {
+          await VisitManager.updateVisitHistoryGroupFavicon(url: webviewURL.absoluteString, faviconData: faviconData)
+        }
+      }
     }
   }
   
