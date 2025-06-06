@@ -13,15 +13,21 @@ struct SettingsSidebar: View {
   var body: some View {
     VStack(spacing: 0) {
       VStack(spacing: 0) {
-        HStack(spacing: 0) {
+        HStack(spacing: 12) {
+          Image("MainLogo")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 24, height: 24)
+          
           Text(NSLocalizedString("Settings", comment: ""))
-            .font(.system(size: 20, weight: .semibold))
+            .font(.system(size: 20, weight: .regular))
             .foregroundColor(Color("UIText"))
+          
           Spacer()
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 20)
-        .padding(.bottom, 15)
+        .padding(.horizontal, 24)
+        .padding(.top, 44)
+        .padding(.bottom, 38)
       }
       
       VStack(spacing: 4) {
@@ -34,11 +40,11 @@ struct SettingsSidebar: View {
           }
         }
       }
-      .padding(.horizontal, 12)
+      .padding(.horizontal, 20)
       
-      Spacer()
+      Spacer(minLength: 40)
     }
-    .frame(width: 200)
+    .frame(width: 240)
     .background(Color("SearchBarBG"))
   }
 }

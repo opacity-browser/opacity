@@ -59,6 +59,7 @@
 "Change Name" = "이름 변경";
 "Delete" = "삭제";
 "Are you sure you want to clear all search history?" = "검색 내역을 모두 지우시겠습니까?";
+"Are you sure you want to clear all visit history?" = "방문 기록을 모두 지우시겠습니까?";
 "Add Folder" = "폴더 추가";
 "Folder" = "폴더";
 "Name" = "이름";

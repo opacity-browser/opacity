@@ -52,11 +52,11 @@ enum SettingsCategory: String, CaseIterable {
     case .searchHistory:
       return "magnifyingglass.circle"
     case .visitHistory:
-      return "clock"
+      return "text.page"
     case .permissions:
-      return "shield"
+      return "shield.lefthalf.filled"
     case .library:
-      return "books.vertical"
+      return "book.closed"
     }
   }
 }

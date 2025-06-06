@@ -23,26 +23,30 @@ struct LibrarySettingsView: View {
         
         VStack(spacing: 16) {
           LibraryInfoRow(
-            title: "Opacity Browser",
-            version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0",
-            description: NSLocalizedString("Private-focused web browser", comment: ""),
-            link: "https://github.com/opacity-browser/opacity-browser",
+            title: "Tracker Radar Kit",
+            description: "Apache 2.0 license",
+            link: "https://github.com/duckduckgo/TrackerRadarKit",
             browser: browser
           )
           
           LibraryInfoRow(
-            title: "DuckDuckGo Tracker Radar",
-            version: "1.0",
-            description: NSLocalizedString("Rule list for tracker blocking", comment: ""),
-            link: "https://github.com/duckduckgo/tracker-radar",
+            title: "Tracker Blocklists",
+            description: "CC BY-NC-SA 4.0 license",
+            link: "https://github.com/duckduckgo/tracker-blocklists",
             browser: browser
           )
           
           LibraryInfoRow(
-            title: "WebKit",
-            version: "Safari Technology Preview",
-            description: NSLocalizedString("Web rendering engine", comment: ""),
-            link: "https://webkit.org",
+            title: "Remove Adblock Thing",
+            description: "MIT license",
+            link: "https://github.com/TheRealJoelmatic/RemoveAdblockThing",
+            browser: browser
+          )
+          
+          LibraryInfoRow(
+            title: "ASN1Decoder",
+            description: "MIT license",
+            link: "https://github.com/filom/ASN1Decoder",
             browser: browser
           )
         }
@@ -55,14 +59,12 @@ struct LibrarySettingsView: View {
 
 struct LibraryInfoRow: View {
   let title: String
-  let version: String
   let description: String
   let link: String?
   @ObservedObject var browser: Browser
   
-  init(title: String, version: String, description: String, link: String? = nil, browser: Browser) {
+  init(title: String, description: String, link: String? = nil, browser: Browser) {
     self.title = title
-    self.version = version
     self.description = description
     self.link = link
     self.browser = browser
@@ -88,10 +90,6 @@ struct LibraryInfoRow: View {
         }
         
         Spacer()
-        
-        Text("v\(version)")
-          .font(.system(size: 14))
-          .foregroundColor(Color("UIText").opacity(0.6))
       }
       
       Text(description)

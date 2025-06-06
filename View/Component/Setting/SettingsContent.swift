@@ -20,29 +20,27 @@ struct SettingsContent: View {
   }
   
   var body: some View {
-    GeometryReader { geometry in
-      ScrollView([.horizontal, .vertical]) {
-        VStack(alignment: .leading, spacing: 0) {
-          switch selectedCategory {
-          case .general:
-            GeneralSettingsView(browser: browser, generalSettings: generalSettings)
-          case .searchHistory:
-            SearchHistorySettingsView(browser: browser)
-          case .visitHistory:
-            VisitHistorySettingsView()
-          case .permissions:
-            PermissionsSettingsView(browser: browser)
-          case .library:
-            LibrarySettingsView(browser: browser)
-          }
-          
-          Spacer(minLength: 40)
+    ScrollView(.vertical) {
+      VStack(alignment: .leading, spacing: 0) {
+        switch selectedCategory {
+        case .general:
+          GeneralSettingsView(browser: browser, generalSettings: generalSettings)
+        case .searchHistory:
+          SearchHistorySettingsView(browser: browser)
+        case .visitHistory:
+          VisitHistorySettingsView(browser: browser)
+        case .permissions:
+          PermissionsSettingsView(browser: browser)
+        case .library:
+          LibrarySettingsView(browser: browser)
         }
-        .padding(.horizontal, 40)
-        .padding(.top, 40)
-        .frame(minWidth: max(600, geometry.size.width - 80), minHeight: geometry.size.height, alignment: .top)
+        
+        Spacer(minLength: 40)
       }
-      .scrollIndicators(.visible)
+      .padding(.horizontal, 40)
+      .padding(.top, 40)
+      .frame(maxWidth: .infinity, alignment: .topLeading)
     }
+    .scrollIndicators(.visible)
   }
 }

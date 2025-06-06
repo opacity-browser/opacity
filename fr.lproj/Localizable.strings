@@ -59,6 +59,7 @@
 "Change Name" = "Modifier le nom";
 "Delete" = "Supprimer";
 "Are you sure you want to clear all search history?" = "Êtes-vous sûr de vouloir effacer tout l'historique de recherche ?";
+"Are you sure you want to clear all visit history?" = "Êtes-vous sûr de vouloir effacer tout l'historique de navigation?";
 "Add Folder" = "Ajouter un dossier";
 "Folder" = "Dossier";
 "Name" = "Nom";

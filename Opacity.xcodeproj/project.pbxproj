@@ -333,7 +333,6 @@
 				A14246272B7E7E010062C516 /* TabDialogItem.swift */,
 				A142462F2B80E3CD0062C516 /* HistoryDialog.swift */,
 				A14246332B8132E50062C516 /* HistoryDialogItem.swift */,
-				A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */,
 				A16BCAEF2B8F7BF3004639F2 /* NotificationDialog.swift */,
 				A16BCAF92B8FFFC0004639F2 /* SiteOptionDialog.swift */,
 				A11EDAC92B9EE774000D07CB /* BookmarkDialog.swift */,
@@ -349,6 +348,7 @@
 		A11EDAE42BA62C9E000D07CB /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				A17245E12B8CBE230049F58D /* GeoLocationDialog.swift */,
 				A11EDAEB2BA6EE06000D07CB /* SearchEditBox.swift */,
 				A11EDAE52BA62CAA000D07CB /* SearchAutoCompleteBox.swift */,
 				A11EDAE22BA5EC3A000D07CB /* SearchAutoComplete.swift */,

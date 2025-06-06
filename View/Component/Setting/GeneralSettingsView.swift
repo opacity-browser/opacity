@@ -42,7 +42,7 @@ struct GeneralSettingsView: View {
   private let retentionPeriods = ["1 Day", "1 Week", "1 Month", "Indefinite"]
   
   var body: some View {
-    VStack(spacing: 24) {
+    VStack(spacing: 32) {
       HStack(spacing: 0) {
         Text(NSLocalizedString("General", comment: ""))
           .font(.system(size: 24, weight: .semibold))
@@ -50,6 +50,7 @@ struct GeneralSettingsView: View {
         
         Spacer()
       }
+      .padding(.bottom, 6)
       
       VStack(spacing: 32) {
         VStack(spacing: 24) {

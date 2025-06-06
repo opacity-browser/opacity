@@ -38,7 +38,7 @@ struct SearchHistorySettingsView: View {
   }
   
   var body: some View {
-    VStack(spacing: 24) {
+    VStack(spacing: 32) {
       HStack(spacing: 0) {
         Text(NSLocalizedString("Search History", comment: ""))
           .font(.system(size: 24, weight: .semibold))
@@ -114,8 +114,8 @@ struct SearchHistorySettingsView: View {
                     .font(.system(size: 14))
                 }
                 .foregroundColor(Color("ButtonText"))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
                 .padding(.trailing, 4)
                 .background(Color("ButtonBG"))
                 .clipShape(RoundedRectangle(cornerRadius: 8))

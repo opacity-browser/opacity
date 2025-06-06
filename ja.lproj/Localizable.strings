@@ -59,6 +59,7 @@
 "Change Name" = "名前を変更";
 "Delete" = "削除";
 "Are you sure you want to clear all search history?" = "すべての検索履歴を削除してもよろしいですか？";
+"Are you sure you want to clear all visit history?" = "閲覧履歴をすべて削除してもよろしいですか？";
 "Add Folder" = "フォルダを追加";
 "Folder" = "フォルダ";
 "Name" = "名前";

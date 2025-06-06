@@ -97,13 +97,8 @@ struct PermissionSection: View {
 struct PermissionRow: View {
   @Environment(\.modelContext) var modelContext
   let permission: DomainPermission
-  
-  @State private var isAllowed: Bool
-  
-  init(permission: DomainPermission) {
-    self.permission = permission
-    self._isAllowed = State(initialValue: !permission.isDenied)
-  }
+  @State private var isHovering = false
+  @State private var isHoveringDelete = false
   
   var body: some View {
     HStack(spacing: 0) {
@@ -112,16 +107,31 @@ struct PermissionRow: View {
           .font(.system(size: 14, weight: .medium))
           .foregroundColor(Color("UIText"))
         
-        Text(isAllowed ? NSLocalizedString("allowed", comment: "") : NSLocalizedString("denied", comment: ""))
+        Text(!permission.isDenied ? NSLocalizedString("allowed", comment: "") : NSLocalizedString("denied", comment: ""))
           .font(.system(size: 12))
-          .foregroundColor(isAllowed ? Color("Point") : Color("Danger"))
+          .foregroundColor(!permission.isDenied ? Color("Point") : Color("Danger"))
       }
       
       Spacer()
       
-      Toggle("", isOn: $isAllowed)
-        .toggleStyle(SwitchToggleStyle(tint: Color("Point")))
-        .scaleEffect(0.8)
+      if isHovering {
+        Button(action: {
+          deletePermission()
+        }) {
+          Image(systemName: "xmark")
+            .font(.system(size: 10, weight: .medium))
+            .foregroundColor(Color("UIText").opacity(0.6))
+            .frame(width: 20, height: 20)
+            .background(
+              Circle()
+                .fill(Color("UIText").opacity(isHoveringDelete ? 0.15 : 0))
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .onHover { hovering in
+          isHoveringDelete = hovering
+        }
+      }
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 12)
@@ -129,9 +139,13 @@ struct PermissionRow: View {
       RoundedRectangle(cornerRadius: 8)
         .fill(Color("InputBG").opacity(0.5))
     )
-    .onChange(of: isAllowed) { _, newValue in
-      permission.isDenied = !newValue
-      try? modelContext.save()
+    .onHover { hovering in
+      isHovering = hovering
     }
+  }
+  
+  private func deletePermission() {
+    modelContext.delete(permission)
+    try? modelContext.save()
   }
 }
