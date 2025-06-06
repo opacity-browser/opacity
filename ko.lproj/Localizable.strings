@@ -58,6 +58,7 @@
 
 "Change Name" = "이름 변경";
 "Delete" = "삭제";
+"Are you sure you want to clear all search history?" = "검색 내역을 모두 지우시겠습니까?";
 "Add Folder" = "폴더 추가";
 "Folder" = "폴더";
 "Name" = "이름";
@@ -90,7 +91,7 @@
 "There is no domain with permissions set." = "권한이 설정된 도메인이 없습니다.";
 "There is no search history." = "검색기록이 없습니다.";
 "There is no visit history." = "방문기록이 없습니다.";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "DuckDuckGo의 추적 방지 목록과 추가 규칙을 사용하여 불필요한 광고와 추적기를 차단합니다.";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "DuckDuckGo의 추적 방지 목록과 추가 규칙을 사용하여 불필요한 광고와 추적기를 차단합니다.";
 "English" = "영어";
 "Norwegian" = "노르웨이어";
 "Hindi" = "힌디어";
@@ -141,3 +142,8 @@
 "Ad Blocking" = "광고 차단";
 
 "Refresh after clearing cache" = "캐시 삭제 후 새로고침";
+
+"Load More" = "더 보기";
+"No results found." = "결과를 찾을 수 없습니다.";
+"Today" = "오늘";
+"Yesterday" = "어제";

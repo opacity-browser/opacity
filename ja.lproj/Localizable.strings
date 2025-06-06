@@ -58,6 +58,7 @@
 
 "Change Name" = "名前を変更";
 "Delete" = "削除";
+"Are you sure you want to clear all search history?" = "すべての検索履歴を削除してもよろしいですか？";
 "Add Folder" = "フォルダを追加";
 "Folder" = "フォルダ";
 "Name" = "名前";
@@ -90,7 +91,7 @@
 "There is no domain with permissions set." = "権限が設定されているドメインはありません。";
 "There is no search history." = "検索履歴はありません。";
 "There is no visit history." = "閲覧履歴はありません。";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "DuckDuckGoの追跡保護リストと追加ルールを使用して不要な広告やトラッカーをブロックします。";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "DuckDuckGoの追跡保護リストと追加ルールを使用して不要な広告やトラッカーをブロックします。";
 "English" = "英語";
 "Norwegian" = "ノルウェー語";
 "Hindi" = "ヒンディー語";
@@ -141,3 +142,8 @@
 "Ad Blocking" = "広告ブロック";
 
 "Refresh after clearing cache" = "キャッシュをクリアした後に更新";
+
+"Load More" = "もっと読み込む";
+"No results found." = "結果が見つかりませんでした。";
+"Today" = "今日";
+"Yesterday" = "昨日";

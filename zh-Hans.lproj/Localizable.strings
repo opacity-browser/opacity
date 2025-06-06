@@ -58,6 +58,7 @@
 
 "Change Name" = "更改名称";
 "Delete" = "删除";
+"Are you sure you want to clear all search history?" = "您确定要清除所有搜索历史吗？";
 "Add Folder" = "添加文件夹";
 "Folder" = "文件夹";
 "Name" = "名称";
@@ -90,7 +91,7 @@
 "There is no domain with permissions set." = "没有设置权限的域名。";
 "There is no search history." = "没有搜索历史。";
 "There is no visit history." = "没有访问历史。";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "使用 DuckDuckGo 的追踪保护列表和附加规则阻止不必要的广告和追踪器。";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "使用 DuckDuckGo 的追踪保护列表和附加规则阻止不必要的广告和追踪器。";
 "English" = "英语";
 "Norwegian" = "挪威语";
 "Hindi" = "印地语";
@@ -141,3 +142,8 @@
 "Ad Blocking" = "广告拦截";
 
 "Refresh after clearing cache" = "清除缓存后刷新";
+
+"Load More" = "加载更多";
+"No results found." = "未找到结果。";
+"Today" = "今天";
+"Yesterday" = "昨天";

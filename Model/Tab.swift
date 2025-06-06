@@ -246,7 +246,7 @@ final class Tab: ObservableObject {
     DispatchQueue.main.async {
       self.complateCleanUpWebview = completion
       
-      if self.isInit || self.isSetting {
+      if self.isInit || self.isSetting || self.showErrorPage {
         completion()
         return
       }

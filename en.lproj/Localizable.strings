@@ -61,6 +61,7 @@
 
 "Change Name" = "Change Name";
 "Delete" = "Delete";
+"Are you sure you want to clear all search history?" = "Are you sure you want to clear all search history?";
 "Add Folder" = "Add Folder";
 "Folder" = "Folder";
 "Name" = "Name";
@@ -93,7 +94,7 @@
 "There is no domain with permissions set." = "There is no domain with permissions set.";
 "There is no search history." = "There is no search history.";
 "There is no visit history." = "There is no visit history.";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules.";
 "English" = "English";
 "Norwegian" = "Norwegian";
 "Hindi" = "Hindi";
@@ -144,3 +145,8 @@
 "Ad Blocking" = "Ad Blocking";
 
 "Refresh after clearing cache" = "Refresh after clearing cache";
+
+"Load More" = "Load More";
+"No results found." = "No results found.";
+"Today" = "Today";
+"Yesterday" = "Yesterday";

@@ -10,14 +10,14 @@ import SwiftUI
 struct SettingsActionButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
-      .font(.system(size: 14))
-      .foregroundColor(.white)
+      .font(.system(size: 12))
+      .foregroundColor(Color("Point"))
       .padding(.horizontal, 16)
       .padding(.vertical, 8)
-      .background(
-        RoundedRectangle(cornerRadius: 8)
-          .fill(configuration.isPressed ? Color("Danger").opacity(0.8) : Color("Danger"))
-      )
+//      .background(
+//        RoundedRectangle(cornerRadius: 8)
+//          .fill(configuration.isPressed ? Color("ButtonBG").opacity(0.8) : Color("ButtonBG"))
+//      )
       .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
       .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
   }

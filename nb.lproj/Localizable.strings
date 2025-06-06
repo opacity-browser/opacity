@@ -58,6 +58,7 @@
 
 "Change Name" = "Endre navn";
 "Delete" = "Slett";
+"Are you sure you want to clear all search history?" = "Er du sikker på at du vil slette all søkehistorikk?";
 "Add Folder" = "Legg til mappe";
 "Folder" = "Mappe";
 "Name" = "Navn";
@@ -90,7 +91,7 @@
 "There is no domain with permissions set." = "Ingen domener har angitte tillatelser.";
 "There is no search history." = "Ingen søkehistorikk.";
 "There is no visit history." = "Ingen besøkshistorikk.";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "Blokkerer unødvendige annonser og sporere ved hjelp av DuckDuckGos sporingsbeskyttelsesliste sammen med ekstra regler.";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "Blokkerer unødvendige annonser og sporere ved hjelp av DuckDuckGos sporingsbeskyttelsesliste sammen med ekstra regler.";
 "English" = "Engelsk";
 "Norwegian" = "Norsk";
 "Hindi" = "Hindi";
@@ -141,3 +142,8 @@
 "Ad Blocking" = "Annonseblokkering";
 
 "Refresh after clearing cache" = "Oppdater etter tømming av buffer";
+
+"Load More" = "Last inn mer";
+"No results found." = "Ingen resultater funnet.";
+"Today" = "I dag";
+"Yesterday" = "I går";

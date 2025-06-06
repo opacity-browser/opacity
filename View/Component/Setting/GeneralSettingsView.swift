@@ -42,36 +42,45 @@ struct GeneralSettingsView: View {
   private let retentionPeriods = ["1 Day", "1 Week", "1 Month", "Indefinite"]
   
   var body: some View {
-    VStack(spacing: 32) {
-      VStack(spacing: 24) {
-        SettingsRow(title: NSLocalizedString("Language", comment: "")) {
-          SettingsDropdown(
-            selection: $selectedLanguage,
-            options: languageOptions.map { $0.1 }  // 각 언어의 네이티브 이름 사용
-          )
-        }
+    VStack(spacing: 24) {
+      HStack(spacing: 0) {
+        Text(NSLocalizedString("General", comment: ""))
+          .font(.system(size: 24, weight: .semibold))
+          .foregroundColor(Color("UIText"))
         
-        SettingsRow(title: NSLocalizedString("Screen Mode", comment: "")) {
-          SettingsDropdown(
-            selection: $selectedScreenMode,
-            options: screenModes.map { NSLocalizedString($0, comment: "") }
-          )
-        }
-        
-        SettingsRow(title: NSLocalizedString("Search Engine", comment: "")) {
-          SettingsDropdown(
-            selection: $selectedSearchEngine,
-            options: searchEngines
-          )
-        }
-        
-        SettingsRow(title: NSLocalizedString("Retention Period", comment: "")) {
-          SettingsDropdown(
-            selection: $selectedRetentionPeriod,
-            options: retentionPeriods.map { NSLocalizedString($0, comment: "") }
-          )
-        }
+        Spacer()
       }
+      
+      VStack(spacing: 32) {
+        VStack(spacing: 24) {
+          SettingsRow(title: NSLocalizedString("Language", comment: "")) {
+            SettingsDropdown(
+              selection: $selectedLanguage,
+              options: languageOptions.map { $0.1 }  // 각 언어의 네이티브 이름 사용
+            )
+          }
+        
+          SettingsRow(title: NSLocalizedString("Screen Mode", comment: "")) {
+            SettingsDropdown(
+              selection: $selectedScreenMode,
+              options: screenModes.map { NSLocalizedString($0, comment: "") }
+            )
+          }
+          
+          SettingsRow(title: NSLocalizedString("Search Engine", comment: "")) {
+            SettingsDropdown(
+              selection: $selectedSearchEngine,
+              options: searchEngines
+            )
+          }
+          
+          SettingsRow(title: NSLocalizedString("Retention Period", comment: "")) {
+            SettingsDropdown(
+              selection: $selectedRetentionPeriod,
+              options: retentionPeriods.map { NSLocalizedString($0, comment: "") }
+            )
+          }
+        }
       
       VStack(spacing: 16) {
         Button(action: {
@@ -115,9 +124,8 @@ struct GeneralSettingsView: View {
         }
         .buttonStyle(PlainButtonStyle())
         .contentShape(Rectangle())
+        }
       }
-      
-      Spacer()
     }
     .onAppear {
       loadCurrentSettings()
@@ -137,6 +145,7 @@ struct GeneralSettingsView: View {
     .onChange(of: isTrackerBlocking) { _, newValue in
       updateTrackerBlocking(newValue)
     }
+    .frame(maxWidth: .infinity, alignment: .topLeading)
   }
   
   private func loadCurrentSettings() {

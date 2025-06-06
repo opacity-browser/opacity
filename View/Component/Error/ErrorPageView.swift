@@ -96,10 +96,10 @@ struct ErrorPageView: View {
             Text(NSLocalizedString("Refresh", comment: ""))
               .font(.system(size: 14, weight: .medium))
           }
-          .foregroundColor(.white)
+          .foregroundColor(Color("ButtonText"))
           .padding(.horizontal, 24)
           .padding(.vertical, 10)
-          .background(Color("Point"))
+          .background(Color("ButtonBG"))
           .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)

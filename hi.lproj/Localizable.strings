@@ -58,6 +58,7 @@
 
 "Change Name" = "नाम बदलें";
 "Delete" = "हटाएं";
+"Are you sure you want to clear all search history?" = "क्या आप वाकई सभी खोज इतिहास साफ़ करना चाहते हैं?";
 "Add Folder" = "फ़ोल्डर जोड़ें";
 "Folder" = "फ़ोल्डर";
 "Name" = "नाम";
@@ -90,7 +91,7 @@
 "There is no domain with permissions set." = "कोई डोमेन अनुमतियों के साथ सेट नहीं है।";
 "There is no search history." = "कोई खोज इतिहास नहीं है।";
 "There is no visit history." = "कोई यात्रा इतिहास नहीं है।";
-"Blocks unnecessary ads and trackers using DuckDuckGo’s tracking protection list along with additional rules." = "DuckDuckGo की ट्रैकिंग सुरक्षा सूची और अतिरिक्त नियमों का उपयोग करके अनावश्यक विज्ञापनों और ट्रैकर्स को रोकता है।";
+"Blocks unnecessary ads and trackers using DuckDuckGo's tracking protection list along with additional rules." = "DuckDuckGo की ट्रैकिंग सुरक्षा सूची और अतिरिक्त नियमों का उपयोग करके अनावश्यक विज्ञापनों और ट्रैकर्स को रोकता है।";
 "English" = "अंग्रेज़ी";
 "Norwegian" = "नॉर्वेजियन";
 "Hindi" = "हिंदी";
@@ -141,3 +142,8 @@
 "Ad Blocking" = "विज्ञापन अवरोधन";
 
 "Refresh after clearing cache" = "कैश साफ़ करने के बाद रीफ्रेश करें";
+
+"Load More" = "और लोड करें";
+"No results found." = "कोई परिणाम नहीं मिला।";
+"Today" = "आज";
+"Yesterday" = "कल";
