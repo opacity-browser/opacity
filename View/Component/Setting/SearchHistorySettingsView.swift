@@ -11,7 +11,7 @@ import SwiftData
 struct SearchHistorySettingsView: View {
   @Query(sort: \SearchHistory.createDate, order: .reverse) var searchHistories: [SearchHistory]
   @State private var showingClearAlert = false
-  @State private var displayCount = 100
+  @State private var displayCount = 30
   @State private var searchKeyword = ""
   @ObservedObject var browser: Browser
   
@@ -105,7 +105,7 @@ struct SearchHistorySettingsView: View {
             HStack {
               Spacer()
               Button(action: {
-                displayCount += 100
+                displayCount += 30
               }) {
                 HStack(spacing: 8) {
                   Image(systemName: "plus.circle")
