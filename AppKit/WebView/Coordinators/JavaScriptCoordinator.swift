@@ -67,8 +67,8 @@ class JavaScriptCoordinator: NSObject, WKUIDelegate {
   
   private func updateWebHistory(webView: WKWebView) {
     DispatchQueue.main.async {
-      self.parent.tab.historyBackList = webView.backForwardList.backList
-      self.parent.tab.historyForwardList = webView.backForwardList.forwardList
+      // 통합 히스토리 시스템을 위해 WebKit 리스트는 더 이상 업데이트하지 않음
+      // 대신 historySiteList를 기반으로 back/forward 리스트를 생성
       self.parent.tab.updateWebHistory = false
     }
   }

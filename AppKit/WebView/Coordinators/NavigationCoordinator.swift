@@ -30,8 +30,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   
   private func setupObservers() {
     guard let webview = parent.tab.webview else { return }
-    webview.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
-    webview.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+    // canGoBack/canGoForward 옵저버 제거 - 통합 히스토리 시스템 사용
     urlObservation = webview.observe(\.url, options: .new) { [weak self] webView, change in
       if let newURL = change.newValue {
         self?.handleURLChange(newURL)
@@ -58,10 +57,8 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   }
   
   func cleanup() {
-    guard let webview = parent.tab.webview else { return }
-    webview.removeObserver(self, forKeyPath: "canGoBack")
-    webview.removeObserver(self, forKeyPath: "canGoForward")
     urlObservation?.invalidate()
+    titleObservation?.invalidate()
   }
   
   private func normalizeURL(_ url: String) -> String {
@@ -75,11 +72,8 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   }
   
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    guard let webview = parent.tab.webview else { return }
-    DispatchQueue.main.async {
-      self.parent.tab.isBack = webview.canGoBack
-      self.parent.tab.isForward = webview.canGoForward
-    }
+    // KVO 관찰자는 더 이상 isBack/isForward를 업데이트하지 않음
+    // 통합 히스토리 시스템이 이 상태를 관리함
   }
   
   func setUserAgent(for webView: WKWebView) {
@@ -110,7 +104,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     if let url = webView.url, !parent.tab.webviewIsError, shouldTriggerSinglePageUpdate {
       self.getWebViewDocumentTitle(webView: webView)
       self.getWebViewFavicon(webView: webView) { faviconURL in
-        let historySite = HistorySite(title: self.parent.tab.title, url: url)
+        let historySite = HistorySite(title: self.parent.tab.title, url: url, siteType: .webPage)
         if let faviconURL = faviconURL {
           historySite.loadFavicon(url: faviconURL)
           // SPA 업데이트도 방문 기록에 추가
@@ -119,10 +113,14 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
             VisitManager.addVisitHistory(url: url.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
           }
         }
-        self.parent.tab.historySiteList = self.parent.tab.historySiteList.filter { item in
-          item.url != url
+        // SPA 업데이트의 경우 히스토리 네비게이션 중이 아니고 기존 URL과 다른 경우에만 히스토리에 추가
+        let shouldAddToHistory = !self.parent.tab.isNavigatingInHistory &&
+                               (self.parent.tab.historySiteList.isEmpty || 
+                                self.parent.tab.historySiteList.last?.url != url)
+        
+        if shouldAddToHistory {
+          self.parent.tab.addToHistory(historySite)
         }
-        self.parent.tab.historySiteList.append(historySite)
       }
       
       DispatchQueue.main.async {
@@ -278,8 +276,6 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   private func handleCleanupCompletion(webView: WKWebView, completion: @escaping () -> Void) {
     DispatchQueue.main.async {
       webView.stopLoading()
-      webView.removeObserver(self, forKeyPath: "canGoBack")
-      webView.removeObserver(self, forKeyPath: "canGoForward")
       webView.navigationDelegate = nil
       webView.uiDelegate = nil
       webView.configuration.userContentController.removeAllScriptMessageHandlers()
@@ -306,15 +302,8 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   }
   
   private func cleanupHistory(webView: WKWebView) {
-    let historyList = webView.backForwardList.backList + webView.backForwardList.forwardList
-    let historyUrlList = historyList.compactMap { $0.url }
-    
-    parent.tab.historySiteDataList = parent.tab.historySiteDataList.filter { item in
-      historyUrlList.contains(item.url)
-    }
-    parent.tab.historySiteList = parent.tab.historySiteList.filter { item in
-      historyUrlList.contains(item.url)
-    }
+    // 통합 히스토리 시스템에서는 히스토리 정리를 하지 않음
+    // WebKit의 히스토리와 독립적으로 관리
   }
   
   private func collectPageData(webView: WKWebView) {
@@ -373,7 +362,11 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     
     group.notify(queue: .main) {
       if let currentURL = webView.url {
-        let historySite = HistorySite(title: self.parent.tab.title, url: self.parent.tab.originURL)
+        // 이미 히스토리에 현재 URL이 있는지 확인 (중복 방지)
+        let shouldAddToHistory = self.parent.tab.historySiteList.isEmpty || 
+                                self.parent.tab.historySiteList.last?.url != self.parent.tab.originURL
+        
+        let historySite = HistorySite(title: self.parent.tab.title, url: self.parent.tab.originURL, siteType: .webPage)
         if let faviconURL = self.parent.tab.faviconURL {
           historySite.loadFavicon(url: faviconURL)
           Task {
@@ -382,8 +375,30 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
             print("add visit OK")
           }
         }
-        self.parent.tab.historySiteDataList.append(historySite)
-        self.parent.tab.historySiteList.append(historySite)
+        
+        // 히스토리 네비게이션 중이 아닌 경우에만 히스토리에 추가
+        if !self.parent.tab.isNavigatingInHistory && shouldAddToHistory {
+          self.parent.tab.addToHistory(historySite)
+        } else {
+          // 기존 히스토리 아이템의 파비콘과 제목 업데이트
+          if let lastHistorySite = self.parent.tab.historySiteList.last,
+             lastHistorySite.url == self.parent.tab.originURL {
+            lastHistorySite.title = self.parent.tab.title
+            if let faviconURL = self.parent.tab.faviconURL {
+              lastHistorySite.loadFavicon(url: faviconURL)
+            }
+          }
+        }
+        
+        // 웹페이지 로드 완료 후 플래그 리셋 및 네비게이션 상태 업데이트
+        if self.parent.tab.isNavigatingInHistory {
+          self.parent.tab.isNavigatingInHistory = false
+          // 네비게이션 상태 업데이트
+          DispatchQueue.main.async {
+            self.parent.tab.isBack = self.parent.tab.canGoBackInHistory
+            self.parent.tab.isForward = self.parent.tab.canGoForwardInHistory
+          }
+        }
       }
     }
   }
@@ -662,6 +677,33 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
       self.parent.tab.errorPageType = errorType
       self.parent.tab.errorFailingURL = failingURL.absoluteString
       self.parent.tab.showErrorPage = true
+      
+      // 에러 페이지를 히스토리에 추가
+      let errorTitle = self.getErrorTitle(for: errorType)
+      let errorHistorySite = HistorySite(
+        title: errorTitle,
+        url: failingURL,
+        siteType: .errorPage,
+        errorType: errorType
+      )
+      self.parent.tab.addToHistory(errorHistorySite)
+    }
+  }
+  
+  private func getErrorTitle(for errorType: ErrorPageType) -> String {
+    switch errorType {
+    case .notFindHost:
+      return NSLocalizedString("Page not found", comment: "")
+    case .notConnectHost:
+      return NSLocalizedString("Unable to connect to site", comment: "")
+    case .notConnectInternet:
+      return NSLocalizedString("No internet connection", comment: "")
+    case .occurredSSLError:
+      return NSLocalizedString("SSL/TLS certificate error", comment: "")
+    case .blockedContent:
+      return NSLocalizedString("Blocked content", comment: "")
+    case .unknown:
+      return NSLocalizedString("Unknown error", comment: "")
     }
   }
 }

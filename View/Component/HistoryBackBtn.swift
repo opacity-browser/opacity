@@ -18,25 +18,28 @@ struct HistoryBackBtn: View {
       tab: tab,
       isBack: true,
       clickAction: { isCommand in
-        if let webview = tab.webview, tab.isBack {
+        if tab.canGoBackInHistory {
           if isCommand {
-            if let previousURL = webview.backForwardList.backItem?.url {
-              browser.newTab(previousURL)
+            // Command+클릭: 새 탭에서 이전 페이지 열기
+            if tab.currentHistoryIndex > 0 {
+              let previousHistorySite = tab.historySiteList[tab.currentHistoryIndex - 1]
+              browser.newTab(previousHistorySite.url)
             }
           } else {
-            webview.goBack()
+            // 일반 클릭: 통합 히스토리로 뒤로가기
+            tab.goBackInHistory(browser: browser)
           }
         }
       },
       longPressAction: {
-        if tab.isBack {
+        if tab.canGoBackInHistory {
           self.tab.updateWebHistory = true
           self.isBackDialog = true
         }
       })
     .frame(width: 24, height: 24)
     .popover(isPresented: $isBackDialog, arrowEdge: .bottom) {
-      HistoryDialog(tab: tab, isBack: true, closeDialog: $isBackDialog)
+      HistoryDialog(tab: tab, browser: browser, isBack: true, closeDialog: $isBackDialog)
     }
   }
 }

@@ -48,6 +48,12 @@ final class Tab: ObservableObject {
   @Published var historyBackList: [WKBackForwardListItem] = []
   @Published var historyForwardList: [WKBackForwardListItem] = []
   
+  // 통합 히스토리 네비게이션을 위한 현재 인덱스
+  @Published var currentHistoryIndex: Int = -1
+  
+  // 히스토리 네비게이션 중인지 확인하는 플래그
+  var isNavigatingInHistory: Bool = false
+  
   @Published var pageProgress: Double = 0.0
   
   // GeoLocation
@@ -174,11 +180,35 @@ final class Tab: ObservableObject {
       self.inputURL = ""
       self.printURL = ""
       self.title = NSLocalizedString("Settings", comment: "")
+      self.isSetting = true
+      
+      // Settings 페이지를 히스토리에 추가
+      let settingsHistorySite = HistorySite(
+        title: NSLocalizedString("Settings", comment: ""),
+        url: URL(string: "opacity://settings")!,
+        siteType: .settings
+      )
+      self.historySiteList.append(settingsHistorySite)
+      self.historySiteDataList.append(settingsHistorySite)
+      self.currentHistoryIndex = 0
+      
     } else if url == EMPTY_URL {
       self.originURL = url
       self.inputURL = ""
       self.printURL = ""
       self.title = NSLocalizedString("New Tab", comment: "")
+      self.isInit = true
+      
+      // New Tab 페이지를 히스토리에 추가
+      let newTabHistorySite = HistorySite(
+        title: NSLocalizedString("New Tab", comment: ""),
+        url: URL(string: "opacity://new-tab")!,
+        siteType: .newTab
+      )
+      self.historySiteList.append(newTabHistorySite)
+      self.historySiteDataList.append(newTabHistorySite)
+      self.currentHistoryIndex = 0
+      
     } else {
       let stringURL = String(describing: url)
       let shortStringURL = StringURL.shortURL(url: stringURL)
@@ -318,6 +348,40 @@ final class Tab: ObservableObject {
   
   func updateURLBySearch(url: URL) {
     DispatchQueue.main.async {
+      // 현재 페이지가 특수 페이지인 경우 히스토리 확인
+      if self.isInit || self.isSetting || self.showErrorPage {
+        // 이미 해당 특수 페이지가 현재 인덱스에 있는지 확인
+        let needsToAddCurrentPage: Bool
+        if self.currentHistoryIndex >= 0 && self.currentHistoryIndex < self.historySiteList.count {
+          let currentSite = self.historySiteList[self.currentHistoryIndex]
+          needsToAddCurrentPage = !(
+            (self.isInit && currentSite.siteType == .newTab) ||
+            (self.isSetting && currentSite.siteType == .settings) ||
+            (self.showErrorPage && currentSite.siteType == .errorPage)
+          )
+        } else {
+          needsToAddCurrentPage = true
+        }
+        
+        if needsToAddCurrentPage {
+          if self.isInit {
+            let newTabSite = HistorySite(
+              title: NSLocalizedString("New Tab", comment: ""),
+              url: URL(string: "opacity://new-tab")!,
+              siteType: .newTab
+            )
+            self.addToHistory(newTabSite)
+          } else if self.isSetting {
+            let settingsSite = HistorySite(
+              title: NSLocalizedString("Settings", comment: ""),
+              url: URL(string: "opacity://settings")!,
+              siteType: .settings
+            )
+            self.addToHistory(settingsSite)
+          }
+        }
+      }
+      
       self.isInit = false
       self.isSetting = false
       self.isUpdateBySearch = true
@@ -386,6 +450,134 @@ final class Tab: ObservableObject {
       DispatchQueue.main.async {
         self.favicon = nil
       }
+    }
+  }
+  
+  // MARK: - 통합 히스토리 네비게이션
+  
+  var canGoBackInHistory: Bool {
+    return currentHistoryIndex > 0 && currentHistoryIndex < historySiteList.count
+  }
+  
+  var canGoForwardInHistory: Bool {
+    return currentHistoryIndex >= 0 && currentHistoryIndex < historySiteList.count - 1
+  }
+  
+  func goBackInHistory(browser: Browser) {
+    guard canGoBackInHistory else { return }
+    currentHistoryIndex -= 1
+    navigateToHistoryIndex(currentHistoryIndex, browser: browser)
+  }
+  
+  func goForwardInHistory(browser: Browser) {
+    guard canGoForwardInHistory else { return }
+    currentHistoryIndex += 1
+    navigateToHistoryIndex(currentHistoryIndex, browser: browser)
+  }
+  
+  func navigateToHistoryIndex(_ index: Int, browser: Browser) {
+    guard index >= 0 && index < historySiteList.count else { return }
+    
+    // 히스토리 네비게이션 중임을 표시
+    isNavigatingInHistory = true
+    
+    // 현재 인덱스 업데이트
+    currentHistoryIndex = index
+    
+    let historySite = historySiteList[index]
+    
+    switch historySite.siteType {
+    case .newTab:
+      DispatchQueue.main.async {
+        self.isInit = true
+        self.isSetting = false
+        self.showErrorPage = false
+        self.originURL = URL(string: "about:blank")!
+        self.inputURL = ""
+        self.printURL = ""
+        self.title = NSLocalizedString("New Tab", comment: "")
+        self.isNavigatingInHistory = false
+        
+        // 네비게이션 상태 업데이트
+        self.isBack = self.canGoBackInHistory
+        self.isForward = self.canGoForwardInHistory
+      }
+      
+    case .settings:
+      DispatchQueue.main.async {
+        self.isInit = false
+        self.isSetting = true
+        self.showErrorPage = false
+        self.originURL = URL(string: "opacity://settings")!
+        self.inputURL = ""
+        self.printURL = ""
+        self.title = NSLocalizedString("Settings", comment: "")
+        self.isNavigatingInHistory = false
+        
+        // 네비게이션 상태 업데이트
+        self.isBack = self.canGoBackInHistory
+        self.isForward = self.canGoForwardInHistory
+      }
+      
+    case .errorPage:
+      DispatchQueue.main.async {
+        self.isInit = false
+        self.isSetting = false
+        self.showErrorPage = true
+        self.errorPageType = historySite.errorType
+        self.errorFailingURL = historySite.url.absoluteString
+        self.originURL = historySite.url
+        self.inputURL = historySite.url.absoluteString
+        self.printURL = historySite.url.absoluteString
+        self.title = historySite.title
+        self.isNavigatingInHistory = false
+        
+        // 네비게이션 상태 업데이트
+        self.isBack = self.canGoBackInHistory
+        self.isForward = self.canGoForwardInHistory
+      }
+      
+    case .webPage:
+      // 일반 웹페이지의 경우
+      DispatchQueue.main.async {
+        self.isInit = false
+        self.isSetting = false
+        self.showErrorPage = false
+        self.webviewIsError = false
+        self.errorPageType = nil
+        self.errorFailingURL = ""
+        
+        // URL과 상태 업데이트
+        self.originURL = historySite.url
+        self.inputURL = StringURL.setInputURL(historySite.url)
+        self.printURL = StringURL.setPrintURL(historySite.url)
+        self.title = historySite.title
+        self.isUpdateBySearch = true
+        
+        // WebView가 있으면 해당 URL로 이동
+        if let webview = self.webview {
+          webview.load(URLRequest(url: historySite.url))
+        }
+      }
+    }
+  }
+  
+  func addToHistory(_ historySite: HistorySite) {
+    // 현재 인덱스 이후의 히스토리 제거 (새로운 페이지로 이동할 때)
+    if currentHistoryIndex >= 0 && currentHistoryIndex < historySiteList.count - 1 {
+      historySiteList.removeSubrange((currentHistoryIndex + 1)...)
+      historySiteDataList = historySiteList // 동기화
+    }
+    
+    // 새 페이지 추가
+    historySiteList.append(historySite)
+    historySiteDataList.append(historySite)
+    currentHistoryIndex = historySiteList.count - 1
+    
+    // isBack/isForward 상태 업데이트
+    DispatchQueue.main.async {
+      self.isBack = self.canGoBackInHistory
+      self.isForward = self.canGoForwardInHistory
     }
   }
 }
