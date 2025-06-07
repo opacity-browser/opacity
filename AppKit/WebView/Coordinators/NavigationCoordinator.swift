@@ -294,7 +294,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
           host.contains("youtube.com") else { return }
     
     do {
-      let scriptContent = try String(contentsOf: scriptURL)
+      let scriptContent = try String(contentsOf: scriptURL, encoding: .utf8)
       webView.evaluateJavaScript(scriptContent, completionHandler: nil)
     } catch {
       print("Failed to load JavaScript file: \(error.localizedDescription)")
