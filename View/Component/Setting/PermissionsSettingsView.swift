@@ -30,6 +30,7 @@ struct PermissionsSettingsView: View {
         Text(NSLocalizedString("Permissions", comment: ""))
           .font(.system(size: 24, weight: .semibold))
           .foregroundColor(Color("UIText"))
+          .padding(.bottom, 2)
         
         PermissionSection(
           title: NSLocalizedString("Notification", comment: ""),
@@ -109,7 +110,7 @@ struct PermissionRow: View {
         
         Text(!permission.isDenied ? NSLocalizedString("allowed", comment: "") : NSLocalizedString("denied", comment: ""))
           .font(.system(size: 12))
-          .foregroundColor(!permission.isDenied ? Color("Point") : Color("Danger"))
+          .foregroundColor(permission.isDenied ? Color("DenyColor") : Color("AllowColor"))
       }
       
       Spacer()

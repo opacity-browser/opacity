@@ -50,10 +50,9 @@ struct GeneralSettingsView: View {
         
         Spacer()
       }
-      .padding(.bottom, 6)
       
-      VStack(spacing: 32) {
-        VStack(spacing: 24) {
+      VStack(spacing: 28) {
+        VStack(spacing: 22) {
           SettingsRow(title: NSLocalizedString("Language", comment: "")) {
             SettingsDropdown(
               selection: $selectedLanguage,

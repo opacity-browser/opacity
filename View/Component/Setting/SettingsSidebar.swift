@@ -26,8 +26,8 @@ struct SettingsSidebar: View {
           Spacer()
         }
         .padding(.horizontal, 24)
-        .padding(.top, 44)
-        .padding(.bottom, 38)
+        .padding(.top, 42)
+        .padding(.bottom, 32)
       }
       
       VStack(spacing: 4) {

@@ -20,6 +20,7 @@ struct LibrarySettingsView: View {
         Text(NSLocalizedString("Library", comment: ""))
           .font(.system(size: 24, weight: .semibold))
           .foregroundColor(Color("UIText"))
+          .padding(.bottom, 6)
         
         VStack(spacing: 16) {
           LibraryInfoRow(
@@ -71,21 +72,21 @@ struct LibraryInfoRow: View {
   }
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
+    VStack(alignment: .leading, spacing: 8) {
       HStack(spacing: 0) {
         if let link = link {
           Button(action: {
             browser.newTab(URL(string: link)!)
           }) {
             Text(title)
-              .font(.system(size: 16, weight: .medium))
+              .font(.system(size: 14, weight: .medium))
               .foregroundColor(Color("Point"))
               .underline()
           }
           .buttonStyle(.plain)
         } else {
           Text(title)
-            .font(.system(size: 16, weight: .medium))
+            .font(.system(size: 14, weight: .medium))
             .foregroundColor(Color("UIText"))
         }
         
@@ -93,8 +94,8 @@ struct LibraryInfoRow: View {
       }
       
       Text(description)
-        .font(.system(size: 14))
-        .foregroundColor(Color("UIText").opacity(0.7))
+        .font(.system(size: 12))
+        .foregroundColor(Color("UIText").opacity(0.6))
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
     }
