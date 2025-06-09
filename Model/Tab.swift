@@ -335,7 +335,9 @@ final class Tab: ObservableObject {
         keyword = self.autoCompleteList[0].searchText
       }
     }
-    SearchManager.addSearchHistory(keyword)
+    Task { @MainActor in
+      SearchManager.addSearchHistory(keyword)
+    }
     
     let newURL = self.changeKeywordToURL(keyword)
     

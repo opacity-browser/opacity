@@ -107,10 +107,12 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         let historySite = HistorySite(title: self.parent.tab.title, url: url, siteType: .webPage)
         if let faviconURL = faviconURL {
           historySite.loadFavicon(url: faviconURL)
-          // SPA 업데이트도 방문 기록에 추가
-          Task {
-            let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-            VisitManager.addVisitHistory(url: url.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+          // 정리 작업 중이 아닐 때만 SPA 방문기록 추가
+          if !self.isCleanUpAction {
+            Task {
+              let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+              VisitManager.addVisitHistory(url: url.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+            }
           }
         }
         // SPA 업데이트의 경우 히스토리 네비게이션 중이 아니고 기존 URL과 다른 경우에만 히스토리에 추가
@@ -159,6 +161,10 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
     DispatchQueue.main.async {
       self.parent.tab.isClearWebview = false
       webView.stopLoading()
+      
+      // WebView title 초기화 (악성 제목 방지)
+      self.parent.tab.title = ""
+      
       webView.load(URLRequest(url: URL(string: "about:blank")!))
       self.isCleanUpAction = true
     }
@@ -369,10 +375,12 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
         let historySite = HistorySite(title: self.parent.tab.title, url: self.parent.tab.originURL, siteType: .webPage)
         if let faviconURL = self.parent.tab.faviconURL {
           historySite.loadFavicon(url: faviconURL)
-          Task {
-            let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
-            VisitManager.addVisitHistory(url: currentURL.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
-            print("add visit OK")
+          // 정리 작업 중이 아닐 때만 방문기록 추가
+          if !self.isCleanUpAction {
+            Task {
+              let faviconData = await VisitHistoryGroup.getFaviconData(url: faviconURL)
+              VisitManager.addVisitHistory(url: currentURL.absoluteString, title: self.parent.tab.title, faviconData: faviconData)
+            }
           }
         }
         

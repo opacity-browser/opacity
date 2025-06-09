@@ -50,6 +50,12 @@ class VisitManager {
   }
   
   @MainActor static func addVisitHistory(url: String, title: String? = nil, faviconData: Data? = nil) {
+    
+    // about:blank URL은 기록하지 않음
+    if url == "about:blank" || url.hasPrefix("about:") {
+      return
+    }
+    
     if let visitGroup = self.getVisitHistoryGroup(url) {
       let currentDate = Date()
       if visitGroup.visitHistories.count == 0 || currentDate.timeIntervalSince(visitGroup.updateDate) > 60 {
