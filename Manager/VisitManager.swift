@@ -49,10 +49,68 @@ class VisitManager {
     return nil
   }
   
+  // 최근 방문한 기록 가져오기 (리다이렉트 판단용)
+  @MainActor static func getRecentVisitHistoryGroup() -> VisitHistoryGroup? {
+    var descriptor = FetchDescriptor<VisitHistoryGroup>(
+      sortBy: [SortDescriptor(\VisitHistoryGroup.updateDate, order: .reverse)]
+    )
+    descriptor.fetchLimit = 1
+    
+    do {
+      let recentGroups = try AppDelegate.shared.opacityModelContainer.mainContext.fetch(descriptor)
+      return recentGroups.first
+    } catch {
+      print("Error fetching recent visit history group: \(error)")
+      return nil
+    }
+  }
+  
+  // 리다이렉트 URL인지 판단 (www 추가/제거, http/https 변경)
+  @MainActor static func areRedirectURLs(from: URL, to: URL) -> Bool {
+    // 같은 URL이면 리다이렉트가 아님
+    if from.absoluteString == to.absoluteString {
+      return false
+    }
+    
+    // 도메인 정규화 함수
+    func normalizeDomain(_ host: String?) -> String? {
+      guard let host = host?.lowercased() else { return nil }
+      return host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
+    }
+    
+    // 도메인이 같고 경로도 같으면 리다이렉트로 판단
+    let fromNormalizedDomain = normalizeDomain(from.host)
+    let toNormalizedDomain = normalizeDomain(to.host)
+    
+    return fromNormalizedDomain == toNormalizedDomain && 
+           from.path == to.path &&
+           from.query == to.query
+  }
+  
   @MainActor static func addVisitHistory(url: String, title: String? = nil, faviconData: Data? = nil) {
     
     // about:blank URL은 기록하지 않음
     if url == "about:blank" || url.hasPrefix("about:") {
+      return
+    }
+    
+    // 리다이렉트 중복 방지 (같은 도메인의 www 추가/제거)
+    if let recentGroup = getRecentVisitHistoryGroup(), 
+       let recentURL = URL(string: recentGroup.url),
+       let currentURL = URL(string: url),
+       // 최근 30초 이내의 기록만 리다이렉트로 판단
+       Date().timeIntervalSince(recentGroup.updateDate) < 30,
+       areRedirectURLs(from: recentURL, to: currentURL) {
+      // 리다이렉트로 판단되면 기존 기록의 URL을 최종 URL로 업데이트
+      recentGroup.url = url
+      if let title = title, !title.isEmpty {
+        recentGroup.title = title
+      }
+      if let faviconData = faviconData {
+        recentGroup.faviconData = faviconData
+      }
+      // updateDate 갱신
+      recentGroup.updateDate = Date()
       return
     }
     
