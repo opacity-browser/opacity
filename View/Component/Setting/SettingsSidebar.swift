@@ -55,6 +55,7 @@ struct SettingsSidebarItem: View {
   let action: () -> Void
   
   @State private var isHover: Bool = false
+  @State private var isPressed: Bool = false
   
   var body: some View {
     Button(action: action) {
@@ -75,14 +76,33 @@ struct SettingsSidebarItem: View {
       .padding(.vertical, 8)
       .background(
         RoundedRectangle(cornerRadius: 8)
-          .fill(isSelected ? Color("Point").opacity(0.1) : (isHover ? Color("UIText").opacity(0.05) : Color.clear))
+          .fill(
+            isSelected ? Color("Point").opacity(0.1) : 
+            isPressed ? Color("UIText").opacity(0.1) :  // 프레스 피드백 추가
+            isHover ? Color("UIText").opacity(0.05) : 
+            Color.clear
+          )
       )
+      .contentShape(Rectangle())  // 전체 영역을 클릭 가능하게
     }
     .buttonStyle(.plain)
     .onHover { hovering in
-      withAnimation(.easeInOut(duration: 0.15)) {
+      withAnimation(.easeInOut(duration: 0.1)) {  // 애니메이션 속도 개선: 0.15 → 0.1
         isHover = hovering
       }
     }
+    .simultaneousGesture(
+      DragGesture(minimumDistance: 0)
+        .onChanged { _ in
+          withAnimation(.easeInOut(duration: 0.05)) {
+            isPressed = true
+          }
+        }
+        .onEnded { _ in
+          withAnimation(.easeInOut(duration: 0.1)) {
+            isPressed = false
+          }
+        }
+    )
   }
 }
