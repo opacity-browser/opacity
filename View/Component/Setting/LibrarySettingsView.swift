@@ -38,13 +38,6 @@ struct LibrarySettingsView: View {
           )
           
           LibraryInfoRow(
-            title: "Remove Adblock Thing",
-            description: "MIT license",
-            link: "https://github.com/TheRealJoelmatic/RemoveAdblockThing",
-            browser: browser
-          )
-          
-          LibraryInfoRow(
             title: "ASN1Decoder",
             description: "MIT license",
             link: "https://github.com/filom/ASN1Decoder",

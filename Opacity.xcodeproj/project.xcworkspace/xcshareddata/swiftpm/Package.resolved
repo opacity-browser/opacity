@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/opacity-browser/ContentBlockRuleList.git",
       "state" : {
-        "revision" : "bace4f5b516ba3157dad97700f37fc72e58c8e26",
-        "version" : "1.0.8"
+        "revision" : "479e760f35d1d18acf986f7547e472a5650c231d",
+        "version" : "1.0.9"
       }
     },
     {

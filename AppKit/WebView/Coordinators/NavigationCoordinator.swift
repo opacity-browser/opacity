@@ -295,7 +295,7 @@ class NavigationCoordinator: NSObject, WKNavigationDelegate {
   private func executeYouTubeAdBlockScript(webView: WKWebView) {
     guard let webviewURL = webView.url,
           let host = webviewURL.host,
-          let scriptURL = Bundle.main.url(forResource: "removeAdblockThing", withExtension: "js"),
+          let scriptURL = Bundle.main.url(forResource: "ad-skipper", withExtension: "js"),
           parent.service.isTrackerBlocking,
           host.contains("youtube.com") else { return }
     

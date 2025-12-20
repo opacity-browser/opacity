@@ -140,7 +140,7 @@
 		A1A1D8D12B60693D008FD44F /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1D8D02B60693D008FD44F /* SchemeHandler.swift */; };
 		A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1A1D8DA2B62B6BB008FD44F /* Localizable.strings */; };
 		A1B1A6E92B85F42D006B665E /* ScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */; };
-		A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */; };
+		A1E1A7202BFBCCB800F537E0 /* ad-skipper.js in Resources */ = {isa = PBXBuildFile; fileRef = A1E1A71F2BFBCCB800F537E0 /* ad-skipper.js */; };
 		A1E7A6A42CB8EB7900799ADD /* TitlebarTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */; };
 		A1E7A6A62CB8EBB800799ADD /* TitlebarTabProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A52CB8EBB700799ADD /* TitlebarTabProvider.swift */; };
 		A1E7A6A82CB8ED7900799ADD /* TitlebarTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */; };
@@ -294,7 +294,7 @@
 		A1A1D8E22B62BC70008FD44F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B1A6E82B85F42D006B665E /* ScriptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptHandler.swift; sourceTree = "<group>"; };
 		A1E0E7DF2D4F9767000ED6BB /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = removeAdblockThing.js; sourceTree = "<group>"; };
+		A1E1A71F2BFBCCB800F537E0 /* ad-skipper.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "ad-skipper.js"; sourceTree = "<group>"; };
 		A1E7A6A32CB8EB7800799ADD /* TitlebarTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabView.swift; sourceTree = "<group>"; };
 		A1E7A6A52CB8EBB700799ADD /* TitlebarTabProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabProvider.swift; sourceTree = "<group>"; };
 		A1E7A6A72CB8ED7800799ADD /* TitlebarTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarTabViewController.swift; sourceTree = "<group>"; };
@@ -657,7 +657,7 @@
 		A1E1A71E2BFBCC4600F537E0 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				A1E1A71F2BFBCCB800F537E0 /* removeAdblockThing.js */,
+				A1E1A71F2BFBCCB800F537E0 /* ad-skipper.js */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -749,7 +749,7 @@
 			files = (
 				A16920132B2FA82200F8B4C0 /* Preview Assets.xcassets in Resources */,
 				A1A1D8D82B62B6BB008FD44F /* Localizable.strings in Resources */,
-				A1E1A7202BFBCCB800F537E0 /* removeAdblockThing.js in Resources */,
+				A1E1A7202BFBCCB800F537E0 /* ad-skipper.js in Resources */,
 				A16920102B2FA82200F8B4C0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1053,7 +1053,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -1070,7 +1070,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1086,7 +1086,7 @@
 				CODE_SIGN_ENTITLEMENTS = Opacity/Opacity.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Opacity/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -1103,7 +1103,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.opacity.OpacityBrowser;
 				PRODUCT_NAME = Opacity;
 				SWIFT_EMIT_LOC_STRINGS = YES;
